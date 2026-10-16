@@ -1,0 +1,70 @@
+// The skin class is on the table element itself: table-bro#{&} is table-bro.nv and the like
+// The visible table starts one shadow size into the element and keeps its width, so a full width leaves room
+// for both shadows
+
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../mixins/toolbar" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} {
+    @if $bro-table-width == 100% {
+      width: calc(100% - var(--bro-shadow-size) * 2);
+    } @else {
+      width: $bro-table-width;
+    }
+
+    // A narrower table would wrap its paginator; a narrow screen is for the adaptive layout of the next versions
+    min-width: var(--bro-table-min-width);
+  }
+
+  @at-root table-bro#{&} table {
+    th.bro-header-cell,
+    td.bro-cell {
+      box-sizing: border-box;
+
+      padding: 0 0 0 $bro-row-horizontal-padding;
+    }
+
+    // The last column keeps the same space at the right edge of the table, as Material gives it: a value at the right
+    // edge of its column does not touch the edge of the table
+    th.bro-header-cell:last-child,
+    td.bro-cell:last-child {
+      padding-right: $bro-row-horizontal-padding;
+    }
+  }
+
+
+  @include skin_table-header();
+
+
+  #{$bro-table-body_container} {
+    // The body runs on under the paginator by one shadow size, with the rows of the next page; the rounded bottom
+    // corners of the paginator would show them. Under the paginator the body ends above its corners, and beside it
+    // the shadow of the body keeps its size. An extension of the layout of the body that draws its own decorations of the
+    // rows hides the rows out of the window itself, so they stay whole
+    $cut: max(0px, var(--bro-shadow-size) + var(--bro-corner-radius) - #{$bro-paginator-height});
+
+    z-index: $bro-table-container-z-index;
+    top: calc(var(--bro-shadow-size) * -1);
+
+    clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - var(--bro-shadow-size)) 100%, calc(100% - var(--bro-shadow-size)) calc(100% - #{$cut}), var(--bro-shadow-size) calc(100% - #{$cut}), var(--bro-shadow-size) 100%, 0 100%);
+  }
+
+  #{$bro-table-body} {
+    z-index: $bro-table-container-z-index;
+
+    > .bro-table {
+      z-index: $bro-table-container-z-index;
+    }
+  }
+
+  #{$bro-table-body},
+  #{$bro-table-shadows} {
+    padding-top: var(--bro-shadow-size);
+  }
+
+  #{$bro-table-aux} {
+    top: var(--bro-shadow-size);
+  }
+}

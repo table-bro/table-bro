@@ -1,0 +1,44 @@
+// The Bootstrap skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.bootstrap.api
+@forward "./table-bro.bootstrap.api";
+@use "./skin/vanilla-js/bootstrap/variables" as *;
+@use "sass:meta";
+
+@use "./skin/vanilla-js/shared/skin" as shared-skin;
+@use "./skin/vanilla-js/bootstrap/vendor-extensions/navbar" as bootstrap-navbar-extension;
+@use "./skin/vanilla-js/bootstrap/vendor-extensions/pagination" as bootstrap-pagination-extension;
+@use "./skin/vanilla-js/bootstrap/vendor-extensions/table" as bootstrap-table-extension;
+@use "./skin/vanilla-js/bootstrap/table-bro/filter-drawer" as bootstrap-filter-drawer;
+@use "./skin/vanilla-js/bootstrap/table-bro/paginator" as bootstrap-paginator;
+@use "./skin/vanilla-js/bootstrap/table-bro/progress-bar" as bootstrap-progress-bar;
+@use "./skin/vanilla-js/bootstrap/table-bro/slide-toggle" as bootstrap-slide-toggle;
+@use "./skin/vanilla-js/bootstrap/table-bro/toolbar" as bootstrap-toolbar;
+@use "./skin/vanilla-js/bootstrap/table-bro/toolbar-search" as bootstrap-toolbar-search;
+
+
+/* Shared */
+@include shared-skin.styles('bro-bs-tags', '.badge') {
+  /* Bootstrap components */
+  // No components yet
+
+
+  /* Bootstrap extensions */
+  #{$bro-skin} {
+    @include bootstrap-navbar-extension.styles;
+    @include bootstrap-pagination-extension.styles;
+    @include bootstrap-table-extension.styles;
+  }
+
+
+  /* Table-bro extensions */
+  #{$bro-skin} {
+    @include bootstrap-paginator.styles;
+    @include bootstrap-progress-bar.styles;
+    @include bootstrap-slide-toggle.styles;
+    @include bootstrap-toolbar.styles;
+    @include bootstrap-toolbar-search.styles;
+
+    // The header of the filter drawer looks as the toolbar search, its rules follow it
+    @include bootstrap-filter-drawer.styles;
+  }
+  @include meta.load-css("./skin/vanilla-js/bootstrap/themes");
+}

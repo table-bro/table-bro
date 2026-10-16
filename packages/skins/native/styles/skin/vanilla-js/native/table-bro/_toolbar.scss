@@ -1,0 +1,19 @@
+@use "../themes" as *;
+@use "../../shared/table-bro/toolbar" as *;
+
+$bro-nav-link-padding: 0.5rem;
+
+@mixin styles {
+  @include toolbar-main-content($bro-nav-link-padding);
+
+  .bro-navbar {
+    border-bottom: 1px solid $bro-border-color;
+  }
+
+  .bro-dark-theme &:not(.bro-light-theme),
+  &.bro-dark-theme {
+    .bro-navbar {
+      border-bottom: 1px solid $bro-border-color-dark;
+    }
+  }
+}

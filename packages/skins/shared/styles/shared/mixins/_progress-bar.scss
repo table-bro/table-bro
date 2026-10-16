@@ -1,0 +1,27 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin table-header-progress-bar($progress-bar-selector) {
+  #{$bro-table-header} {
+    #{$progress-bar-selector} {
+      position: absolute;
+      top: calc(var(--bro-header-height) - #{$bro-global-progress});
+
+      width: 100%;
+      height: $bro-global-progress;
+    }
+  }
+}
+
+@mixin table-aux-progress-bar($progress-bar-selector) {
+  #{$bro-table-aux} {
+    #{$progress-bar-selector} {
+      position: absolute;
+      z-index: $bro-table-container-z-index;
+      top: calc(var(--bro-row-height) - #{$bro-details-progress});
+
+      width: 100%;
+      height: $bro-details-progress;
+    }
+  }
+}

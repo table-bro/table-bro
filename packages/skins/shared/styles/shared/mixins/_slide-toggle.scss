@@ -1,0 +1,5 @@
+@mixin slide-toggle($slide-toggle-selector: 'bro-mat-slide-toggle') {
+  #{$slide-toggle-selector} {
+    overflow: visible;
+  }
+}

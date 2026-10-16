@@ -1,0 +1,134 @@
+@use "../../../../shared/mixins/shared" as *;
+@use "../../../../shared/mixins/sort-header" as *;
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+.bro-sort-header-container {
+  display: flex;
+
+  align-items: center;
+
+  // Needs to be reset since we don't want an outline around the inner
+  // div which is focusable. We have our own alternate focus styling.
+  outline: 0;
+
+  letter-spacing: normal;
+
+  cursor: pointer;
+
+  // The focus from the keyboard shows a ring in the color of the title, inside the header: the cell component clips
+  // what is outside it. A click shows no ring
+  &:focus-visible {
+    outline: 2px solid currentColor;
+
+    outline-offset: -2px;
+  }
+}
+
+// The icon that the configs of the bs and nv skins give the arrow (icon-html): a class, not a style attribute, which a
+// strict Content Security Policy blocks
+.bro-sort-header-arrow .bro-button-icon {
+  display: inline-block;
+
+  line-height: 1;
+  vertical-align: top;
+}
+
+.bro-sort-header-content {
+  @include sort-header-content();
+
+  @include table-width-transition();
+}
+
+.bro-sort-header-position-before {
+  flex-direction: row-reverse;
+}
+
+@keyframes _bro-sort-header-recently-cleared-ascending {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-25%);
+  }
+}
+
+.bro-sort-header-arrow {
+  $timing: 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  overflow: visible;
+
+  width: 16px;
+  height: 16px;
+
+  opacity: 0;
+
+  transition: transform $timing, opacity $timing;
+
+  // A header without a title sorts nothing and is no control: no arrow
+  .bro-sort-header-container:not([role="button"]) & {
+    visibility: hidden;
+  }
+
+  .bro-sort-header:hover & {
+    opacity: 0.54;
+  }
+
+  .bro-sort-header .bro-sort-header-sorted & {
+    opacity: 1;
+  }
+
+  .bro-sort-header-descending & {
+    transform: rotate(180deg);
+  }
+
+  .bro-sort-header-recently-cleared-ascending & {
+    transform: translateY(-25%);
+
+    transition: none; // Without this the animation looks glitchy on Safari.
+    animation: _bro-sort-header-recently-cleared-ascending $timing forwards;
+  }
+
+  // Without motion the arrow takes its end state at once
+  @media (prefers-reduced-motion: reduce) {
+    .bro-sort-header & {
+      transition-duration: 0ms;
+      animation-duration: 0ms;
+    }
+  }
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+
+    // Without this transform the element twitches at the end of the transition on Safari.
+    transform: translateZ(0);
+
+    fill: currentColor;
+  }
+
+  &,
+  [dir='rtl'] .bro-sort-header-position-before & {
+    margin: 0 0 0 6px;
+  }
+
+  .bro-sort-header-position-before &,
+  [dir='rtl'] & {
+    margin: 0 6px 0 0;
+  }
+}

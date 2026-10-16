@@ -1,0 +1,8 @@
+@mixin styles {
+  // The ellipsis after the chips that show takes the color of their text, in the light and the dark theme
+  bro-mat-tags .mdc-evolution-chip-set__chips > .bro-cell-items-ellipsis {
+    margin-left: 4px;
+
+    color: var(--mat-chip-label-text-color, var(--mat-sys-on-surface-variant));
+  }
+}

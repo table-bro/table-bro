@@ -1,0 +1,70 @@
+// The CSS that the vanilla skins bs and nv share, in the order of their entry points: the shared parts, the parts of the
+// skin, which @content gives, then the shadow container and the sizes and timings for the table script
+@use "sass:meta";
+@use "../../shared/variables" as *;
+
+/* Mixins */
+@use "../../shared/mixins/custom-properties" as *;
+@use "../../shared/mixins/shared" as *;
+
+@use "../../shared/table-bro/details" as shared-details;
+@use "../../shared/table-bro/filter-drawer" as shared-filter-drawer;
+@use "../../shared/table-bro/shadows" as shared-shadows;
+@use "../../shared/table-bro/state" as shared-state;
+@use "../../shared/table-bro/table" as shared-table;
+@use "../../shared/table-bro/text-ellipsis" as shared-text-ellipsis;
+@use "./components/bootstrap-based/button" as bootstrap-based-button;
+@use "./components/material-based/table" as material-based-table;
+@use "./vendor-extensions/material-based/paginator" as material-based-paginator-extension;
+@use "./table-bro/paginator" as vanilla-paginator;
+@use "./table-bro/toolbar" as vanilla-toolbar;
+
+// @param $tags - the element of the tags of the skin in a cell
+// @param $tag - a tag in it
+@mixin styles($tags, $tag) {
+  #{$bro-skin} {
+    @include shared-details.styles;
+    @include shared-filter-drawer.styles;
+    @include shared-shadows.styles;
+    @include shared-state.styles;
+    @include shared-table.styles;
+    @include shared-text-ellipsis.styles;
+
+    // The tags of the skin in a cell
+    @include bro-cell-items($tags, $tag);
+  }
+
+
+  /* Shared VanillaJS components */
+  @include meta.load-css("./components/material-based/paginator");
+  @include meta.load-css("./components/material-based/sort-header");
+
+  #{$bro-skin} {
+    @include bootstrap-based-button.styles;
+    @include material-based-table.styles;
+
+    @include material-based-paginator-extension.styles;
+  }
+
+
+  /* Shared Table-bro extensions */
+  #{$bro-skin} {
+    @include vanilla-paginator.styles;
+  }
+  @include vanilla-toolbar.styles;
+  @include meta.load-css("./table-bro/toolbar-search");
+
+
+  @content;
+
+
+  #{$bro-skin} {
+    @include bro-table-shadow-container();
+  }
+
+
+  /* The sizes and timings for the table script; :where() lets a plain table-bro selector override them */
+  :where(#{$bro-skin}) {
+    @include bro-skin-custom-properties();
+  }
+}

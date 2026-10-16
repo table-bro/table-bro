@@ -1,0 +1,47 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "name": "Table, Bro",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/core",
+    "packages/angular"
+  ],
+  "packageOptions": {
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "readme": "none",
+    "groupOrder": [
+      "Element",
+      "Configuration",
+      "Columns and cells",
+      "Rows and query",
+      "Events",
+      "Skins",
+      "Rendering helpers",
+      "Filter drawer",
+      "*"
+    ],
+    "sort": [
+      "kind",
+      "alphabetical-ignoring-documents"
+    ],
+    "validation": {
+      "notExported": false,
+      "invalidLink": true,
+      "notDocumented": false
+    }
+  },
+  "out": "docs/api",
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "readme": "none",
+  "router": "member",
+  "disableSources": true,
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "sanitizeComments": true,
+  "treatWarningsAsErrors": true
+}

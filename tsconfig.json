@@ -1,0 +1,29 @@
+// The unit specs and the editors: the packages import each other by their names, and these paths give the sources,
+// as the specs take them
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": [],
+    "paths": {
+      "@table-bro/core": [
+        "./packages/core/index.ts"
+      ],
+      "@table-bro/bootstrap": [
+        "./packages/skins/bootstrap/js/table-bro.bootstrap.ts"
+      ],
+      "@table-bro/native": [
+        "./packages/skins/native/js/table-bro.native.ts"
+      ],
+      "@table-bro/angular": [
+        "./packages/angular/src/public-api.ts"
+      ],
+      "@table-bro/angular-material": [
+        "./packages/skins/angular-material/src/public-api.ts"
+      ]
+    }
+  },
+  "include": [
+    "packages/angular/src/**/*.ts",
+    "packages/skins/angular-material/src/**/*.ts"
+  ]
+}

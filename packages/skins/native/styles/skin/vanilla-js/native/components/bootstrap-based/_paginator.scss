@@ -1,0 +1,50 @@
+@use "../../variables" as *;
+
+$bro-margin: 0.5rem;
+$bro-padding: $bro-margin;
+
+$bro-link-color: #00e;
+$bro-link-color-dark: #7dafff;
+
+@mixin styles {
+  .bro-pagination { // copies styles of bs `.pagination`
+    display: flex;
+
+    // The links have no padding of their own: the last one stands as far from the edge as the links of Bootstrap do
+    margin-right: 0.75rem;
+    margin-bottom: 0;
+    padding-left: 0;
+
+    list-style: none;
+
+    cursor: pointer;
+  }
+
+  .bro-page-link {
+    position: relative;
+
+    display: block;
+
+    color: $bro-link-color;
+  }
+
+  .bro-dark-theme #{$bro-skin}:not(.bro-light-theme),
+  #{$bro-skin}.bro-dark-theme {
+    .bro-page-link {
+      color: $bro-link-color-dark;
+    }
+  }
+
+  .bro-page-item {
+    &:not(:first-child) .bro-page-link {
+      margin-left: $bro-margin;
+    }
+
+    // The paginator gives the class disabled to the item of a page that does not exist; after the colors of the themes
+    &.disabled .bro-page-link {
+      color: GrayText;
+
+      pointer-events: none;
+    }
+  }
+}

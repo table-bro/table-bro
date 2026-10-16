@@ -1,0 +1,19 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  #{$bro-shadow} {
+    padding-right: var(--bro-shadow-size);
+    padding-left: var(--bro-shadow-size);
+  }
+
+  #{$bro-table-shadows} {
+    z-index: $bro-shadow-z-index;
+
+    width: calc(100% - var(--bro-shadow-size) * 2);
+
+    .bro-row {
+      height: var(--bro-row-height);
+    }
+  }
+}

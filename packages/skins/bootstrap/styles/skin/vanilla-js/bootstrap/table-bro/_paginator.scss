@@ -1,0 +1,48 @@
+@use "../../shared/bootstrap-adapter" as *;
+
+@mixin styles {
+  $prefix: "bs-";
+
+  .bro-paginator-page-size {
+    .dropdown-toggle {
+      border-color: var(--#{$prefix}border-color);
+
+      background-color: var(--#{$prefix}body-bg);
+      color: var(--#{$prefix}link-color);
+
+      opacity: 1;
+      @include transition($pagination-transition);
+
+      &:hover,
+
+      &:first-child:active,
+      &.active,
+      &.show {
+        border-color: var(--#{$prefix}border-color);
+
+        background-color: var(--#{$prefix}tertiary-bg);
+        color: var(--#{$prefix}link-hover-color);
+      }
+
+      &:focus-visible,
+
+      &:first-child:active,
+      &.active,
+      &.show {
+        background-color: var(--#{$prefix}secondary-bg);
+        color: var(--#{$prefix}link-hover-color);
+        box-shadow: $focus-ring-box-shadow;
+      }
+
+      &:disabled,
+      &.disabled {
+        border-color: var(--#{$prefix}border-color);
+
+        background-color: var(--#{$prefix}secondary-bg);
+        color: var(--#{$prefix}secondary-color);
+
+        pointer-events: none;
+      }
+    }
+  }
+}

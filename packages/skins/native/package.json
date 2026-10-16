@@ -1,0 +1,64 @@
+{
+  "name": "@table-bro/native",
+  "version": "1.1.0",
+  "description": "Pixel-perfect Material data tables for Angular, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "native"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/native"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.native.esm.js",
+  "module": "dist/table-bro.native.esm.js",
+  "types": "dist/table-bro.native.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.native.d.ts",
+      "import": "./dist/table-bro.native.esm.js",
+      "default": "./dist/table-bro.native.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "unpkg": "dist/table-bro.native.umd.js",
+  "jsdelivr": "dist/table-bro.native.umd.js",
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.native.ts",
+    "./dist/table-bro.native.esm.js",
+    "./dist/table-bro.native.umd.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.native",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.native",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "@table-bro/core": "^1.1.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.23.0",
+    "typescript": "^5.8.3"
+  }
+}

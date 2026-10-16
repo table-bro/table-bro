@@ -1,0 +1,29 @@
+@use "variables" as *;
+@use "../shared/mixins/skin-colors" as *;
+
+// The skin takes the theme of the application, as every component of Angular Material does: the components of Material
+// in the table read the tokens of that theme themselves, and the parts of the table read the tokens of mat-table
+#{$bro-skin} {
+  @include bro-table-theme(
+      '.mat-table',
+      $mat-toolbar-selector,
+      $mat-bg,
+      $mat-border-color,
+      $mat-text-color,
+      $mat-text-secondary-color
+  );
+}
+
+// The dark theme is the dark scheme of the theme of the application: its tokens, written with light-dark(), give
+// the dark colors under color-scheme: dark. The class is on the table host or on an ancestor of it
+.bro-dark-theme {
+  #{$bro-skin},
+  &#{$bro-skin} {
+    color-scheme: dark;
+  }
+}
+
+// A table with its own light theme, the class bro-light-theme, takes the light scheme in a dark page too
+#{$bro-skin}.bro-light-theme {
+  color-scheme: light;
+}

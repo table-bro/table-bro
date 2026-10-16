@@ -1,0 +1,87 @@
+@use "../variables" as *;
+
+// The same mixin is in components/material-based/_table.scss of the core: the core and the skins are separate packages,
+// which share no Sass module but the maps of the selectors
+@mixin table-width-transition() {
+  // --bro-duration-scale is 0 under prefers-reduced-motion: reduce
+  transition: width calc(var(--bro-column-width-duration) * var(--bro-duration-scale)) ease;
+}
+
+// The items of a component cell, such as tags, keep to one line, so the row keeps its height. The component calls
+// fitCellItems() of the core: the items that do not fit whole give way to an ellipsis after the items that show.
+// The first item always shows and shrinks with its own ellipsis in a narrow cell.
+// @param $row - the element that holds the items in its line
+// @param $item - an item
+// @param $text - the text inside an item; without it the item holds its text itself
+@mixin bro-cell-items($row, $item, $text: null) {
+  #{$row} {
+    display: flex;
+    overflow: hidden;
+
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+
+    flex-wrap: nowrap;
+    align-items: center;
+
+    > #{$item} {
+      flex: none;
+    }
+
+    > #{$item}:first-child {
+      min-width: 0;
+
+      flex-shrink: 1;
+
+      // The boxes inside the item shrink with it down to its text
+      * {
+        min-width: 0;
+      }
+
+      @if $text {
+        #{$text} {
+          overflow: hidden;
+
+          text-overflow: ellipsis;
+        }
+      } @else {
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+      }
+    }
+
+    > .bro-cell-items-ellipsis {
+      flex: none;
+    }
+
+    // An item that does not fit the line: hidden from the eye, not from screen readers (fitCellItems)
+    > .bro-cell-item-hidden {
+      position: absolute;
+
+      overflow: hidden;
+
+      width: 1px;
+      height: 1px;
+
+      white-space: nowrap;
+
+      clip-path: inset(50%);
+    }
+  }
+}
+
+// A container of the table on the page lines the table up with its content: the table moves left by its shadow size,
+// so its visible part starts at the content and its shadows fall into the margins around it. The table knows its skin,
+// so the rule needs no skin class around the container. A full width table takes the full width of the container,
+// its shadows falling into the margins.
+@mixin bro-table-shadow-container() {
+  @at-root .bro-table-shadow-container > table-bro#{&} {
+    margin-left: calc(var(--bro-shadow-size) * -1);
+
+    @if $bro-table-width == 100% {
+      width: 100%;
+    }
+  }
+}

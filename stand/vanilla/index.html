@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Vanilla stand, Table, Bro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The builds of the packages, as a page without a bundler takes them: the CSS and the UMD scripts -->
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/table-bro.min.css">
+    <link rel="stylesheet" href="dist/table-bro.bootstrap.min.css">
+    <link rel="stylesheet" href="dist/table-bro.native.min.css">
+
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="dist/table-bro.umd.js"></script>
+    <script src="dist/table-bro.bootstrap.umd.js"></script>
+    <script src="dist/table-bro.native.umd.js"></script>
+</head>
+<body>
+<div class="container py-3">
+    <h1 class="h4 mb-3">Vanilla JS: <code>&lsaquo;table-bro&rsaquo;</code> without a framework</h1>
+
+    <div class="mb-3">
+        <label class="me-3"><input type="radio" name="vanilla-skin" value="bs" checked> Bootstrap</label>
+        <label><input type="radio" name="vanilla-skin" value="nv"> Native</label>
+    </div>
+
+    <table-bro-filter-drawer-container class="bro-table-shadow-container"></table-bro-filter-drawer-container>
+</div>
+
+<script src="stand-vanilla.js"></script>
+</body>
+</html>

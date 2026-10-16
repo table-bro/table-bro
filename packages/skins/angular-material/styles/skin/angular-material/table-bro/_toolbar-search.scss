@@ -1,0 +1,27 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  // The buttons and the field of the search lie in the toolbar itself, so it lays them out in a row as Material does,
+  // and the field takes the width between the buttons
+  #{$bro-table-toolbar_container} #{$mat-toolbar-selector}.bro-toolbar-search {
+    display: flex;
+
+    align-items: center;
+  }
+
+  // The field has the title text of the toolbar, of the theme of the application
+  #{$mat-toolbar-selector} #{$bro-toolbar_content-search} {
+    line-height: inherit;
+
+    input {
+      font-weight: inherit;
+      font-size: inherit;
+      line-height: inherit;
+
+      &::placeholder {
+        color: $mat-text-secondary-color;
+      }
+    }
+  }
+}

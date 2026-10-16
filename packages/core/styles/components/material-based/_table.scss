@@ -1,0 +1,108 @@
+@use "table-bro-selector-map" as *;
+@use "shared-selector-map" as *;
+
+// The same mixin is in skin/shared/mixins/_shared.scss: the core and the skins are separate packages, which share no
+// Sass module but the maps of the selectors
+@mixin table-width-transition() {
+  // --bro-duration-scale is 0 under prefers-reduced-motion: reduce
+  transition: width calc(var(--bro-column-width-duration) * var(--bro-duration-scale)) ease;
+}
+
+@mixin styles {
+  table-bro {
+    position: relative;
+
+    display: inline-block;
+
+    table {
+      width: 100%;
+
+      text-align: left;
+    }
+  }
+
+  // The tables of the table keep the separate border model whatever the page sets, as the reboot of Bootstrap does: in
+  // the collapsing model the header table is half a pixel higher, 56.5 px instead of 56
+  :is(#{$bro-table-header}, .bro-table, #{$bro-table-aux}) {
+    border-spacing: 0;
+    border-collapse: separate;
+  }
+
+  // The host and the classes of the cell: above the cells of the skins, as .mat td.mat-cell
+  table-bro td.bro-cell#{$bro-cell-empty} {
+    border-bottom-width: 0;
+  }
+
+  // The classes of the cell: above the cells of the skins, as .mat th.mat-header-cell
+  table-bro :is(th.bro-header-cell, td.bro-cell).bro-col_text-right {
+    text-align: right;
+  }
+
+  .bro-col_text-right {
+    // A column at its right edge puts its components there too: an inline one by the text alignment, a block by its margin
+    > .bro-cell_component {
+      margin-left: auto;
+    }
+  }
+
+  #{$bro-table-aux} {
+    position: absolute;
+
+    // A component measures by its content, also with a block host of its own CSS: the stretched aux table would give it
+    // the width of its column. The width of an application, as of bro-text-ellipsis-width, stays above it.
+    :where(.bro-cell_component:not(span, strong)) {
+      width: max-content;
+    }
+
+    tr.bro-row,
+    tr#{$bro-details_tr} {
+      background: transparent;
+    }
+
+    // The host, the rows and the cells by their classes: above the cells of the skins, as table-bro.mat table td.bro-cell:last-child
+    @at-root table-bro #{&} > tbody > tr:is(.bro-row, #{$bro-details_tr}) > td.bro-cell {
+      position: relative;
+
+      padding: 0;
+
+      border-bottom-width: 0;
+    }
+  }
+
+  // The components of the rows measure so too until their first widths: the widest of them may have a shorter value
+  [data-bro-measure] :where(.bro-cell_component:not(span, strong)) {
+    width: max-content;
+  }
+
+  // All rows have one fixed height: the content of a cell keeps to one line, and the column clips what does not fit
+  .bro-cell_component {
+    display: inline-block;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    vertical-align: top;
+
+    @include table-width-transition();
+  }
+
+  // A plain value may wrap for the column widths, so a long one cannot widen its column, also with autoColumnWidth:
+  // false, and it shows only its first line with an ellipsis, since all rows have one height. The aux table measures
+  // the widths, so its values keep to one line.
+  table:not(#{$bro-table-aux}) td > span.bro-cell_component,
+  table:not(#{$bro-table-aux}) td > strong.bro-cell_component {
+    display: -webkit-box;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  // The cells of the tables of the table only: the CSS of a skin comes to the whole page
+  table-bro :is(th, td) {
+    @include table-width-transition();
+  }
+}

@@ -1,0 +1,110 @@
+<form [formGroup]="filtersForm">
+    @switch (skin()) {
+        @case ('bs') {
+            <div class="mb-2">
+                <label class="form-label w-100 mb-0">
+                    Feature
+                    <input type="search" class="form-control mt-1"
+                           name="featureName" formControlName="featureName" autocomplete="off">
+                </label>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label w-100 mb-0">
+                    Category
+                    <select class="form-select mt-1" name="category" formControlName="category">
+                        <option [ngValue]="null">Any</option>
+
+                        @for (category of categories; track category) {
+                            <option [ngValue]="category">{{category}}</option>
+                        }
+                    </select>
+                </label>
+            </div>
+
+            <div class="form-check mb-2">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="serverSide" formControlName="serverSide">
+                    Including server-side data loading
+                </label>
+            </div>
+
+            <!-- A link of the toolbar of the skin -->
+            <button type="button" class="nav-link px-0 bro-feature-filters-clear"
+                    (click)="onClearFilters()">Clear</button>
+        }
+
+        @case ('nv') {
+            <label class="bro-native-field">
+                Feature
+                <input type="search" name="featureName" formControlName="featureName" autocomplete="off">
+            </label>
+
+            <label class="bro-native-field">
+                Category
+                <select name="category" formControlName="category">
+                    <option [ngValue]="null">Any</option>
+
+                    @for (category of categories; track category) {
+                        <option [ngValue]="category">{{category}}</option>
+                    }
+                </select>
+            </label>
+
+            <label class="bro-native-check">
+                <input type="checkbox" name="serverSide" formControlName="serverSide">
+                Including server-side data loading
+            </label>
+
+            <!-- A link of the toolbar of the skin -->
+            <a href="" class="bro-nav-link bro-feature-filters-clear"
+               (click)="$event.preventDefault(); onClearFilters()">Clear</a>
+        }
+
+        @default {
+            <div class="mb-2">
+                <mat-form-field style="width: 100%" subscriptSizing="dynamic">
+                    <mat-label>
+                        Feature
+                    </mat-label>
+                    <input type="text" matInput
+                           name="featureName" formControlName="featureName" autocomplete="off">
+
+                    @if (filtersForm.controls.featureName.value) {
+                        <button matIconButton matSuffix type="button" aria-label="Clear"
+                                (click)="onClearFilter('featureName')">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="mb-2">
+                <mat-form-field style="width: 100%" subscriptSizing="dynamic">
+                    <mat-label>
+                        Category
+                    </mat-label>
+                    <mat-select name="category" formControlName="category">
+                        <mat-option [value]="null">Any</mat-option>
+
+                        @for (category of categories; track category) {
+                            <mat-option [value]="category">{{category}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="mb-2">
+                <mat-checkbox name="serverSide" formControlName="serverSide">
+                    Including server-side data loading
+                </mat-checkbox>
+            </div>
+
+            <button matButton type="button" class="bro-feature-filters-clear"
+                    (click)="onClearFilters()">
+                <mat-icon>filter_list_off</mat-icon>
+                Clear
+            </button>
+        }
+    }
+</form>

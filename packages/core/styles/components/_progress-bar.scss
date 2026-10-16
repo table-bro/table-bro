@@ -1,0 +1,10 @@
+@use "shared-selector-map" as *;
+
+// The host and the header of the table: above the cells of the skins, as table-bro.nv table > :not(caption) > * > *
+table-bro table > thead > tr > th#{$bro-table-progress} {
+  padding: 0;
+
+  border-bottom-width: 0;
+
+  line-height: 0;
+}

@@ -1,0 +1,21 @@
+@mixin styles {
+  @at-root table-bro#{&} .table > :not(caption) > * > * {
+    background-color: transparent;
+  }
+
+  @at-root table-bro#{&} .table {
+    margin-bottom: 0;
+  }
+
+  @at-root table-bro#{&} .table {
+    vertical-align: middle;
+
+    > tbody {
+      vertical-align: middle;
+    }
+
+    > thead {
+      vertical-align: middle;
+    }
+  }
+}

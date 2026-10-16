@@ -1,0 +1,18 @@
+@use "shared-selector-map" as *;
+
+#{$bro-toolbar_content-search} {
+  flex: 1 1 auto;
+
+  line-height: 1.2; // styles of `.h5`
+
+  input {
+    width: 100%;
+
+    padding: 0;
+
+    border: 0;
+    outline: none;
+
+    background-color: transparent;
+  }
+}

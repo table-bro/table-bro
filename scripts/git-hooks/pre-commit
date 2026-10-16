@@ -1,0 +1,26 @@
+#!/bin/sh
+# The pre-commit check of Table, Bro: ESLint and stylelint over the staged files within the scope of `npm run lint` and
+# `npm run lint:styles`. It only checks: it changes no file and no index, and a commit with errors stops with a hint.
+# Git uses it after `npm install`, whose prepare script sets core.hooksPath to scripts/git-hooks.
+#
+# Limitation: the linters read the working tree copy of each staged file, not its staged content. A file staged in
+# part is checked with its unstaged changes too, so a commit of a part of a file may pass or fail by the rest of it.
+
+files=$(git diff --cached --name-only --diff-filter=ACMR)
+scripts=$(printf '%s\n' "$files" | grep -E '^((packages|stand|e2e|scripts|eslint-rules)/.+|[^/]+)\.(ts|js|mjs)$')
+styles=$(printf '%s\n' "$files" | grep -E '^(packages|stand)/.+\.scss$')
+status=0
+
+if [ -n "$scripts" ]; then
+  printf '%s\n' "$scripts" | tr '\n' '\0' | xargs -0 npx eslint --no-warn-ignored || status=1
+fi
+
+if [ -n "$styles" ]; then
+  printf '%s\n' "$styles" | tr '\n' '\0' | xargs -0 npx stylelint --allow-empty-input || status=1
+fi
+
+if [ $status -ne 0 ]; then
+  echo 'pre-commit: the staged files have lint errors. Fix them with npm run format and npm run lint:styles:fix, stage them again and commit.' >&2
+fi
+
+exit $status

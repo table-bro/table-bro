@@ -1,0 +1,81 @@
+$mat-paginator-selector: '.mat-mdc-paginator' !default;
+$mat-progress-bar-selector: '.mat-mdc-progress-bar' !default;
+$mat-toolbar-selector: '.mat-toolbar' !default;
+
+// The originals of Material Design under their names: the skin takes them as the defaults of its $bro-* variables, which
+// an application configures as in the other skins
+$mat-table-header: 56px;
+$mat-table-row: 52px;
+$row-horizontal-padding: 24px;
+
+$mat-elevation-z16-shadow-size: 42px;
+$mat-elevation-z8-shadow-size: 14px;
+$mat-elevation-z4-shadow-size: 10px;
+$mat-table-shadow-size: $mat-elevation-z16-shadow-size;
+
+$mat-toolbar-height: 64px;
+$mat-paginator-height: 56px;
+
+$mat-corner-radius: 12px; // the corner-medium of Material 3, as its cards
+$mat-filter-drawer-corner-radius: 16px; // the corner-large of Material 3, as its side sheets
+
+// The colors of the parts of the table: the tokens of mat-table, else the system tokens of the theme of the application,
+// as mat-table reads them
+$mat-bg: var(--mat-table-background-color, var(--mat-sys-surface)) !default;
+$mat-border-color: var(--mat-table-row-item-outline-color, var(--mat-sys-outline)) !default;
+$mat-text-color: var(--mat-table-row-item-label-text-color, var(--mat-sys-on-surface)) !default;
+$mat-text-secondary-color: var(--mat-sys-on-surface-variant) !default;
+
+
+// The values of the Angular Material skin for the variables every skin has (skin/shared/_variables.scss)
+@forward "../shared/variables" with (
+  $bro-skin: '.mat',
+
+  $bro-table-width: 100% !default, // or px-value, or 100%;
+
+  $bro-table-header-height: $mat-table-header !default,
+  $bro-table-row-height: $mat-table-row !default,
+  $bro-row-horizontal-padding: $row-horizontal-padding !default,
+
+  $bro-table-shadow-size: $mat-table-shadow-size !default,
+
+  $bro-toolbar-height: $mat-toolbar-height !default,
+  $bro-paginator-height: $mat-paginator-height !default,
+  $bro-table-min-width: 541px !default,
+
+  $bro-corner-radius: $mat-corner-radius !default,
+
+  $bro-filter-drawer-width: 320px !default,
+  $bro-filter-drawer-corner-radius: $mat-filter-drawer-corner-radius !default,
+
+
+  $bro-global-progress: 3px !default,
+  $bro-details-progress: 2px !default,
+
+
+  // Layers
+  $bro-table-container-z-index: 2 !default,
+  $bro-shadow-z-index: -1 !default,
+
+
+  // Read by the table script (skin/shared/mixins/_custom-properties.scss)
+  $bro-refresh-overlay-opacity: .5 !default,
+  $bro-refresh-overlay-opacity-dark: .5 !default,
+  $bro-column-width-duration: 500ms !default, // read by the CSS alone
+  $bro-details-duration: 350ms !default,
+  $bro-details-easing: cubic-bezier(.37, 0, .63, 1) !default, // the curve of easeInOutSine
+  $bro-filter-drawer-duration: 400ms !default,
+  $bro-kinetic-time-constant: 280ms !default, // the time constant of the exponential decay, not its duration
+  $bro-state-icon-duration: 500ms !default,
+  $bro-state-message-duration: 750ms !default,
+
+
+  // State
+  $bro-state-icon-size: 40px !default,
+  $bro-state-icon-margin-right: 16px !default,
+  $bro-state-message-font-size: 28px !default,
+
+
+  // Table cells
+  $bro-cell-number-width: 45.5px !default
+);

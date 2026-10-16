@@ -1,0 +1,12 @@
+@use "../../shared/mixins/shared" as *;
+@use "../../shared/mixins/sort-header" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} {
+    .mat-sort-header-content {
+      @include sort-header-content();
+
+      @include table-width-transition();
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@use "shared-selector-map" as *;
+@use "material-based/table" as *;
+
+@mixin cy-text-ellipsis() {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+#{$bro-cell_text-ellipsis-container} {
+  display: inline-block;
+
+  box-sizing: content-box;
+
+  vertical-align: top;
+
+  cursor: default;
+
+  @include cy-text-ellipsis();
+  @include table-width-transition();
+
+  #{$bro-cell_text-ellipsis} {
+    display: inline;
+  }
+}

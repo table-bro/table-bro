@@ -1,0 +1,651 @@
+{
+  "ui": {
+    "title": "Table, Bro Architecture",
+    "themeAuto": "AUTO",
+    "themeLight": "LIGHT",
+    "themeDark": "DARK",
+    "eyebrow": "@table-bro/* 1.1 · architecture for library developers",
+    "h1": "How Table, Bro is built",
+    "lede": "A Web Components table engine on top of existing UI components. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Views write the DOM, skins supply the UI components, framework wrappers translate inputs into the methods of the element, and the Island Details module extends the body through one interface. The core follows MVC with passive views and a one-way data flow.",
+    "tabMvc": "Layers (MVC)",
+    "tabPkg": "Packages",
+    "mvcTitle": "Layers: model, view, controller",
+    "mvcLede": "Lanes are the roles of the MVC loop, the color of a block is its package. Read the loop clockwise: an action reaches the element, the controller changes the model and calls the views, the views read the model and write the DOM. Pick a flow to light up its path, or show the forbidden links.",
+    "mvcAria": "Layers map: input on the left, the host on top, the controller, model and view lanes in the middle, services at the bottom, output, the module and the skin packages on the right.",
+    "mvcCaption": "Data goes one way and comes back only as an event: view → bro-action → element → controller → model → view. A view never calls the controller, and the context has no methods to do it. Show the forbidden links to see the arrows that check:arch rejects.",
+    "forbidBtn": "✕ Forbidden links",
+    "forbidHead": "Forbidden links",
+    "forbidLede": "Red marks are the arrows that the rules forbid; each one keeps a boundary of the loop. Rules 3 and 10 check the text of the code and have no arrow.",
+    "contract": "contract",
+    "ctxNoMethods": "BroContext has no methods: a view cannot reach the controller through it.",
+    "islandNoCtx": "Island Details never gets the context, only BroIslandTable.",
+    "lgCtrl": "C · controller lane",
+    "lgModel": "M · model lane",
+    "lgViewLane": "V · view lane",
+    "lgHost": "host and services",
+    "lgPkgColor": "block color = its package",
+    "lgForbid": "forbidden link",
+    "whyTitle": "Why the layers are linked this way",
+    "whyLede": "Each boundary of the loop exists for a reason that the code depends on. Break one, and one of these guarantees goes.",
+    "cmpTitle": "Table, Bro and classic MVC",
+    "cmpAspect": "Aspect",
+    "cmpClassic": "Classic MVC",
+    "mapTitle": "System map",
+    "mapLede": "Blocks are grouped by package: the application, the wrapper, the core, the skins and the extension module. Pick a flow to light up its path; the numbers on the blocks show the order of its steps.",
+    "all": "All links",
+    "hint": "Hover a block to see its links, or pick a flow above the map.",
+    "caption": "Every change goes through BroController.update(). The controller is the only writer of ctx.state; views write the DOM; the body layout is the only part of the core that calls Island Details. Packages above the core import it only as @table-bro/core.",
+    "lgApp": "Application and browser",
+    "lgWrap": "Framework wrapper and page elements",
+    "lgCore": "Core: @table-bro/core",
+    "lgSkin": "Skins",
+    "lgMod": "Extension module",
+    "lgState": "state and models",
+    "lgView": "views",
+    "lgCall": "call or data",
+    "lgEvent": "DOM event or read-only contract",
+    "lgActive": "path of the selected flow",
+    "lgBadge": "step number in the flow",
+    "flowsTitle": "Flows",
+    "flowsLede": "Each flow is one chain of calls through the blocks, checked against the code. Together they cover every link of the map.",
+    "colData": "Data and interaction",
+    "colDataSub": "entry: the application or a user action",
+    "colEnv": "Extension and environment",
+    "colEnvSub": "entry: a module, the browser or the page",
+    "showOnMap": "Show on the map ↑",
+    "updTitle": "One update",
+    "updLede": "BroController.update(reason, {state, render, events}) in controller/controller.ts, with BroUpdate and BroFrame in shared/frame.ts. An update is synchronous: after it the DOM is ready. The writes queue their layout reads in the frame, so the browser lays the table out once per update. Pick a phase.",
+    "rulesTitle": "Dependency rules",
+    "rulesLede": "npm run check:arch checks them by searching the code (scripts/check-arch.mjs); npm test runs it first. Unit specs are exempt.",
+    "domTitle": "Views and the DOM of the host",
+    "domLede": "A view implements BroView (types/view.ts). A parent view creates its children and assigns them to the registry ctx.view right before it renders them; the directories of view/dom follow this tree.",
+    "blocksTitle": "Blocks",
+    "blocksLede": "Each block on its own: where it is defined and what it does. Paths are relative to the repository root; the core is in packages/core.",
+    "footer": "Built from the sources of the library. The page has no external resources; serve the docs folder over HTTP to open it, for example `npx http-server docs`.",
+    "mapAria": "System map: the application and the wrapper on the left, the core in the middle, the skins and the Island Details module on the right.",
+    "whereLbl": "Where",
+    "doesLbl": "What it does",
+    "mayLbl": "May",
+    "mayNotLbl": "May not",
+    "codeLbl": "Code"
+  },
+  "facts": {
+    "0": {
+      "l": "runtime dependencies of the core"
+    },
+    "1": {
+      "l": "phases of one update, after its input"
+    },
+    "2": {
+      "l": "skins: mat · bs · nv"
+    },
+    "3": {
+      "l": "interface for extensions: BroBodyLayout"
+    },
+    "4": {
+      "l": "dependency rules in check:arch"
+    }
+  },
+  "zones": {
+    "app": {
+      "t": "APPLICATION · BROWSER"
+    },
+    "wrap": {
+      "t": "WRAPPER · PAGE"
+    },
+    "core": {
+      "t": "CORE · @table-bro/core"
+    },
+    "skin": {
+      "t": "SKINS"
+    },
+    "mod": {
+      "t": "EXTENSION MODULE"
+    }
+  },
+  "nodes": {
+    "app": {
+      "t": "Application"
+    },
+    "server": {
+      "t": "Server API",
+      "s": "answers a BroQuery"
+    },
+    "browser": {
+      "t": "Browser",
+      "s": "resize · color scheme"
+    },
+    "drawer": {
+      "t": "Filter drawer",
+      "s": "element of the core"
+    },
+    "element": {
+      "s": "configure · replaceRows · appendRows · setState · theme"
+    },
+    "columns": {
+      "s": "measures and fits the columns"
+    },
+    "body": {
+      "s": "render phase of rows, paginator, status"
+    },
+    "details": {
+      "s": "opens and loads details"
+    },
+    "hostWidth": {
+      "s": "columns follow the host width"
+    },
+    "motion": {
+      "s": "ctx.motion · one frame loop per table"
+    },
+    "theme": {
+      "s": "ctx.themeService · light or dark"
+    },
+    "registry": {
+      "t": "Registries"
+    },
+    "context": {
+      "s": "createContext · frozen, no methods"
+    },
+    "state": {
+      "s": "rows · filter · sort · pagination · status"
+    },
+    "models": {
+      "s": "row heights · slots · details · columns"
+    },
+    "views": {
+      "c": "VIEWS"
+    },
+    "regions": {
+      "s": "toolbar · table container · live region"
+    },
+    "bodyViews": {
+      "t": "Body views",
+      "s": "containers · tables · rows · cells"
+    },
+    "detailsView": {
+      "s": "detail rows, heights, animations"
+    },
+    "pager": {
+      "t": "Paginator · states"
+    },
+    "layout": {
+      "s": "ctx.layout · gaps, decorations, window"
+    },
+    "css": {
+      "s": "core and skin stylesheets"
+    },
+    "elements": {
+      "t": "Skin elements",
+      "s": "paginator · sort header · toolbar · tags"
+    },
+    "dom": {
+      "t": "Host DOM",
+      "s": "regions · rows · cells"
+    },
+    "spaces": {
+      "s": "spaces, shadows, rounded corners"
+    }
+  },
+  "edges": {
+    "nv-elements": {
+      "l": "defines"
+    }
+  },
+  "flows": {
+    "render": {
+      "t": "First render",
+      "steps": {
+        "0": "The application calls `configure()` with the columns, the rows and `conf.skin`.",
+        "1": "`TableBro` copies the columns and the rows, resolves the config with the registered skin and waits for the document fonts.",
+        "2": "`render()` creates `BroContext`: the sizes and timings come from the computed `--bro-*` properties of the host.",
+        "3": "`BroTableRegions` renders the toolbar, the table container with the header and the live region.",
+        "4": "`controller.mount(rows)` runs one update; its state phase calls `acceptRows`.",
+        "5": "`BroBodyController` renders the paginator and the body; the aux table measures the columns.",
+        "6": "The views create the skin elements that the skin config names.",
+        "7": "The body layout gets `rowsRendered` and adds the shadow of the page window."
+      },
+      "note": "Calls made before the render, such as `replaceRows()`, wait in a queue and run after `mount()`."
+    },
+    "rows": {
+      "t": "New rows from Angular",
+      "trig": "[rows] of <table-bro-ng>",
+      "steps": {
+        "0": "The page sets the `rows` input, for example from an async pipe.",
+        "1": "`TableBroNg` calls `replaceRows()` outside the Angular zone, so the animation frames of the table start no change detection.",
+        "2": "The element passes the rows to `BroController.onReplaceRows`.",
+        "3": "Phase 1: `acceptRows` derives the displayed rows with the filters and the sort and replaces the pagination.",
+        "4": "Phase 2: the slots diff the rows by key; kept rows keep their open details, row heights are rebuilt.",
+        "5": "The body views remove and render rows; the aux table measures the columns again in the frame.",
+        "6": "The body layout gets `rowsChanged`; the body takes the height of the page without an animation."
+      },
+      "note": "Without Angular the application calls `replaceRows()` on the element directly: the path starts at step 3."
+    },
+    "sort": {
+      "t": "Local sort",
+      "trig": "click on a sort header, local mode",
+      "steps": {
+        "0": "The sort header element sends `bro-action` `bro-filters-sort`; the event bubbles to the host.",
+        "1": "The element passes the actions of its own subtree to `onDelegateEvents`; the action map calls `onSortRows`.",
+        "2": "Phase 1: `sortRows` derives the new displayed rows.",
+        "3": "Phase 2: the slots diff the keys; only the rows outside the longest kept run move.",
+        "4": "The rows move in the body and aux tables; open details settle first.",
+        "5": "The layout gets `rowsMoved` and `rowsChanged`."
+      },
+      "note": "With `config.server` the same action goes to `onServerSort`: a refresh and a load query, as in the server page flow."
+    },
+    "server": {
+      "t": "Server page",
+      "trig": "a page that is not loaded yet, config.server",
+      "steps": {
+        "0": "The paginator element sends `bro-paginator-page`.",
+        "1": "`onDelegateEvents` → `onPage`: the page is not loaded, so `onServerPage` runs.",
+        "2": "Phase 1: `requestLoad` keeps the page and the page size, `startRefresh` sets the status to refreshing.",
+        "3": "Phase 2: `renderStatus` shows the header progress and the refresh overlay and disables the paginator.",
+        "4": "Phase 6: the host sends `bro-action` `bro-filters-server-loaded` with a `BroQuery`: page, page size, filter, sort.",
+        "5": "The application loads the page from its API.",
+        "6": "`replaceRows()` or `appendRows()` with `total` ends the refresh."
+      },
+      "note": "The refresh starts before the event, so an application that answers at once finds the table refreshing."
+    },
+    "details": {
+      "t": "Row details",
+      "trig": "click on the details button of a row",
+      "steps": {
+        "0": "`<bro-details-button>` in the row sends `bro-action` `bro-details-toggle`.",
+        "1": "The action map calls `detailsCtrl.onToggle` with the sender.",
+        "2": "`BroDetailsController` finds the slot of the row; server details load at the first opening with a progress bar in the row.",
+        "3": "`BroDetailsView` renders the details rows in the body and aux tables and sets the target height.",
+        "4": "The height animates through `BroMotion`, kinetic or eased by `config.rowDetailsMotion`.",
+        "5": "The layout gets `detailsToggled` and `heightsChanged`.",
+        "6": "With Island Details, the module opens the spaces around the row."
+      },
+      "note": "The slot of the row (`BroRowSlot`) keeps every layer of the row and the state of its details; the views write their layers into it by design."
+    },
+    "island": {
+      "t": "Island Details",
+      "steps": {
+        "0": "On import the module calls `useIslandDetails({create})`, as a skin registers itself.",
+        "1": "The core keeps the module in its slot (`shared/island.ts`).",
+        "2": "The `BroController` constructor takes the module from `getIslandDetails()`.",
+        "3": "It calls `ctx.layout.extend(module.create(createIslandTable(ctx)))`.",
+        "4": "The module reads the table only through `BroIslandTable`: rows, row heights, page window, header, paginator, motion.",
+        "5": "The views tell the layout the facts of the body: rows rendered, moved or resized, details toggled, window moved.",
+        "6": "The module draws the spaces, the row shadows and the rounded corners and keeps their geometry itself."
+      },
+      "note": "Without the module a table with `rowDetailsIsland` shows the fail state and sends `bro-error` with `island-details-missing`."
+    },
+    "skin": {
+      "t": "Skin registration",
+      "steps": {
+        "0": "On import the skin defines its elements in the browser, prefixed `bro-nv-*`, and the shared ones; its optional elements come with `withTags()` and `withSwitch()`.",
+        "1": "The elements extend `BroHTMLElement` and implement `BroView` and the element interfaces of the core.",
+        "2": "`registerSkin('nv', config)` stores its `BroSkinConfig`: class names and component selectors.",
+        "3": "`configure({conf: {skin: 'nv'}})` requires the registered skin and merges its config."
+      },
+      "note": "The mat skin does the same in `provideTableBroMatSkin(withTags(), …)` when the Angular application starts; its elements wrap Angular Material components with `@angular/elements`."
+    },
+    "width": {
+      "t": "Width change",
+      "trig": "host resize or a filter drawer transition",
+      "steps": {
+        "0": "A filter drawer declares the width that its transition gives the host: `bro-columns-width`.",
+        "1": "The action reaches `hostWidthCtrl.onDeclaredWidth`; the columns take the width at once and move with the drawer.",
+        "2": "Without a declared width the `ResizeObserver` of the host reports the new width.",
+        "3": "`BroHostWidthController` runs an update that lays the columns out for the width.",
+        "4": "The views write the column widths into the header, body and aux tables."
+      },
+      "note": "The filter drawer is outside the table: the table keeps its host box and only follows the width."
+    },
+    "theme": {
+      "t": "Theme change",
+      "trig": "color scheme, page theme attribute or the theme attribute",
+      "steps": {
+        "0": "The color scheme of the system or the theme attribute of the page changes.",
+        "1": "`BroThemeService` computes the theme and sends `bro-theme-change` on the host.",
+        "2": "The subscription of the controller runs an update.",
+        "3": "The shown state renders again with the icons of the new theme."
+      },
+      "note": "The attribute `theme` of `<table-bro>` sets an explicit theme through `setExplicitTheme`."
+    }
+  },
+  "phases": {
+    "input": {
+      "s": "an entry of the controller",
+      "d": "A method of the element, an action of a view, an observer or a timer calls the controller outside `update()`. The entry runs one or more updates.",
+      "may": "read `ctx.state`, choose the update",
+      "not": "write the DOM"
+    },
+    "state": {
+      "s": "ctx.state only",
+      "d": "Computes the new state and only then sets it. Nothing changes before the last step that may throw, so an exception leaves the table as it was and reaches the caller.",
+      "may": "write `ctx.state`",
+      "not": "touch views, models, the DOM"
+    },
+    "render": {
+      "s": "writes of the regions",
+      "d": "Writes the regions through the views and changes the models. A region queues its layout reads, the writes that depend on them and its animations in the frame.",
+      "may": "call views, write `ctx.model`",
+      "not": "read the layout directly"
+    },
+    "read": {
+      "d": "Layout reads, after all the writes of phase 2: the browser lays the table out once.",
+      "may": "measure",
+      "not": "write"
+    },
+    "write": {
+      "d": "Writes that depend on the reads of phase 3, such as column widths from measurements.",
+      "may": "write the DOM",
+      "not": "measure directly: a new read goes to `frame.read()` and starts one more round"
+    },
+    "animate": {
+      "d": "Animations start through `ctx.motion`, after the dependent writes. `flush()` repeats phases 3–5 in rounds while tasks queue more tasks.",
+      "may": "start `BroMotion` tracks",
+      "not": "call requestAnimationFrame"
+    },
+    "events": {
+      "s": "to the application",
+      "d": "Events to the application, in their order. An exception in phases 2–5 is a failed render: `failRender()` shows the fail state in a new body, sends `bro-error` with `render-failed`, and the events of the change are not sent.",
+      "may": "dispatch events on the host",
+      "not": "run after a failed render"
+    }
+  },
+  "why": {
+    "onlyTheController": {
+      "t": "Only the controller writes the model",
+      "d": "Only the controller writes `ctx.state`, and its state phase computes the whole new state before it sets it. An exception leaves the table as it was; nothing on the screen is half-updated.",
+      "r": "atomic updates"
+    },
+    "passiveViews": {
+      "t": "Passive views",
+      "d": "Views render when the controller calls them in the render phase, not on a subscription. So the controller orders all writes first and all layout reads after them in `BroFrame`.",
+      "r": "one layout per update"
+    },
+    "actionsAsDOM": {
+      "t": "Actions as DOM events",
+      "d": "A view, a skin element or a custom cell sends `bro-action`; the element passes the actions of its own subtree to the controller. Views do not know the controller, and a table nested in row details keeps its own actions.",
+      "r": "replaceable views"
+    },
+    "contextWithoutMethods": {
+      "t": "A context without methods",
+      "d": "`BroContext` holds data only, and each part declares its own fields next to its code (`declare module`). Views get all the data they need through it but cannot call the controller; the types make no import cycle.",
+      "r": "no hidden back channel"
+    },
+    "twoModels": {
+      "t": "Two models",
+      "d": "The logical state is pure and changes before any DOM: the server mode builds its `BroQuery` from it. The geometry keeps row heights and slots as numbers: with one fixed row height the motion has numeric targets and nothing measures rows.",
+      "r": "testable state, numeric geometry"
+    },
+    "oneInterfaceFor": {
+      "t": "One interface for an extension",
+      "d": "Only `BroBodyLayout` calls Island Details, and the module reads the table only through `BroIslandTable`. The core can change inside; within a major version it adds members of the contract only as optional ones.",
+      "r": "a stable paid module"
+    },
+    "skinsThroughA": {
+      "t": "Skins through a registry",
+      "d": "A skin imports only `@table-bro/core` and registers a `BroSkinConfig` and its elements; the core reads class names and selectors from it. No module touches `window` or `document` on load.",
+      "r": "swappable skins, server render"
+    }
+  },
+  "cmp": {
+    "0": {
+      "aspect": "Who renders the view",
+      "classic": "the view observes the model",
+      "bro": "the controller calls the views in the render phase"
+    },
+    "1": {
+      "aspect": "How input arrives",
+      "classic": "the view forwards input to the controller",
+      "bro": "a bubbling bro-action event, routed by the element"
+    },
+    "2": {
+      "aspect": "Model notifications",
+      "classic": "events or observers",
+      "bro": "none: phases of one synchronous update"
+    },
+    "3": {
+      "aspect": "Model",
+      "classic": "one",
+      "bro": "logical state and geometry"
+    },
+    "4": {
+      "aspect": "Layout reads",
+      "classic": "anywhere",
+      "bro": "queued in BroFrame after all writes"
+    },
+    "5": {
+      "aspect": "Lifetime",
+      "classic": "app-defined",
+      "bro": "M, V and C are created on every render of the element"
+    }
+  },
+  "rules": {
+    "viewsAndModels": {
+      "t": "Views and models stay below the controller",
+      "d": "They import neither the controller nor the element."
+    },
+    "packagesAboveThe": {
+      "t": "Packages above the core import @table-bro/core",
+      "d": "Skins, the adapter and the wrappers never import a path into the core sources."
+    },
+    "noGlobalsNo": {
+      "t": "No globals, no work on load",
+      "d": "No window.bro; no module touches window or document when it loads, as in the server render."
+    },
+    "animationsThroughBroMotion": {
+      "t": "Animations through BroMotion",
+      "d": "Only its clock (shared/clock.ts) requests animation frames, in the skins too."
+    },
+    "viewsReadNo": {
+      "t": "Views read no registry",
+      "d": "A view talks to the views it makes and only puts them into ctx.view, which the controller reads."
+    },
+    "viewsAssignNo": {
+      "t": "Views assign no models",
+      "d": "The controller makes the models. Exception by design: the slot of a row takes the layers of the views and the target height of the details."
+    },
+    "modelsWriteNo": {
+      "t": "Models write no DOM",
+      "d": "Models keep geometry as numbers."
+    },
+    "theControllerNeither": {
+      "t": "The controller neither writes nor measures the DOM",
+      "d": "The views do it."
+    },
+    "theElementRenders": {
+      "t": "The element renders no regions",
+      "d": "It creates BroTableRegions and asks it to render them."
+    },
+    "everyControllerMethod": {
+      "t": "Every controller method names its phase",
+      "d": "Its JSDoc has @phase input, state, render or events."
+    }
+  },
+  "tree": {
+    "table": "element TableBro",
+    "broTableToolbarContainer": "unless toolbar: false",
+    "broTableContainer": "role=\"table\" for screen readers",
+    "broTheadTr": "with the sort header of the skin",
+    "broProgressTheadTr": "progress bar of the skin",
+    "broTableBodyContainer": "new on every body render",
+    "broTableBodyScrollingContainer": "moves the rows to the page; windowMoved",
+    "broTableAux": "invisible measuring table",
+    "broTheadAux": "header measurement, removed after it",
+    "broTbodyAux": "body measurement, rows of server details",
+    "broTbodyTr": "cell elements of the skin or the application",
+    "broStateView": "loading, no data, not found, failed",
+    "broTableBodyShadowContainer": "the body layout puts the shadows here",
+    "liveRegion": "live region"
+  },
+  "treeSide": {
+    "broView": {
+      "p": "`render()` renders the element or fills it in place; optional `template()`, `events()` and `renderAnimation()`. `el` keeps the rendered element."
+    },
+    "ctxView": {
+      "p": "The registry is filled in render order: regions, table container, header container, thead, paginator, body container and its children, details. The paginator comes before the body, so a body that fails shows the fail state with it."
+    },
+    "rowLayersTs": {
+      "p": "Writes the position and the row object to every layer of a row and removes a row from all its layers; it tells the layout `rowRemoved`, `rowResized` and `detailsRemoved`."
+    }
+  },
+  "groups": {
+    "core": {
+      "t": "Core: element and controller",
+      "items": {
+        "tableBro": "The <table-bro> element. Copies the inputs, resolves the config, creates the context, the controller and the regions on every render; releases them on disconnection.",
+        "broController": "Runs every change as one update in phases; the action map routes the actions of the table; the only writer of ctx.state.",
+        "broColumnsController": "Measures the header and the body in the aux table and fits the columns to a width.",
+        "broBodyController": "Render phase of the rows: body, states, empty rows of the last page, scroll to the page, details, paginator, status.",
+        "broDetailsController": "Opens and closes the details of a row; loads server details at the first opening.",
+        "broHostWidthController": "Observes the host width; takes the width a filter drawer declares for its transition."
+      }
+    },
+    "state": {
+      "t": "Core: context, state, models",
+      "s": "data of one instance",
+      "items": {
+        "broContext": "Frozen data of the instance: cols, columns, config, styles, state, model, view, layout, motion, themeService, host, signal. No methods. Models, views and layout declare their fields with declare module, so there is no import cycle.",
+        "broDataState": "sourceRows, rows, filter, sort, pagination, status, load. Pure functions of the state phase.",
+        "broModels": "rowHeights, slots, details, emptyRows and the column measurements; the controller makes them, no DOM.",
+        "broRowSlot": "One slot per displayed row with all its layers and the state of its details; diff by key keeps the rows of kept keys.",
+        "broRowHeights": "Height of every row with its details by position. All body rows share one fixed height; only details change it.",
+        "rowKeys": "Row keys and the difference of two orders: a sort moves the fewest rows."
+      }
+    },
+    "views": {
+      "t": "Core: views and services",
+      "items": {
+        "broTableRegions": "Renders the regions of the host: toolbar, table container with the header, live region; the paginator comes with the rows.",
+        "broBodyLayout": "Gaps between rows, row decorations, page window. The only part of the core that calls an extension; without one the body has one shadow along the window.",
+        "broDetailsView": "Rows of the details in the body and aux tables, their heights and animations.",
+        "broMotion": "All animations of an instance on one frame loop; keyed tracks, kinetic and eased runs, durationScale, reduced motion.",
+        "broThemeService": "Computes the light or dark theme from the config, the page attribute and the color scheme; sends bro-theme-change.",
+        "resolveStyles": "Reads sizes and timings once at render from the computed --bro-* properties that the core CSS registers.",
+        "dispatchAction": "Sends a bubbling bro-action {action, selector, data}; the event names are constants.",
+        "filterDrawer": "The table and the filters of the application in a grid; the drawer is outside the table. Defined on demand."
+      }
+    },
+    "skins": {
+      "t": "Skins",
+      "s": "BroSkinConfig + elements + CSS",
+      "items": {
+        "nv": "No UI library; elements bro-nv-*.",
+        "bs": "Bootstrap 5 as a peer; elements bro-bs-*.",
+        "mat": "Angular Material components as custom elements (ng-mat-*) and skin components (bro-mat-*); reads the tokens of the Material theme of the application.",
+        "sharedTitle": "Shared skin elements",
+        "shared": "Button, sort header, paginator, tags, text ellipsis, toolbar, switch; bundled into each vanilla skin.",
+        "css": "table-bro.scss for the core and one entry per skin; --bro-* custom properties set sizes and timings without a rebuild."
+      }
+    },
+    "frameworkWrapper": {
+      "t": "Framework wrapper",
+      "items": {
+        "tableBroNg": "Inputs cols, conf, rows, rowsToAppend, total, loading, failed, filter, emptyState, theme, tableId → methods of the element; outputs action and query. Renders nothing of its own and keeps no pagination, sort or filters.",
+        "broFacade": "Contracts of a page with server data: a BroQuery maps to an API request and the answer maps back to a BroServerPage."
+      }
+    },
+    "extensionModule": {
+      "t": "Extension module",
+      "items": {
+        "broBodyLayoutExtension": "The facts the core tells the module. Within a major version the core adds members only as optional ones and calls them only when the module has them.",
+        "broIslandTable": "What the module reads: styles, class names, rows, row heights, page window, header table, paginator, animateKinetic. Never the context.",
+        "broIslandDetails": "Implements the extension: Spaces around open details, RowShadows and Shadows for every row and space, Corners for rounded corners."
+      }
+    },
+    "tooling": {
+      "t": "Tooling",
+      "s": "beside the runtime",
+      "items": {
+        "checkArch": "Dependency rules of the code.",
+        "checkApi": "Public API reports of the packages.",
+        "mcp": "MCP server that generates table code for an application; depends on no runtime package."
+      }
+    }
+  },
+  "mvc": {
+    "zones": {
+      "input": {
+        "t": "INPUT"
+      },
+      "host": {
+        "t": "HOST · creates M, V and C on every render"
+      },
+      "ctrl": {
+        "t": "C · CONTROLLER"
+      },
+      "model": {
+        "t": "M · MODEL"
+      },
+      "view": {
+        "t": "V · VIEW"
+      },
+      "svc": {
+        "t": "SERVICES · REGISTRIES"
+      },
+      "output": {
+        "t": "OUTPUT"
+      },
+      "mod": {
+        "t": "EXTENSION MODULE"
+      },
+      "skin": {
+        "t": "SKIN PACKAGES"
+      }
+    },
+    "notes": {
+      "0": {
+        "lines": [
+          "The only writer of the model.",
+          "Runs each change as one update:",
+          "state → render → frame → events.",
+          "Never writes or measures the DOM."
+        ]
+      },
+      "1": {
+        "lines": [
+          "ctx.state: logical state, pure",
+          "functions of controller/state.ts.",
+          "ctx.model: geometry as numbers.",
+          "Views and the module only read it.",
+          "No DOM, no events."
+        ]
+      },
+      "2": {
+        "lines": [
+          "Passive: they render when the",
+          "controller calls them. They read the",
+          "model, write the DOM and send",
+          "actions as bro-action events."
+        ]
+      }
+    },
+    "edges": {
+      "body-views": {
+        "l": "phase 2: render"
+      },
+      "views-motion": {
+        "l": "phase 5: animate"
+      }
+    },
+    "extra": {
+      "views-dom": {
+        "l": "writes"
+      },
+      "views-read": {
+        "l": "reads"
+      }
+    },
+    "forbid": {
+      "marks": {
+        "element": {
+          "l": "✕ regions"
+        },
+        "context": {
+          "l": "✕ methods"
+        },
+        "mat": {
+          "l": "✕ deep imports"
+        }
+      }
+    }
+  }
+}

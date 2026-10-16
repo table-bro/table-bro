@@ -1,0 +1,71 @@
+{
+  "name": "@table-bro/core",
+  "version": "1.1.0",
+  "description": "Pixel-perfect Material data tables for Angular, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "table-engine",
+    "web-components",
+    "custom-elements",
+    "pagination",
+    "sorting",
+    "filtering"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "main": "dist/table-bro.esm.js",
+  "module": "dist/table-bro.esm.js",
+  "types": "dist/table-bro.d.ts",
+  "customElements": "dist/custom-elements.json",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.d.ts",
+      "import": "./dist/table-bro.esm.js",
+      "default": "./dist/table-bro.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./dist/lottie/*": "./dist/lottie/*",
+    "./dist/custom-elements.json": "./dist/custom-elements.json",
+    "./styles/*": "./styles/*"
+  },
+  "unpkg": "dist/table-bro.umd.js",
+  "jsdelivr": "dist/table-bro.umd.js",
+  "sideEffects": [
+    "./index.ts",
+    "./table-bro.ts",
+    "./dist/table-bro.esm.js",
+    "./dist/table-bro.umd.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../scripts/build-css.mjs . table-bro && node ../../scripts/build-custom-elements.mjs",
+    "build:js": "tsdown",
+    "build:css": "node ../../scripts/build-css.mjs . table-bro",
+    "prepack": "npm run build",
+    "watch": "tsdown --watch"
+  },
+  "devDependencies": {
+    "lightningcss": "^1.33.0",
+    "sass": "^1.90.0",
+    "tsdown": "^0.23.0",
+    "typescript": "^5.8.3"
+  }
+}

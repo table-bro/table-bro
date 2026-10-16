@@ -1,0 +1,29 @@
+// The core CSS of Table, Bro that every skin needs. The entry includes the styles of each file in the order of the CSS.
+@use "sass:meta";
+@use "./dom/table-toolbar-container";
+@use "./components/material-based/table" as material-based-table;
+
+/* Custom properties of the skins */
+@include meta.load-css("./custom-properties");
+
+/* Table-bro DOM */
+@include table-toolbar-container.styles;
+@include meta.load-css("./dom/table-header-container");
+@include meta.load-css("./dom/table-body-container");
+@include meta.load-css("./dom/table-paginator-container");
+
+
+/* Table-bro components */
+@include material-based-table.styles;
+@include meta.load-css("./components/material-based/toolbar/toolbar-search");
+@include meta.load-css("./components/material-based/sort-header");
+
+@include meta.load-css("./components/filter-drawer");
+@include meta.load-css("./components/progress-bar");
+@include meta.load-css("./components/shadows");
+@include meta.load-css("./components/text-ellipsis");
+
+
+/* Table-bro features */
+@include meta.load-css("./features/details/details");
+@include meta.load-css("./features/state/state");

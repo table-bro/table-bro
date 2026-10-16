@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+@mixin styles {
+  .mat-elevation-z16 {
+    @include mat.elevation(16);
+  }
+}

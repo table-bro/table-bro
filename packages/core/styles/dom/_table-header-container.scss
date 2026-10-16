@@ -1,0 +1,13 @@
+@use "shared-selector-map" as *;
+@use "table-toolbar-container" as *;
+
+@mixin header-shadow-transition() {
+  transition: box-shadow .5s ease;
+}
+
+#{$bro-table-header_container} {
+  box-sizing: content-box;
+}
+
+
+@include toolbar-container($bro-table-header_container, $bro-table-header_shadow);

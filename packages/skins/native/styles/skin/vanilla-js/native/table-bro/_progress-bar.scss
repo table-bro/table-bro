@@ -1,0 +1,24 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar('bro-nv-progress-bar progress');
+  @include table-aux-progress-bar('bro-nv-progress-bar progress');
+
+  $bro-nv-global-progress-inner-vertical-space: 3px; // inner top/bottom space if height is 10px
+
+  #{$bro-table-header} {
+    bro-nv-progress-bar progress {
+      top: calc(var(--bro-header-height) - #{$bro-global-progress - $bro-nv-global-progress-inner-vertical-space});
+    }
+  }
+
+  $bro-nv-details-progress-inner-vertical-space: 2px; // inner top/bottom space if height is 6px
+
+  #{$bro-table-aux} {
+    bro-nv-progress-bar progress {
+      top: calc(var(--bro-row-height) - #{$bro-details-progress - $bro-nv-details-progress-inner-vertical-space});
+    }
+  }
+}

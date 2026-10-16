@@ -1,0 +1,5 @@
+@use "../../shared/table-bro/toolbar" as *;
+
+@mixin styles {
+  @include toolbar-main-content(var(--bs-navbar-nav-link-padding-x));
+}

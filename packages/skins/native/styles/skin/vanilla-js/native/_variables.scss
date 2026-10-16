@@ -1,0 +1,54 @@
+// The values of the native skin for the variables every skin has (skin/shared/_variables.scss)
+@forward "../../shared/variables" with (
+  $bro-skin: '.nv',
+
+  $bro-table-width: 100% !default, // or px-value, or 100%;
+
+  $bro-table-header-height: 40px !default,
+  $bro-table-row-height: 40px !default,
+  $bro-row-horizontal-padding: 1.25rem !default,
+
+  $bro-table-shadow-size: 48px !default,
+
+  $bro-toolbar-height: 64px !default,
+  $bro-paginator-height: 56px !default,
+  $bro-table-min-width: 594px !default,
+
+  $bro-corner-radius: 12px !default, // the corner-medium of Material 3, as its cards
+
+  $bro-filter-drawer-width: 320px !default,
+  $bro-filter-drawer-corner-radius: 16px !default, // the corner-large of Material 3, as its side sheets
+  $bro-scrim-color: rgba(#000, .32) !default, // the scrim of Material 3
+
+
+  $bro-global-progress: 10px !default,
+  $bro-details-progress: 6px !default,
+
+
+  // Layers
+  $bro-table-container-z-index: 2 !default,
+  $bro-shadow-z-index: -1 !default,
+
+
+  // Read by the table script (skin/shared/mixins/_custom-properties.scss)
+  $bro-refresh-overlay-opacity: .5 !default,
+  $bro-refresh-overlay-opacity-dark: .5 !default,
+  $bro-column-width-duration: 500ms !default, // read by the CSS alone
+  $bro-details-duration: 350ms !default,
+  $bro-details-easing: cubic-bezier(.37, 0, .63, 1) !default, // the curve of easeInOutSine
+  $bro-filter-drawer-duration: 400ms !default,
+  $bro-kinetic-time-constant: 280ms !default, // the time constant of the exponential decay, not its duration
+  $bro-state-icon-duration: 500ms !default,
+  $bro-state-message-duration: 750ms !default,
+
+
+  // State
+  $bro-state-icon-size: 28px !default,
+  $bro-state-icon-margin-right: 16px !default,
+  $bro-state-line-height: 33px !default,
+  $bro-state-message-font-size: 28px !default,
+
+
+  // Table cells
+  $bro-cell-number-width: 45px !default
+);

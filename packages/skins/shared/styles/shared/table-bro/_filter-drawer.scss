@@ -1,0 +1,62 @@
+@use "../variables" as *;
+
+// The table with the filter drawer carries the class of the skin itself:
+// table-bro-filter-drawer-container#{&} is table-bro-filter-drawer-container.nv and the like
+@mixin styles {
+  // The drawer lies above a table that does not fit its narrowed regions, and the scrim of the modal drawer between them
+  @at-root table-bro-filter-drawer-container#{&} {
+    > .bro-filter-drawer-scrim {
+      z-index: $bro-filter-drawer-scrim-z-index;
+
+      background: $bro-scrim-color;
+    }
+
+    > .bro-filter-drawer-card {
+      z-index: $bro-filter-drawer-card-z-index;
+    }
+
+    > .bro-filter-drawer-header,
+    > [slot="filters"] {
+      z-index: $bro-filter-drawer-content-z-index;
+    }
+
+    // The modal drawer and its scrim lie over the whole table, its toolbar too
+    &[modal] {
+      > .bro-filter-drawer-scrim {
+        z-index: $bro-modal-filter-drawer-scrim-z-index;
+      }
+
+      > .bro-filter-drawer-card {
+        z-index: $bro-modal-filter-drawer-card-z-index;
+      }
+
+      > .bro-filter-drawer-header,
+      > [slot="filters"] {
+        z-index: $bro-modal-filter-drawer-content-z-index;
+      }
+    }
+
+    // The filters of the application under the header
+    > [slot="filters"] > * {
+      padding: $bro-row-horizontal-padding;
+    }
+  }
+
+  // The filters of the application under the header in the card of mat-drawer of the mat skin
+  .bro-filter-drawer-card > .bro-filter-drawer-header ~ * {
+    padding: $bro-row-horizontal-padding;
+  }
+
+  .bro-filter-drawer-header {
+    .bro-toolbar {
+      display: block;
+
+      height: $bro-toolbar-height;
+
+      > nav {
+        box-sizing: border-box;
+        height: 100%;
+      }
+    }
+  }
+}

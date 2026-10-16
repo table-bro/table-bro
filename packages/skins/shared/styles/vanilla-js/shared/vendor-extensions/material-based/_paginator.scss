@@ -1,0 +1,12 @@
+@use "../../../../shared/variables" as *;
+
+@mixin styles {
+  // The background of the paginator lies on this element, so it takes the corners of the paginator
+  .bro-paginator-outer-container {
+    border-radius: inherit;
+  }
+
+  .bro-paginator-inner-container {
+    height: $bro-paginator-height;
+  }
+}

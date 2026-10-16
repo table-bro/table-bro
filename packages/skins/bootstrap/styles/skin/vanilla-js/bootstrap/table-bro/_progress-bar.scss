@@ -1,0 +1,39 @@
+@use "../../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar('bro-bs-progress-bar .progress');
+  @include table-aux-progress-bar('bro-bs-progress-bar .progress');
+
+  bro-bs-progress-bar .progress {
+    border-radius: 0;
+  }
+
+  /**
+  * Bootstrap's (v5.3.3) default stripes animation is:
+
+  .progress-bar-animated {
+    animation: 1s linear infinite progress-bar-stripes;
+  }
+   */
+  .bro-progress-bar-animated-n-flashing {
+    animation-name: progress-bar-stripes, bro-pulse;
+    animation-duration: 1s, 2s;
+    animation-timing-function: linear, cubic-bezier(.4, 0, .6, 1);
+    animation-iteration-count: infinite, infinite;
+
+    // The moving stripes and the pulse are decoration; the width of the bar still shows the progress
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  @keyframes bro-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+}

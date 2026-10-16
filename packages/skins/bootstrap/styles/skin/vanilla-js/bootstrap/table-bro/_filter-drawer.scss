@@ -1,0 +1,5 @@
+@use "../../shared/table-bro/filter-drawer" as *;
+
+@mixin styles {
+  @include filter-drawer-header-content(var(--bs-navbar-nav-link-padding-x));
+}

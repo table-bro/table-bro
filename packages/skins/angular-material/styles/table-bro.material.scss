@@ -1,0 +1,74 @@
+// The Angular Material skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.material.api
+@forward "./table-bro.material.api";
+@use "./skin/angular-material/variables" as *;
+@use "sass:meta";
+
+/* Mixins */
+@use "./skin/shared/mixins/custom-properties" as *;
+@use "./skin/shared/mixins/shared" as *;
+
+@use "./skin/shared/table-bro/details" as shared-details;
+@use "./skin/shared/table-bro/filter-drawer" as shared-filter-drawer;
+@use "./skin/shared/table-bro/shadows" as shared-shadows;
+@use "./skin/shared/table-bro/state" as shared-state;
+@use "./skin/shared/table-bro/table" as shared-table;
+@use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
+@use "./skin/angular-material/components/shadows" as mat-shadows;
+@use "./skin/angular-material/table-bro/filter-drawer" as mat-filter-drawer;
+@use "./skin/angular-material/table-bro/paginator" as mat-paginator;
+@use "./skin/angular-material/table-bro/progress-bar" as mat-progress-bar;
+@use "./skin/angular-material/table-bro/slide-toggle" as mat-slide-toggle;
+@use "./skin/angular-material/table-bro/sort-header" as mat-sort-header;
+@use "./skin/angular-material/table-bro/table" as mat-table;
+@use "./skin/angular-material/table-bro/text-ellipsis" as mat-text-ellipsis;
+@use "./skin/angular-material/table-bro/toolbar" as mat-toolbar;
+@use "./skin/angular-material/table-bro/toolbar-search" as mat-toolbar-search;
+
+
+/* Shared */
+#{$bro-skin} {
+  @include shared-details.styles;
+  @include shared-filter-drawer.styles;
+  @include shared-shadows.styles;
+  @include shared-state.styles;
+  @include shared-table.styles;
+  @include shared-text-ellipsis.styles;
+
+  // The tags of the skin in a cell
+  @include bro-cell-items('bro-mat-tags .mdc-evolution-chip-set__chips', 'mat-chip', '.mdc-evolution-chip__text-label');
+}
+
+
+/* Angular Material components */
+#{$bro-skin} {
+  @include mat-shadows.styles;
+}
+
+/* Angular Material extensions */
+// No Angular Material extensions yet
+
+
+/* Table-bro extensions */
+#{$bro-skin} {
+  @include mat-filter-drawer.styles;
+  @include mat-paginator.styles;
+  @include mat-progress-bar.styles;
+  @include mat-slide-toggle.styles;
+  @include mat-sort-header.styles;
+  @include mat-table.styles;
+  @include mat-text-ellipsis.styles;
+  @include mat-toolbar.styles;
+  @include mat-toolbar-search.styles;
+}
+@include meta.load-css("./skin/angular-material/themes");
+
+
+#{$bro-skin} {
+  @include bro-table-shadow-container();
+}
+
+
+/* The sizes and timings for the table script; :where() lets a plain table-bro selector override them */
+:where(#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}

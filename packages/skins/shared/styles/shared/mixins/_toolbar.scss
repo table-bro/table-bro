@@ -1,0 +1,61 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+// The component and its shadow take the same corners: the shadow follows the rounded shape of the component
+@mixin toolbar_or_paginator-container($container-selector, $shadow-selector, $component-selector, $component-height, $component-z-index, $border-radius: null) {
+  #{$container-selector} {
+    width: $bro-table-width;
+
+    #{$shadow-selector} {
+      z-index: $bro-shadow-z-index;
+      left: var(--bro-shadow-size);
+
+      height: $component-height;
+
+      border-radius: $border-radius;
+    }
+
+    #{$component-selector} {
+      position: relative;
+      z-index: $component-z-index;
+      left: var(--bro-shadow-size);
+
+      border-radius: $border-radius;
+    }
+  }
+}
+
+
+@mixin skin_toolbar($toolbar-selector) {
+  #{$bro-table-toolbar_container} {
+    top: 0;
+
+    .bro-toolbar {
+      display: block;
+
+      height: $bro-toolbar-height;
+
+      > nav {
+        box-sizing: border-box;
+        height: 100%;
+      }
+    }
+  }
+
+  // The menus of the toolbar lie above the filter drawer next to the table (the scale of the layers, skin/shared/_variables.scss).
+  // The toolbar has the top corners of the table.
+  @include toolbar_or_paginator-container($bro-table-toolbar_container, $bro-table-toolbar_shadow, $toolbar-selector, $bro-toolbar-height, $bro-toolbar-z-index, var(--bro-corner-radius) var(--bro-corner-radius) 0 0);
+}
+
+@mixin skin_table-header() {
+  @include toolbar_or_paginator-container($bro-table-header_container, $bro-table-header_shadow, $bro-table-header, var(--bro-header-height), $bro-header-paginator-z-index);
+}
+
+@mixin skin_paginator($paginator-selector) {
+  #{$bro-paginator-container} {
+    top: calc(var(--bro-shadow-size) * -2);
+  }
+
+  // The paginator has the bottom corners of the table
+  @include toolbar_or_paginator-container($bro-paginator-container, $bro-paginator-shadow, $paginator-selector, $bro-paginator-height, $bro-header-paginator-z-index, 0 0 var(--bro-corner-radius) var(--bro-corner-radius));
+}

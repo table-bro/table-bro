@@ -1,0 +1,9 @@
+@use "../../bootstrap-adapter" as *;
+
+@mixin styles {
+  .bro-button-toggle {
+    display: inline-block;
+
+    @include caret();
+  }
+}

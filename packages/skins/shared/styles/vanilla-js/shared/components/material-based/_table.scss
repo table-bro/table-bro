@@ -1,0 +1,11 @@
+@mixin styles {
+  @at-root table-bro#{&} table {
+    tr.bro-header-row {
+      height: var(--bro-header-height);
+    }
+
+    tr.bro-row {
+      height: var(--bro-row-height);
+    }
+  }
+}

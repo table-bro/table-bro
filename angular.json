@@ -1,0 +1,95 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "stand",
+  "projects": {
+    "stand": {
+      "projectType": "application",
+      "root": "stand",
+      "sourceRoot": "stand/src",
+      "prefix": "stand",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/stand",
+            "browser": "stand/src/main.ts",
+            "index": "stand/src/index.html",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "stand/tsconfig.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "stand/vanilla",
+                "output": "vanilla"
+              },
+              {
+                "glob": "*.{js,css}",
+                "input": "packages/core/dist",
+                "output": "vanilla/dist"
+              },
+              {
+                "glob": "*.{js,css}",
+                "input": "packages/skins/bootstrap/dist",
+                "output": "vanilla/dist"
+              },
+              {
+                "glob": "*.{js,css}",
+                "input": "packages/skins/native/dist",
+                "output": "vanilla/dist"
+              },
+              {
+                "glob": "bootstrap.min.css",
+                "input": "node_modules/bootstrap/dist/css",
+                "output": "vanilla/bootstrap"
+              },
+              {
+                "glob": "bootstrap.bundle.min.js",
+                "input": "node_modules/bootstrap/dist/js",
+                "output": "vanilla/bootstrap"
+              }
+            ],
+            "styles": [
+              "packages/core/styles/table-bro.scss",
+              "packages/skins/angular-material/styles/table-bro.material.scss",
+              "packages/skins/bootstrap/styles/table-bro.bootstrap.scss",
+              "packages/skins/native/styles/table-bro.native.scss",
+              "stand/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "packages/core/styles",
+                "packages/core/styles/mappings/development",
+                "node_modules"
+              ],
+              "sass": {
+                "silenceDeprecations": [
+                  "import"
+                ]
+              }
+            },
+            "optimization": false,
+            "extractLicenses": false,
+            "sourceMap": true,
+            "namedChunks": true
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "stand:build",
+            "port": 4210
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

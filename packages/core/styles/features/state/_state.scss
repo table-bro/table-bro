@@ -1,0 +1,63 @@
+@use "table-bro-selector-map" as *;
+@use "shared-selector-map" as *;
+
+// The host and the classes of the cell: above the cells of the skins, as .mat td.mat-cell
+table-bro td#{$bro-state}.bro-cell {
+  border-bottom-width: 0;
+}
+
+#{$bro-state-container}  {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  overflow: hidden;
+
+  min-width: 20rem;
+
+  text-align: center;
+  word-break: keep-all;
+
+  transform: translate(-50%, -50%);
+
+  .bro-state-icon {
+    position: relative;
+
+    display: inline-block;
+
+    vertical-align: top;
+
+    transform: rotate(-180deg);
+
+    transform-origin: center;
+  }
+
+  &#{$bro-state-container_alt}  {
+    .bro-state-icon {
+      position: static;
+      top: auto;
+
+      transform: rotate(-120deg);
+
+      transform-origin: bottom right;
+    }
+  }
+}
+
+#{$bro-state-message} {
+  opacity: 0;
+}
+
+// The live region of the table: screen readers say its text, and the page does not show it
+#{$bro-live-status} {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+
+  white-space: nowrap;
+
+  clip-path: inset(50%);
+}

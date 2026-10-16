@@ -1,0 +1,21 @@
+{
+  "name": "table-bro-sample-bootstrap",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@table-bro/bootstrap": "^1.1.0",
+    "@table-bro/core": "^1.1.0",
+    "bootstrap": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

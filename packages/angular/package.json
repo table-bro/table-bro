@@ -1,0 +1,33 @@
+{
+  "name": "@table-bro/angular",
+  "version": "1.1.0",
+  "description": "Pixel-perfect Material data tables for Angular, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "angular",
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/angular"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": ">=20 <23",
+    "@angular/core": ">=20 <23",
+    "@table-bro/core": "^1.1.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

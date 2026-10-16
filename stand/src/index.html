@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Stand, Table, Bro</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<stand-root></stand-root>
+<script>
+    // The dark page: the classes of the dark theme for the tables and Bootstrap on the body, by the scheme of the system
+    const matchDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function setTheme(mediaQueryList) {
+        document.body.classList.toggle('bro-dark-theme', mediaQueryList.matches);
+
+        if (mediaQueryList.matches) {
+            document.body.setAttribute('data-bs-theme', 'dark');
+        } else {
+            document.body.removeAttribute('data-bs-theme');
+        }
+    }
+
+    setTheme(matchDarkTheme);
+    matchDarkTheme.addEventListener('change', setTheme);
+</script>
+</body>
+</html>

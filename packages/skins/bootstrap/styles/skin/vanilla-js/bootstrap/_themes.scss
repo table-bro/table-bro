@@ -1,0 +1,40 @@
+@use "../shared/bootstrap-adapter" as *;
+@use "variables" as *;
+@use "../../shared/mixins/skin-colors" as *;
+
+// The table has the text of the color mode of Bootstrap where it is: a table with a theme of its own has the mode of
+// that theme on its host (data-bs-theme), and does not take the text of a page of the other mode
+#{$bro-skin} {
+  color: var(--bs-body-color);
+
+  @include bro-table-theme(
+      '.bro-table',
+      '.bro-toolbar',
+      $body-bg,
+      $border-color,
+      $body-color,
+      $body-secondary-color
+  );
+}
+
+// Apply the dark theme only when the `.bro-dark-theme` CSS class is applied
+// to an ancestor element of the components (such as `body`) or to the table host.
+// A table with its own light theme, the class bro-light-theme, stays light under a dark ancestor
+.bro-dark-theme {
+  #{$bro-skin}:not(.bro-light-theme),
+  &#{$bro-skin} {
+    @include bro-table-theme(
+        '.bro-table',
+        '.bro-toolbar',
+        $body-tertiary-bg-dark,
+        $border-color-dark,
+        $body-color-dark,
+        $body-secondary-color-dark
+    );
+  }
+}
+
+// Bootstrap gives a color scheme to its dark mode only: a table with its own light theme takes the light one itself
+#{$bro-skin}.bro-light-theme {
+  color-scheme: light;
+}

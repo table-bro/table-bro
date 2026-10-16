@@ -1,0 +1,31 @@
+// The buttons of a toolbar content: the toolbar search and the header of the filter drawer (filter-drawer.scss) look the same
+@mixin toolbar-content-buttons($nav-link-padding) {
+  > bro-button {
+    display: flex;
+
+    a {
+      box-sizing: content-box;
+      width: 1rem;
+      padding: 0.75rem;
+    }
+
+    &:first-child a {
+      padding-left: $nav-link-padding;
+    }
+
+    // The icon of the last button keeps to the right edge, as the icon of the first one keeps to the left edge:
+    // a text icon of the nv skin is narrower than its box
+    &:last-child a {
+      padding-right: $nav-link-padding;
+
+      text-align: right;
+    }
+  }
+}
+
+// The buttons of the toolbar search
+@mixin toolbar-search-content($nav-link-padding) {
+  .bro-toolbar-search .bro-toolbar-content {
+    @include toolbar-content-buttons($nav-link-padding);
+  }
+}

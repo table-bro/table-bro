@@ -1,0 +1,23 @@
+@use "shared-selector-map" as *;
+
+#{$bro-details_tr} {
+  // The host, the table and the classes of the cell: above the cells of the skins, as table-bro.mat table td.bro-cell:last-child
+  @at-root table-bro :is(.bro-table, #{$bro-table-aux}) > tbody > tr#{&} > td.bro-cell {
+    padding: 0;
+  }
+
+  > td {
+    // The element of the table around the details: its height opens them, with their paddings and borders inside
+    > :first-child {
+      display: block;
+
+      overflow: hidden;
+
+      opacity: 0;
+
+      > * {
+        display: block;
+      }
+    }
+  }
+}

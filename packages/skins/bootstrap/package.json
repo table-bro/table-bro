@@ -1,0 +1,71 @@
+{
+  "name": "@table-bro/bootstrap",
+  "version": "1.1.0",
+  "description": "Pixel-perfect Material data tables for Angular, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "bootstrap",
+    "bootstrap5"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/bootstrap"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.bootstrap.esm.js",
+  "module": "dist/table-bro.bootstrap.esm.js",
+  "types": "dist/table-bro.bootstrap.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.bootstrap.d.ts",
+      "import": "./dist/table-bro.bootstrap.esm.js",
+      "default": "./dist/table-bro.bootstrap.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "unpkg": "dist/table-bro.bootstrap.umd.js",
+  "jsdelivr": "dist/table-bro.bootstrap.umd.js",
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.bootstrap.ts",
+    "./dist/table-bro.bootstrap.esm.js",
+    "./dist/table-bro.bootstrap.umd.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.bootstrap",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.bootstrap",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "bootstrap": "^5.3.0",
+    "@table-bro/core": "^1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "bootstrap": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "tsdown": "^0.23.0",
+    "typescript": "^5.8.3"
+  }
+}

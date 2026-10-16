@@ -1,0 +1,10 @@
+@use "toolbar" as *;
+@use "../../shared/table-bro/filter-drawer" as *;
+
+@mixin styles {
+  .bro-filter-drawer-header .bro-nav-link {
+    text-decoration: none;
+  }
+
+  @include filter-drawer-header-content($bro-nav-link-padding);
+}

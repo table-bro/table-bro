@@ -1,0 +1,62 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+$padding: 0 8px;
+$page-size-margin-right: 8px;
+
+$items-per-page-label-margin: 0 4px;
+
+$range-label-margin: 0 32px 0 24px;
+
+.bro-paginator {
+  display: block;
+}
+
+// Note: this wrapper element is only used to get the flexbox vertical centering to work
+// with the `min-height` on IE11. It can be removed if we drop support for IE.
+.bro-paginator-outer-container {
+  display: flex;
+}
+
+.bro-paginator-inner-container {
+  display: flex;
+
+  width: 100%;
+  padding: $padding;
+
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bro-paginator-page-size {
+  display: flex;
+
+  margin-right: $page-size-margin-right;
+
+  align-items: baseline;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: $page-size-margin-right;
+  }
+}
+
+.bro-paginator-page-size-label {
+  margin: $items-per-page-label-margin;
+}
+
+.bro-paginator-range-label {
+  margin: $range-label-margin;
+}
+
+.bro-paginator-range-actions {
+  display: flex;
+
+  align-items: center;
+}

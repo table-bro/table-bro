@@ -1,0 +1,13 @@
+@use "toolbar-search" as *;
+
+// The header of the filter drawer of the vanilla skins: its close button looks as the buttons of the toolbar search
+@mixin filter-drawer-header-content($nav-link-padding) {
+  .bro-filter-drawer-header .bro-toolbar-content {
+    @include toolbar-content-buttons($nav-link-padding);
+  }
+
+  // The title of the filter drawer keeps from the left edge the space that the close button keeps from the right one
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    padding-left: $nav-link-padding;
+  }
+}

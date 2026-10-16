@@ -1,0 +1,94 @@
+// The variables every skin has. Each skin forwards this file with its own values (skin/<skin>/_variables.scss),
+// and users change them with @use "table-bro.<skin>" with (...). A variable of one skin lives in the file of that skin.
+// The sizes and timings that the table script reads too go to the host as custom properties
+// (skin/shared/mixins/_custom-properties.scss).
+$bro-skin: null !default;
+
+
+// Table
+$bro-table-width: null !default; // or px-value, or 100%;
+$bro-table-header-height: null !default;
+$bro-table-row-height: null !default;
+$bro-row-horizontal-padding: null !default;
+$bro-table-shadow-size: null !default;
+
+// The space between the islands of the table, as between the table and its filter drawer
+$bro-island-space-size: null !default;
+
+// The radius of the corners of the table; 0 keeps them square
+$bro-corner-radius: null !default;
+
+
+// Toolbar and paginator
+$bro-toolbar-height: null !default;
+$bro-paginator-height: null !default;
+
+// The narrowest table, as wide as its paginator in one line, and the filter drawer lies over a table that would be narrower
+// next to it. The range of the paginator writes the number of rows, so 1000 rows, as 996 – 1,000 of 1,000 on their
+// last page, need a wider table than fewer rows: the skins take this width, and a page with fewer rows may set a smaller one
+$bro-table-min-width: null !default;
+
+
+// Table cells
+$bro-cell-number-width: null !default;
+
+
+// Filter drawer
+$bro-filter-drawer-width: null !default;
+$bro-filter-drawer-corner-radius: null !default;
+
+// The scrim over the table of the modal filter drawer
+$bro-scrim-color: null !default;
+
+
+// Progress
+$bro-global-progress: null !default;
+$bro-details-progress: null !default;
+
+// How much the body fades during a refresh, from 0 to 1, in the light and the dark theme
+$bro-refresh-overlay-opacity: null !default;
+$bro-refresh-overlay-opacity-dark: null !default;
+
+
+// State
+$bro-state-icon-size: null !default;
+$bro-state-icon-margin-right: null !default;
+$bro-state-line-height: null !default;
+$bro-state-message-font-size: null !default;
+
+
+// Motion
+$bro-column-width-duration: null !default; // the motion of the columns to their new widths
+$bro-details-duration: null !default;
+$bro-details-easing: null !default; // the curve of the eased row details and of the turn of their button
+$bro-filter-drawer-duration: null !default;
+$bro-kinetic-time-constant: null !default; // the time constant of the exponential decay, not its duration
+$bro-state-icon-duration: null !default;
+$bro-state-message-duration: null !default;
+
+
+// Layers: the containers of the table and the shadows under them
+$bro-table-container-z-index: null !default;
+$bro-shadow-z-index: null !default;
+
+// The layers above the containers of the table, from the bottom up: the header and the paginator over the rows,
+// the filter drawer next to the table, the toolbar with its menus over that drawer, and the modal filter drawer
+// over the whole table, its toolbar too
+$bro-header-paginator-z-index: $bro-table-container-z-index + 1;
+$bro-filter-drawer-scrim-z-index: $bro-table-container-z-index + 2;
+$bro-filter-drawer-card-z-index: $bro-table-container-z-index + 3;
+$bro-filter-drawer-content-z-index: $bro-table-container-z-index + 4;
+$bro-toolbar-z-index: $bro-table-container-z-index + 5;
+$bro-modal-filter-drawer-scrim-z-index: $bro-table-container-z-index + 6;
+$bro-modal-filter-drawer-card-z-index: $bro-table-container-z-index + 7;
+$bro-modal-filter-drawer-content-z-index: $bro-table-container-z-index + 8;
+
+
+// Derived values: a skin or a user may set them, otherwise they follow the values above
+@if not $bro-island-space-size {
+  $bro-island-space-size: $bro-table-shadow-size * .5;
+}
+
+@if not $bro-state-line-height {
+  $bro-state-line-height: $bro-state-icon-size;
+}

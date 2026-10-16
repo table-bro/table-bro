@@ -1,0 +1,11 @@
+@mixin sort-header-content() {
+  // A block, not a flex container: text-overflow does not apply to the anonymous flex item of the title. The container of
+  // the sort header centers the content as its flex item
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}

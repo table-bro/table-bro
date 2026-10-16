@@ -1,0 +1,29 @@
+# Builds
+dist/
+out-tsc/
+coverage/
+*.tgz
+
+# The copies of the shared styles, of the SCSS API of the core and of the notices that the build of each skin writes
+packages/skins/*/styles/skin/shared/
+packages/skins/*/styles/skin/vanilla-js/shared/
+packages/skins/*/styles/mixins/
+packages/skins/*/styles/_table-bro.api.scss
+packages/skins/*/THIRD_PARTY_NOTICES.md
+
+# The check of the generator of the MCP server
+packages/mcp/.check/
+
+# Dependencies and caches
+node_modules/
+.angular/
+.vite/
+test-results/
+.vitest/
+playwright-report/
+
+# Editors and systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

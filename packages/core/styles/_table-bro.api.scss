@@ -1,0 +1,3 @@
+// The SCSS API of the core without its CSS: the mixins for custom table styles, the same for every skin.
+// A stylesheet that needs only them, such as the styles of a page or of a component, uses this module: @use "table-bro.api" as *.
+@forward "./mixins/text-ellipsis" show bro-text-ellipsis-width;

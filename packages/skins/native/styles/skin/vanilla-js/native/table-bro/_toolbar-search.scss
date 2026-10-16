@@ -1,0 +1,17 @@
+@use "toolbar" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/table-bro/toolbar-search" as *;
+
+@mixin styles {
+  #{$bro-toolbar_content-search} {
+    input {
+      font-weight: bold;
+    }
+  }
+
+  .bro-toolbar-search .bro-nav-link {
+    text-decoration: none;
+  }
+
+  @include toolbar-search-content($bro-nav-link-padding);
+}

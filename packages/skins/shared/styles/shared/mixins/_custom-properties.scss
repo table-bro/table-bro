@@ -1,0 +1,39 @@
+@use "../variables" as *;
+
+// The sizes and timings of the skin as custom properties on the host. The rules of the skin size the table with them,
+// and the table script reads them at render (packages/core/shared/styles.ts) as numbers for the geometry
+// of the rows, the kinetic scroll, the shadows and the animations; only the header height, the corner radii and
+// the duration of the motion of the column widths are for the CSS alone.
+// A value set on the table changes the CSS and the script together, without a new build of the skin.
+// The core CSS registers the properties (_custom-properties.scss).
+@mixin bro-skin-custom-properties() {
+  --bro-row-height: #{$bro-table-row-height};
+  --bro-header-height: #{$bro-table-header-height};
+  --bro-shadow-size: #{$bro-table-shadow-size};
+  --bro-corner-radius: #{$bro-corner-radius};
+  --bro-island-space-size: #{$bro-island-space-size};
+  --bro-table-min-width: #{$bro-table-min-width};
+  --bro-filter-drawer-width: #{$bro-filter-drawer-width};
+  --bro-filter-drawer-corner-radius: #{$bro-filter-drawer-corner-radius};
+
+  --bro-table-body-container-z-index: #{$bro-table-container-z-index};
+  --bro-refresh-overlay-opacity: #{$bro-refresh-overlay-opacity};
+  --bro-refresh-overlay-opacity-dark: #{$bro-refresh-overlay-opacity-dark};
+
+  --bro-column-width-duration: #{$bro-column-width-duration};
+  --bro-details-duration: #{$bro-details-duration};
+  --bro-details-easing: #{$bro-details-easing};
+  --bro-filter-drawer-duration: #{$bro-filter-drawer-duration};
+  --bro-kinetic-time-constant: #{$bro-kinetic-time-constant};
+  --bro-state-icon-duration: #{$bro-state-icon-duration};
+  --bro-state-message-duration: #{$bro-state-message-duration};
+
+  // The factor of every animation of the table; without motion each one draws its end at once
+  --bro-duration-scale: 1;
+
+  @media (prefers-reduced-motion: reduce) {
+    @at-root #{&} {
+      --bro-duration-scale: 0;
+    }
+  }
+}

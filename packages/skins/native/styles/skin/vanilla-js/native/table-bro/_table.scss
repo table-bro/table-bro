@@ -1,0 +1,16 @@
+@use "../themes" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} table {
+    border-color: $bro-border-color;
+
+    > :not(caption) > * > * {
+      border-bottom-width: 1px;
+    }
+  }
+
+  @at-root .bro-dark-theme table-bro#{&}:not(.bro-light-theme) table,
+  table-bro#{&}.bro-dark-theme table {
+    border-color: $bro-border-color-dark;
+  }
+}

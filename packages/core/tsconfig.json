@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "lib": [
+      "DOM",
+      "ES2022"
+    ],
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "paths": {
+      "@table-bro/core": [
+        "./index.ts"
+      ]
+    }
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "dist",
+    "node_modules",
+    "**/tsdown.config.ts"
+  ],
+  "watchOptions": {
+    "excludeDirectories": ["dist"]
+  }
+}

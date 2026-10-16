@@ -1,0 +1,164 @@
+// The table with the filter drawer: <table-bro-filter-drawer-container> lays out in a grid the table on the left and
+// the drawer on the right, outside of the table: the card of the drawer, its header, and the filters of the application
+// (slot="filters"). The opened attribute moves --bro-filter-drawer-opened from 0 to 1 by a transition: the drawer
+// takes this part of its width with the space before it, and the table takes the rest of the width.
+// The motion of the filter drawer of the mat skin (table-bro-filter-drawer-container-ng): the right edge of the drawer
+// stands still, its left edge follows the table at the same space, and its content keeps its width from its left edge,
+// so it slides in with it.
+
+// The part of the width that the drawer takes, with the space before it
+$opened-width: calc(var(--bro-filter-drawer-opened) * (var(--bro-filter-drawer-width) + var(--bro-island-space-size)));
+
+// The space before the drawer: until the drawer has opened by the space, it is empty
+$space-width: min(var(--bro-island-space-size), $opened-width);
+
+// The card under the header and the filters, the header, and the filters of the application
+$drawer-parts: '.bro-filter-drawer-card, .bro-filter-drawer-header, [slot="filters"]';
+
+table-bro-filter-drawer-container {
+  --bro-filter-drawer-opened: 0;
+
+  display: grid;
+
+  // The header and the filters; the table takes both rows, so the drawer is as high as the table
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) $opened-width;
+
+  // The standard curve of Material, as in the mat skin; --bro-duration-scale is 0 under prefers-reduced-motion: reduce
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  transition-duration: calc(var(--bro-filter-drawer-duration) * var(--bro-duration-scale));
+  transition-property: --bro-filter-drawer-opened, --bro-filter-drawer-modal;
+
+  &[opened] {
+    --bro-filter-drawer-opened: 1;
+  }
+
+  // The table: <table-bro> or a wrapper of a framework
+  > :not(#{$drawer-parts}) {
+    grid-area: 1 / 1 / 3 / 2;
+  }
+
+  // Each part of the drawer takes the opened part without the space
+  > :is(#{$drawer-parts}) {
+    // A closed drawer is hidden when its transition has ended
+    visibility: hidden;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+    width: calc($opened-width - $space-width);
+
+    // A table leaves room for its shadows around it: the drawer ends where the visible table ends
+    margin-right: var(--bro-shadow-size);
+    margin-left: calc($space-width - var(--bro-shadow-size));
+
+    transition: visibility 0s linear calc(var(--bro-filter-drawer-duration) * var(--bro-duration-scale));
+  }
+
+  &[opened] > :is(#{$drawer-parts}) {
+    visibility: visible;
+
+    transition-delay: 0s;
+  }
+
+  // The card has the corners of the drawer, and the header and the filters over it clip to its top and bottom corners
+  > .bro-filter-drawer-card {
+    // The host of a table ends two shadow sizes below the visible table
+    margin-bottom: calc(var(--bro-shadow-size) * 2);
+
+    border-radius: var(--bro-filter-drawer-corner-radius);
+
+    grid-area: 1 / 2 / 3 / 3;
+  }
+
+  > .bro-filter-drawer-header {
+    border-radius: var(--bro-filter-drawer-corner-radius) var(--bro-filter-drawer-corner-radius) 0 0;
+
+    grid-area: 1 / 2 / 2 / 3;
+  }
+
+  > [slot="filters"] {
+    display: block;
+    overflow: hidden auto;
+
+    margin-bottom: calc(var(--bro-shadow-size) * 2);
+
+    border-radius: 0 0 var(--bro-filter-drawer-corner-radius) var(--bro-filter-drawer-corner-radius);
+
+    // The filters add no height to the table and scroll when they are higher
+    contain: size;
+    grid-area: 2 / 2 / 3 / 3;
+  }
+
+  // The content keeps its width while the drawer opens
+  > .bro-filter-drawer-header > *,
+  > [slot="filters"] > * {
+    display: block;
+
+    box-sizing: border-box;
+
+    width: var(--bro-filter-drawer-width);
+  }
+
+  // The modal drawer: a table that would get narrower than its minimum width keeps its width, and the drawer lies over
+  // it at its right edge, over the scrim, as the modal side sheet of Material 3 lies over the content of a compact window
+  &[modal] {
+    --bro-filter-drawer-modal: 1;
+
+    grid-template-columns: minmax(0, 1fr) 0;
+
+    > :is(#{$drawer-parts}) {
+      grid-column: 1 / 2;
+      justify-self: end;
+    }
+
+    // At the right edge of the table the drawer takes the corners of the table, which would show around its own
+    > .bro-filter-drawer-card,
+    > .bro-filter-drawer-header {
+      border-top-right-radius: var(--bro-corner-radius);
+    }
+
+    > .bro-filter-drawer-card,
+    > [slot="filters"] {
+      border-bottom-right-radius: var(--bro-corner-radius);
+    }
+  }
+
+  // The scrim over the visible table: a table leaves room for its shadows around it, and its host ends two shadow
+  // sizes below it. It comes and goes with the drawer, and with the modal mode when the width of the page changes
+  > .bro-filter-drawer-scrim {
+    visibility: hidden;
+
+    margin: 0 var(--bro-shadow-size) calc(var(--bro-shadow-size) * 2);
+
+    border-radius: var(--bro-corner-radius);
+
+    opacity: calc(var(--bro-filter-drawer-opened) * var(--bro-filter-drawer-modal));
+
+    transition: visibility 0s linear calc(var(--bro-filter-drawer-duration) * var(--bro-duration-scale));
+  }
+
+  &[modal][opened] > .bro-filter-drawer-scrim {
+    visibility: visible;
+
+    transition-delay: 0s;
+  }
+}
+
+// The shadows of a table in a shadow container fall into the margins around it, so the visible table takes the full
+// width: the class is on the wrapper of a framework before the drawer, or on this element around <table-bro>
+.bro-table-shadow-container ~ :is(#{$drawer-parts}),
+table-bro-filter-drawer-container.bro-table-shadow-container > :is(#{$drawer-parts}) {
+  margin-right: 0;
+  margin-left: $space-width;
+}
+
+.bro-table-shadow-container ~ .bro-filter-drawer-scrim,
+table-bro-filter-drawer-container.bro-table-shadow-container > .bro-filter-drawer-scrim {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.bro-filter-drawer-title {
+  flex: 1 1 auto;
+}

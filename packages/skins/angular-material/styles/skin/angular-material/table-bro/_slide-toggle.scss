@@ -1,0 +1,5 @@
+@use "../../shared/mixins/slide-toggle" as *;
+
+@mixin styles {
+  @include slide-toggle('bro-mat-slide-toggle.bro-cell_component');
+}

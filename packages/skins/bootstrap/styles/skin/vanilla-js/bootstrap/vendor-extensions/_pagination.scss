@@ -1,0 +1,9 @@
+@mixin styles {
+  @at-root table-bro#{&} .pagination {
+    margin-bottom: 0;
+
+    a {
+      cursor: pointer;
+    }
+  }
+}

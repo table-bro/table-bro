@@ -1,0 +1,136 @@
+// The custom properties that the skins set on the host: the rules of the skins size the table with them, and the table
+// script reads them at render (packages/core/shared/styles.ts). The registration makes the browser compute rem
+// and calc() to px and drop a value of the wrong type. The values come from the skins
+// (skin/shared/mixins/_custom-properties.scss).
+
+@property --bro-row-height {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+@property --bro-header-height {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+@property --bro-shadow-size {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+// The radius of the corners of the table; 0 keeps them square
+@property --bro-corner-radius {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+// The space between the islands of the table, as between the table and its filter drawer
+@property --bro-island-space-size {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+// The narrowest table, as wide as its paginator in one line; the filter drawer lies over a table that would be narrower next to it
+@property --bro-table-min-width {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+@property --bro-filter-drawer-width {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+// The radius of the corners of the filter drawer; 0 keeps them square
+@property --bro-filter-drawer-corner-radius {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<length>';
+}
+
+// How far the filter drawer is opened, from 0 to 1: the registration lets the drawer move it by a transition
+@property --bro-filter-drawer-opened {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<number>';
+}
+
+// How far the filter drawer lies over its table, from 0 to 1: the scrim comes and goes with it by a transition
+@property --bro-filter-drawer-modal {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<number>';
+}
+
+@property --bro-table-body-container-z-index {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<integer>';
+}
+
+@property --bro-refresh-overlay-opacity {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<number>';
+}
+
+@property --bro-refresh-overlay-opacity-dark {
+  inherits: true;
+  initial-value: 0;
+  syntax: '<number>';
+}
+
+@property --bro-column-width-duration {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+@property --bro-details-duration {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+// A curve of CSS, as cubic-bezier(.2, 0, 0, 1): no syntax of @property takes it, so the value stays a string
+@property --bro-details-easing {
+  inherits: true;
+  syntax: '*';
+}
+
+@property --bro-filter-drawer-duration {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+@property --bro-kinetic-time-constant {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+@property --bro-state-icon-duration {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+@property --bro-state-message-duration {
+  inherits: true;
+  initial-value: 0s;
+  syntax: '<time>';
+}
+
+@property --bro-duration-scale {
+  inherits: true;
+  initial-value: 1;
+  syntax: '<number>';
+}

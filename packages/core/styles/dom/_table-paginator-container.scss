@@ -1,0 +1,4 @@
+@use "shared-selector-map" as *;
+@use "table-toolbar-container" as *;
+
+@include toolbar-container($bro-paginator-container, $bro-paginator-shadow);

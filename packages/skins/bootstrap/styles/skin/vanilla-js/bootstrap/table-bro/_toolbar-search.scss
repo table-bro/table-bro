@@ -1,0 +1,18 @@
+@use "shared-selector-map" as *;
+@use "../../shared/table-bro/toolbar-search" as *;
+
+@mixin styles {
+  #{$bro-toolbar_content-search} {
+    input {
+      font-weight: 700; // styles of `.h5`
+      font-size: var(--bs-navbar-brand-font-size); // styles of `.navbar-brand`
+      line-height: 1.2; // styles of `.h5`
+
+      &::placeholder {
+        color: var(--bs-secondary-color);
+      }
+    }
+  }
+
+  @include toolbar-search-content(var(--bs-navbar-nav-link-padding-x));
+}

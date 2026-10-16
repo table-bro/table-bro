@@ -1,0 +1,14 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../../mixins/text-ellipsis" as *;
+
+@mixin styles {
+  #{$bro-cell_text-ellipsis-container} {
+    line-height: 1.5;
+  }
+
+  // The width of the row counter column of the skin; the skin class is on the table element itself
+  @at-root table-bro#{&} {
+    @include bro-text-ellipsis-width('.bro-cell-number', $bro-cell-number-width);
+  }
+}

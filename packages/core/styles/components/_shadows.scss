@@ -1,0 +1,12 @@
+@use "shared-selector-map" as *;
+
+#{$bro-shadow} {
+  width: 100%;
+}
+
+#{$bro-table-shadows} {
+  position: absolute;
+  top: 0;
+
+  height: 100%;
+}

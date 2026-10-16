@@ -1,0 +1,12 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_paginator($mat-paginator-selector);
+
+  // The paginator has the background of the rows; the dark theme gives it the dark one too
+  #{$bro-paginator-container} #{$mat-paginator-selector} {
+    background-color: $mat-bg;
+  }
+}

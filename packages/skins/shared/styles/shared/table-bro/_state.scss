@@ -1,0 +1,38 @@
+@use 'sass:math';
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  $bro-state-icon-rotate-offset: math.ceil(math.sqrt(2) * $bro-state-icon-size) - $bro-state-icon-size;
+
+  #{$bro-state-container}  {
+    padding-right: $bro-state-icon-rotate-offset;
+    padding-left: $bro-state-icon-rotate-offset;
+
+    font-size: $bro-state-message-font-size;
+    line-height: $bro-state-line-height;
+
+    .bro-state-icon {
+      top: $bro-state-line-height;
+
+      width: $bro-state-icon-size;
+      height: $bro-state-icon-size;
+
+      margin-right: $bro-state-icon-margin-right;
+
+      font-size: $bro-state-icon-size;
+      line-height: $bro-state-line-height;
+
+      & > svg {
+        width: $bro-state-icon-size;
+        height: $bro-state-icon-size;
+
+        vertical-align: top;
+      }
+    }
+
+    lottie-player {
+      height: $bro-state-icon-size * 3;
+    }
+  }
+}

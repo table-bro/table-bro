@@ -1,0 +1,7 @@
+@use "../variables" as *;
+@use "../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar($mat-progress-bar-selector);
+  @include table-aux-progress-bar($mat-progress-bar-selector);
+}

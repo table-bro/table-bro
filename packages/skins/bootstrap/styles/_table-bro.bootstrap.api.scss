@@ -1,0 +1,5 @@
+// The SCSS API of the Bootstrap skin without its CSS: the variables of the skin and the mixins of table-bro.api.
+// A stylesheet that needs only them, such as the styles of a component, uses this module instead of table-bro.bootstrap,
+// whose @use prints the CSS of the skin. It takes the same configuration: @use "table-bro.bootstrap.api" with (...).
+@forward "./skin/vanilla-js/bootstrap/variables";
+@forward "./table-bro.api";

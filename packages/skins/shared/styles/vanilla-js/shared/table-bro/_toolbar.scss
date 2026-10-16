@@ -1,0 +1,39 @@
+@use "../../../shared/variables" as *;
+@use "../../../shared/mixins/toolbar" as *;
+
+@mixin toolbar-links($toolbar-link-selector, $link-color) {
+  #{$toolbar-link-selector} {
+    color: $link-color;
+
+    &:hover,
+    &:focus {
+      color: $link-color;
+    }
+  }
+}
+
+@mixin toolbar-main-content($nav-link-padding) {
+  .bro-toolbar-content {
+    .bro-toolbar-title-space {
+      display: inline-block;
+
+      width: calc($nav-link-padding + 1rem + 0.75rem);
+    }
+  }
+
+  // The space between the title and the buttons, which keep their width: classes, not a style attribute, which a strict
+  // Content Security Policy blocks
+  .bro-toolbar-space {
+    flex: 1 1 auto;
+  }
+
+  .bro-toolbar-buttons {
+    flex-grow: 0;
+  }
+}
+
+@mixin styles {
+  #{$bro-skin} {
+    @include skin_toolbar('.bro-toolbar');
+  }
+}

@@ -1,0 +1,45 @@
+@use "variables" as *;
+@use "../../shared/mixins/skin-colors" as *;
+
+$bro-border-color: #dee2e6;
+$bro-border-color-dark: #495057;
+
+@mixin styles {
+  // The table has the text and the color scheme of its theme: native controls follow the scheme, and a table with
+  // a theme of its own does not take the text of a page of the other theme
+  #{$bro-skin} {
+    color: #212529;
+
+    color-scheme: light;
+
+    @include bro-table-theme(
+        '.bro-table',
+        '.bro-toolbar',
+        #fff,
+        $bro-border-color,
+        #212529,
+        rgba(#212529, .75)
+    );
+  }
+
+  // Apply the dark theme only when the `.bro-dark-theme` CSS class is applied
+  // to an ancestor element of the components (such as `body`) or to the table host.
+  // A table with its own light theme, the class bro-light-theme, stays light under a dark ancestor
+  .bro-dark-theme {
+    #{$bro-skin}:not(.bro-light-theme),
+    &#{$bro-skin} {
+      color: #dee2e6;
+
+      color-scheme: dark;
+
+      @include bro-table-theme(
+          '.bro-table',
+          '.bro-toolbar',
+          #2b3035,
+          $bro-border-color-dark,
+          #dee2e6,
+          rgba(#dee2e6, .75)
+      );
+    }
+  }
+}

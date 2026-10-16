@@ -1,0 +1,16 @@
+@use "../components/bootstrap-based/paginator" as *;
+
+@mixin styles {
+  bro-button {
+    a {
+      color: $bro-link-color;
+    }
+  }
+
+  .bro-dark-theme &:not(.bro-light-theme),
+  &.bro-dark-theme {
+    a {
+      color: $bro-link-color-dark;
+    }
+  }
+}

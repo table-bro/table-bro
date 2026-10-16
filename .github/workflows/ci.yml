@@ -1,0 +1,122 @@
+# The checks of every push and pull request. A failed step fails the run, and a branch protection rule that requires
+# the jobs of this workflow blocks the merge of a pull request with a failed run.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# A new push to a branch cancels the run of its previous push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Types, lint, unit and e2e tests, packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: TypeScript of all packages, the stand and the e2e tests
+        run: npm run typecheck
+      - name: Dependency rules
+        run: npm run check:arch
+      - name: Public API reports
+        run: npm run check:api
+      - name: ESLint
+        run: npm run lint
+      - name: Stylelint
+        run: npm run lint:styles
+      - name: Browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+      # The bs and nv skins on the stand take the system font stack of Bootstrap. Its system-ui is the sans-serif font of
+      # fontconfig: on the runner DejaVu Sans. The sans-serif font and system-ui are Ubuntu Sans, the font of Ubuntu
+      # Desktop, so that the stand shows what its users see
+      - name: Fonts
+        run: |
+          sudo apt-get install -y --no-install-recommends fonts-ubuntu
+          mkdir -p ~/.config/fontconfig
+          cat > ~/.config/fontconfig/fonts.conf <<'EOF'
+          <?xml version="1.0"?>
+          <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+          <fontconfig>
+            <alias binding="same">
+              <family>sans-serif</family>
+              <prefer><family>Ubuntu Sans</family></prefer>
+            </alias>
+            <alias binding="same">
+              <family>system-ui</family>
+              <prefer><family>Ubuntu Sans</family></prefer>
+            </alias>
+          </fontconfig>
+          EOF
+          fc-match sans-serif
+          fc-match 'system\-ui'
+      - name: Unit tests
+        run: npx vitest run
+      - name: Unit tests of the MCP server
+        run: npm run test:mcp
+      - name: Generator of the MCP server
+        run: npm run check:mcp
+      - name: E2E tests on the stand
+        run: npm run e2e
+      - name: Packages
+        run: npm run check:pack
+      - name: Report of the e2e tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  install:
+    name: Installation into ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [vanilla, angular-20, angular-21, angular-22, angular-ssr]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Browser
+        run: npx playwright install --with-deps chromium
+      - name: Clean project
+        run: npm run check:install -- ${{ matrix.project }}
+
+  samples:
+    name: Pages of samples/
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Pages from the tarballs of the packages
+        run: npm run build:samples

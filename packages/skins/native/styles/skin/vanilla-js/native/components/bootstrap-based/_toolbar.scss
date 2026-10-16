@@ -1,0 +1,99 @@
+@use "../../variables" as *;
+@use "paginator" as *;
+@use "../../../shared/table-bro/toolbar" as *;
+
+$bro-margin: 0.5rem;
+$bro-padding: $bro-margin;
+
+
+/** Bootstrap-based (5.3) styles: */
+.bro-navbar {
+  position: relative;
+
+  display: flex;
+
+  padding: $bro-padding;
+
+  flex-wrap: wrap; // allow us to do the line break for collapsing content
+  align-items: center;
+  justify-content: space-between; // space out brand from logo
+}
+
+div.bro-toolbar-content { // styles of `.container-fluid`
+  display: flex;
+
+  width: 100%;
+
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.bro-navbar-brand {
+  margin-right: $bro-padding;
+  padding-top: $bro-padding;
+  padding-bottom: $bro-padding;
+
+  font-weight: bold;
+
+  white-space: nowrap;
+}
+
+ul.bro-navbar-nav {
+  display: flex;
+
+  // The links have no padding of their own: the last one stands as far from the edge as the links of Bootstrap do
+  margin-right: 0.75rem;
+  margin-bottom: 0;
+  padding-left: 0;
+
+  flex-direction: column; // cannot use `inherit` to get the `.navbar`s value
+
+  list-style: none;
+}
+
+.bro-navbar-collapse {
+  flex-grow: 1;
+  flex-basis: 100%;
+
+  // For always expanded or extra full navbars, ensure content aligns itself
+  // properly vertically. Can be easily overridden with flex utilities.
+  align-items: center;
+}
+
+.bro-navbar-expand {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  .bro-navbar-nav {
+    flex-direction: row;
+  }
+
+  .bro-navbar-collapse {
+    display: flex;
+
+    flex-basis: auto;
+  }
+}
+
+
+/** Custom styles: */
+.bro-nav-item {
+  &:not(:first-child) .bro-nav-link {
+    margin-left: $bro-margin;
+  }
+
+  select {
+    width: 60px;
+
+    margin-left: $bro-margin;
+  }
+}
+
+@include toolbar-links('.bro-nav-link', $bro-link-color);
+
+.bro-dark-theme #{$bro-skin}:not(.bro-light-theme),
+#{$bro-skin}.bro-dark-theme {
+  @include toolbar-links('.bro-nav-link', $bro-link-color-dark);
+}

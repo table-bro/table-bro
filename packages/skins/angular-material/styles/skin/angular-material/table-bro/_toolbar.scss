@@ -1,0 +1,14 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_toolbar($mat-toolbar-selector);
+
+  #{$bro-table-toolbar_container} {
+    #{$mat-toolbar-selector} {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+    }
+  }
+}

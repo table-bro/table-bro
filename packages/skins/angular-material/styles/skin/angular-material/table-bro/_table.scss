@@ -1,0 +1,68 @@
+@use "../variables" as *;
+
+@mixin styles {
+  table.mat-table {
+    border-spacing: 0;
+  }
+
+  tr.mat-header-row {
+    height: var(--bro-header-height);
+  }
+
+  tr.mat-row, tr.mat-footer-row {
+    height: var(--bro-row-height);
+  }
+
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 0;
+
+    border-color: $mat-border-color;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    // The text of the theme, as in mat-table: the body text in the cells, the title text in the header below
+    font-weight: var(--mat-table-row-item-label-text-weight, var(--mat-sys-body-medium-weight));
+    font-size: var(--mat-table-row-item-label-text-size, var(--mat-sys-body-medium-size));
+    line-height: var(--mat-table-row-item-label-text-line-height, var(--mat-sys-body-medium-line-height));
+    font-family: var(--mat-table-row-item-label-text-font, var(--mat-sys-body-medium-font));
+    letter-spacing: var(--mat-table-row-item-label-text-tracking, var(--mat-sys-body-medium-tracking));
+
+    color: $mat-text-color;
+
+    // Note: we use `first-of-type`/`last-of-type` here in order to prevent extra
+    // elements like ripples or badges from throwing off the layout (see #11165).
+    &:first-of-type {
+      padding-left: $bro-row-horizontal-padding;
+
+      [dir='rtl'] &:not(:only-of-type) {
+        padding-right: $bro-row-horizontal-padding;
+        padding-left: 0;
+      }
+    }
+
+    &:last-of-type {
+      padding-right: $bro-row-horizontal-padding;
+
+      [dir='rtl'] &:not(:only-of-type) {
+        padding-right: 0;
+        padding-left: $bro-row-horizontal-padding;
+      }
+    }
+  }
+
+  th.mat-header-cell {
+    font-weight: var(--mat-table-header-headline-weight, var(--mat-sys-title-small-weight));
+    font-size: var(--mat-table-header-headline-size, var(--mat-sys-title-small-size));
+    line-height: var(--mat-table-header-headline-line-height, var(--mat-sys-title-small-line-height));
+    font-family: var(--mat-table-header-headline-font, var(--mat-sys-title-small-font));
+    letter-spacing: var(--mat-table-header-headline-tracking, var(--mat-sys-title-small-tracking));
+
+    text-align: left;
+
+    color: var(--mat-table-header-headline-color, var(--mat-sys-on-surface));
+
+    [dir='rtl'] & {
+      text-align: right;
+    }
+  }
+}

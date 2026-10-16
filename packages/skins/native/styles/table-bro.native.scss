@@ -1,0 +1,43 @@
+// The native skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.native.api
+@forward "./table-bro.native.api";
+@use "./skin/vanilla-js/native/variables" as *;
+@use "sass:meta";
+
+@use "./skin/vanilla-js/shared/skin" as shared-skin;
+@use "./skin/vanilla-js/native/themes" as native-themes;
+@use "./skin/vanilla-js/native/components/bootstrap-based/paginator" as native-bootstrap-based-paginator;
+@use "./skin/vanilla-js/native/table-bro/filter-drawer" as native-filter-drawer;
+@use "./skin/vanilla-js/native/table-bro/button" as native-button;
+@use "./skin/vanilla-js/native/table-bro/progress-bar" as native-progress-bar;
+@use "./skin/vanilla-js/native/table-bro/table" as native-table;
+@use "./skin/vanilla-js/native/table-bro/toolbar" as native-toolbar;
+@use "./skin/vanilla-js/native/table-bro/toolbar-search" as native-toolbar-search;
+
+
+/* Shared */
+@include shared-skin.styles('bro-nv-tags', 'mark') {
+  // The space after each tag of the skin
+  #{$bro-skin} bro-nv-tags > mark {
+    margin-right: 0.375rem;
+  }
+
+
+  /* Native components */
+  @include native-themes.styles;
+
+  @include native-bootstrap-based-paginator.styles;
+  @include meta.load-css("./skin/vanilla-js/native/components/bootstrap-based/toolbar");
+
+
+  /* Table-bro extensions */
+  #{$bro-skin} {
+    @include native-button.styles;
+    @include native-progress-bar.styles;
+    @include native-table.styles;
+    @include native-toolbar.styles;
+    @include native-toolbar-search.styles;
+
+    // The header of the filter drawer looks as the toolbar search, its rules follow it
+    @include native-filter-drawer.styles;
+  }
+}

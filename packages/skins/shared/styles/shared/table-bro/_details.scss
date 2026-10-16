@@ -1,0 +1,11 @@
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  #{$bro-details_tr} {
+    > td > :first-child > * {
+      > div {
+        padding: calc(var(--bro-row-height) / 2);
+      }
+    }
+  }
+}

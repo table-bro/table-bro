@@ -1,0 +1,20 @@
+// The e2e tests of the stand: the types of the core from its sources
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@table-bro/core": ["../packages/core/index.ts"]
+    }
+  },
+  "include": ["**/*.ts", "../playwright.config.ts"]
+}

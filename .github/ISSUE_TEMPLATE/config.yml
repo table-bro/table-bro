@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability
+    url: https://github.com/table-bro/table-bro/security/advisories/new
+    about: Report a vulnerability privately, as SECURITY.md describes.

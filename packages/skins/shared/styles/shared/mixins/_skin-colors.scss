@@ -1,0 +1,64 @@
+@use "sass:selector";
+@use "shared-selector-map" as *;
+
+@mixin bro-table-theme($table-selector, $toolbar-selector, $bro-bg, $bro-border-color, $bro-text-color, $bro-text-secondary-color) {
+  #{$table-selector} {
+    background: transparent;
+  }
+
+  #{$bro-table-header_container} {
+    > table {
+      background: $bro-bg;
+    }
+  }
+
+  #{$bro-table-toolbar_container} #{$toolbar-selector},
+  .bro-filter-drawer-header #{$toolbar-selector} {
+    border-bottom-color: $bro-border-color;
+
+    background: $bro-bg;
+  }
+
+  // The table with the filter drawer carries the class of the skin itself, so do the drawer of the mat skin and
+  // the card in it. Unify keeps the dark theme class where it is: on an ancestor
+  // (.bro-dark-theme table-bro-filter-drawer-container.bs) or on this element (table-bro-filter-drawer-container.bro-dark-theme.bs)
+  @at-root #{selector.unify(&, 'table-bro-filter-drawer-container')} {
+    > .bro-filter-drawer-header,
+    > [slot="filters"] {
+      color: $bro-text-color;
+    }
+  }
+
+  // The ellipsis after the items of a component cell that show (fitCellItems)
+  .bro-cell-items-ellipsis {
+    color: $bro-text-color;
+  }
+
+  // The card of the drawer under its header and its filters
+  .bro-filter-drawer-card {
+    background: $bro-bg;
+    color: $bro-text-color;
+  }
+
+  // The rows of the table of the body: the aux table measures the same rows, and its rows stay transparent
+  .bro-table tr.bro-row {
+    background: $bro-bg;
+  }
+
+  .bro-table #{$bro-details_tr} {
+    background-color: $bro-bg;
+  }
+
+  #{$bro-toolbar_content-search} input {
+    background: $bro-bg;
+    color: $bro-text-color;
+
+    &::placeholder {
+      color: $bro-text-secondary-color;
+    }
+  }
+
+  .bro-paginator-outer-container {
+    background-color: $bro-bg;
+  }
+}

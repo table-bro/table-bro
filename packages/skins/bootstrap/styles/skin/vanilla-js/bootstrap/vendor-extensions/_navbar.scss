@@ -1,0 +1,14 @@
+@use "../../shared/table-bro/toolbar" as *;
+
+@mixin styles {
+  $selector: '.nav-link';
+  $color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+
+  @include toolbar-links($selector, $color);
+
+  #{$selector} {
+    &.show {
+      color: $color;
+    }
+  }
+}

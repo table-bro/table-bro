@@ -1,0 +1,22 @@
+@use "shared-selector-map" as *;
+
+#{$bro-table-body_container} {
+  position: relative;
+
+  display: block;
+
+  overflow: hidden;
+
+  box-sizing: content-box;
+  width: 100%;
+
+  margin: 0 auto;
+}
+
+#{$bro-table-body} {
+  position: relative;
+
+  > .bro-table {
+    position: relative;
+  }
+}

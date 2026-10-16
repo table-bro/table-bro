@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+// The page of the stand: Bootstrap for the bs skin and the Material theme of the application for the mat skin
+
+@import 'bootstrap/scss/bootstrap';
+
+// The theme of the application for its Material components and the tables of the mat skin, which take the theme of the
+// application. The page is light; the dark scheme of the theme serves the tables in the dark theme (color-scheme: dark)
+html {
+  color-scheme: light;
+
+  @include mat.theme((
+    color: (
+      theme-type: color-scheme,
+      primary: mat.$violet-palette
+    ),
+    typography: (
+      brand-family: 'Roboto, sans-serif',
+      plain-family: 'Roboto, sans-serif'
+    )
+  ));
+
+  // The light mat tables take the white background of the page, not the tinted surface of the violet theme, and keep
+  // the outlines of the rows lighter than the outline of the theme; the dark ones rise above the dark page as a container
+  // surface of the theme
+  @include mat.table-overrides((
+    background-color: light-dark(#fff, var(--mat-sys-surface-container)),
+    row-item-outline-color: light-dark(rgba(0, 0, 0, .12), #798180)
+  ));
+}
+
+// A black shadow hardly shows on a dark page: the dark mat tables take the shadow of Material four times as opaque.
+// The class bro-dark-theme is on the body of the dark page or on the table host; a table with its own light theme keeps
+// the light shadow
+.bro-dark-theme .mat:not(.bro-light-theme) .mat-elevation-z16,
+.bro-dark-theme.mat:not(.bro-light-theme) .mat-elevation-z16 {
+  @include mat.elevation(16, $opacity: 4);
+}
+
+// The table and its filter drawer start at one line: the container takes the margin of the table
+.bro-table-shadow-container {
+  margin-top: $grid-gutter-width;
+}
+
+table-bro-filter-drawer-container,
+table-bro-filter-drawer-container-ng {
+  margin-top: $grid-gutter-width;
+
+  .bro-table-shadow-container {
+    margin-top: 0;
+  }
+}

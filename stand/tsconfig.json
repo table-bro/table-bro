@@ -1,0 +1,30 @@
+// The stand of the e2e tests: an Angular application with the packages from their sources, as the unit specs take them
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/stand",
+    // The packages come from their sources next to the stand
+    "rootDir": "..",
+    "types": [],
+    "paths": {
+      "@table-bro/core": [
+        "../packages/core/index.ts"
+      ],
+      "@table-bro/bootstrap": [
+        "../packages/skins/bootstrap/js/table-bro.bootstrap.ts"
+      ],
+      "@table-bro/native": [
+        "../packages/skins/native/js/table-bro.native.ts"
+      ],
+      "@table-bro/angular": [
+        "../packages/angular/src/public-api.ts"
+      ],
+      "@table-bro/angular-material": [
+        "../packages/skins/angular-material/src/public-api.ts"
+      ]
+    }
+  },
+  "files": [
+    "src/main.ts"
+  ]
+}

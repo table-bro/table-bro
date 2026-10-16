@@ -1,0 +1,31 @@
+{
+  "name": "table-bro-sample-angular-material",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build"
+  },
+  "dependencies": {
+    "@angular/cdk": "^22.2.2",
+    "@angular/common": "^22.2.0",
+    "@angular/compiler": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/elements": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "@angular/material": "^22.2.2",
+    "@angular/platform-browser": "^22.2.0",
+    "@table-bro/angular": "^1.1.0",
+    "@table-bro/angular-material": "^1.1.0",
+    "@table-bro/core": "^1.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.2.2",
+    "@angular/cli": "^22.2.2",
+    "@angular/compiler-cli": "^22.2.0",
+    "typescript": "~6.0.2"
+  }
+}

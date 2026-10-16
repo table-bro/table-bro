@@ -1,0 +1,111 @@
+@use "../variables" as *;
+
+// The filter drawer of the mat skin: the container carries the class of the skin, as the drawer of the core does, so
+// the drawer reads the custom properties of the skin and of the container. The drawer is transparent and holds a card that looks like the table: the background and the shadow of the skin,
+// one island space after the visible table. The space belongs to the drawer, so Material narrows the content by it
+// too
+@mixin styles {
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer {
+    --mat-sidenav-container-background-color: transparent;
+
+    // The host of a table ends two shadow sizes below the visible table
+    bottom: calc(var(--bro-shadow-size) * 2);
+
+    // The shadow of the card lies outside of the drawer
+    overflow: visible;
+
+    width: calc(var(--bro-filter-drawer-width) + var(--bro-island-space-size));
+    padding-left: var(--bro-island-space-size);
+
+    .mat-drawer-inner-container {
+      overflow: visible;
+    }
+
+    // A closed drawer keeps the card laid out, hidden by its visibility, so the card opens from the width of 0
+    // stylelint-disable-next-line selector-not-notation -- one :not() per class keeps the specificity above the rule of Material
+    &:not(.mat-drawer-opened):not(.mat-drawer-animating) .mat-drawer-inner-container {
+      display: block;
+    }
+  }
+
+  // The drawer stands in its place: a closed one has an identity transform instead of the shift of Material, so
+  // the transition of Material moves nothing, but it still gives Material its events to narrow the content. The opened
+  // one keeps the transform none of Material: the change between the two runs the transition, and its end lets Material
+  // finish the animation, which otherwise keeps the closed drawer visible over the table
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer.mat-drawer-end {
+    border-left: 0;
+  }
+
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer.mat-drawer-end:not(.mat-drawer-opened) {
+    transform: translate3d(0, 0, 0);
+  }
+
+  // With shadows the table lets them into its margins and ends at the edge of the container, as the card does.
+  // Without shadows the table leaves room for them around it: the card ends where the visible table ends
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer.mat-drawer-end.bro-filter-drawer_no-shadow {
+    right: var(--bro-shadow-size);
+  }
+
+  // The card grows from its right edge, so the edge and the shadow never move. Its children keep their width from
+  // its left edge and slide in with it, as in the drawer of the core. The size comes from the layout alone:
+  // a transform of the compositor next to a width of the main thread would shake the edge.
+  // The content narrows by the opened part of the drawer with the space, so the card takes this part without
+  // the space: its left edge follows the table at the same space. Below 0, the card is empty
+  $opened-width: max(0px, calc(var(--bro-filter-drawer-opened) * 100% - (1 - var(--bro-filter-drawer-opened)) * var(--bro-island-space-size)));
+
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer .bro-filter-drawer-card {
+    --bro-filter-drawer-opened: 0;
+    overflow: hidden auto;
+
+    box-sizing: border-box;
+    width: $opened-width;
+    height: 100%;
+    margin-left: calc(100% - #{$opened-width});
+
+    // The corners of the drawer: the overflow clips the header and the filters to them
+    border-radius: var(--bro-filter-drawer-corner-radius);
+
+    > * {
+      box-sizing: border-box;
+      width: var(--bro-filter-drawer-width);
+    }
+  }
+
+  // In the mode over the drawer lies at the right edge of the table and takes the corners of the table there, which
+  // would show around its own
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer.mat-drawer-over .bro-filter-drawer-card {
+    border-top-right-radius: var(--bro-corner-radius);
+    border-bottom-right-radius: var(--bro-corner-radius);
+  }
+
+  // The page shows through the container of the drawer, as through the drawer itself
+  @at-root table-bro-filter-drawer-container-ng .mat-drawer-container {
+    --mat-sidenav-content-background-color: transparent;
+  }
+
+  // The scrim of Material over the table of the drawer in the mode over, with the corners of the table: the host of
+  // the table ends two shadow sizes below the visible table, and without shadows the table leaves room for them at its sides
+  @at-root table-bro-filter-drawer-container-ng .mat-drawer-backdrop {
+    bottom: calc(var(--bro-shadow-size) * 2);
+
+    border-radius: var(--bro-corner-radius);
+  }
+
+  @at-root table-bro-filter-drawer-container-ng .bro-filter-drawer_no-shadow > .mat-drawer-backdrop {
+    right: var(--bro-shadow-size);
+    left: var(--bro-shadow-size);
+  }
+
+  // The component moves it with the drawer (table-bro-filter-drawer-container-ng.ts)
+  @at-root table-bro-filter-drawer-container-ng#{&} .mat-drawer-opened .bro-filter-drawer-card {
+    --bro-filter-drawer-opened: 1;
+  }
+
+  // The toolbar of the header has the bottom border of the toolbar of the table
+  .bro-filter-drawer-header {
+    #{$mat-toolbar-selector} {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+    }
+  }
+}

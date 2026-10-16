@@ -1,0 +1,9 @@
+// Bootstrap 5 has no Sass modules, so this adapter is the only file that imports it.
+// The skins take its functions, variables and mixins with @use, and Bootstrap 6 will change only this file.
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+@import "bootstrap/scss/mixins/caret";
+@import "bootstrap/scss/mixins/gradients";
+@import "bootstrap/scss/mixins/transition";

@@ -1,0 +1,5 @@
+// The SCSS API of the native skin without its CSS: the variables of the skin and the mixins of table-bro.api.
+// A stylesheet that needs only them, such as the styles of a component, uses this module instead of table-bro.native,
+// whose @use prints the CSS of the skin. It takes the same configuration: @use "table-bro.native.api" with (...).
+@forward "./skin/vanilla-js/native/variables";
+@forward "./table-bro.api";

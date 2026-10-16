@@ -1,0 +1,18 @@
+@use "shared-selector-map" as *;
+
+@mixin toolbar-container($container-selector, $shadow-selector) {
+  #{$container-selector} {
+    position: relative;
+
+    #{$shadow-selector} {
+      position: absolute;
+      top: 0;
+
+      width: 100%;
+    }
+  }
+}
+
+@mixin styles {
+  @include toolbar-container($bro-table-toolbar_container, $bro-table-toolbar_shadow);
+}
