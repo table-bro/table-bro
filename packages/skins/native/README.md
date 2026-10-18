@@ -3,6 +3,21 @@
 The native skin of [Table, Bro](https://table-bro.com): data tables on the native controls of the browser, without a
 UI library. The skin is `nv`.
 
+## With an AI coding agent
+
+The skin `nv` gives a table made by the agent plain HTML elements and no UI library, for any framework. Tell your AI
+assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages,
+generates the table, its setup and its cells from one request, and checks the result.
+
+```sh
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+```
+
+The setup for Cursor, Codex and VS Code is in the README of
+[`@table-bro/mcp`](https://github.com/table-bro/table-bro/tree/main/packages/mcp) and on [MCP
+server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
+[Docs](https://table-bro.com/docs).
+
 ## Install
 
 ```sh

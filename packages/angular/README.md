@@ -1,10 +1,26 @@
 # @table-bro/angular
 
-The Angular wrapper of [Table, Bro](https://table-bro.com): the `<table-bro-ng>` component with signal inputs and outputs
-over the `<table-bro>` Custom Element.
+The Angular wrapper of [Table, Bro](https://table-bro.com), pixel-perfect Material (M3) data tables for Angular: the
+`<table-bro-ng>` component with signal inputs and outputs over the `<table-bro>` Custom Element.
 
 The wrapper does not depend on a skin. It works with any registered skin of Table, Bro: Angular Material
 (`@table-bro/angular-material`), Bootstrap (`@table-bro/bootstrap`) or native (`@table-bro/native`).
+
+## With an AI coding agent
+
+`<table-bro-ng>` is the table that the agent adds to an Angular project: a pixel-perfect Material (M3) data table with
+search, paging, sorting and row details. Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code,
+Cursor or Codex: the agent installs the packages, generates the table, its setup and its cells from one request, and
+checks the result.
+
+```sh
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+```
+
+The setup for Cursor, Codex and VS Code is in the README of
+[`@table-bro/mcp`](https://github.com/table-bro/table-bro/tree/main/packages/mcp) and on [MCP
+server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
+[Docs](https://table-bro.com/docs), [Material Design](https://table-bro.com/docs/design/material-design).
 
 ## Install
 
