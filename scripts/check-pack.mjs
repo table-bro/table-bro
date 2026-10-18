@@ -52,6 +52,18 @@ function check(command, args) {
   }
 }
 
+/**
+ * Checks that the tarball of the core carries the Custom Elements Manifest that the field customElements of its manifest names.
+ * @param tarball - the path of the tarball of the core
+ * @returns whether the manifest is in the tarball
+ */
+function hasCustomElements(tarball) {
+  const files = execFileSync('tar', ['-tzf', tarball], {encoding: 'utf8'});
+  const {customElements} = JSON.parse(fs.readFileSync(path.join(root, 'packages/core/package.json'), 'utf8'));
+
+  return Boolean(customElements) && files.split('\n').includes(`package/${customElements}`);
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const dest = fs.mkdtempSync(path.join(os.tmpdir(), 'table-bro-pack-'));
   const tarballs = packAll(dest);
@@ -60,7 +72,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const {name, dir} of packages) {
     // The packages are ES modules: a require() of them is not supported, so the types of CommonJS do not count
     const ok = check('npx', ['publint', 'run', dir, '--strict'])
-      && check('npx', ['attw', tarballs[name], '--profile', 'esm-only']);
+      && check('npx', ['attw', tarballs[name], '--profile', 'esm-only'])
+      && (name !== '@table-bro/core' || hasCustomElements(tarballs[name]));
 
     console.log(`${ok ? 'ok    ' : 'FAILED'} ${name} ${path.basename(tarballs[name])}`);
     failed ||= !ok;
