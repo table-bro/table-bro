@@ -24,6 +24,7 @@
     "jetbrains-ai",
     "angular-material-table"
   ],
+  "mcpName": "io.github.table-bro/table-bro",
   "author": "table-bro",
   "homepage": "https://table-bro.com",
   "repository": {
