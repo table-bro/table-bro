@@ -153,13 +153,16 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
   private drawerElement = viewChild.required(MatDrawer, {read: ElementRef});
 
   constructor() {
-    // A narrower or a wider page moves the opened drawer over the table or next to it
-    const resizeObserver = new ResizeObserver(() => this.fitMode());
-
     const destroyRef = inject(DestroyRef);
 
-    resizeObserver.observe(this.host.nativeElement);
-    destroyRef.onDestroy(() => resizeObserver.disconnect());
+    // A narrower or a wider page moves the opened drawer over the table or next to it. The observer exists in the
+    // browser only: a server render of the app, as a prerender, creates the component without one
+    afterNextRender(() => {
+      const resizeObserver = new ResizeObserver(() => this.fitMode());
+
+      resizeObserver.observe(this.host.nativeElement);
+      destroyRef.onDestroy(() => resizeObserver.disconnect());
+    });
 
     // The theme of the table is the class of its host, which the table changes with its theme
     afterNextRender(() => {
