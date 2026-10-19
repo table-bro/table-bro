@@ -367,7 +367,7 @@ const config: BroConfig = {
     text: `<!-- intro -->
 The table supports and animates following states: _Loading_, _No data_, _No records found_, _Failed_.
 
-The first tables show the states as Lottie animations, as every table of this site with Angular Material and Bootstrap; the Native skin shows its own icons. The tables after them show the icons of an icon font.
+The first tables show the states as Lottie animations, as every table of this site with Angular Material and Bootstrap; the Native skin shows its own icons. The tables after them show static icons: the SVG of Bootstrap Icons with Bootstrap and an icon font with Angular Material.
 
 <!-- table-state-loading-lottie -->
 #### Loading _with Lottie_
@@ -445,15 +445,7 @@ When an error occurs during data loading:
 
    **Dependencies** (0.364 kB of \`CSS\`, 129 kB of \`woff2\`):
 
-   {{font-icon_mat-dependencies.html}}
-
-   Bootstrap icons:
-
-   {{font-icon_bs.ts}}
-
-   **Dependencies** (14.1 kB of \`CSS\`, 131 kB of \`woff2\`):
-
-   {{font-icon_bs-dependencies.html}}`,
+   {{font-icon_mat-dependencies.html}}`,
     files: [
       {file: 'html-icon_bs.ts', language: 'ts', code: `import type {BroConfig} from '@table-bro/core';
 
@@ -520,29 +512,6 @@ const config: BroConfig = {
       {file: 'font-icon_mat-dependencies.html', language: 'html', code: `<head>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-`},
-      {file: 'font-icon_bs.ts', language: 'ts', code: `import type {BroConfig} from '@table-bro/core';
-
-const config: BroConfig = {
-  components: {
-    fontIcon: {
-      html: (iconName: string) => \`<i class="bi bi-\${iconName} bro-state-icon"></i>\`
-    },
-    state: {
-      fontIcon: true,
-      states: {
-        loading: ['rocket-takeoff-fill', 'Loading'],
-        'no-data': ['heartbreak-fill', 'No data'],
-        'not-found': ['search', 'No records found'],
-        fail: ['emoji-neutral-fill', 'Failed']
-      }
-    }
-  }
-};
-`},
-      {file: 'font-icon_bs-dependencies.html', language: 'html', code: `<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 `},
       {file: 'lottie-icon.ts', language: 'ts', code: `import type {BroConfig} from '@table-bro/core';
