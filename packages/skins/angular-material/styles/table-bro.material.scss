@@ -72,3 +72,9 @@
 :where(#{$bro-skin}) {
   @include bro-skin-custom-properties();
 }
+
+/* A prerendered table (data-bro-prerender of prerenderTableBro) takes them in the critical CSS of its page too, as
+   Beasties writes it: it drops a selector of :where() alone, which nothing is left of without the pseudo-class */
+table-bro:where([data-bro-prerender]#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}

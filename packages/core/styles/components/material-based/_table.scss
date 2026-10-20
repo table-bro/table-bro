@@ -22,8 +22,11 @@
   }
 
   // The tables of the table keep the separate border model whatever the page sets, as the reboot of Bootstrap does: in
-  // the collapsing model the header table is half a pixel higher, 56.5 px instead of 56
-  :is(#{$bro-table-header}, .bro-table, #{$bro-table-aux}) {
+  // the collapsing model the header table is half a pixel higher, 56.5 px instead of 56. A list of the selectors, not
+  // :is(): the critical CSS of a prerender (Beasties) drops a selector that starts with a pseudo-class
+  #{$bro-table-header},
+  .bro-table,
+  #{$bro-table-aux} {
     border-spacing: 0;
     border-collapse: separate;
   }
