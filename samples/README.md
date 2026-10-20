@@ -1,16 +1,20 @@
 # Samples
 
-Pages with a table of Table, Bro, one per skin, each set up as its page of Docs, Getting started, says:
+Pages with a table of Table, Bro, one per skin, each set up as its page of Docs, Getting started, says, and the pages
+of the frameworks of Docs, Frameworks:
 
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
-- `native`: Vanilla JS with `@table-bro/native`, built by Vite.
+- `native`: Vanilla JS with `@table-bro/native`, built by Vite;
+- `frameworks`: a Vite project per framework, `react`, `vue`, `svelte`, `solid` and `preact`, each with
+  `@table-bro/native`; StackBlitz opens each folder as it is.
 
 A page installs the packages as its users do: `npm install`, then `npm run build` or `npm start` (`npm run dev` for Vite).
 
 `npm run build:samples` at the root of the repository builds every page from the packages of the repository: after
 `npm run build`, it packs them as npm publishes them, serves the tarballs from a local npm registry (Verdaccio), installs
-each page from it and builds it into `dist/samples/<name>`, under the base path `/samples/<name>/` of table-bro.com.
+each page from it and builds it into `dist/samples/<name>`, under the base path `/samples/<name>/` of table-bro.com; the
+projects of `frameworks` go to `dist/samples/frameworks/<framework>`.
 
 ## The budget of `angular-material`
 

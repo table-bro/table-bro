@@ -1,0 +1,21 @@
+{
+  "name": "table-bro-sample-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@table-bro/core": "^1.1.0",
+    "@table-bro/native": "^1.1.0",
+    "vue": "^3.5.44"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.10",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

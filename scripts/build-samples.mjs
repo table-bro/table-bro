@@ -1,8 +1,9 @@
-// The build of the pages of samples/: each is a project of one skin, set up as its page of Docs says, which installs
-// the tarballs of the packages, as npm publishes them, from a local npm registry (Verdaccio) and builds into
-// dist/samples/<name> under the base path of the pages. The other packages come from npmjs through the registry. Run
-// after `npm run build`, with the names of the samples as arguments or without them for all; REGISTRY_PORT sets the
-// port of the registry (4873 by default) and SAMPLES_BASE the base path of the pages (/samples/ by default).
+// The build of the pages of samples/: each is a project of one skin, or of one framework in samples/frameworks, set up
+// as its page of Docs says, which installs the tarballs of the packages, as npm publishes them, from a local npm
+// registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. The other packages come
+// from npmjs through the registry. Run after `npm run build`, with the names of the samples as arguments or without them
+// for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default)
+// and SAMPLES_BASE the base path of the pages (/samples/ by default).
 import {execFileSync, spawn} from 'node:child_process';
 import fs                    from 'node:fs';
 import os                    from 'node:os';
@@ -103,13 +104,33 @@ async function waitFor(url) {
 }
 
 /**
+ * The projects of the samples: a folder of samples/ with its package.json, or the folders of a folder without one, as
+ * frameworks/react of samples/frameworks.
+ * @param names - the names of the folders of samples/
+ * @returns the paths of the projects under samples/
+ */
+function sampleProjects(names) {
+  return names.flatMap(name => {
+    const dir = path.join(root, 'samples', name);
+
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return [name];
+    }
+
+    return fs.readdirSync(dir, {withFileTypes: true})
+      .filter(entry => entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'package.json')))
+      .map(entry => `${name}/${entry.name}`);
+  });
+}
+
+/**
  * Installs a copy of a sample from the registry, as its users install it, and builds it into dist/samples/<name>.
- * @param name - the name of the folder of the sample
+ * @param name - the path of the project of the sample under samples/
  * @param registry - the address of the registry
  * @param base - the base path of the pages
  */
 function buildSample(name, registry, base) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `table-bro-sample-${name}-`));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `table-bro-sample-${name.replace('/', '-')}-`));
   const angular = fs.existsSync(path.join(root, 'samples', name, 'angular.json'));
   const dest = path.join(root, 'dist/samples', name);
 
@@ -128,7 +149,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const registry = await startRegistry(tarballs, Number(process.env.REGISTRY_PORT ?? 4873));
 
   try {
-    for (const name of names) {
+    for (const name of sampleProjects(names)) {
       buildSample(name, registry.url, process.env.SAMPLES_BASE ?? '/samples/');
     }
   } finally {
