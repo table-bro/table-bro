@@ -44,6 +44,12 @@ table-bro td#{$bro-state}.bro-cell {
   }
 }
 
+// A prerendered table shows the first frame of its state, where the icon is below its container: a glyph that overflows
+// its box, as a turned emoji, shows no part of it either
+table-bro[data-bro-prerender] #{$bro-state-container} .bro-state-icon {
+  visibility: hidden;
+}
+
 #{$bro-state-message} {
   opacity: 0;
 }
