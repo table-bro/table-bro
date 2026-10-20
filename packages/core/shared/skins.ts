@@ -12,7 +12,12 @@ export function registerSkin(name: BroSkin, config: BroSkinConfig): void {
   skins.set(name, config);
 }
 
-/** The config of a registered skin for init(); undefined when no skin is registered under the name. */
+/**
+ * The config of a registered skin, as configure() takes it; undefined when no skin is registered under the name. The
+ * prerender of a framework reads whether a skin has elements for a server DOM (BroSkinConfig.defineElements).
+ * @param name - the name of the skin
+ * @group Skins
+ */
 export function getSkin(name: BroSkin): BroSkinConfig | undefined {
   return skins.get(name);
 }

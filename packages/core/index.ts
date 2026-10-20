@@ -18,7 +18,7 @@ export {useIslandDetails}                 from './shared/island';
 export {BroMotion}                        from './shared/motion';
 export {matchesFilterCondition}           from './shared/query';
 export {BroHTML, BroHTMLElement}          from './shared/html';
-export {registerSkin}                     from './shared/skins';
+export {getSkin, registerSkin}            from './shared/skins';
 export {isPrerendered, prerenderTableBro} from './table-bro';
 
 // <table-bro-filter-drawer-container> is defined on demand, by the application

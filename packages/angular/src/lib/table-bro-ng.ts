@@ -1,7 +1,7 @@
 import {isPlatformBrowser}                                                                                                                                                 from '@angular/common';
 import {ChangeDetectionStrategy, Component, type ComponentRef, DestroyRef, effect, ElementRef, EnvironmentInjector, inject, input, NgZone, output, PLATFORM_ID, untracked} from '@angular/core';
 
-import {type BroActionDetail, type BroCol, type BroConfig, type BroEmptyState, type BroFilters, type BroQuery, type BroUserTheme, dispatchAction, events, type TableBroHTMLElement} from '@table-bro/core';
+import {type BroActionDetail, type BroCol, type BroConfig, type BroEmptyState, type BroFilters, type BroQuery, type BroUserTheme, dispatchAction, events, getSkin, type TableBroHTMLElement} from '@table-bro/core';
 
 import {prerenderTableBroNg, TABLE_BRO_ELEMENTS} from './table-bro-prerender';
 import type {BroServerFacade}                    from './table-bro.facade';
@@ -79,7 +79,9 @@ export class TableBroNg<MODEL extends object> implements BroServerFacade<MODEL> 
         const elements = skins.find(({skin}) => skin === conf.skin)?.elements;
 
         destroyComponents();
-        components = elements ? prerenderTableBroNg(this.elementRef.nativeElement, this.cols(), conf, elements, injector, this.tableId(), this.theme()) : [];
+        // A skin of custom elements defines them in the server DOM; the host of a skin without elements for the server, or
+        // of a skin that only the browser registers, stays empty
+        components = (elements || (conf.skin && getSkin(conf.skin)?.defineElements)) ? prerenderTableBroNg(this.elementRef.nativeElement, this.cols(), conf, elements ?? {}, injector, this.tableId(), this.theme()) : [];
       });
 
       return;

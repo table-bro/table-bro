@@ -662,6 +662,7 @@ interface BroIslandDetailsModule {
 }
 export declare function useIslandDetails(impl: BroIslandDetailsModule): void;
 export declare function registerSkin(name: BroSkin, config: BroSkinConfig): void;
+export declare function getSkin(name: BroSkin): BroSkinConfig | undefined;
 export declare function defineTableBroFilterDrawerContainer(): void;
 export declare const broCellSelectors: Readonly<{
     ellipsisContainer: string;
