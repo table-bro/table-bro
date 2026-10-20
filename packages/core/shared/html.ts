@@ -1,22 +1,29 @@
+import {BroDom} from './dom';
+
 /**
- * A helper of the HTML of the views and the skins: elements and templates from markup, text for markup and back.
+ * A helper of the HTML of the views and the skins: text for markup and back. BroDom creates the elements and the
+ * templates of markup in the document of the table.
  * @group Rendering helpers
  */
 export class BroHTML {
+  /**
+   * The element of markup, in the global document.
+   * @param html - the markup of the element
+   * @deprecated Use createFromHTML() of BroDom, in the document of the table: ctx.dom in a view, new
+   * BroDom(this.ownerDocument) in a custom element. 2.0 removes it.
+   */
   static createElement(html: string): HTMLElement {
-    return BroHTML.createTemplate(html).content.firstChild as HTMLElement;
+    return new BroDom(document).createFromHTML(html);
   }
 
+  /**
+   * The template of markup, in the global document.
+   * @param html - the markup of the template
+   * @deprecated Use createTemplate() of BroDom, in the document of the table: ctx.dom in a view, new
+   * BroDom(this.ownerDocument) in a custom element. 2.0 removes it.
+   */
   static createTemplate(html: string): HTMLTemplateElement {
-    html = html || '';
-
-    html = html.trim(); // Never return a text node of whitespace as the result
-
-    const template: HTMLTemplateElement = document.createElement('template');
-
-    template.innerHTML = html;
-
-    return template;
+    return new BroDom(document).createTemplate(html);
   }
 
   /**
@@ -44,11 +51,6 @@ export function classAttr(...classNames: (string | undefined)[]): string {
   const className = classNames.filter(Boolean).join(' ');
 
   return className ? `class="${BroHTML.escape(className)}"` : '';
-}
-
-/** Creates the element of a skin component, typed by the interfaces the element implements. */
-export function createComponent<T>(selector: string): HTMLElement & T {
-  return document.createElement(selector) as HTMLElement & T;
 }
 
 /**

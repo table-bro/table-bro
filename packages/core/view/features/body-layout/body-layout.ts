@@ -54,7 +54,7 @@ export class BroBodyLayout {
     }
 
     // The shadow exists also with shadowsEnabled: false; then it has no class and no size
-    this.windowShadow = document.createElement('div');
+    this.windowShadow = container.ownerDocument.createElement('div');
 
     if (this.config.css.shadow?.className) {
       this.windowShadow.className = this.config.css.shadow.className;

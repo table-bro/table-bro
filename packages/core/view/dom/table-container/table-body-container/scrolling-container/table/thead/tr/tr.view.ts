@@ -1,10 +1,8 @@
-import {BroHTML, classAttr} from '../../../../../../../../shared/html';
-import type {BroContext}    from '../../../../../../../../types/context';
-import type {BroCol}        from '../../../../../../../../types/table-bro';
-import type {BroView}       from '../../../../../../../../types/view';
-import {BroTheadTh}         from './th/th.view';
-
-const {createElement} = BroHTML;
+import {classAttr}       from '../../../../../../../../shared/html';
+import type {BroContext} from '../../../../../../../../types/context';
+import type {BroCol}     from '../../../../../../../../types/table-bro';
+import type {BroView}    from '../../../../../../../../types/view';
+import {BroTheadTh}      from './th/th.view';
 
 export class BroTheadTr implements BroView {
   template(): string {
@@ -23,7 +21,7 @@ export class BroTheadTr implements BroView {
   }
 
   render(): HTMLElement {
-    const tr = createElement(this.template());
+    const tr = this.ctx.dom.createFromHTML(this.template());
 
     // The header row is the first row of the table for screen readers
     if (this.header) {

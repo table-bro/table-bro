@@ -1,4 +1,4 @@
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 
 import {isPrerendered, prerenderTableBro, registerSkin} from './index';
 import type {BroSkinConfig}                             from './types/table-bro';
@@ -55,6 +55,22 @@ describe('prerenderTableBro', () => {
     prerenderTableBro(element, {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender'}});
 
     expect([...element.classList].filter(name => name.endsWith('-theme'))).toEqual([]);
+  });
+
+  it('creates the nodes of the table in the document of the element: a server DOM needs no global document', () => {
+    const element = serverElement();
+    const created = [vi.spyOn(document, 'createElement'), vi.spyOn(document, 'createTextNode')];
+    let calls: number[];
+
+    try {
+      prerenderTableBro(element, {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender', toolbarTitle: 'Names'}});
+    } finally {
+      calls = created.map(spy => spy.mock.calls.length);
+      created.forEach(spy => spy.mockRestore());
+    }
+
+    expect(calls).toEqual([0, 0]);
+    expect(element.querySelector('.bro-state-message')?.textContent).toBe('Loading');
   });
 
   it('gives a table without shadows no room for them', () => {

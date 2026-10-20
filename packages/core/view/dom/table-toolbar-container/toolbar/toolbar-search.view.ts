@@ -1,12 +1,12 @@
 import {filtersFilterEvent, toolbarSearchCloseEvent}  from '../../../../shared/events';
-import {BroHTML, createComponent}                     from '../../../../shared/html';
+import {BroHTML}                                      from '../../../../shared/html';
 import {dispatchAction}                               from '../../../../shared/interaction';
 import {selectors}                                    from '../../../../shared/shared-selectors';
 import type {BroContext}                              from '../../../../types/context';
 import type {BroConfiguredElement, BroToolbarElement} from '../../../../types/table-bro';
 import type {BroView}                                 from '../../../../types/view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroToolbarSearch implements BroView {
   el?: HTMLElement;
@@ -28,7 +28,7 @@ export class BroToolbarSearch implements BroView {
   render(): HTMLElement & BroToolbarElement {
     const {config} = this.ctx;
 
-    const toolbar = createComponent<BroToolbarElement & BroConfiguredElement>(config.components.toolbar.selector);
+    const toolbar = this.ctx.dom.createElement<BroToolbarElement & BroConfiguredElement>(config.components.toolbar.selector);
 
     toolbar.config = config;
 
@@ -78,7 +78,7 @@ export class BroToolbarSearch implements BroView {
   }
 
   private renderBackButton(): HTMLElement {
-    const backButton: HTMLElement = document.createElement(this.buttonSelector);
+    const backButton: HTMLElement = this.ctx.dom.createElement(this.buttonSelector);
 
     backButton.addEventListener('click', () => {
       this.clearSearch();
@@ -92,7 +92,7 @@ export class BroToolbarSearch implements BroView {
   private renderInput(): HTMLElement {
     const field = escape(this.ctx.config.texts.searchField);
 
-    this.inputEl = <HTMLInputElement>createElement(`<input type="text" name="search" placeholder="${field}" aria-label="${field}" autofocus>`);
+    this.inputEl = <HTMLInputElement>this.ctx.dom.createFromHTML(`<input type="text" name="search" placeholder="${field}" aria-label="${field}" autofocus>`);
 
     // setTimeout does not accept a signal; the timer is cleared when the table disconnects or the search closes
     this.ctx.signal.addEventListener('abort', () => clearTimeout(this.timer), {once: true, signal: this.lifetime.signal});
@@ -122,7 +122,7 @@ export class BroToolbarSearch implements BroView {
       }
     });
 
-    const inputContainer = createElement(`<span class="${selectors.toolbarContentSearch}"></span>`);
+    const inputContainer = this.ctx.dom.createFromHTML(`<span class="${selectors.toolbarContentSearch}"></span>`);
 
     inputContainer.appendChild(this.inputEl);
 
@@ -130,7 +130,7 @@ export class BroToolbarSearch implements BroView {
   }
 
   private renderClearButton(): HTMLElement {
-    const clearButton = document.createElement(this.buttonSelector);
+    const clearButton = this.ctx.dom.createElement(this.buttonSelector);
 
     clearButton.addEventListener('click', () => {
       if (this.search) {

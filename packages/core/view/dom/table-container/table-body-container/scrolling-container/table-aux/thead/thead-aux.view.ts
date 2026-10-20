@@ -1,10 +1,8 @@
-import {BroHTML, classAttr} from '../../../../../../../shared/html';
-import type {BroContext}    from '../../../../../../../types/context';
-import type {BroCol}        from '../../../../../../../types/table-bro';
-import type {BroView}       from '../../../../../../../types/view';
-import {BroTheadTr}         from '../../table/thead/tr/tr.view';
-
-const {createElement} = BroHTML;
+import {classAttr}       from '../../../../../../../shared/html';
+import type {BroContext} from '../../../../../../../types/context';
+import type {BroCol}     from '../../../../../../../types/table-bro';
+import type {BroView}    from '../../../../../../../types/view';
+import {BroTheadTr}      from '../../table/thead/tr/tr.view';
 
 export class BroTheadAux implements BroView {
   template(): string {
@@ -22,7 +20,7 @@ export class BroTheadAux implements BroView {
   }
 
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.el.appendChild(new BroTheadTr(this.ctx, this.cols).render());
 

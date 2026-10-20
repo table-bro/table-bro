@@ -1,14 +1,12 @@
 import {type BroValueWidths, emptyRow} from '../../../../../../../../model/row-slots';
 import type {BroFrame}                 from '../../../../../../../../shared/frame';
-import {BroHTML, classAttr}            from '../../../../../../../../shared/html';
+import {classAttr}                     from '../../../../../../../../shared/html';
 import {cssRowsHeight}                 from '../../../../../../../../shared/styles';
 import {selectors}                     from '../../../../../../../../table-bro-selectors';
 import type {BroContext}               from '../../../../../../../../types/context';
 import type {BroCol, BroRow}           from '../../../../../../../../types/table-bro';
 import type {BroView}                  from '../../../../../../../../types/view';
 import {BroTd}                         from './td/td.view';
-
-const {createElement} = BroHTML;
 
 export class BroTbodyTr implements BroView {
   template(dataRowNumber?: number): string {
@@ -37,9 +35,7 @@ export class BroTbodyTr implements BroView {
    * @param frame - the frame of the update, in which the cells of the body table measure their values
    */
   render(dataRowNumber?: number, height?: number, frame?: BroFrame): HTMLElement {
-    const tr = createElement(
-      this.template(dataRowNumber)
-    );
+    const tr = this.ctx.dom.createFromHTML(this.template(dataRowNumber));
 
     // A style attribute in the markup breaks a Content Security Policy without 'unsafe-inline'; a property of style does not.
     // The prerender renders only the row of its loading state, of the height of the page, in CSS

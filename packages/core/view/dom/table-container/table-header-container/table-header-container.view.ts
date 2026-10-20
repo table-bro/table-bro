@@ -1,10 +1,8 @@
-import {BroHTML, classAttr} from '../../../../shared/html';
-import {selectors}          from '../../../../shared/shared-selectors';
-import type {BroContext}    from '../../../../types/context';
-import type {BroView}       from '../../../../types/view';
-import {BroTable}           from '../table-body-container/scrolling-container/table/table.view';
-
-const {createElement} = BroHTML;
+import {classAttr}       from '../../../../shared/html';
+import {selectors}       from '../../../../shared/shared-selectors';
+import type {BroContext} from '../../../../types/context';
+import type {BroView}    from '../../../../types/view';
+import {BroTable}        from '../table-body-container/scrolling-container/table/table.view';
 
 export class BroTableHeaderContainer implements BroView {
   template(): string {
@@ -22,7 +20,7 @@ export class BroTableHeaderContainer implements BroView {
   }
 
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.tableEl = new BroTable(this.ctx, null).render(true);
 

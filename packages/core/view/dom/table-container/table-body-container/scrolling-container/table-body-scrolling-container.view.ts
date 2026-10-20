@@ -1,5 +1,4 @@
 import type {BroFrame}    from '../../../../../shared/frame';
-import {BroHTML}          from '../../../../../shared/html';
 import {selectors}        from '../../../../../table-bro-selectors';
 import type {BroContext}  from '../../../../../types/context';
 import type {BroRow}      from '../../../../../types/table-bro';
@@ -8,8 +7,6 @@ import {BroTableAux}      from './table-aux/table-aux.view';
 import type {BroTbodyAux} from './table-aux/tbody/tbody-aux.view';
 import {BroTable}         from './table/table.view';
 import type {BroTbody}    from './table/tbody/tbody.view';
-
-const {createElement} = BroHTML;
 
 export class BroTableBodyScrollingContainer implements BroView {
   template(): string {
@@ -32,7 +29,7 @@ export class BroTableBodyScrollingContainer implements BroView {
   }
 
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     // The auxiliary table measures column widths and holds the refresh overlay, so every table has it
     this.tableAux = new BroTableAux(this.ctx, this.rows);

@@ -1,13 +1,11 @@
 import type {BroFrame}                  from '../../../../../../shared/frame';
-import {BroHTML, classAttr}             from '../../../../../../shared/html';
+import {classAttr}                      from '../../../../../../shared/html';
 import {selectors as sharedSelectors}   from '../../../../../../shared/shared-selectors';
 import type {BroContext}                from '../../../../../../types/context';
 import type {BroResolvedConfig, BroRow} from '../../../../../../types/table-bro';
 import type {BroView}                   from '../../../../../../types/view';
 import {BroTbody}                       from './tbody/tbody.view';
 import {BroThead}                       from './thead/thead.view';
-
-const {createElement} = BroHTML;
 
 export class BroTable implements BroView {
   static template(config: BroResolvedConfig, tableHeaderContainer?: boolean, props?: {className?: string; ariaHidden?: boolean}): string {
@@ -45,7 +43,7 @@ export class BroTable implements BroView {
 
     const props = {className: layout.bodyClassName};
 
-    const table = createElement(BroTable.template(config, tableHeaderContainer, props));
+    const table = this.ctx.dom.createFromHTML(BroTable.template(config, tableHeaderContainer, props));
 
     if (tableHeaderContainer) {
       this.thead = new BroThead(this.ctx);

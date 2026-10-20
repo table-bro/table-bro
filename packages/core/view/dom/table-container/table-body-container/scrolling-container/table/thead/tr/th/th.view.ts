@@ -5,7 +5,7 @@ import type {BroContext}                                                        
 import type {BroCol, BroConfiguredElement, BroCustomElementConfig, BroSortHeader} from '../../../../../../../../../types/table-bro';
 import type {BroView}                                                             from '../../../../../../../../../types/view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroTheadTh implements BroView {
   template(col: BroCol) {
@@ -42,7 +42,7 @@ export class BroTheadTh implements BroView {
   }
 
   render() {
-    const th = createElement(this.template(this.col));
+    const th = this.ctx.dom.createFromHTML(this.template(this.col));
 
     th.classList.add(this.column.className);
     th.setAttribute(selectors.columnKeyAttribute, this.column.key);
@@ -67,7 +67,7 @@ export class BroTheadTh implements BroView {
   private renderSortHeader(col: BroCol): HTMLElement & BroSortHeader {
     const {config} = this.ctx;
 
-    const parent: HTMLElement = document.createElement('div');
+    const parent: HTMLElement = this.ctx.dom.createElement('div');
 
     parent.insertAdjacentHTML('afterbegin', this.buildSortHeaderHTML(col));
 

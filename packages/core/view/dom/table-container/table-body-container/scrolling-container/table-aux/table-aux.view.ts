@@ -1,5 +1,4 @@
 import type {BroColumnMeasure}          from '../../../../../../model/columns';
-import {BroHTML}                        from '../../../../../../shared/html';
 import {selectors}                      from '../../../../../../shared/shared-selectors';
 import {selectors as tableSelectors}    from '../../../../../../table-bro-selectors';
 import type {BroContext}                from '../../../../../../types/context';
@@ -10,8 +9,6 @@ import {BroTable}                       from '../table/table.view';
 import {fitRenderedValues}              from '../table/tbody/tr/td/content/td-content.view';
 import {BroTbodyAux}                    from './tbody/tbody-aux.view';
 import {BroTheadAux}                    from './thead/thead-aux.view';
-
-const {createElement} = BroHTML;
 
 /** The canvas that compares the widths of the plain values of a column. */
 let measureCanvas: HTMLCanvasElement | undefined;
@@ -39,7 +36,7 @@ export class BroTableAux implements BroView {
   render(): Node {
     const {cols, config, model, view, motion} = this.ctx;
 
-    this.el = createElement(BroTableAux.template(config));
+    this.el = this.ctx.dom.createFromHTML(BroTableAux.template(config));
 
     // A new body starts without the dimming of a refresh, as before it with a new aux table: the dimming of the previous
     // body would stay in the style of the host
@@ -382,7 +379,7 @@ export class BroTableAux implements BroView {
     if (!style) {
       const theadStyle = this.columnWidthsStyleOf('thead');
 
-      style = document.createElement('style');
+      style = this.ctx.dom.createElement('style');
       style.setAttribute('data-bro-column-widths', kind);
 
       // A strict Content Security Policy applies the style only with the nonce of the page
@@ -425,7 +422,7 @@ export class BroTableAux implements BroView {
     let style = this.refreshStyle();
 
     if (!style) {
-      style = document.createElement('style');
+      style = this.ctx.dom.createElement('style');
       style.setAttribute('data-bro-refresh', '');
 
       // A strict Content Security Policy applies the style only with the nonce of the page

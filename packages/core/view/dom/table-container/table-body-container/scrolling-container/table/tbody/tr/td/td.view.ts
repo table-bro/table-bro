@@ -8,7 +8,7 @@ import type {BroCol, BroRow}           from '../../../../../../../../../types/ta
 import type {BroView}                  from '../../../../../../../../../types/view';
 import {BroTdContent}                  from './content/td-content.view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroTd implements BroView {
   template(col: BroCol) {
@@ -33,7 +33,7 @@ export class BroTd implements BroView {
   }
 
   render(frame?: BroFrame): HTMLElement {
-    const td = createElement(this.template(this.col));
+    const td = this.ctx.dom.createFromHTML(this.template(this.col));
 
     if (this.column) {
       td.classList.add(this.column.className);

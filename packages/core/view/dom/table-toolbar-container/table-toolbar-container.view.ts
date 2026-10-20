@@ -1,13 +1,11 @@
 import {actionEvent, toolbarEvent, toolbarSearchCloseEvent, toolbarSearchOpenEvent} from '../../../shared/events';
-import {BroHTML, classAttr, createComponent}                                        from '../../../shared/html';
+import {classAttr}                                                                  from '../../../shared/html';
 import {dispatchAction}                                                             from '../../../shared/interaction';
 import {selectors}                                                                  from '../../../shared/shared-selectors';
 import type {BroContext}                                                            from '../../../types/context';
 import type {BroConfiguredElement, BroEventDetail, BroToolbarMain}                  from '../../../types/table-bro';
 import type {BroView}                                                               from '../../../types/view';
 import {BroToolbarSearch}                                                           from './toolbar/toolbar-search.view';
-
-const {createElement} = BroHTML;
 
 export class BroTableToolbarContainer implements BroView {
   template(): string {
@@ -42,7 +40,7 @@ export class BroTableToolbarContainer implements BroView {
   }
 
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.appendToolbarMain();
 
@@ -83,7 +81,7 @@ export class BroTableToolbarContainer implements BroView {
   private appendToolbarMain(): HTMLElement {
     const {config} = this.ctx;
 
-    const broToolbarMain = createComponent<BroToolbarMain & BroConfiguredElement>(config.components.toolbarMain.selector);
+    const broToolbarMain = this.ctx.dom.createElement<BroToolbarMain & BroConfiguredElement>(config.components.toolbarMain.selector);
 
     broToolbarMain.config = config;
 

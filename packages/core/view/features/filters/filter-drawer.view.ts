@@ -1,11 +1,10 @@
 import {resolveTexts}                                                                                                               from '../../../shared/config';
+import {BroDom}                                                                                                                     from '../../../shared/dom';
 import {actionEvent, columnsWidthEvent, filtersCloseEvent, filtersOpenEvent, filtersToggleEvent}                                    from '../../../shared/events';
-import {BroHTML, BroHTMLElement, classAttr, createComponent}                                                                        from '../../../shared/html';
+import {BroHTMLElement, classAttr}                                                                                                  from '../../../shared/html';
 import {dispatchAction, focusableSelector}                                                                                          from '../../../shared/interaction';
 import {getSkin}                                                                                                                    from '../../../shared/skins';
 import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, BroSkin, BroSkinConfig, BroTexts, BroToolbarElement} from '../../../types/table-bro';
-
-const {createElement} = BroHTML;
 
 /**
  * Defines <table-bro-filter-drawer-container> on demand: the core does not define it on import, the application calls
@@ -102,10 +101,11 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     this.skinClassName = skinName;
     this.classList.add(this.skinClassName);
 
+    const dom = new BroDom(this.ownerDocument);
     // The card lies under the header and the filters: the background and the shadow of the skin
-    const card = createElement(`<div ${classAttr('bro-filter-drawer-card', skin.css.shadow?.className)}></div>`);
+    const card = dom.createFromHTML(`<div ${classAttr('bro-filter-drawer-card', skin.css.shadow?.className)}></div>`);
     // The scrim lies over the table of the modal drawer
-    const scrim = createElement('<div class="bro-filter-drawer-scrim"></div>');
+    const scrim = dom.createFromHTML('<div class="bro-filter-drawer-scrim"></div>');
 
     scrim.addEventListener('click', () => {
       this.opened = false;
@@ -328,7 +328,8 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
   }
 
   private renderHeader(skin: BroSkinConfig): HTMLElement {
-    const toolbar = createComponent<BroToolbarElement & BroConfiguredElement>(skin.components.toolbar.selector);
+    const dom = new BroDom(this.ownerDocument);
+    const toolbar = dom.createElement<BroToolbarElement & BroConfiguredElement>(skin.components.toolbar.selector);
 
     toolbar.config = skin;
 
@@ -336,8 +337,8 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
 
     const titleClassName = skin.components.toolbarMain.css?.toolbarTitle.className;
     const texts = resolveTexts(this.ownTexts);
-    const title = createElement(`<span ${classAttr('bro-filter-drawer-title', titleClassName)}></span>`);
-    const closeButton: HTMLElement = document.createElement(skin.components.button.selector);
+    const title = dom.createFromHTML(`<span ${classAttr('bro-filter-drawer-title', titleClassName)}></span>`);
+    const closeButton: HTMLElement = dom.createElement(skin.components.button.selector);
 
     title.textContent = texts.filters;
     closeButton.setAttribute('label', texts.close);
@@ -357,7 +358,7 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     closeButton.classList.add('bro-filter-drawer-close');
 
     // The class stays on this element: an Angular Element replaces the classes of its own host
-    const header = createElement('<div class="bro-filter-drawer-header"></div>');
+    const header = dom.createFromHTML('<div class="bro-filter-drawer-header"></div>');
 
     header.appendChild(toolbar);
 

@@ -1,11 +1,8 @@
 import type {BroPagination}           from '../../../../../model/pagination';
 import type {BroRowSlot}              from '../../../../../model/row-slots';
-import {BroHTML}                      from '../../../../../shared/html';
 import {selectors as sharedSelectors} from '../../../../../shared/shared-selectors';
 import type {BroContext}              from '../../../../../types/context';
 import type {BroView}                 from '../../../../../types/view';
-
-const {createElement} = BroHTML;
 
 /**
  * The container of the shadows of the body. The layout of the body (ctx.layout) puts the shadows into it: one shadow
@@ -45,7 +42,7 @@ export class BroTableBodyShadowContainer implements BroView {
    * @param height - height of the shadows on the current page; the state of the table passes its own height
    */
   render(height?: number): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.ctx.layout.rowsRendered(this.el, this.rowsLength, this.firstRow(), this.lastRow(), height);
 

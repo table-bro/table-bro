@@ -395,8 +395,8 @@ function renderRegions(controller: BroController, rows: BroRow[] | null | undefi
  * Renders a <table-bro> element of a server DOM in the loading state of its columns and config, as the prerender of a
  * framework does: the regions of the table, the elements of its skin, which the server render of the framework renders
  * then, and the heights of the skin in CSS. It measures and animates nothing and leaves nothing running. In the browser
- * configure() on the same element renders the table in its place, at the same height. The global document is the
- * document of the element while it runs.
+ * configure() on the same element renders the table in its place, at the same height. The table creates its nodes in the
+ * document of the element: the render needs no global document.
  * @param element - the <table-bro> element of the server DOM, empty
  * @param options - the columns and the config of configure(); the rows wait for the browser
  * @group Rendering helpers

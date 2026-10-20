@@ -1,5 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 
+import {BroDom}                                from '../../../../../../../../../../shared/dom';
 import {registerSkin}                          from '../../../../../../../../../../shared/skins';
 import type {BroContext}                       from '../../../../../../../../../../types/context';
 import type {BroResolvedConfig, BroSkinConfig} from '../../../../../../../../../../types/table-bro';
@@ -11,7 +12,7 @@ describe('BroTdContent', () => {
 
     registerSkin('nv', <BroSkinConfig>{elements: {'test-tags': 'withTags'}});
 
-    const ctx = <BroContext><unknown>{config: <BroResolvedConfig>{skin: 'nv'}};
+    const ctx = <BroContext><unknown>{config: <BroResolvedConfig>{skin: 'nv'}, dom: new BroDom(document)};
     const cell = (name: string, selector: string) => <HTMLElement>new BroTdContent(ctx, {title: name, name, component: {selector}}, {[name]: 'a'}).render();
 
     cell('labels', 'test-tags');

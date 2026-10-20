@@ -6,7 +6,7 @@ import type {BroCol, BroRow}         from '../../../../types/table-bro';
 import type {BroView}                from '../../../../types/view';
 import {BroTdDetails}                from './td/td-details.view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroTrDetails implements BroView {
   template(dataRowNumber: number, slotId: number): string {
@@ -26,9 +26,7 @@ export class BroTrDetails implements BroView {
    * @param details - the loaded component of server details, which moves into the details row
    */
   render(dataRowNumber: number, slotId: number, details?: HTMLElement): HTMLElement {
-    const tr = createElement(
-      this.template(dataRowNumber, slotId)
-    );
+    const tr = this.ctx.dom.createFromHTML(this.template(dataRowNumber, slotId));
 
     // Not in the markup: a strict Content Security Policy blocks a style attribute
     tr.style.height = '0';

@@ -1,12 +1,10 @@
-import {BroHTML, classAttr}      from '../../../../../../../shared/html';
+import {classAttr}               from '../../../../../../../shared/html';
 import type {BroContext}         from '../../../../../../../types/context';
 import type {BroCol, BroColSort} from '../../../../../../../types/table-bro';
 import type {BroView}            from '../../../../../../../types/view';
 import {BroProgressTheadTr}      from '../../../../../../features/state/progress/tr/tr.view';
 import {easeInOutSine}           from '../../../../../../shared/animation';
 import {BroTheadTr}              from './tr/tr.view';
-
-const {createElement} = BroHTML;
 
 export class BroThead implements BroView {
   template(): string {
@@ -28,7 +26,7 @@ export class BroThead implements BroView {
 
   /** The head of the header table; the body table has none, the header container shows the head. */
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     return this.el;
   }

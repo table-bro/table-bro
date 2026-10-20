@@ -1,11 +1,8 @@
-import {BroHTML}                      from '../../../shared/html';
 import {selectors as sharedSelectors} from '../../../shared/shared-selectors';
 import {selectors}                    from '../../../table-bro-selectors';
 import type {BroContext}              from '../../../types/context';
 import type {BroView}                 from '../../../types/view';
 import {easeInOutSine}                from '../../shared/animation';
-
-const {createElement} = BroHTML;
 
 export class BroStateView implements BroView {
   template(iconHTML: string, message: string): string {
@@ -27,7 +24,7 @@ export class BroStateView implements BroView {
   }
 
   render(iconHTML: string, message: string): HTMLElement {
-    this.el = createElement(this.template(iconHTML, message));
+    this.el = this.ctx.dom.createFromHTML(this.template(iconHTML, message));
 
     return this.el;
   }

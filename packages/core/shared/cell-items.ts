@@ -24,7 +24,7 @@ export function fitCellItems(row: HTMLElement, signal: AbortSignal): void {
   }
 
   if (!ellipsis) {
-    ellipsis = document.createElement('span');
+    ellipsis = row.ownerDocument.createElement('span');
     ellipsis.className = ellipsisClassName;
     ellipsis.textContent = '…';
     // The items that it stands for are read

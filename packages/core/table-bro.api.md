@@ -494,6 +494,14 @@ export interface BroView {
 }
 export declare function fitCellItems(row: HTMLElement, signal: AbortSignal): void;
 export declare function resolveTexts(texts?: Partial<BroTexts>): BroTexts;
+export declare class BroDom {
+    readonly document: Document;
+    constructor(document: Document);
+    createElement<T = HTMLElement>(tag: string): HTMLElement & T;
+    createTextNode(value: string): Text;
+    createTemplate(html: string): HTMLTemplateElement;
+    createFromHTML<T = HTMLElement>(html: string): HTMLElement & T;
+}
 declare namespace events_d_exports {
     export { actionEvent, columnsWidthEvent, detailsServerFailedEvent, detailsServerLoadedEvent, detailsToggleEvent, errorEvent, filtersCloseEvent, filtersFilterEvent, filtersOpenEvent, filtersServerLoadedEvent, filtersSortEvent, filtersToggleEvent, paginatorPageEvent, themeChangeEvent, toolbarEvent, toolbarMoreExportEvent, toolbarSearchCloseEvent, toolbarSearchOpenEvent };
 }

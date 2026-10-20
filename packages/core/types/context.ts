@@ -1,4 +1,5 @@
 import type {BroDataState}              from '../controller/state';
+import type {BroDom}                    from '../shared/dom';
 import type {BroMotion}                 from '../shared/motion';
 import type {BroThemeService}           from '../shared/theme.service';
 import type {BroCol, BroResolvedConfig} from './table-bro';
@@ -50,6 +51,8 @@ export interface BroContext {
   readonly state: Readonly<BroDataState>;
   /** The <table-bro> element of the instance; the table events are sent and listened to on it. */
   readonly host: HTMLElement;
+  /** The nodes of the views in the document of the host, as of a server DOM in a prerender. */
+  readonly dom: BroDom;
   /** All view animations of the instance. */
   readonly motion: BroMotion;
   /** The computed theme. */

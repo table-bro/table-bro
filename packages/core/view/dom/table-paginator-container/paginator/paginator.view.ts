@@ -1,6 +1,5 @@
 import type {BroPagination}                                                    from '../../../../model/pagination';
 import {paginatorPageEvent}                                                    from '../../../../shared/events';
-import {createComponent}                                                       from '../../../../shared/html';
 import {dispatchAction, keepFocus}                                             from '../../../../shared/interaction';
 import type {BroContext}                                                       from '../../../../types/context';
 import type {BroPaginatorOptions}                                              from '../../../../types/pagination';
@@ -25,7 +24,7 @@ export class BroPaginator implements BroView {
   render(options?: BroPaginatorOptions): HTMLElement {
     const {config} = this.ctx;
 
-    this.el = createComponent<BroPaginatorElement & BroConfiguredElement>(config.components.paginator.selector);
+    this.el = this.ctx.dom.createElement<BroPaginatorElement & BroConfiguredElement>(config.components.paginator.selector);
 
     this.el.classList.add('bro-paginator');
     this.el.setAttribute('role', 'group');

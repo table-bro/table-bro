@@ -1,11 +1,9 @@
-import {BroHTML, classAttr}       from '../../../shared/html';
+import {classAttr}                from '../../../shared/html';
 import {selectors}                from '../../../shared/shared-selectors';
 import type {BroContext}          from '../../../types/context';
 import type {BroPaginatorOptions} from '../../../types/pagination';
 import type {BroView}             from '../../../types/view';
 import {BroPaginator}             from './paginator/paginator.view';
-
-const {createElement} = BroHTML;
 
 export class BroTablePaginatorContainer implements BroView {
   template(): string {
@@ -22,7 +20,7 @@ export class BroTablePaginatorContainer implements BroView {
    * @param options - the page, the page size and the total of the rows at the first render
    */
   render(options?: BroPaginatorOptions): HTMLElement {
-    const container = createElement(this.template());
+    const container = this.ctx.dom.createFromHTML(this.template());
 
     const paginator = new BroPaginator(this.ctx);
 

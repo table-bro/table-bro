@@ -1,10 +1,7 @@
-import {BroHTML}                    from '../../../shared/html';
 import {cssNumber}                  from '../../../shared/styles';
 import type {BroContext}            from '../../../types/context';
 import type {BroView}               from '../../../types/view';
 import type {BroTableBodyContainer} from './table-body-container/table-body-container.view';
-
-const {createElement} = BroHTML;
 
 /**
  * The table for screen readers: one element with the role table around the containers of the header and of the body,
@@ -25,7 +22,7 @@ export class BroTableContainer implements BroView {
   render(): HTMLElement {
     const {config} = this.ctx;
 
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     if (config.toolbarTitle) {
       this.el.setAttribute('aria-label', config.toolbarTitle);

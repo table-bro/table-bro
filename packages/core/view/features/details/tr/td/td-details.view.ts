@@ -1,10 +1,11 @@
 import {appObject}                                 from '../../../../../shared/app-objects';
-import {BroHTML, classAttr, createComponent}       from '../../../../../shared/html';
+import type {BroDom}                               from '../../../../../shared/dom';
+import {BroHTML, classAttr}                        from '../../../../../shared/html';
 import type {BroContext}                           from '../../../../../types/context';
 import type {BroCol, BroRow, BroRowDetailsElement} from '../../../../../types/table-bro';
 import type {BroView}                              from '../../../../../types/view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroTdDetails implements BroView {
   template(col: BroCol) {
@@ -14,8 +15,8 @@ export class BroTdDetails implements BroView {
       </td>`;
   }
 
-  static createDetails(selector: string, row: BroRow, server: boolean): HTMLElement {
-    const details = createComponent<HTMLElement & BroRowDetailsElement>(selector);
+  static createDetails(selector: string, row: BroRow, server: boolean, dom: BroDom): HTMLElement {
+    const details = dom.createElement<BroRowDetailsElement>(selector);
 
     details.row = appObject(row);
     details.setAttribute('server', JSON.stringify(server));
@@ -29,14 +30,14 @@ export class BroTdDetails implements BroView {
   }
 
   render(details?: HTMLElement) {
-    const td = createElement(this.template(this.col));
+    const td = this.ctx.dom.createFromHTML(this.template(this.col));
     // The table opens the details by the height of its own element: the paddings and borders of the details stay inside it
-    const container = document.createElement('div');
+    const container = this.ctx.dom.createElement('div');
 
     td.appendChild(container);
 
     if (!details) {
-      details = BroTdDetails.createDetails(<string>this.ctx.config.rowDetailsComponent, this.row, !!this.ctx.config.rowDetailsServer);
+      details = BroTdDetails.createDetails(<string>this.ctx.config.rowDetailsComponent, this.row, !!this.ctx.config.rowDetailsServer, this.ctx.dom);
 
       container.appendChild(details);
     }

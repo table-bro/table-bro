@@ -11,6 +11,7 @@ export type {BroAdvancedFilterGroup, BroFilterCondition, BroFilters, BroFilterVa
 
 export {fitCellItems}                     from './shared/cell-items';
 export {resolveTexts}                     from './shared/config';
+export {BroDom}                           from './shared/dom';
 export * as events                        from './shared/events';
 export {dispatchAction}                   from './shared/interaction';
 export {useIslandDetails}                 from './shared/island';

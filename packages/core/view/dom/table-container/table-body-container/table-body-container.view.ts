@@ -1,7 +1,6 @@
 import type {BroPagination}                          from '../../../../model/pagination';
 import type {BroRowSlot, BroRowSlots}                from '../../../../model/row-slots';
 import type {BroFrame}                               from '../../../../shared/frame';
-import {BroHTML}                                     from '../../../../shared/html';
 import {keepFocus}                                   from '../../../../shared/interaction';
 import {cssRowsHeight}                               from '../../../../shared/styles';
 import {selectors}                                   from '../../../../table-bro-selectors';
@@ -11,8 +10,6 @@ import type {BroView}                                from '../../../../types/vie
 import {removeRow, renderRowNumber, renderRowObject} from './row-layers';
 import {BroTableBodyScrollingContainer}              from './scrolling-container/table-body-scrolling-container.view';
 import {BroTableBodyShadowContainer}                 from './shadow-container/table-body-shadow-container.view';
-
-const {createElement} = BroHTML;
 
 export class BroTableBodyContainer implements BroView {
   selector = selectors.tableBodyContainer;
@@ -38,7 +35,7 @@ export class BroTableBodyContainer implements BroView {
   render(): HTMLElement {
     const {view} = this.ctx;
 
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.scrollingContainer = new BroTableBodyScrollingContainer(this.ctx, this.rows);
     view.scrollingContainer = this.scrollingContainer;

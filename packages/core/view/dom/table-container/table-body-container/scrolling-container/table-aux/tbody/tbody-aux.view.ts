@@ -128,9 +128,9 @@ export class BroTbodyAux implements BroView {
 
   /** The element of the server details of the row, before it loads: the table listens to its loading first. */
   createServerDetails(slot: BroRowSlot): HTMLElement {
-    const {config} = this.ctx;
+    const {config, dom} = this.ctx;
 
-    return BroTdDetails.createDetails(<string>config.rowDetailsComponent, slot.row, !!config.rowDetailsServer);
+    return BroTdDetails.createDetails(<string>config.rowDetailsComponent, slot.row, !!config.rowDetailsServer, dom);
   }
 
   /** Server details load hidden in the aux row of their row; a component that ends its loading as soon as it connects shows them at once. */

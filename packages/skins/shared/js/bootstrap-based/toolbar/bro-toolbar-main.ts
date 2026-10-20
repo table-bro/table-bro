@@ -1,8 +1,8 @@
-import {type BroButton, type BroConfiguredElement, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, events, isPrerendered} from '@table-bro/core';
+import {type BroButton, type BroConfiguredElement, BroDom, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, events, isPrerendered} from '@table-bro/core';
 
 import type {BroToolbarComponent} from './bro-toolbar';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroToolbarMainComponent extends BroHTMLElement implements BroView, BroConfiguredElement, BroToolbarMain {
   template(): string {
@@ -59,7 +59,7 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
 
   render(): void {
     // The toolbar element
-    const broToolbar = document.createElement(this.config.components.toolbar.selector) as BroToolbarComponent;
+    const broToolbar = this.dom.createElement<BroToolbarComponent>(this.config.components.toolbar.selector);
 
     broToolbar.setAttribute('class', 'bro-toolbar');
 
@@ -68,7 +68,7 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
     this.appendChild(broToolbar);
 
     // The template in the toolbar element
-    const wrapper: HTMLElement = document.createElement('div');
+    const wrapper: HTMLElement = this.dom.createElement('div');
 
     wrapper.insertAdjacentHTML('afterbegin', this.template());
 
@@ -114,8 +114,13 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
       .append(...nodes);
   }
 
+  /** The nodes of the toolbar in the document of its element, as of a server DOM in a prerender. */
+  private get dom(): BroDom {
+    return new BroDom(this.ownerDocument);
+  }
+
   private templateToolbarButton(buttonTitle: string, iconHTML?: string, className?: string): HTMLElement {
-    return createElement(`
+    return this.dom.createFromHTML(`
       <li class="${escape(this.css.navbarCollapse.ul.li.className)}">
         <a class="${escape(this.css.navbarCollapse.ul.li.a.className)}${className ? ` ${escape(className)}` : ''}" href="">
            ${iconHTML || ''}${escape(buttonTitle)}
@@ -124,7 +129,7 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
   }
 
   private renderSearchButton(): HTMLElement {
-    const broButton = document.createElement(this.config.components.button.selector) as HTMLElement & BroButton;
+    const broButton = this.dom.createElement<BroButton>(this.config.components.button.selector);
 
     this.config.components.toolbarMain.beforeRender?.(broButton, this.config.texts.search);
 
@@ -136,7 +141,7 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
   private renderButtons(): HTMLElement[] {
     return (this.config.components.toolbarMain.buttons ?? []).map((button: BroButton | BroDropdown) => {
       if (button.mode === 'navbar-dropdown') {
-        const broDropdown: HTMLElement = document.createElement(<string>this.config.components.dropdown?.selector);
+        const broDropdown: HTMLElement = this.dom.createElement(<string>this.config.components.dropdown?.selector);
 
         (<BroConfiguredElement>broDropdown).config = this.config;
 

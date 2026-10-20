@@ -5,6 +5,7 @@ import type {BroControllerContext}      from '../types/context';
 import type {BroCol, BroResolvedConfig} from '../types/table-bro';
 import {BroBodyLayout}                  from '../view/features/body-layout/body-layout';
 import type {BroViews}                  from '../view/shared/views';
+import {BroDom}                         from './dom';
 import {BroMotion}                      from './motion';
 import {prerenderStyles, resolveStyles} from './styles';
 import {BroThemeService}                from './theme.service';
@@ -33,6 +34,7 @@ export function createContext(host: HTMLElement, cols: BroCol[], config: BroReso
       emptyRows: 0
     },
     host,
+    dom: new BroDom(host.ownerDocument),
     view: <BroViews>{},
     layout: new BroBodyLayout(config),
     motion,

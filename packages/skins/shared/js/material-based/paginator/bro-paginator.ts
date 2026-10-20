@@ -7,7 +7,7 @@
  */
 
 import type {BroConfiguredElement, BroDropdownOption, BroPaginatorElement, BroPaginatorPageEvent, BroResolvedConfig, BroTexts, BroView} from '@table-bro/core';
-import {BroHTML, BroHTMLElement, isPrerendered}                                                                                         from '@table-bro/core';
+import {BroDom, BroHTML, BroHTMLElement, isPrerendered}                                                                                 from '@table-bro/core';
 
 const {escape} = BroHTML;
 
@@ -324,7 +324,7 @@ export class BroPaginatorComponent extends BroHTMLElement implements BroView, Br
   }
 
   private renderPageSizeDropdown(): void {
-    const broDropdown: HTMLElement = document.createElement(this.dropdownSelector);
+    const broDropdown: HTMLElement = new BroDom(this.ownerDocument).createElement(this.dropdownSelector);
 
     (<BroConfiguredElement>broDropdown).config = this.config;
     broDropdown.setAttribute('mode', 'select');

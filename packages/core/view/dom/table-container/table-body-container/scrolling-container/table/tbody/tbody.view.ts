@@ -10,7 +10,7 @@ import {type BroDetailsButton, detailsButtonSelector} from '../../../../../../fe
 import {BroStateView}                                 from '../../../../../../features/state/state.view';
 import {BroTbodyTr}                                   from './tr/tr.view';
 
-const {createElement, escape} = BroHTML;
+const {escape} = BroHTML;
 
 export class BroTbody implements BroView {
   template(): string {
@@ -42,7 +42,7 @@ export class BroTbody implements BroView {
    * @param frame - the frame of the update for the body table; the aux table renders without one
    */
   render(frame?: BroFrame): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     if (this.rows?.length) {
       this.rows.forEach((row, i) => {

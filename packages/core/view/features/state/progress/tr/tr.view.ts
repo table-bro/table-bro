@@ -1,10 +1,7 @@
-import {BroHTML}            from '../../../../../shared/html';
 import type {BroContext}    from '../../../../../types/context';
 import type {BroCol}        from '../../../../../types/table-bro';
 import type {BroView}       from '../../../../../types/view';
 import {BroProgressTheadTh} from './th/th.view';
-
-const {createElement} = BroHTML;
 
 export class BroProgressTheadTr implements BroView {
   template(): string {
@@ -19,7 +16,7 @@ export class BroProgressTheadTr implements BroView {
   }
 
   render(): HTMLElement {
-    this.el = createElement(this.template());
+    this.el = this.ctx.dom.createFromHTML(this.template());
 
     this.el.appendChild(
       new BroProgressTheadTh(this.ctx, {

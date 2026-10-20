@@ -1,6 +1,7 @@
 import type {BroColumnModel}                                                                                                        from '../../../../../../../../../../model/columns';
 import {type BroRowSlot, type BroValueWidths, emptyRow}                                                                             from '../../../../../../../../../../model/row-slots';
 import {appObject}                                                                                                                  from '../../../../../../../../../../shared/app-objects';
+import type {BroDom}                                                                                                                from '../../../../../../../../../../shared/dom';
 import type {BroFrame}                                                                                                              from '../../../../../../../../../../shared/frame';
 import {getSkin}                                                                                                                    from '../../../../../../../../../../shared/skins';
 import {selectors}                                                                                                                  from '../../../../../../../../../../table-bro-selectors';
@@ -44,7 +45,7 @@ export class BroTdContent implements BroView {
     const row = this.row;
 
     if (row === emptyRow) {
-      return document.createTextNode('');
+      return this.ctx.dom.createTextNode('');
     }
 
     if (typeof col.component === 'string') {
@@ -60,14 +61,14 @@ export class BroTdContent implements BroView {
     const value = this.buildAttrValue(componentConfig, 'value', col, row);
 
     if (col.name === selectors.rowCounter) {
-      return cellValueElement('strong', value, false);
+      return cellValueElement('strong', value, false, this.ctx.dom);
     }
 
     if (!value) {
-      return document.createTextNode('');
+      return this.ctx.dom.createTextNode('');
     }
 
-    const node = cellValueElement('span', value, col.html);
+    const node = cellValueElement('span', value, col.html, this.ctx.dom);
 
     // autoColumnWidth: false measures nothing: the CSS of the application sizes the columns
     if (frame && this.column && config.autoColumnWidth !== false) {
@@ -135,7 +136,7 @@ export class BroTdContent implements BroView {
       }
     };
 
-    return this.decorate(document.createElement(selector), textEllipsis);
+    return this.decorate(this.ctx.dom.createElement(selector), textEllipsis);
   }
 
   /**
@@ -151,7 +152,7 @@ export class BroTdContent implements BroView {
       console.error(`Table, Bro: the column "${this.col.name}" uses the element ${tag}: call ${define}() after the import of the skin`);
     }
 
-    return document.createElement(tag);
+    return this.ctx.dom.createElement(tag);
   }
 
   /** Gives a cell element the objects of its column and row, its attributes and the listener of its event from the config of the column. */
@@ -216,9 +217,15 @@ export class BroTdContent implements BroView {
   }
 }
 
-/** A cell value element: the value goes in as text, or as markup for a column with html: true. */
-function cellValueElement(tagName: 'strong' | 'span', value: string, html: boolean | undefined): HTMLElement {
-  const el: HTMLElement = document.createElement(tagName);
+/**
+ * A cell value element: the value goes in as text, or as markup for a column with html: true.
+ * @param tagName - the tag of the element
+ * @param value - the value of the cell
+ * @param html - whether the value is markup
+ * @param dom - the nodes of the table in its document
+ */
+function cellValueElement(tagName: 'strong' | 'span', value: string, html: boolean | undefined, dom: BroDom): HTMLElement {
+  const el: HTMLElement = dom.createElement(tagName);
 
   el.className = 'bro-cell_component';
 
