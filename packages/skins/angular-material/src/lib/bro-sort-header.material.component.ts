@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal, viewChild} from '@angular/core';
+import {isPlatformBrowser}                                                                                               from '@angular/common';
+import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, PLATFORM_ID, signal, viewChild} from '@angular/core';
 
 import {MatSort, MatSortHeader, type Sort, type SortDirection, type SortHeaderArrowPosition} from '@angular/material/sort';
 import {MatTooltip}                                                                          from '@angular/material/tooltip';
@@ -52,11 +53,20 @@ export class BroMaterialSortHeaderComponent {
     });
 
     // The header cell of the table tells the sort with aria-sort. Material puts aria-sort on its own host too, a div
-    // inside the cell, where ARIA does not allow it: the div does not keep it
+    // inside the cell, where ARIA does not allow it: the div does not keep it. The prerender sorts nothing, so its div
+    // only loses the attribute
+    const browser = isPlatformBrowser(inject(PLATFORM_ID));
+
     effect(onCleanup => {
       const header: HTMLElement | undefined = this.sortHeader()?.nativeElement;
 
       if (!header) {
+        return;
+      }
+
+      if (!browser) {
+        header.removeAttribute('aria-sort');
+
         return;
       }
 

@@ -141,6 +141,25 @@ describe('TableBroNg', () => {
     expect(filters).toEqual([filter]);
   });
 
+  it('renders the first table in the element of the prerender, and a new table for new columns', async () => {
+    const fixture = TestBed.createComponent<TableBroNg<BroRow>>(TableBroNg);
+    const prerendered = document.createElement('table-bro');
+
+    fixture.nativeElement.append(prerendered);
+    fixture.componentRef.setInput('cols', cols);
+    fixture.componentRef.setInput('rows', undefined);
+    fixture.componentRef.setInput('conf', {skin: 'nv'});
+    await fixture.whenStable();
+
+    expect(calls[0].table).toBe(prerendered);
+    expect(fixture.nativeElement.firstElementChild).toBe(prerendered);
+
+    await set(fixture, {cols: [{title: 'Status', name: 'status'}]});
+
+    expect(calls[0].table).not.toBe(prerendered);
+    expect(fixture.nativeElement.firstElementChild).toBe(calls[0].table);
+  });
+
   it('emits the query of the server mode and the other actions of the table', async () => {
     const fixture = await create({rows: [{name: 'a'}]});
     const table = calls[0].table;

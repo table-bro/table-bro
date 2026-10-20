@@ -2,10 +2,10 @@ import {isPlatformBrowser}                                from '@angular/common'
 import {type EnvironmentInjector, PLATFORM_ID, type Type} from '@angular/core';
 import {createCustomElement}                              from '@angular/elements';
 
-import {MatPaginator}        from '@angular/material/paginator';
-import {MatProgressBar}      from '@angular/material/progress-bar';
-import {MatToolbar}          from '@angular/material/toolbar';
-import type {BroCellElement} from '@table-bro/core';
+import {MatPaginator}                       from '@angular/material/paginator';
+import {MatProgressBar}                     from '@angular/material/progress-bar';
+import {MatToolbar}                         from '@angular/material/toolbar';
+import {type BroCellElement, isPrerendered} from '@table-bro/core';
 
 import {BroMaterialButtonComponent}       from './bro-button.material.component';
 import {BroMaterialSortHeaderComponent}   from './bro-sort-header.material.component';
@@ -16,7 +16,7 @@ import {BroMaterialToolbarMainComponent}  from './toolbar/bro-toolbar-main.mater
  * The elements of the skin that every table may use: the components of Material that the table uses as they are, and
  * the ones of the skin. The optional elements come from the features of provideTableBroMatSkin().
  */
-const elements: Record<string, Type<unknown>> = {
+export const tableBroMatElements: Record<string, Type<unknown>> = {
   'ng-mat-paginator': MatPaginator,
   'ng-mat-progress-bar': MatProgressBar,
   'ng-mat-toolbar': MatToolbar,
@@ -39,7 +39,7 @@ export function defineTableBroMatElements(injector: EnvironmentInjector, feature
     return;
   }
 
-  Object.entries({...elements, ...features}).forEach(([name, component]) => {
+  Object.entries({...tableBroMatElements, ...features}).forEach(([name, component]) => {
     if (!customElements.get(name)) {
       customElements.define(name, keepThroughMoves(createCustomElement(component, {injector})));
     }
@@ -93,6 +93,11 @@ function keepThroughMoves(element: CustomElementConstructor): CustomElementConst
       if (this.moving) {
         this.moving = false;
 
+        return;
+      }
+
+      // An element of the prerender keeps its markup until the table renders its own elements in its place
+      if (isPrerendered(this)) {
         return;
       }
 

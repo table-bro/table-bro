@@ -1,14 +1,17 @@
-import {isPlatformBrowser}                                                                                             from '@angular/common';
-import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, input, NgZone, output, PLATFORM_ID, untracked} from '@angular/core';
+import {isPlatformBrowser}                                                                                                                                                 from '@angular/common';
+import {ChangeDetectionStrategy, Component, type ComponentRef, DestroyRef, effect, ElementRef, EnvironmentInjector, inject, input, NgZone, output, PLATFORM_ID, untracked} from '@angular/core';
 
 import {type BroActionDetail, type BroCol, type BroConfig, type BroEmptyState, type BroFilters, type BroQuery, type BroUserTheme, dispatchAction, events, type TableBroHTMLElement} from '@table-bro/core';
 
-import type {BroServerFacade} from './table-bro.facade';
+import {prerenderTableBroNg, TABLE_BRO_ELEMENTS} from './table-bro-prerender';
+import type {BroServerFacade}                    from './table-bro.facade';
 
 /**
  * The Angular wrapper of <table-bro>: it translates the inputs into the methods of the element and the bro-action event
  * into the outputs. The table stays one: the wrapper renders nothing of its own and keeps no pagination, sort or filters.
  * The table works outside the Angular zone, so its animation frames start no change detection; the outputs emit inside it.
+ * The server render of Angular renders the table in its loading state (prerenderTableBroNg), and the browser renders the
+ * table in that element: the page shows the table before the application starts.
  */
 @Component({
   selector: 'table-bro-ng',
@@ -60,8 +63,25 @@ export class TableBroNg<MODEL extends object> implements BroServerFacade<MODEL> 
   private ngZone = inject(NgZone);
 
   constructor() {
-    // The server render of Angular leaves the host empty: the table is created in the browser
+    // The server render of Angular renders the table in its loading state; the browser renders it with its rows
     if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+      const skins = inject(TABLE_BRO_ELEMENTS);
+      const injector = inject(EnvironmentInjector);
+      let components: ComponentRef<unknown>[] = [];
+
+      // The components of the elements of the skin belong to no view: they go with the table that they render
+      const destroyComponents = () => components.forEach(component => component.destroy());
+
+      inject(DestroyRef).onDestroy(destroyComponents);
+
+      effect(() => {
+        const conf = this.conf();
+        const elements = skins.find(({skin}) => skin === conf.skin)?.elements;
+
+        destroyComponents();
+        components = elements ? prerenderTableBroNg(this.elementRef.nativeElement, this.cols(), conf, elements, injector, this.tableId(), this.theme()) : [];
+      });
+
       return;
     }
 
@@ -118,8 +138,10 @@ export class TableBroNg<MODEL extends object> implements BroServerFacade<MODEL> 
   private createTableBro(cols: BroCol<MODEL>[], conf: BroConfig<MODEL>, tableId?: string) {
     const rows = this.rows();
     const theme = this.theme();
+    // The first table renders in the element of the prerender, in place of its loading state
+    const prerendered = !this.tableBro && this.elementRef.nativeElement.querySelector(':scope > table-bro');
 
-    this.tableBro = document.createElement('table-bro') as TableBroHTMLElement;
+    this.tableBro = (prerendered || document.createElement('table-bro')) as TableBroHTMLElement;
     this.appliedLoading = false;
     this.appliedFailed = false;
 
@@ -142,7 +164,10 @@ export class TableBroNg<MODEL extends object> implements BroServerFacade<MODEL> 
       }
     });
 
-    this.elementRef.nativeElement.replaceChildren(this.tableBro);
+    // The element of the prerender is in its place already
+    if (!prerendered) {
+      this.elementRef.nativeElement.replaceChildren(this.tableBro);
+    }
 
     this.appliedFilter = undefined;
     this.applyFilter(this.filter());

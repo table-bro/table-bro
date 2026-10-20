@@ -1,12 +1,13 @@
-import {EnvironmentInjector, type EnvironmentProviders, inject, provideAppInitializer, type Type} from '@angular/core';
+import {EnvironmentInjector, type EnvironmentProviders, inject, makeEnvironmentProviders, provideAppInitializer, type Type} from '@angular/core';
 
-import {registerSkin} from '@table-bro/core';
+import {TABLE_BRO_ELEMENTS} from '@table-bro/angular';
+import {registerSkin}       from '@table-bro/core';
 
-import {BroMaterialSlideToggleComponent} from './bro-slide-toggle.material.component';
-import {BroMaterialTagsComponent}        from './bro-tags.material.component';
-import {defineTableBroMatElements}       from './define-table-bro-mat-elements';
-import {matSkinConfig}                   from './table-bro.angular-material.config';
-import {BroMaterialToolbarMoreComponent} from './toolbar/bro-toolbar-more.material.component';
+import {BroMaterialSlideToggleComponent}                from './bro-slide-toggle.material.component';
+import {BroMaterialTagsComponent}                       from './bro-tags.material.component';
+import {defineTableBroMatElements, tableBroMatElements} from './define-table-bro-mat-elements';
+import {matSkinConfig}                                  from './table-bro.angular-material.config';
+import {BroMaterialToolbarMoreComponent}                from './toolbar/bro-toolbar-more.material.component';
 
 /** An optional element of the skin mat for provideTableBroMatSkin(): its tag and its component. */
 export interface TableBroMatSkinFeature {
@@ -20,10 +21,16 @@ export interface TableBroMatSkinFeature {
  * @param features - the optional elements: withTags(), withSwitch(), withToolbarMenu()
  */
 export function provideTableBroMatSkin(...features: TableBroMatSkinFeature[]): EnvironmentProviders {
-  return provideAppInitializer(() => {
-    registerSkin('mat', matSkinConfig);
-    defineTableBroMatElements(inject(EnvironmentInjector), Object.assign({}, ...features.map(feature => feature.elements)));
-  });
+  const elements = Object.assign({}, ...features.map(feature => feature.elements));
+
+  // The prerender renders the elements of the skin with their components too (TABLE_BRO_ELEMENTS)
+  return makeEnvironmentProviders([
+    provideAppInitializer(() => {
+      registerSkin('mat', matSkinConfig);
+      defineTableBroMatElements(inject(EnvironmentInjector), elements);
+    }),
+    {provide: TABLE_BRO_ELEMENTS, useValue: {skin: 'mat', elements: {...tableBroMatElements, ...elements}}, multi: true}
+  ]);
 }
 
 /** The element bro-mat-tags: the items of a column as the chips of Material. */
