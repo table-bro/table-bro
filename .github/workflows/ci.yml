@@ -122,5 +122,5 @@ jobs:
         run: npm run build:samples
       - name: Browser
         run: npx playwright install --with-deps chromium
-      - name: Pages of samples/frameworks
-        run: npx playwright test e2e/samples-frameworks.spec.ts --project chromium
+      - name: Pages of samples/frameworks and samples/no-build
+        run: npx playwright test e2e/samples-frameworks.spec.ts e2e/samples-no-build.spec.ts --project chromium

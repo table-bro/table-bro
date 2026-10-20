@@ -1,6 +1,8 @@
 // The build of the pages of samples/: each is a project of one skin, or of one framework in samples/frameworks, set up
 // as its page of Docs says, which installs the tarballs of the packages, as npm publishes them, from a local npm
-// registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. The other packages come
+// registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. A page without a build,
+// a folder with index.html and no package.json, as no-build, takes the packages from a CDN and is copied as it is, with
+// the base path of the page in its index.html. The other packages come
 // from npmjs through the registry. Run after `npm run build`, with the names of the samples as arguments or without them
 // for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default)
 // and SAMPLES_BASE the base path of the pages (/samples/ by default).
@@ -104,8 +106,8 @@ async function waitFor(url) {
 }
 
 /**
- * The projects of the samples: a folder of samples/ with its package.json, or the folders of a folder without one, as
- * frameworks/react of samples/frameworks.
+ * The projects of the samples: a folder of samples/ with its package.json or its index.html, or the folders of a folder
+ * without them, as frameworks/react of samples/frameworks.
  * @param names - the names of the folders of samples/
  * @returns the paths of the projects under samples/
  */
@@ -113,7 +115,7 @@ function sampleProjects(names) {
   return names.flatMap(name => {
     const dir = path.join(root, 'samples', name);
 
-    if (fs.existsSync(path.join(dir, 'package.json'))) {
+    if (fs.existsSync(path.join(dir, 'package.json')) || fs.existsSync(path.join(dir, 'index.html'))) {
       return [name];
     }
 
@@ -124,15 +126,25 @@ function sampleProjects(names) {
 }
 
 /**
- * Installs a copy of a sample from the registry, as its users install it, and builds it into dist/samples/<name>.
+ * Installs a copy of a sample from the registry, as its users install it, and builds it into dist/samples/<name>; a page
+ * without a build goes there as it is, with <base> of its base path: the site serves it without the trailing slash.
  * @param name - the path of the project of the sample under samples/
  * @param registry - the address of the registry
  * @param base - the base path of the pages
  */
 function buildSample(name, registry, base) {
+  const dest = path.join(root, 'dist/samples', name);
+
+  if (!fs.existsSync(path.join(root, 'samples', name, 'package.json'))) {
+    fs.rmSync(dest, {recursive: true, force: true});
+    fs.cpSync(path.join(root, 'samples', name), dest, {recursive: true});
+    fs.writeFileSync(path.join(dest, 'index.html'), fs.readFileSync(path.join(dest, 'index.html'), 'utf8').replace('<head>\n', `<head>\n    <base href="${base}${name}/" />\n`));
+
+    return;
+  }
+
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `table-bro-sample-${name.replace('/', '-')}-`));
   const angular = fs.existsSync(path.join(root, 'samples', name, 'angular.json'));
-  const dest = path.join(root, 'dist/samples', name);
 
   fs.cpSync(path.join(root, 'samples', name), dir, {recursive: true, filter: file => !/[\\/](node_modules|dist)$/.test(file)});
   fs.writeFileSync(path.join(dir, '.npmrc'), `registry=${registry}\n`);

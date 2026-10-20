@@ -6,6 +6,8 @@ of the frameworks of Docs, Frameworks:
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
+- `no-build`: Vanilla JS with `@table-bro/native` without a bundler: `index.html` takes the packages from jsDelivr by
+  an import map, and `npm run build:samples` copies the folder as it is;
 - `frameworks`: a Vite project per framework, `react`, `vue`, `svelte`, `solid` and `preact`, each with
   `@table-bro/native`; StackBlitz opens each folder as it is.
 
