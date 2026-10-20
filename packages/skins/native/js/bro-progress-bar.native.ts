@@ -1,4 +1,4 @@
-import {type BroConfiguredElement, BroHTML, BroHTMLElement, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView} from '@table-bro/core';
+import {type BroConfiguredElement, BroHTML, BroHTMLElement, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
 
 const {escape} = BroHTML;
 
@@ -40,6 +40,11 @@ export class BroNativeProgressBarComponent extends BroHTMLElement implements Bro
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (this.rendered) {
       return;
     }

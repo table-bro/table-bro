@@ -1,4 +1,4 @@
-import {type BroColSort, type BroConfiguredElement, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSortDirection, type BroSortHeader, type BroView, dispatchAction, events} from '@table-bro/core';
+import {type BroColSort, type BroConfiguredElement, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSortDirection, type BroSortHeader, type BroView, dispatchAction, events, isPrerendered} from '@table-bro/core';
 
 const {escape} = BroHTML;
 
@@ -127,6 +127,11 @@ export class BroSortHeaderComponent extends BroHTMLElement implements BroView, B
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (this.rendered) {
       if (this.released) {
         this.released = false;
@@ -180,6 +185,11 @@ export class BroSortHeaderComponent extends BroHTMLElement implements BroView, B
 
   private afterRender(): void {
     const container = this.children[0];
+
+    // A prerender runs no scripts of the browser, as the tooltips of a skin
+    if (this.config.prerender) {
+      return;
+    }
 
     this.release = this.config.components.sortHeader.afterRender?.(container, this.tooltip);
   }

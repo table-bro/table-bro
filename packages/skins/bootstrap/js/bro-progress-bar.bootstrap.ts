@@ -1,4 +1,4 @@
-import {type BroConfiguredElement, BroHTML, BroHTMLElement, BroMotion, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView} from '@table-bro/core';
+import {type BroConfiguredElement, BroHTML, BroHTMLElement, BroMotion, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
 
 const {escape} = BroHTML;
 
@@ -46,6 +46,11 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (!this.rendered) {
       this.rendered = true;
 
@@ -56,7 +61,8 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
       this.valueEl.style.width = `${this.value}%`;
     }
 
-    if (this.mode === 'indeterminate' && !this.motion) {
+    // A prerender animates nothing: the bar of the table that the browser renders moves
+    if (this.mode === 'indeterminate' && !this.motion && !this.config.prerender) {
       this.animateProgress();
     }
   }

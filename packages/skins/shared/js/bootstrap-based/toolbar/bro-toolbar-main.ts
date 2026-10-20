@@ -1,4 +1,4 @@
-import {type BroButton, type BroConfiguredElement, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, events} from '@table-bro/core';
+import {type BroButton, type BroConfiguredElement, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, events, isPrerendered} from '@table-bro/core';
 
 import type {BroToolbarComponent} from './bro-toolbar';
 
@@ -91,6 +91,11 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (this.rendered) {
       return;
     }

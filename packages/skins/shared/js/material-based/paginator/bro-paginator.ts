@@ -7,7 +7,7 @@
  */
 
 import type {BroConfiguredElement, BroDropdownOption, BroPaginatorElement, BroPaginatorPageEvent, BroResolvedConfig, BroTexts, BroView} from '@table-bro/core';
-import {BroHTML, BroHTMLElement}                                                                                                        from '@table-bro/core';
+import {BroHTML, BroHTMLElement, isPrerendered}                                                                                         from '@table-bro/core';
 
 const {escape} = BroHTML;
 
@@ -188,6 +188,11 @@ export class BroPaginatorComponent extends BroHTMLElement implements BroView, Br
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (this.rendered) {
       return;
     }

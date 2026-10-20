@@ -1,4 +1,4 @@
-import {type BroResolvedConfig, resolveTexts, type TableBroHTMLElement} from '@table-bro/core';
+import {type BroConfigureOptions, type BroResolvedConfig, prerenderTableBro, resolveTexts, type TableBroHTMLElement} from '@table-bro/core';
 
 import {afterEach, describe, expect, it} from 'vitest';
 
@@ -108,5 +108,36 @@ describe('the vanilla button', () => {
 
     expect(button.querySelector('button')!.getAttribute('aria-label')).toBe('Back');
     expect(button.hasAttribute('aria-label')).toBe(false);
+  });
+});
+
+describe('a prerendered native table', () => {
+  it('keeps the markup of the prerender in the browser until configure() renders the table in its place', () => {
+    const options: BroConfigureOptions<{name: string}> = {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'nv'}};
+    const prerendered = document.createElement('table-bro');
+    const holder = document.createElement('div');
+
+    // The prerender in a DOM with the elements of the skin, as happy-dom on a server: the elements render their markup
+    document.body.append(prerendered);
+    prerenderTableBro(prerendered, options);
+
+    // The browser parses the prerender: the elements of the skin upgrade and keep their markup
+    holder.innerHTML = prerendered.outerHTML;
+    prerendered.remove();
+    document.body.append(holder);
+
+    const table = <HTMLElement & TableBroHTMLElement>holder.firstElementChild;
+    const headers = () => [...table.querySelectorAll('bro-sort-header')].map(header => header.querySelectorAll('.bro-sort-header-container').length);
+    const toolbars = () => table.querySelectorAll('bro-toolbar-main .bro-toolbar-content').length;
+
+    expect(table.hasAttribute('data-bro-prerender')).toBe(true);
+    expect(headers()).toEqual([1, 1]);
+    expect(toolbars()).toBe(1);
+
+    table.configure(options);
+
+    expect(table.hasAttribute('data-bro-prerender')).toBe(false);
+    expect(headers()).toEqual([1, 1]);
+    expect(toolbars()).toBe(1);
   });
 });

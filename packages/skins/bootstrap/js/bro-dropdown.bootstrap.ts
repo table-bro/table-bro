@@ -1,4 +1,4 @@
-import {type BroConfiguredElement, type BroDropdown, type BroDropdownOption, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroView} from '@table-bro/core';
+import {type BroConfiguredElement, type BroDropdown, type BroDropdownOption, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
 
 import {bootstrapClasses} from './bootstrap-classes';
 
@@ -98,13 +98,22 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
     this.insertAdjacentHTML('afterbegin', this.template());
 
     this.dropdownToggleEl = <HTMLElement>this.querySelector('.dropdown-toggle');
-    this.bsDropdown = new (bootstrapClasses().Dropdown)(this.dropdownToggleEl);
+
+    // A prerender runs no scripts of the browser: Bootstrap takes the toggle in the table that the browser renders
+    if (!this.config.prerender) {
+      this.bsDropdown = new (bootstrapClasses().Dropdown)(this.dropdownToggleEl);
+    }
 
     this.renderName();
     this.events();
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     if (this.rendered) {
       // Connected again after its removal: Bootstrap gets the toggle back
       if (!this.bsDropdown) {
