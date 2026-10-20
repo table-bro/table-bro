@@ -240,6 +240,9 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
 
     this.pendingInit.rows = undefined;
 
+    // The table of the browser continues the CSS animations of the prerender, as its progress bar
+    const prerenderAnimations = this.hasAttribute(selectors.prerenderAttribute) ? animationStartTimes(this) : null;
+
     // A table rendered again after its release starts from an empty host, without the controller of its last render:
     // a render that fails before its new controller is only reported, not shown by the released one
     this.release();
@@ -286,6 +289,10 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
 
     /** The regions of the table with the rows from init */
     renderRegions(controller, rows);
+
+    if (prerenderAnimations) {
+      continueAnimations(this, prerenderAnimations);
+    }
 
     /** Attach events */
     this.events(controller);
@@ -389,6 +396,31 @@ function renderRegions(controller: BroController, rows: BroRow[] | null | undefi
 
   /** Table body and paginator with the rows from init */
   controller.mount(rows);
+}
+
+/**
+ * The start times of the CSS animations of an element and its descendants on the timeline of the document, by the names
+ * of the animations.
+ * @param element - the element
+ */
+function animationStartTimes(element: HTMLElement): Map<string, CSSNumberish> {
+  return new Map(element.getAnimations({subtree: true})
+    .filter(animation => animation instanceof CSSAnimation && animation.startTime !== null)
+    .map(animation => [(<CSSAnimation>animation).animationName, <CSSNumberish>animation.startTime]));
+}
+
+/**
+ * Continues CSS animations in the new elements of a rendered element: an animation of a name of startTimes starts at
+ * that time, so it shows the phase that the animation of its previous element shows, instead of its start.
+ * @param element - the rendered element
+ * @param startTimes - the start times of the animations of its previous elements by their names
+ */
+function continueAnimations(element: HTMLElement, startTimes: Map<string, CSSNumberish>): void {
+  element.getAnimations({subtree: true}).forEach(animation => {
+    if (animation instanceof CSSAnimation && startTimes.has(animation.animationName)) {
+      animation.startTime = <CSSNumberish>startTimes.get(animation.animationName);
+    }
+  });
 }
 
 /**

@@ -112,4 +112,32 @@ describe('prerenderTableBro', () => {
 
     element.remove();
   });
+
+  it('continues the CSS animations of the prerender, as of its progress bar, in the table of the browser', () => {
+    const style = document.createElement('style');
+    const element = document.createElement('table-bro');
+    const options = {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender', autoColumnWidth: false}};
+
+    style.textContent = '@keyframes test-progress { to { opacity: 0; } } test-progress-bar { display: block; animation: test-progress 2s infinite; }';
+    document.head.append(style);
+    prerenderTableBro(element, options);
+    document.body.append(element);
+
+    // The progress bar of the prerender has run since the first paint of the page
+    const [prerenderAnimation] = element.getAnimations({subtree: true});
+    const startTime = <number>document.timeline.currentTime - 700;
+
+    prerenderAnimation.startTime = startTime;
+
+    (<HTMLElement & {configure(options: object): void}>element).configure(options);
+
+    const [animation] = element.getAnimations({subtree: true});
+
+    expect(animation).not.toBe(prerenderAnimation);
+    expect((<CSSAnimation>animation).animationName).toBe('test-progress');
+    expect(animation.startTime).toBe(startTime);
+
+    element.remove();
+    style.remove();
+  });
 });

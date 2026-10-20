@@ -1,4 +1,4 @@
-import {type ComponentRef, createComponent, type EnvironmentInjector, InjectionToken, reflectComponentType, type Type} from '@angular/core';
+import {ANIMATION_MODULE_TYPE, type ComponentRef, createComponent, type EnvironmentInjector, InjectionToken, Injector, reflectComponentType, type Type} from '@angular/core';
 
 import {type BroCol, type BroConfig, type BroSkin, prerenderTableBro} from '@table-bro/core';
 
@@ -49,11 +49,14 @@ export function prerenderTableBroNg<MODEL extends object>(host: HTMLElement, col
 
   // The components render their templates, which may hold elements of the skin too: they render after them
   const rendered = new Map<Element, ComponentRef<unknown>>();
+  // The components render the markup of the browser, with its animations, as the progress bar of Material: the server
+  // render of Angular has no animations, and the CSS animations of the prerender run from its first paint
+  const elementInjector = Injector.create({providers: [{provide: ANIMATION_MODULE_TYPE, useValue: 'BrowserAnimations'}]});
   const selector = Object.keys(elements).join(',');
   let pending: Element[];
 
   while ((pending = Array.from(tableBro.querySelectorAll(selector)).filter(element => !rendered.has(element))).length) {
-    pending.forEach(element => rendered.set(element, renderElement(element, elements[element.localName], injector)));
+    pending.forEach(element => rendered.set(element, renderElement(element, elements[element.localName], injector, elementInjector)));
   }
 
   return [...rendered.values()];
@@ -66,9 +69,10 @@ export function prerenderTableBroNg<MODEL extends object>(host: HTMLElement, col
  * @param element - the element of the skin
  * @param component - the component of the element
  * @param environmentInjector - the injector of the application
+ * @param elementInjector - the injector of the elements, with the animations of the browser
  */
-function renderElement(element: Element, component: Type<unknown>, environmentInjector: EnvironmentInjector): ComponentRef<unknown> {
-  const componentRef = createComponent(component, {environmentInjector, hostElement: element, projectableNodes: [Array.from(element.childNodes)]});
+function renderElement(element: Element, component: Type<unknown>, environmentInjector: EnvironmentInjector, elementInjector: Injector): ComponentRef<unknown> {
+  const componentRef = createComponent(component, {environmentInjector, elementInjector, hostElement: element, projectableNodes: [Array.from(element.childNodes)]});
 
   reflectComponentType(component)?.inputs.forEach(({propName, templateName}) => {
     const attribute = templateName.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`);
