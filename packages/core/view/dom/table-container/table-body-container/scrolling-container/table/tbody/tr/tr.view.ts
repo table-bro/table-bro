@@ -1,6 +1,7 @@
 import {type BroValueWidths, emptyRow} from '../../../../../../../../model/row-slots';
 import type {BroFrame}                 from '../../../../../../../../shared/frame';
 import {BroHTML, classAttr}            from '../../../../../../../../shared/html';
+import {cssRowsHeight}                 from '../../../../../../../../shared/styles';
 import {selectors}                     from '../../../../../../../../table-bro-selectors';
 import type {BroContext}               from '../../../../../../../../types/context';
 import type {BroCol, BroRow}           from '../../../../../../../../types/table-bro';
@@ -40,8 +41,9 @@ export class BroTbodyTr implements BroView {
       this.template(dataRowNumber)
     );
 
-    // A style attribute in the markup breaks a Content Security Policy without 'unsafe-inline'; a property of style does not
-    tr.style.height = `${height || this.ctx.styles.rowHeight}px`;
+    // A style attribute in the markup breaks a Content Security Policy without 'unsafe-inline'; a property of style does not.
+    // The prerender renders only the row of its loading state, of the height of the page, in CSS
+    tr.style.height = this.ctx.config.prerender ? cssRowsHeight(this.ctx.state.pagination.pageSize, false) : `${height || this.ctx.styles.rowHeight}px`;
 
     const row = this.row;
 

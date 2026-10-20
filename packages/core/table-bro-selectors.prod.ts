@@ -14,6 +14,8 @@ export const enum selectors {
   columnKeyAttribute = 'data-bro-column-key',
   /** The instance of the table on its host: the rules of its <style> elements find it by it, also when another table has its id. */
   instanceAttribute = 'data-bro-instance',
+  /** The table of the prerender on its host, until the browser renders it: the elements of the skin in it keep their markup. */
+  prerenderAttribute = 'data-bro-prerender',
 
   // Names the application sees keep their names in production
   rowNumberAttribute = 'data-row-number',

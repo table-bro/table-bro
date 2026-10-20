@@ -3,6 +3,7 @@ import type {BroRowSlot, BroRowSlots}                from '../../../../model/row
 import type {BroFrame}                               from '../../../../shared/frame';
 import {BroHTML}                                     from '../../../../shared/html';
 import {keepFocus}                                   from '../../../../shared/interaction';
+import {cssRowsHeight}                               from '../../../../shared/styles';
 import {selectors}                                   from '../../../../table-bro-selectors';
 import type {BroContext}                             from '../../../../types/context';
 import type {BroRow}                                 from '../../../../types/table-bro';
@@ -204,6 +205,14 @@ export class BroTableBodyContainer implements BroView {
    */
   private writeHeight(height: number): void {
     this.height = height;
+
+    // The prerender has no row height: the CSS computes the height of the page, and the window shadow has it already
+    if (this.ctx.config.prerender) {
+      this.el.style.height = cssRowsHeight(this.pagination.pageSize, true);
+
+      return;
+    }
+
     this.el.style.height = `${height}px`;
 
     // The window of the page moves its bottom edge: the layout of the body follows it

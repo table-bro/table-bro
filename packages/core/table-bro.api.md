@@ -407,6 +407,7 @@ interface BroResolvedConfig extends Omit<BroConfig, "skin" | "theme" | "componen
     rowCounter: boolean;
     pageSize: number;
     pageSizeOptions: number[];
+    prerender?: boolean;
 }
 interface BroCellElement<T extends object = BroRow> {
     row?: T;
@@ -481,6 +482,8 @@ declare global {
         "table-bro-filter-drawer-container": BroFilterDrawerHTMLElement;
     }
 }
+export declare function prerenderTableBro<T extends object>(element: HTMLElement, options: BroConfigureOptions<T>): void;
+export declare function isPrerendered(element: Element): boolean;
 export interface BroView {
     selector?: string;
     template?(...args: unknown[]): string;

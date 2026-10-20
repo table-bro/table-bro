@@ -46,8 +46,8 @@ export class BroController {
     this.detailsCtrl = new BroDetailsController(ctx, (reason, update) => this.update(reason, update), this.bodyCtrl);
     this.hostWidthCtrl = new BroHostWidthController(ctx, (reason, update) => this.update(reason, update), this.columnsCtrl, this.bodyCtrl);
 
-    // Island Details extends the layout of the body
-    if (ctx.config.rowDetailsIsland) {
+    // Island Details extends the layout of the body; the prerender shows the loading state with the window shadow of the core
+    if (ctx.config.rowDetailsIsland && !ctx.config.prerender) {
       const islandDetails = getIslandDetails();
 
       if (islandDetails) {

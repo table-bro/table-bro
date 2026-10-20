@@ -9,15 +9,16 @@ export type {BroActionDataMap, BroActionDetail, BroAppendRowsOptions, BroButton,
 
 export type {BroAdvancedFilterGroup, BroFilterCondition, BroFilters, BroFilterValue, BroQuery, BroSortDirection, BroSortSpec} from './shared/query';
 
-export {fitCellItems}            from './shared/cell-items';
-export {resolveTexts}            from './shared/config';
-export * as events               from './shared/events';
-export {dispatchAction}          from './shared/interaction';
-export {useIslandDetails}        from './shared/island';
-export {BroMotion}               from './shared/motion';
-export {matchesFilterCondition}  from './shared/query';
-export {BroHTML, BroHTMLElement} from './shared/html';
-export {registerSkin}            from './shared/skins';
+export {fitCellItems}                     from './shared/cell-items';
+export {resolveTexts}                     from './shared/config';
+export * as events                        from './shared/events';
+export {dispatchAction}                   from './shared/interaction';
+export {useIslandDetails}                 from './shared/island';
+export {BroMotion}                        from './shared/motion';
+export {matchesFilterCondition}           from './shared/query';
+export {BroHTML, BroHTMLElement}          from './shared/html';
+export {registerSkin}                     from './shared/skins';
+export {isPrerendered, prerenderTableBro} from './table-bro';
 
 // <table-bro-filter-drawer-container> is defined on demand, by the application
 export {defineTableBroFilterDrawerContainer} from './view/features/filters/filter-drawer.view';

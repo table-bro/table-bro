@@ -259,6 +259,11 @@ export function fitRenderedValues(ctx: BroContext, targets?: Map<string, number>
     }
   }
 
+  // A body without values, as of a state, has nothing to fit
+  if (!values.length) {
+    return;
+  }
+
   const shownWidths = values.map(({node, targetWidth}) => targetWidth ?? node.getBoundingClientRect().width);
 
   // The values keep to one line while they are measured: the CSS of the table lets a plain value wrap

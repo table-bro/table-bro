@@ -112,52 +112,17 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
    */
   configure<T extends object>(options: BroConfigureOptions<T>): void {
     // The table reads the fields of the rows of any type by the names of its columns
-    const cols = <BroCol[]>options.cols;
     const rows = <BroRow[] | undefined>options.rows;
-    const conf = options.conf;
 
-    // Copies: the table never changes the application columns; cells and events get them back
-    this.cols = cols.map(col => copyAppObject(col));
+    ({cols: this.cols, config: this.config} = resolveTable(this, options));
 
     // A copy: the row numbers below must not change the application rows
     if (rows) {
       this.pendingInit.rows = copyRows(rows);
     }
 
-    // A table cannot start without a skin
-    if (!conf?.skin) {
-      throw new Error('[table-bro] conf.skin is required. Pass the name of a registered skin, for example configure({cols, conf: {skin: \'mat\'}}).');
-    }
-
-    const skinConfig = getSkin(conf.skin);
-
-    if (!skinConfig) {
-      throw new Error(`[table-bro] The skin "${conf.skin}" is not registered. Import the skin package, call provideTableBroMatSkin() for the skin mat, or call registerSkin() before configure(). If the skin is registered, check that the page loads one copy of table-bro: each copy has its own skin registry.`);
-    }
-
-    this.config = resolveConfig(skinConfig, conf);
-
-    if (this.config.rowCounter) {
-      this.cols.unshift({
-        title: this.config.texts.rowCounter,
-        name: selectors.rowCounter,
-        className: 'bro-col_text-left bro-cell-number',
-        sortKey: selectors.rowCounter
-      });
-
-      if (this.pendingInit.rows?.length) {
-        this.pendingInit.rows = setRowNumbers(this.pendingInit.rows);
-      }
-    }
-
-    if (!this.getAttribute('id')) {
-      this.setAttribute('id', `table-bro-${randomName()}`);
-    }
-
-    // A page that replaces a table may hold the old one with the same id for a moment, as the @if of Angular does: the rules
-    // of the column widths find this table by its instance as well, so the ones of the old table never size it
-    if (!this.hasAttribute(selectors.instanceAttribute)) {
-      this.setAttribute(selectors.instanceAttribute, randomName());
+    if (this.config.rowCounter && this.pendingInit.rows?.length) {
+      this.pendingInit.rows = setRowNumbers(this.pendingInit.rows);
     }
 
     // The calls before a new configure() belong to the table it replaces
@@ -281,15 +246,20 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
     this.controller = null;
     this.replaceChildren();
 
+    // The table of a prerender keeps no shadow size of the prerender, which is no one of the application
+    if (this.hasAttribute(selectors.prerenderAttribute)) {
+      this.removeAttribute(selectors.prerenderAttribute);
+      this.style.removeProperty('--bro-shadow-size');
+    }
+
     // The host keeps the classes of the application: only the class of the skin changes
     if (this.skinClass) {
       this.classList.remove(this.skinClass);
     }
 
-    this.classList.add(this.config.skin);
     this.skinClass = this.config.skin;
 
-    // A table without shadows has no room for them in the CSS of its skin either, as in its script (resolveStyles)
+    // A table without shadows keeps the shadow size of the application for a later render with them (renderTable)
     if (this.appShadowSize !== null) {
       this.style.setProperty('--bro-shadow-size', this.appShadowSize);
       this.appShadowSize = null;
@@ -297,16 +267,11 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
 
     if (!this.config.shadowsEnabled) {
       this.appShadowSize = this.style.getPropertyValue('--bro-shadow-size');
-      this.style.setProperty('--bro-shadow-size', '0px');
     }
 
     this.lifecycle = new AbortController();
 
-    /**
-     * Instance context. Its theme service subscribes to system theme changes in case of `auto` theme
-     * and, with the `theme` attribute, adds the theme class to the host after the skin class above.
-     */
-    const controller = new BroController(createContext(this, this.cols, this.config, this.lifecycle.signal));
+    const controller = createController(this, this.cols, this.config, this.lifecycle.signal);
     const {ctx} = controller;
 
     // A table in the row details of another one fits its values to the widths of that table
@@ -319,12 +284,8 @@ export class TableBro extends BroHTMLElement implements TableBroHTMLElement {
       Reflect.set(this, Symbol.for('table-bro:debug'), ctx);
     }
 
-    /** The toolbar, and the table for screen readers with the header */
-    ctx.view.regions = new BroTableRegions(ctx);
-    ctx.view.regions.render();
-
-    /** Table body and paginator with the rows from init */
-    controller.mount(rows);
+    /** The regions of the table with the rows from init */
+    renderRegions(controller, rows);
 
     /** Attach events */
     this.events(controller);
@@ -343,6 +304,125 @@ safeDefine('table-bro', TableBro);
 safeDefine(detailsButtonSelector, BroDetailsButton);
 safeDefine('bro-table-html-cell', BroTableHTMLCellComponent);
 
+/**
+ * The columns and the config of a table from the options of configure(): copies of the columns of the application with
+ * the column of the row numbers, and the config of the skin with the one of the application over it. The element gets an
+ * id and the name of its instance unless it has them.
+ * @param element - the <table-bro> element
+ * @param options - the options of configure()
+ */
+function resolveTable<T extends object>(element: HTMLElement, options: BroConfigureOptions<T>): {cols: BroCol[]; config: BroResolvedConfig} {
+  const conf = options.conf;
+
+  // Copies: the table never changes the application columns; cells and events get them back
+  const cols = (<BroCol[]>options.cols).map(col => copyAppObject(col));
+
+  // A table cannot start without a skin
+  if (!conf?.skin) {
+    throw new Error('[table-bro] conf.skin is required. Pass the name of a registered skin, for example configure({cols, conf: {skin: \'mat\'}}).');
+  }
+
+  const skinConfig = getSkin(conf.skin);
+
+  if (!skinConfig) {
+    throw new Error(`[table-bro] The skin "${conf.skin}" is not registered. Import the skin package, call provideTableBroMatSkin() for the skin mat, or call registerSkin() before configure(). If the skin is registered, check that the page loads one copy of table-bro: each copy has its own skin registry.`);
+  }
+
+  const config = resolveConfig(skinConfig, conf);
+
+  if (config.rowCounter) {
+    cols.unshift({
+      title: config.texts.rowCounter,
+      name: selectors.rowCounter,
+      className: 'bro-col_text-left bro-cell-number',
+      sortKey: selectors.rowCounter
+    });
+  }
+
+  if (!element.getAttribute('id')) {
+    element.setAttribute('id', `table-bro-${randomName()}`);
+  }
+
+  // A page that replaces a table may hold the old one with the same id for a moment, as the @if of Angular does: the rules
+  // of the column widths find this table by its instance as well, so the ones of the old table never size it
+  if (!element.hasAttribute(selectors.instanceAttribute)) {
+    element.setAttribute(selectors.instanceAttribute, randomName());
+  }
+
+  return {cols, config};
+}
+
+/**
+ * The controller of a table in its empty element, which gets the class of the skin.
+ * @param element - the <table-bro> element, empty
+ * @param cols - the columns of the table
+ * @param config - the config of the table
+ * @param signal - the lifecycle of the render
+ */
+function createController(element: HTMLElement, cols: BroCol[], config: BroResolvedConfig, signal: AbortSignal): BroController {
+  element.classList.add(config.skin);
+
+  // A table without shadows has no room for them in the CSS of its skin either, as in its script (resolveStyles)
+  if (!config.shadowsEnabled) {
+    element.style.setProperty('--bro-shadow-size', '0px');
+  }
+
+  /**
+   * Instance context. Its theme service subscribes to system theme changes in case of `auto` theme
+   * and, with the `theme` attribute, adds the theme class to the host after the skin class above.
+   */
+  return new BroController(createContext(element, cols, config, signal));
+}
+
+/**
+ * Renders the regions of a table: the toolbar, the table for screen readers with the header, the body and the paginator
+ * with the rows.
+ * @param controller - the controller of the table
+ * @param rows - the rows of the body; without them the loading state
+ */
+function renderRegions(controller: BroController, rows: BroRow[] | null | undefined): void {
+  const {ctx} = controller;
+
+  /** The toolbar, and the table for screen readers with the header */
+  ctx.view.regions = new BroTableRegions(ctx);
+  ctx.view.regions.render();
+
+  /** Table body and paginator with the rows from init */
+  controller.mount(rows);
+}
+
+/**
+ * Renders a <table-bro> element of a server DOM in the loading state of its columns and config, as the prerender of a
+ * framework does: the regions of the table, the elements of its skin, which the server render of the framework renders
+ * then, and the heights of the skin in CSS. It measures and animates nothing and leaves nothing running. In the browser
+ * configure() on the same element renders the table in its place, at the same height. The global document is the
+ * document of the element while it runs.
+ * @param element - the <table-bro> element of the server DOM, empty
+ * @param options - the columns and the config of configure(); the rows wait for the browser
+ * @group Rendering helpers
+ */
+export function prerenderTableBro<T extends object>(element: HTMLElement, options: BroConfigureOptions<T>): void {
+  const {cols, config} = resolveTable(element, options);
+
+  // A server DOM has no layout to measure either: the columns take the widths of the CSS, as with autoColumnWidth: false
+  config.prerender = true;
+  config.autoColumnWidth = false;
+
+  renderRegions(createController(element, cols, config, new AbortController().signal), undefined);
+
+  element.setAttribute(selectors.prerenderAttribute, '');
+}
+
+/**
+ * Whether an element is in a table of the prerender that the browser has not rendered yet. An element of a skin there
+ * keeps the markup of the prerender: the table renders its own elements in its place (prerenderTableBro).
+ * @param element - the element of a skin
+ * @group Rendering helpers
+ */
+export function isPrerendered(element: Element): boolean {
+  return !!element.closest(`[${selectors.prerenderAttribute}]`);
+}
+
 /** Defines the element in the browser only: imported without a DOM, as in the server render, the module defines nothing. */
 function safeDefine(selector: string, constructor: CustomElementConstructor) {
   if (typeof customElements !== 'undefined' && !customElements.get(selector)) {
@@ -352,7 +432,7 @@ function safeDefine(selector: string, constructor: CustomElementConstructor) {
 
 /** A random name in base 36; getRandomValues works outside a secure context too, unlike randomUUID, as on a page of plain HTTP. */
 function randomName(): string {
-  const [high, low] = window.crypto.getRandomValues(new Uint32Array(2));
+  const [high, low] = crypto.getRandomValues(new Uint32Array(2));
 
   return `${high.toString(36)}${low.toString(36)}`;
 }

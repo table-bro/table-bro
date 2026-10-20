@@ -1,6 +1,7 @@
 import type {BroRowSlot}             from '../../../model/row-slots';
 import type {BroFrame}               from '../../../shared/frame';
 import type {BroBodyLayoutExtension} from '../../../shared/island';
+import {cssRowsHeight}               from '../../../shared/styles';
 import type {BroResolvedConfig}      from '../../../types/table-bro';
 
 declare module '../../../types/context' {
@@ -59,7 +60,10 @@ export class BroBodyLayout {
       this.windowShadow.className = this.config.css.shadow.className;
     }
 
-    if (height) {
+    // The prerender has no row height: the CSS computes the height of the page
+    if (this.config.prerender) {
+      this.windowShadow.style.height = cssRowsHeight(last - first + 1, false);
+    } else if (height) {
       this.windowShadow.style.height = `${height}px`;
     }
 

@@ -33,7 +33,8 @@ export class BroStateView implements BroView {
   }
 
   renderAnimation() {
-    if (this.ctx.config.components.state.lottie) {
+    // The prerender shows the first frame of the animation, which the table plays in the browser
+    if (this.ctx.config.components.state.lottie || this.ctx.config.prerender) {
       return;
     }
 

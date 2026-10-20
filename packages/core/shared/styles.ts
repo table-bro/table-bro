@@ -42,6 +42,35 @@ export function resolveStyles(host: HTMLElement, config: BroConfig): BroSkinStyl
   return Object.freeze(styles);
 }
 
+/**
+ * The sizes and timings of the skin in the prerender, which computes no style: the sizes are unknown, the heights that
+ * the prerender writes are the calc() of the custom properties of the skin (cssRowsHeight), and nothing animates.
+ */
+export const prerenderStyles: BroSkinStyles = Object.freeze({
+  rowHeight: NaN,
+  shadowSize: NaN,
+  islandSpaceSize: NaN,
+  tableBodyContainerZIndex: NaN,
+  refreshOverlayOpacity: NaN,
+  refreshOverlayOpacityDark: NaN,
+  detailsDuration: 0,
+  detailsEasing: easeInOutSine,
+  kineticTimeConstant: 0,
+  stateIconDuration: 0,
+  stateMessageDuration: 0,
+  durationScale: 0
+});
+
+/**
+ * The height of rows of the skin in the prerender, which computes no style: the calc() of the custom properties of the
+ * skin on the host.
+ * @param rows - the number of the rows
+ * @param shadows - the height takes the space of the shadows above and below the rows too
+ */
+export function cssRowsHeight(rows: number, shadows: boolean): string {
+  return shadows ? `calc(var(--bro-row-height) * ${rows} + var(--bro-shadow-size) * 2)` : `calc(var(--bro-row-height) * ${rows})`;
+}
+
 /** The curve of the filter drawers: of the core (components/_filter-drawer.scss) and of @table-bro/angular-material. */
 export const filterDrawerEasing = 'cubic-bezier(.4, 0, .2, 1)';
 

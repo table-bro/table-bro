@@ -6,16 +6,17 @@ import type {BroCol, BroResolvedConfig} from '../types/table-bro';
 import {BroBodyLayout}                  from '../view/features/body-layout/body-layout';
 import type {BroViews}                  from '../view/shared/views';
 import {BroMotion}                      from './motion';
-import {resolveStyles}                  from './styles';
+import {prerenderStyles, resolveStyles} from './styles';
 import {BroThemeService}                from './theme.service';
 
 /**
  * Creates the instance context. It is called on every render of the element, before the controller and the first view,
  * so every field is set before the first read. The element is connected and has the class of its skin by then,
- * so the sizes and timings of the skin come from the computed style of the host.
+ * so the sizes and timings of the skin come from the computed style of the host. A server DOM computes no style: the
+ * prerender has no sizes and timings of the skin (prerenderStyles).
  */
 export function createContext(host: HTMLElement, cols: BroCol[], config: BroResolvedConfig, signal: AbortSignal): BroControllerContext {
-  const styles = resolveStyles(host, config);
+  const styles = config.prerender ? prerenderStyles : resolveStyles(host, config);
 
   const motion = new BroMotion(signal, config.debugAnimation);
 
@@ -35,7 +36,7 @@ export function createContext(host: HTMLElement, cols: BroCol[], config: BroReso
     view: <BroViews>{},
     layout: new BroBodyLayout(config),
     motion,
-    themeService: new BroThemeService(config.theme, host, signal, config.debug, config.themeAttribute),
+    themeService: new BroThemeService(config.theme, host, signal, config.debug, config.themeAttribute, config.prerender),
     signal
   });
 }

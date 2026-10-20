@@ -33,12 +33,14 @@ export class BroThemeService {
    * @param signal - the signal of the table, which ends the subscription to the system theme
    * @param debug - the table warns about an invalid theme
    * @param themeAttribute - the attribute of the color mode of the library of the skin, which the host gets with its theme
+   * @param prerender - the table renders into a server DOM, which has no theme of the system
    */
   constructor(configTheme: BroUserTheme,
               private tableBroEl: HTMLElement,
               private readonly signal: AbortSignal,
               private readonly debug?: boolean,
-              private readonly themeAttribute?: string) {
+              private readonly themeAttribute?: string,
+              private readonly prerender?: boolean) {
     this.configTheme = configTheme;
     this.themeChanges = this.tableBroEl;
 
@@ -69,7 +71,11 @@ export class BroThemeService {
 
     const userTheme = (this.explicitTheme !== null) ? this.explicitTheme : this.configTheme;
 
-    if (userTheme === 'auto') {
+    // The prerender knows no theme of the system: the host takes no class of a theme and keeps the theme of the page,
+    // and the states show their light icons
+    if (userTheme === 'auto' && this.prerender) {
+      this._theme = 'light';
+    } else if (userTheme === 'auto') {
       if (!this.prefersDarkMediaQuery) {
         this.prefersDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       }
