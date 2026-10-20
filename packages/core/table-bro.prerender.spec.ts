@@ -73,6 +73,21 @@ describe('prerenderTableBro', () => {
     expect(element.querySelector('.bro-state-message')?.textContent).toBe('Loading');
   });
 
+  it('defines the elements of the skin in the registry of the window of a server DOM, and in none without a window', () => {
+    const defineElements = vi.fn();
+    const registry = <CustomElementRegistry><unknown>{get: () => undefined, define: () => undefined};
+    const element = serverElement();
+
+    registerSkin('test-prerender-elements', {...skin, defineElements});
+    // The window of a server DOM with custom elements, as the prerender of TableBroNg gives the server DOM of Angular
+    Object.defineProperty(element.ownerDocument, 'defaultView', {value: {customElements: registry}});
+
+    prerenderTableBro(element, {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender-elements'}});
+    prerenderTableBro(serverElement(), {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender-elements'}});
+
+    expect(defineElements.mock.calls).toEqual([[registry]]);
+  });
+
   it('gives a table without shadows no room for them', () => {
     const element = serverElement();
 

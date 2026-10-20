@@ -952,6 +952,13 @@ export interface BroSkinConfig {
    * undefined names the function in the console.
    */
   elements?: Record<string, string>;
+  /**
+   * Defines the elements of the skin in a registry of custom elements, unless they are defined. The module of a skin of
+   * custom elements calls it with the registry of the page; prerenderTableBro() calls it with the registry of the window
+   * of the server DOM, which the module of the skin, loaded without a DOM, has not found.
+   * @param registry - the registry of the custom elements
+   */
+  defineElements?: (registry: CustomElementRegistry) => void;
 }
 
 /**

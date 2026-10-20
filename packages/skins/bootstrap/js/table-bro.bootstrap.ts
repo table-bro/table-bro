@@ -1,20 +1,14 @@
 import {registerSkin} from '@table-bro/core';
 
-import {defineElement, defineSharedElements} from '../../shared/js/define-shared-elements';
-import {BroBootstrapDropdownComponent}       from './bro-dropdown.bootstrap';
-import {BroBootstrapProgressBarComponent}    from './bro-progress-bar.bootstrap';
-import {BroBootstrapTagsComponent}           from './bro-tags.bootstrap';
-import {bootstrapSkinConfig}                 from './table-bro.bootstrap.config';
+import {defineElement}             from '../../shared/js/define-shared-elements';
+import {BroBootstrapTagsComponent} from './bro-tags.bootstrap';
+import {bootstrapSkinConfig}       from './table-bro.bootstrap.config';
 
 // The elements are defined only in the browser: imported without a DOM, as in the server render, the skin only
-// registers its config. The optional elements, tags and switch, come with withTags() and withSwitch()
+// registers its config, and a prerender defines them in its server DOM (defineElements). The optional elements, tags
+// and switch, come with withTags() and withSwitch()
 if (typeof customElements !== 'undefined') {
-  /* Skin - Shared */
-  defineSharedElements('@table-bro/bootstrap');
-
-  /* Skin - Bootstrap */
-  defineElement('bro-bs-dropdown', BroBootstrapDropdownComponent);
-  defineElement('bro-bs-progress-bar', BroBootstrapProgressBarComponent);
+  bootstrapSkinConfig.defineElements(customElements);
 }
 
 registerSkin('bs', bootstrapSkinConfig);

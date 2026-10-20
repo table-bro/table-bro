@@ -10,7 +10,7 @@ describe('defineSharedElements', () => {
     // The bundle of the other vanilla skin has its own copy of the class
     customElements.define('bro-toolbar', class extends HTMLElement {});
 
-    defineSharedElements('@table-bro/native');
+    defineSharedElements('@table-bro/native', customElements);
 
     expect(['bro-button', 'bro-paginator', 'bro-sort-header', 'bro-text-ellipsis', 'bro-toolbar', 'bro-toolbar-main'].filter(name => !customElements.get(name))).toEqual([]);
     // The switch is an optional element: only its feature defines it

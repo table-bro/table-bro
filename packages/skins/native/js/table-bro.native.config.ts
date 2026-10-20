@@ -1,5 +1,9 @@
 import type {BroButton, BroSkinConfig} from '@table-bro/core';
 
+import {defineElement, defineSharedElements} from '../../shared/js/define-shared-elements';
+import {BroNativeDropdownComponent}          from './bro-dropdown.native';
+import {BroNativeProgressBarComponent}       from './bro-progress-bar.native';
+
 // The constant keeps the type of its value: an application reads its buttons and its states without checks of undefined
 export const nativeSkinConfig = {
   css: {
@@ -164,5 +168,13 @@ export const nativeSkinConfig = {
   elements: {
     'bro-nv-tags': 'withTags',
     'bro-switch': 'withSwitch'
+  },
+
+  // The optional elements, tags and switch, come with withTags() and withSwitch()
+  defineElements: (registry: CustomElementRegistry): void => {
+    defineSharedElements('@table-bro/native', registry);
+
+    defineElement('bro-nv-dropdown', BroNativeDropdownComponent, registry);
+    defineElement('bro-nv-progress-bar', BroNativeProgressBarComponent, registry);
   }
 } satisfies BroSkinConfig;

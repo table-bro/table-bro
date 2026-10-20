@@ -1,20 +1,14 @@
 import {registerSkin} from '@table-bro/core';
 
-import {defineElement, defineSharedElements} from '../../shared/js/define-shared-elements';
-import {BroNativeDropdownComponent}          from './bro-dropdown.native';
-import {BroNativeProgressBarComponent}       from './bro-progress-bar.native';
-import {BroNativeTagsComponent}              from './bro-tags.native';
-import {nativeSkinConfig}                    from './table-bro.native.config';
+import {defineElement}          from '../../shared/js/define-shared-elements';
+import {BroNativeTagsComponent} from './bro-tags.native';
+import {nativeSkinConfig}       from './table-bro.native.config';
 
 // The elements are defined only in the browser: imported without a DOM, as in the server render, the skin only
-// registers its config. The optional elements, tags and switch, come with withTags() and withSwitch()
+// registers its config, and a prerender defines them in its server DOM (defineElements). The optional elements, tags
+// and switch, come with withTags() and withSwitch()
 if (typeof customElements !== 'undefined') {
-  /* Skin - Shared */
-  defineSharedElements('@table-bro/native');
-
-  /* Skin - Native */
-  defineElement('bro-nv-dropdown', BroNativeDropdownComponent);
-  defineElement('bro-nv-progress-bar', BroNativeProgressBarComponent);
+  nativeSkinConfig.defineElements(customElements);
 }
 
 registerSkin('nv', nativeSkinConfig);

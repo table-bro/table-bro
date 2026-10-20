@@ -393,6 +393,7 @@ interface BroSkinConfig {
     css: BroConfigCSS;
     components: BroSkinComponents;
     elements?: Record<string, string>;
+    defineElements?: (registry: CustomElementRegistry) => void;
 }
 interface BroResolvedConfig extends Omit<BroConfig, "skin" | "theme" | "components" | "css" | "texts" | "shadowsEnabled" | "toolbarTitle" | "shortColumnTitle" | "rowCounter" | "pageSize" | "pageSizeOptions"> {
     skin: BroSkin;

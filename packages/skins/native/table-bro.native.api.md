@@ -134,6 +134,7 @@ export declare const nativeSkinConfig: {
         "bro-nv-tags": string;
         "bro-switch": string;
     };
+    defineElements: (registry: CustomElementRegistry) => void;
 };
 declare abstract class BroTagsComponent extends BroHTMLElement implements BroView, BroCellElement, BroConfiguredElement {
     template(): string;

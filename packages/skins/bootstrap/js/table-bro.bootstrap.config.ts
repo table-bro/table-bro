@@ -1,6 +1,9 @@
 import type {BroButton, BroSkinConfig} from '@table-bro/core';
 
-import {bootstrapClasses} from './bootstrap-classes';
+import {defineElement, defineSharedElements} from '../../shared/js/define-shared-elements';
+import {bootstrapClasses}                    from './bootstrap-classes';
+import {BroBootstrapDropdownComponent}       from './bro-dropdown.bootstrap';
+import {BroBootstrapProgressBarComponent}    from './bro-progress-bar.bootstrap';
 
 // The constant keeps the type of its value: an application reads its buttons and its states without checks of undefined
 export const bootstrapSkinConfig = {
@@ -213,5 +216,13 @@ export const bootstrapSkinConfig = {
   elements: {
     'bro-bs-tags': 'withTags',
     'bro-switch': 'withSwitch'
+  },
+
+  // The optional elements, tags and switch, come with withTags() and withSwitch()
+  defineElements: (registry: CustomElementRegistry): void => {
+    defineSharedElements('@table-bro/bootstrap', registry);
+
+    defineElement('bro-bs-dropdown', BroBootstrapDropdownComponent, registry);
+    defineElement('bro-bs-progress-bar', BroBootstrapProgressBarComponent, registry);
   }
 } satisfies BroSkinConfig;

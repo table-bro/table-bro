@@ -24,10 +24,15 @@ export function withSwitch(): void {
   defineElement('bro-switch', BroSwitchComponent);
 }
 
-/** Defines an element of a skin unless it is defined: a second load of the bundle of the skin finds it defined. */
-export function defineElement(name: string, element: CustomElementConstructor): void {
-  if (typeof customElements !== 'undefined' && !customElements.get(name)) {
-    customElements.define(name, element);
+/**
+ * Defines an element of a skin unless it is defined: a second load of the bundle of the skin finds it defined.
+ * @param name - the tag of the element
+ * @param element - the class of the element
+ * @param registry - the registry of the custom elements: the one of the page by default, none without a DOM
+ */
+export function defineElement(name: string, element: CustomElementConstructor, registry: CustomElementRegistry | undefined = (typeof customElements !== 'undefined') ? customElements : undefined): void {
+  if (registry && !registry.get(name)) {
+    registry.define(name, element);
   }
 }
 
@@ -35,15 +40,17 @@ export function defineElement(name: string, element: CustomElementConstructor): 
  * Defines the shared elements of a vanilla skin. Each skin bundle carries its own copy of them, so with two bundles
  * on one page the bundle loaded first defines them and the other skin works with its classes. Two vanilla skin
  * bundles on one page are not supported, so the skin loaded second warns about it.
+ * @param skinPackage - the package of the skin, for the warning
+ * @param registry - the registry of the custom elements
  */
-export function defineSharedElements(skinPackage: string): void {
+export function defineSharedElements(skinPackage: string, registry: CustomElementRegistry): void {
   const definedElsewhere: string[] = [];
 
   Object.entries(sharedElements).forEach(([name, element]) => {
-    const defined = customElements.get(name);
+    const defined = registry.get(name);
 
     if (!defined) {
-      customElements.define(name, element);
+      registry.define(name, element);
     } else if (defined !== element) {
       definedElsewhere.push(name);
     }

@@ -428,13 +428,20 @@ function continueAnimations(element: HTMLElement, startTimes: Map<string, CSSNum
  * framework does: the regions of the table, the elements of its skin, which the server render of the framework renders
  * then, and the heights of the skin in CSS. It measures and animates nothing and leaves nothing running. In the browser
  * configure() on the same element renders the table in its place, at the same height. The table creates its nodes in the
- * document of the element: the render needs no global document.
+ * document of the element: the render needs no global document. The custom elements of a skin render where the window of
+ * that document has a registry of custom elements: the skin defines them in it (BroSkinConfig.defineElements).
  * @param element - the <table-bro> element of the server DOM, empty
  * @param options - the columns and the config of configure(); the rows wait for the browser
  * @group Rendering helpers
  */
 export function prerenderTableBro<T extends object>(element: HTMLElement, options: BroConfigureOptions<T>): void {
   const {cols, config} = resolveTable(element, options);
+  const registry = element.ownerDocument.defaultView?.customElements;
+
+  // The module of a skin defines its elements only in the browser: a server DOM with custom elements gets them here
+  if (registry) {
+    getSkin(config.skin)?.defineElements?.(registry);
+  }
 
   // A server DOM has no layout to measure either: the columns take the widths of the CSS, as with autoColumnWidth: false
   config.prerender = true;
