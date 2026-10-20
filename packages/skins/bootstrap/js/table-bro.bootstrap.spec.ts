@@ -1,8 +1,12 @@
 import {type BroResolvedConfig, resolveTexts} from '@table-bro/core';
 
-import {afterEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, describe, expect, it} from 'vitest';
 
 import {bootstrapSkinConfig, type BroBootstrapClasses, useBootstrap, withSwitch, withTags} from './table-bro.bootstrap';
+
+// The CSS of the skin from its build, which grows the bar of a progress of an unknown end; Vite gives it as a string
+const skinCssModule: string = '../dist/table-bro.bootstrap.min.css?inline';
+const {default: skinCss} = <{default: string}>await import(/* @vite-ignore */ skinCssModule);
 
 // The optional elements, as a page with tags and switches defines them after the import of the skin
 withTags();
@@ -42,68 +46,88 @@ describe('the Bootstrap progress bar', () => {
 });
 
 describe('the Bootstrap progress of an unknown end', () => {
-  afterEach(() => vi.useRealTimers());
-
-  /** The bar of a progress of an unknown end in the time of the table, on fake frames. */
+  /** The bar of a progress of an unknown end in the time of the table, in a box of 200 px with the CSS of the skin. */
   function progress(durationScale: string, properties: Record<string, unknown> = {}): HTMLElement {
-    vi.useFakeTimers({toFake: ['requestAnimationFrame', 'performance']});
-
+    const style = document.createElement('style');
     const el = document.createElement('bro-bs-progress-bar');
+
+    style.textContent = skinCss;
+    document.body.className = 'bs';
+    document.body.append(style);
 
     Object.assign(el, {config, ...properties});
     el.setAttribute('mode', 'indeterminate');
     el.style.setProperty('--bro-duration-scale', durationScale);
+    el.style.setProperty('display', 'block');
+    el.style.setProperty('width', '200px');
     document.body.append(el);
 
     return el.querySelector<HTMLElement>('.progress-bar')!;
   }
 
-  /** The width in whole percent after the given ms; the fake frames come every 16 ms. */
-  function widthAfter(bar: HTMLElement, ms: number): number {
-    vi.advanceTimersByTime(ms);
-
-    return Math.round(parseFloat(bar.style.width));
+  /** The CSS animation of a bar by its name. */
+  function animation(bar: HTMLElement, name: string): CSSAnimation {
+    return <CSSAnimation>bar.getAnimations().find(animation => (<CSSAnimation>animation).animationName === name);
   }
+
+  /** The width in whole percent of the box at the given ms of the growth. */
+  function widthAt(bar: HTMLElement, ms: number): number {
+    animation(bar, 'bro-progress-bar-growth').currentTime = ms;
+
+    return Math.round(parseFloat(getComputedStyle(bar).width) / 2);
+  }
+
+  /** The next frame, after the events of the animations that started. */
+  const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+  afterEach(() => document.body.removeAttribute('class'));
 
   it('grows by its schedule, half in the first second, and flashes at 98% after 12 seconds', () => {
     const bar = progress('1');
 
-    expect(widthAfter(bar, 496)).toBe(25);
-    expect(widthAfter(bar, 512)).toBe(50);
-    expect(widthAfter(bar, 992)).toBe(58);
-    expect(bar.classList.contains('bro-progress-bar-animated-n-flashing')).toBe(false);
-
-    expect(widthAfter(bar, 10_000)).toBe(98);
-    expect(bar.classList.contains('bro-progress-bar-animated-n-flashing')).toBe(true);
+    expect(bar.hasAttribute('style')).toBe(false);
+    expect(bar.classList.contains('bro-progress-bar-full')).toBe(false);
+    expect(widthAt(bar, 500)).toBe(25);
+    expect(widthAt(bar, 1000)).toBe(50);
+    expect(widthAt(bar, 2000)).toBe(58);
+    expect(widthAt(bar, 12_000)).toBe(98);
+    expect(widthAt(bar, 20_000)).toBe(98);
+    expect(animation(bar, 'bro-pulse').effect!.getComputedTiming().delay).toBe(12_000);
   });
 
-  it('is full at once without the time of motion, and slower with a larger scale or with debugAnimation', () => {
-    expect(widthAfter(progress('0'), 0)).toBe(100);
+  it('is slower with a larger scale or with debugAnimation', () => {
+    expect(widthAt(progress('2'), 2000)).toBe(50);
 
     document.body.replaceChildren();
-    expect(widthAfter(progress('2'), 2016)).toBe(50);
-
-    document.body.replaceChildren();
-    expect(widthAfter(progress('1', {config: {...config, debugAnimation: true}}), 6000)).toBe(50);
+    expect(widthAt(progress('1', {config: {...config, debugAnimation: true}}), 6000)).toBe(50);
   });
 
-  it('goes on after a move in the DOM and stops when the element is removed', async () => {
+  it('is full at once without animations in the time 0 of the table, as under reduced motion', async () => {
+    const bar = progress('0');
+
+    await frame();
+
+    expect(parseFloat(getComputedStyle(bar).width)).toBe(200);
+    expect(bar.getAnimations()).toEqual([]);
+  });
+
+  it('goes on after a move in the DOM, which starts its CSS animations again', async () => {
     const bar = progress('1');
     const el = bar.closest('bro-bs-progress-bar')!;
 
-    expect(widthAfter(bar, 1008)).toBe(50);
+    await frame();
+
+    const startTime = animation(bar, 'bro-progress-bar-growth').startTime;
+
+    expect(startTime).not.toBeNull();
 
     // A sort moves the row with the bar: the element is disconnected and connected in one task
     document.body.prepend(document.createElement('div'));
     document.body.append(el);
-    await Promise.resolve();
 
-    expect(widthAfter(bar, 992)).toBe(58);
-
-    el.remove();
-    await Promise.resolve();
-
-    expect(widthAfter(bar, 1000)).toBe(58);
+    // The stripes are the keyframes of Bootstrap, which the CSS of the skin does not have
+    expect(['bro-progress-bar-growth', 'bro-pulse'].map(name => animation(bar, name).startTime))
+      .toEqual([startTime, startTime]);
   });
 });
 

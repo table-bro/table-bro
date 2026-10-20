@@ -1827,8 +1827,10 @@ test('the values of the config and of the columns stay text in the markup of the
   expect(await table.locator('option').evaluateAll(options => options.map(option => option.getAttribute('value')))).toContain('a" data-injected="1');
 });
 
-test('the bs progress of an unknown end has no values and draws its end at once without the time of motion', async ({page}) => {
-  const table = await mountTable(page, {cols: priceCols, rows: priceRows, config: {skin: 'bs'}, hostStyle: '--bro-duration-scale: 0'});
+test('the bs progress of an unknown end has no values and draws its end at once under reduced motion', async ({page}) => {
+  await page.emulateMedia({reducedMotion: 'reduce'});
+
+  const table = await mountTable(page, {cols: priceCols, rows: priceRows, config: {skin: 'bs'}});
 
   await table.evaluate(el => (el as TableBroHTMLElement).setState('refreshing'));
 
@@ -1837,7 +1839,20 @@ test('the bs progress of an unknown end has no values and draws its end at once 
   await expect(progress).toBeAttached();
   await expect(progress).not.toHaveAttribute('aria-valuenow');
   await expect(progress).not.toHaveAttribute('aria-valuemin');
-  await expect(progress.locator('.progress-bar')).toHaveAttribute('style', /width: 100%/);
+  expect(await progress.locator('.progress-bar').evaluate((el: HTMLElement) => el.getBoundingClientRect().width / el.parentElement!.getBoundingClientRect().width)).toBe(1);
+  await expect(progress.locator('.progress-bar')).not.toHaveAttribute('style');
+});
+
+test('the bs progress of an unknown end is full at once without the time of motion', async ({page}) => {
+  const table = await mountTable(page, {cols: priceCols, rows: priceRows, config: {skin: 'bs'}, hostStyle: '--bro-duration-scale: 0'});
+
+  await table.evaluate(el => (el as TableBroHTMLElement).setState('refreshing'));
+
+  const bar = table.locator('bro-bs-progress-bar .progress-bar').first();
+
+  await expect(bar).toBeAttached();
+  expect(await bar.evaluate((el: HTMLElement) => el.getBoundingClientRect().width / el.parentElement!.getBoundingClientRect().width)).toBe(1);
+  expect(await bar.evaluate(el => el.getAnimations().length)).toBe(0);
 });
 
 test('a native dropdown takes the attribute disabled before its render', async ({page}) => {

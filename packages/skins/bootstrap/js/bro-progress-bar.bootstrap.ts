@@ -1,9 +1,9 @@
-import {type BroConfiguredElement, BroHTML, BroHTMLElement, BroMotion, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
+import {type BroConfiguredElement, BroHTML, BroHTMLElement, type BroProgressBar, type BroProgressMode, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
 
 const {escape} = BroHTML;
 
-/** The progress of an unknown end in each of its 12 seconds, in %: half in the first one, then smaller steps up to 98%. */
-const progressPerSecond: number[] = [50, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3];
+/** The CSS animation of the progress of an unknown end: the skin grows the bar by its schedule. */
+const growth: string = 'bro-progress-bar-growth';
 
 export class BroBootstrapProgressBarComponent extends BroHTMLElement implements BroView, BroConfiguredElement, BroProgressBar {
   template(): string {
@@ -13,6 +13,9 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
     this.mode = <BroProgressMode>this.getAttribute('mode') || 'indeterminate';
 
     const indeterminate = (this.mode === 'indeterminate');
+    // The CSS of the skin grows the bar of an unknown end, slower with config.debugAnimation
+    const debugClass = (this.config.debugAnimation ? ' bro-progress-bar-debug-animation' : '');
+    const growthClasses = (indeterminate ? ` bro-progress-bar-indeterminate${debugClass}` : '');
 
     this.value = (indeterminate ? 0 : (this.getAttribute('value') || 0))
       .toString();
@@ -21,7 +24,7 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
       <div class="progress"
            role="progressbar" aria-label="${escape(this.config.texts.loadingProgress)}"
            ${indeterminate ? '' : `aria-valuenow="${escape(this.value)}" aria-valuemin="0" aria-valuemax="100"`}>
-        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+        <div class="progress-bar progress-bar-striped progress-bar-animated${growthClasses}"></div>
       </div>`;
   }
 
@@ -35,9 +38,9 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
   mode!: BroProgressMode;
   value!: string;
 
-  /** The motion of the progress of an unknown end; a move in the DOM keeps it. */
-  private motion?: BroMotion;
-  /** A move in the DOM connects the element again; it keeps its markup and its motion. */
+  /** The start time of the growth of the progress of an unknown end; a move in the DOM keeps it. */
+  private startTime: CSSNumberish | null = null;
+  /** A move in the DOM connects the element again; it keeps its markup and its progress. */
   private rendered: boolean = false;
   private valueEl!: HTMLElement;
 
@@ -57,24 +60,22 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
       this.render();
 
       this.valueEl = this.querySelector('.progress-bar') as HTMLElement;
-      // The width of the value is a property of style: a strict Content Security Policy blocks a style attribute
-      this.valueEl.style.width = `${this.value}%`;
-    }
 
-    // A prerender animates nothing: the bar of the table that the browser renders moves
-    if (this.mode === 'indeterminate' && !this.motion && !this.config.prerender) {
-      this.animateProgress();
-    }
-  }
-
-  /** A move in the DOM disconnects and connects the element in one task: the progress goes on. */
-  disconnectedCallback(): void {
-    queueMicrotask(() => {
-      if (!this.isConnected) {
-        this.motion?.cancelAll();
-        this.motion = undefined;
+      if (this.mode === 'determinate') {
+        // The width of the value is a property of style: a strict Content Security Policy blocks a style attribute
+        this.valueEl.style.width = `${this.value}%`;
+      } else if (!this.config.prerender && !parseFloat(getComputedStyle(this).getPropertyValue('--bro-duration-scale'))) {
+        // The time of the table is 0: the bar is full at once, as under reduced motion
+        this.valueEl.classList.add('bro-progress-bar-full');
+      } else {
+        this.valueEl.addEventListener('animationstart', event => this.keepStartTime(event));
       }
-    });
+    } else if (this.startTime !== null) {
+      // A move in the DOM starts the CSS animations of the bar again, moveBefore() keeps them: both go on from their start
+      this.valueEl.getAnimations().forEach(animation => {
+        animation.startTime = this.startTime;
+      });
+    }
   }
 
   attributeChangedCallback(name: string, previousValue: string, currentValue: string) {
@@ -85,41 +86,15 @@ export class BroBootstrapProgressBarComponent extends BroHTMLElement implements 
   }
 
   /**
-   * Moves the progress of an unknown end by its schedule in the time of the table: --bro-duration-scale, 0 under
-   * reduced motion, where the bar is full at once, and slower with config.debugAnimation. At the end of the schedule
-   * the bar flashes until the loading ends.
+   * Keeps the start time of the growth of the progress, the CSS animation of the skin. The growth of a table that
+   * continues a prerendered one starts at the start of the prerender.
+   * @param event - the start of a CSS animation of the bar
    */
-  private animateProgress(): void {
-    const durationScale = parseFloat(getComputedStyle(this).getPropertyValue('--bro-duration-scale'));
+  private keepStartTime(event: AnimationEvent): void {
+    if (event.animationName === growth && this.startTime === null) {
+      const animation = this.valueEl.getAnimations().find(animation => (<CSSAnimation>animation).animationName === growth);
 
-    if (!durationScale) {
-      this.valueEl.style.width = '100%';
-
-      return;
+      this.startTime = animation?.startTime ?? null;
     }
-
-    const end = progressPerSecond.reduce((sum, progress) => sum + progress, 0);
-
-    this.motion = new BroMotion(new AbortController().signal, this.config.debugAnimation);
-    this.motion.durationScale *= durationScale;
-
-    this.motion.animate('progress', {
-      duration: progressPerSecond.length * 1000,
-      // Within each second the progress grows evenly
-      timing: (timeFraction: number): number => {
-        const time = timeFraction * progressPerSecond.length;
-        const second = Math.min(Math.floor(time), progressPerSecond.length - 1);
-        const before = progressPerSecond.slice(0, second).reduce((sum, progress) => sum + progress, 0);
-
-        return (before + (time - second) * progressPerSecond[second]) / end;
-      },
-      draw: (progress: number): void => {
-        this.valueEl.style.width = `${progress * end}%`;
-
-        if (progress === 1) {
-          this.valueEl.classList.add('bro-progress-bar-animated-n-flashing');
-        }
-      }
-    });
   }
 }

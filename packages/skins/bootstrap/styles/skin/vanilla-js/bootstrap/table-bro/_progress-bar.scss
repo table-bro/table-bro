@@ -1,4 +1,9 @@
+@use "sass:list";
+@use "sass:math";
 @use "../../../shared/mixins/progress-bar" as *;
+
+/** The progress of an unknown end in each of its 12 seconds, in %: half in the first one, then smaller steps up to 98%. */
+$bro-progress-per-second: (50, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3);
 
 @mixin styles {
   @include table-header-progress-bar('bro-bs-progress-bar .progress');
@@ -15,15 +20,53 @@
     animation: 1s linear infinite progress-bar-stripes;
   }
    */
-  .bro-progress-bar-animated-n-flashing {
-    animation-name: progress-bar-stripes, bro-pulse;
-    animation-duration: 1s, 2s;
-    animation-timing-function: linear, cubic-bezier(.4, 0, .6, 1);
-    animation-iteration-count: infinite, infinite;
+  // The progress of an unknown end grows by its schedule in the time of the table: --bro-duration-scale, slower with
+  // config.debugAnimation. At the end of the schedule the bar flashes until the loading ends. A CSS animation runs from
+  // the first paint of a prerendered table, and the table of the browser continues it
+  bro-bs-progress-bar .bro-progress-bar-indeterminate {
+    --bro-progress-bar-duration: calc(#{list.length($bro-progress-per-second) * 1s} * var(--bro-duration-scale));
 
-    // The moving stripes and the pulse are decoration; the width of the bar still shows the progress
+    // Each name stands between other words of its animation, not next to a comma, which a minifier joins to the words:
+    // the critical CSS of a prerender keeps the keyframes whose names are words of an animation (Beasties)
+    animation:
+      1s progress-bar-stripes linear infinite,
+      var(--bro-progress-bar-duration) bro-progress-bar-growth linear forwards,
+      2s bro-pulse cubic-bezier(.4, 0, .6, 1) var(--bro-progress-bar-duration) infinite;
+
+    // Under reduced motion the bar is full at once
     @media (prefers-reduced-motion: reduce) {
+      width: 100%;
+
       animation: none;
+    }
+
+    // The element gives the class when the time of the table is 0, --bro-duration-scale of the application
+    &.bro-progress-bar-full {
+      width: 100%;
+
+      animation: none;
+    }
+  }
+
+  // The factor of config.debugAnimation, as debugDurationScale of the core
+  bro-bs-progress-bar .bro-progress-bar-debug-animation {
+    --bro-progress-bar-duration: calc(#{list.length($bro-progress-per-second) * 6s} * var(--bro-duration-scale));
+  }
+
+  // Within each second the progress grows evenly
+  @keyframes bro-progress-bar-growth {
+    0% {
+      width: 0;
+    }
+
+    $progress: 0;
+
+    @for $second from 1 through list.length($bro-progress-per-second) {
+      $progress: $progress + list.nth($bro-progress-per-second, $second);
+
+      #{math.percentage(math.div($second, list.length($bro-progress-per-second)))} {
+        width: $progress * 1%;
+      }
     }
   }
 

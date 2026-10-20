@@ -34,7 +34,8 @@ test('the bs progress of server details keeps its width when a sort moves the ro
   await bodyTable(table).locator('tbody > tr[data-row-number]').nth(1).getByRole('button', {name: 'Details'}).click();
 
   const bar = table.locator('bro-bs-progress-bar .progress-bar');
-  const width = async () => parseFloat(await bar.evaluate((el: HTMLElement) => el.style.width));
+  // The width in % of the track: the CSS animation of the skin grows the bar
+  const width = async () => bar.evaluate((el: HTMLElement) => 100 * el.getBoundingClientRect().width / el.parentElement!.getBoundingClientRect().width);
 
   // Half of the bar fills in the first second of the loading
   await expect.poll(width).toBeGreaterThan(50);
