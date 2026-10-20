@@ -16,6 +16,14 @@ A page installs the packages as its users do: `npm install`, then `npm run build
 each page from it and builds it into `dist/samples/<name>`, under the base path `/samples/<name>/` of table-bro.com; the
 projects of `frameworks` go to `dist/samples/frameworks/<framework>`.
 
+## Source maps and the readable code of a page
+
+A page built for table-bro.com has source maps, so the Sources of DevTools show the files of the sample and of the
+packages. The code of a Vite sample stays readable in its own chunk: `sample-page.config.ts` puts the packages into the
+chunk `libraries` and minifies only that chunk; the bundler keeps the names and drops the plain comments, which the
+source map has. The Angular CLI minifies all the code of `angular-material`, which has source maps for its own code and
+for the packages (`sourceMap` of its production build).
+
 ## The budget of `angular-material`
 
 The initial bundle of the page is 648 kB raw, 144 kB as brotli: Angular Material and the CDK 288 kB of it, most of them

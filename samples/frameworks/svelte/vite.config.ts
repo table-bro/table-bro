@@ -1,8 +1,10 @@
-import {svelte}       from '@sveltejs/vite-plugin-svelte';
-import {defineConfig} from 'vite';
+import {svelte}                    from '@sveltejs/vite-plugin-svelte';
+import {defineConfig, mergeConfig} from 'vite';
 
-export default defineConfig({
+import {samplePage} from './sample-page.config.ts';
+
+export default mergeConfig(samplePage, defineConfig({
   plugins: [
     svelte()
   ]
-});
+}));

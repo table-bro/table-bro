@@ -1,8 +1,10 @@
-import {defineConfig} from 'vite';
-import solid          from 'vite-plugin-solid';
+import {defineConfig, mergeConfig} from 'vite';
+import solid                       from 'vite-plugin-solid';
 
-export default defineConfig({
+import {samplePage} from './sample-page.config.ts';
+
+export default mergeConfig(samplePage, defineConfig({
   plugins: [
     solid()
   ]
-});
+}));

@@ -13,6 +13,7 @@
     "@table-bro/native": "^1.1.0"
   },
   "devDependencies": {
+    "@jridgewell/remapping": "^2.3.5",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }
