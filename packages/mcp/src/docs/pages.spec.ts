@@ -124,6 +124,20 @@ describe('the files of code of Docs', () => {
     }
   });
 
+  it('of Getting started without a build are the files of samples/no-build, at the versions of the packages', () => {
+    const files = docPages.find(page => page.path === 'getting-started')!.files;
+
+    for (const file of ['index.html', 'app.js']) {
+      expect(files.find(item => item.file === file)?.code, file).toBe(fs.readFileSync(path.join(root, 'samples/no-build', file), 'utf8'));
+    }
+
+    for (const [, name, version] of files.find(item => item.file === 'index.html')!.code.matchAll(/@table-bro\/([\w-]+)@([\d.]+)\//g)) {
+      const folder = path.join(root, 'packages', name === 'core' ? name : `skins/${name}`);
+
+      expect(version, name).toBe(JSON.parse(fs.readFileSync(path.join(folder, 'package.json'), 'utf8')).version);
+    }
+  });
+
   it('name only the files that the packages of Table, Bro ship', () => {
     // The CSS of a package is built from the entry file of its styles of the same name, and dist/lottie of the core is a copy of its Lottie files
     const shipped = (name: string, file: string): boolean => {

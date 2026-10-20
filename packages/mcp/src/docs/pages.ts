@@ -94,8 +94,87 @@ ${setupBs.text}
 
 [See a working page](https://table-bro.com/samples/native)
 
-${setupNv.text}`,
+${setupNv.text}
+
+#### Without a build
+
+[See a working page](https://table-bro.com/samples/no-build), [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/no-build)
+
+A page without a bundler takes the same packages from [jsDelivr](https://www.jsdelivr.com/), the CDN of npm, at an exact version: the CSS by \`‹link›\`, the modules by an import map, which gives \`@table-bro/core\` to the skin ([MDN, importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)). \`index.html\`:
+
+{{index.html}}
+
+\`app.js\` imports the skin and gives the table its columns, rows and config:
+
+{{app.js}}`,
     files: [
+      {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + Vanilla HTML without a build</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/native@1.1.0/dist/table-bro.native.min.css" />
+    <!-- The page around the table, as on table-bro.com -->
+    <link rel="stylesheet" href="sample-page.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.esm.js",
+          "@table-bro/native": "https://cdn.jsdelivr.net/npm/@table-bro/native@1.1.0/dist/table-bro.native.esm.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
+`},
+      {file: 'app.js', language: 'js', code: `// The import of the skin defines <table-bro> and registers the skin nv
+import '@table-bro/native';
+
+const cols = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+const rows = [
+  {
+    description: 'Modern Cotton Chair',
+    price: 100
+  }, {
+    description: 'Awesome Concrete Ball',
+    price: 200
+  }
+];
+
+const conf = {
+  skin: 'nv',
+  toolbarTitle: 'Orders'
+};
+
+const table = document.createElement('table-bro');
+
+table.id = 'orders';
+table.configure({cols, rows, conf});
+table.addEventListener('bro-action', event => console.log(event.detail.action));
+
+// The shadows of the table fall into the margins of this element: the visible table takes its full width
+const container = document.createElement('div');
+
+container.className = 'bro-table-shadow-container';
+container.append(table);
+document.body.append(container);
+`},
       {file: 'orders.component.ts', language: 'ts', code: `import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 
 import {TableBroNg}                     from '@table-bro/angular';
