@@ -11,6 +11,7 @@
 @use "./skin/vanilla-js/bootstrap/table-bro/paginator" as bootstrap-paginator;
 @use "./skin/vanilla-js/bootstrap/table-bro/progress-bar" as bootstrap-progress-bar;
 @use "./skin/vanilla-js/bootstrap/table-bro/slide-toggle" as bootstrap-slide-toggle;
+@use "./skin/vanilla-js/bootstrap/table-bro/sort-header" as bootstrap-sort-header;
 @use "./skin/vanilla-js/bootstrap/table-bro/toolbar" as bootstrap-toolbar;
 @use "./skin/vanilla-js/bootstrap/table-bro/toolbar-search" as bootstrap-toolbar-search;
 
@@ -34,6 +35,7 @@
     @include bootstrap-paginator.styles;
     @include bootstrap-progress-bar.styles;
     @include bootstrap-slide-toggle.styles;
+    @include bootstrap-sort-header.styles;
     @include bootstrap-toolbar.styles;
     @include bootstrap-toolbar-search.styles;
 

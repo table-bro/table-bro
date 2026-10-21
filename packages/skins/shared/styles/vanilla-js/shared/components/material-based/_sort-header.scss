@@ -9,25 +9,32 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+// The box of the pseudo-element of the header below
+.bro-sort-header {
+  position: relative;
+}
+
+// The header is as wide as its title and arrow, as a button, so its focus ring keeps to them: the native outline of the
+// browser in the skin nv, the focus ring of Bootstrap in the skin bs
 .bro-sort-header-container {
   display: flex;
 
-  align-items: center;
+  width: fit-content;
+  max-width: 100%;
 
-  // Needs to be reset since we don't want an outline around the inner
-  // div which is focusable. We have our own alternate focus styling.
-  outline: 0;
+  align-items: center;
 
   letter-spacing: normal;
 
   cursor: pointer;
 
-  // The focus from the keyboard shows a ring in the color of the title, inside the header: the cell component clips
-  // what is outside it. A click shows no ring
-  &:focus-visible {
-    outline: 2px solid currentColor;
+  // A click on the whole width of the column sorts it, also beside the title
+  &::after {
+    content: "";
 
-    outline-offset: -2px;
+    position: absolute;
+
+    inset: 0;
   }
 }
 
@@ -48,6 +55,9 @@
 
 .bro-sort-header-position-before {
   flex-direction: row-reverse;
+
+  // The arrow before the title keeps them at the end of the header
+  margin-inline-start: auto;
 }
 
 @keyframes _bro-sort-header-recently-cleared-ascending {

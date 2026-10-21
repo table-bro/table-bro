@@ -1,0 +1,10 @@
+@mixin styles {
+  $prefix: "bs-";
+
+  // Bootstrap has no sort header: the focus from the keyboard shows the ring of its helper .focus-ring, a click none
+  .bro-sort-header-container:focus-visible {
+    outline: 0;
+
+    box-shadow: var(--#{$prefix}focus-ring-x, 0) var(--#{$prefix}focus-ring-y, 0) var(--#{$prefix}focus-ring-blur, 0) var(--#{$prefix}focus-ring-width) var(--#{$prefix}focus-ring-color);
+  }
+}

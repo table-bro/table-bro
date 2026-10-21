@@ -126,7 +126,36 @@ for (const skin of ['nv', 'bs']) {
     const header = table.locator('table.bro-table-header th').nth(2).locator('.bro-sort-header-container');
 
     await expect(header).toBeFocused();
-    await expect(header).toHaveCSS('outline-style', 'solid');
+
+    // The native outline of the browser in the skin nv, the ring of .focus-ring of Bootstrap in the skin bs
+    if (skin === 'nv') {
+      await expect(header).toHaveCSS('outline-style', 'auto');
+    } else {
+      await expect(header).toHaveCSS('outline-style', 'none');
+      await expect(header).toHaveCSS('box-shadow', /0px 0px 0px 4px$/);
+    }
+
+    // The ring keeps to the title and the arrow in a column wider than them, with a width of the CSS of the application,
+    // and a click beside them sorts the column all the same
+    const wide = await mount(page, `
+      const css = document.createElement('style');
+      css.textContent = '.e2e-wide .bro-cell_component { width: 200px; }';
+      document.head.append(css);
+
+      el.configure({cols: [{...cols[0], className: 'e2e-wide'}, cols[1]], rows, conf: {skin: '${skin}', autoColumnWidth: false}});
+      document.body.append(el);`);
+
+    await expect.poll(() => cellTexts(wide, 2)).toEqual(['b', 'a', 'c']);
+
+    const name = wide.locator('table.bro-table-header th').nth(1).locator('bro-sort-header');
+    const box = (await name.locator('.bro-sort-header-container').boundingBox())!;
+    const column = (await name.boundingBox())!;
+
+    expect(column.width).toBe(200);
+    expect(box.width).toBeLessThan(100);
+
+    await name.click({position: {x: 190, y: column.height / 2}});
+    await expect.poll(() => cellTexts(wide, 2)).toEqual(['c', 'b', 'a']);
   });
 }
 
