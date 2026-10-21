@@ -5,6 +5,12 @@
     a {
       color: $bro-link-color;
     }
+
+    // A link with an icon is one box, so the outline of its focus is one rectangle around the title and the icon,
+    // not the box of the text with the taller box of the icon
+    a:has(> .bro-button-toggle) {
+      display: inline-block;
+    }
   }
 
   .bro-dark-theme &:not(.bro-light-theme),
