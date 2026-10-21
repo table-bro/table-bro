@@ -76,4 +76,13 @@ describe('the sources of the library', () => {
 
     expect(Object.keys(sources).filter(file => !imported.has(file) && !entries.test(file))).toEqual([]);
   });
+
+  it('give the selector maps of the production build every member of the development maps', () => {
+    // A member that the production map lacks is undefined in the production build: its element gets no class
+    const members = (file: string) => [...sources[file].matchAll(/^ {2}(\w+) = /gm)].map(match => match[1]);
+
+    for (const file of ['./table-bro-selectors.ts', './shared/shared-selectors.ts']) {
+      expect(members(file.replace(/\.ts$/, '.prod.ts'))).toEqual(members(file));
+    }
+  });
 });

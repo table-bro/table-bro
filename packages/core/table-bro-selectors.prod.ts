@@ -9,6 +9,8 @@ export const enum selectors {
 
   // State
   stateMessage = 'bro-state-message',
+  /** The live region of the table: screen readers say its text. */
+  liveStatus = 'bro-live-status',
 
   /** The key of the column on its header and body cells: the rules of the column widths find the cells by it. */
   columnKeyAttribute = 'data-bro-column-key',
