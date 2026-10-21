@@ -90,6 +90,12 @@
     @include table-width-transition();
   }
 
+  // A control in focus from the keyboard shows its whole focus ring, which lies outside the control and so outside
+  // the component around it
+  .bro-cell_component:has(:focus-visible) {
+    overflow: visible;
+  }
+
   // A plain value may wrap for the column widths, so a long one cannot widen its column, also with autoColumnWidth:
   // false, and it shows only its first line with an ellipsis, since all rows have one height. The aux table measures
   // the widths, so its values keep to one line.

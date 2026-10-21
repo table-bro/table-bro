@@ -130,6 +130,66 @@ for (const skin of ['nv', 'bs']) {
   });
 }
 
+/**
+ * The parts of the focus ring of the focused element that the boxes around it clip: overflow, clip-path, contain
+ * paint. The ring is the box-shadow of Bootstrap or the outline.
+ * @param page - the page
+ */
+function clippedFocusRing(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const el = document.activeElement!;
+    const style = getComputedStyle(el);
+    const spreads = [...style.boxShadow.matchAll(/(-?[\d.]+)px (-?[\d.]+)px (-?[\d.]+)px (-?[\d.]+)px/g)].map(m => Number(m[3]) + Number(m[4]));
+    const outline = (style.outlineStyle === 'none') ? 0 : parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+    const ring = Math.max(0, outline, ...spreads);
+    const rect = el.getBoundingClientRect();
+    const cuts: string[] = [];
+
+    for (let box = el.parentElement; box && box !== document.body; box = box.parentElement) {
+      const boxStyle = getComputedStyle(box);
+      const r = box.getBoundingClientRect();
+      const clips = boxStyle.overflow !== 'visible' || boxStyle.clipPath !== 'none' || /paint|content|strict/.test(boxStyle.contain);
+      const outside = rect.left - ring < r.left - 0.5 || rect.top - ring < r.top - 0.5 || rect.right + ring > r.right + 0.5 || rect.bottom + ring > r.bottom + 0.5;
+
+      if (clips && outside) {
+        cuts.push(`${el.tagName} ${el.textContent!.trim()} in ${box.tagName}.${box.className}`);
+      }
+    }
+
+    return (style.outlineStyle !== 'none' || spreads.length) ? cuts : [`${el.tagName} ${el.textContent!.trim()} has no focus ring`];
+  });
+}
+
+for (const skin of ['nv', 'bs']) {
+  test(`the focus ring of the controls of the ${skin} skin shows whole`, async ({page}) => {
+    // The whole ring at once: Bootstrap grows it by a transition
+    await page.emulateMedia({reducedMotion: 'reduce'});
+
+    const table = await mount(page, `
+      const done = {title: 'Done', name: 'done', component: {selector: 'bro-switch', attrs: {checked: () => true}}};
+
+      ${detailsTable(skin).replace('[...cols, details]', '[...cols, done, details]')}`);
+
+    await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+    // The sort headers, the switch and the details button of the first row from the keyboard
+    await table.locator('table.bro-table-header th').first().locator('.bro-sort-header-container').focus();
+
+    for (const name of ['No', 'Name', 'Price', 'Done']) {
+      await expect(page.locator(':focus')).toHaveText(new RegExp(name));
+      expect(await clippedFocusRing(page)).toEqual([]);
+      await page.keyboard.press('Tab');
+    }
+
+    for (const control of ['input', 'details']) {
+      await expect(page.locator(':focus')).toHaveCount(1);
+      expect(await page.evaluate(() => document.activeElement!.closest('bro-switch, bro-details-button')!.tagName)).toBe((control === 'input') ? 'BRO-SWITCH' : 'BRO-DETAILS-BUTTON');
+      expect(await clippedFocusRing(page)).toEqual([]);
+      await page.keyboard.press('Tab');
+    }
+  });
+}
+
 test('the page size list and the progress of the nv skin have names', async ({page}) => {
   const table = await mount(page, `
     el.configure({cols, rows, conf: {skin: 'nv'}});
