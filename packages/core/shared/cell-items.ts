@@ -1,3 +1,5 @@
+import {focusableSelector} from './interaction';
+
 /** The class of the ellipsis after the items that show. */
 const ellipsisClassName = 'bro-cell-items-ellipsis';
 /** The class of an item that does not fit the line: it is hidden from the eye only, screen readers read it. */
@@ -8,7 +10,7 @@ const hiddenClassName = 'bro-cell-item-hidden';
  * The items that do not fit whole give way to an ellipsis after the items that show; the first item always shows,
  * and the CSS of the skin shrinks it with its own ellipsis in a narrow cell (mixin bro-cell-items).
  * The items are measured once; then the line follows the width of the cell, also while it animates, until
- * the signal aborts.
+ * the signal aborts. A hidden item is out of the tab order, and takes its own tabindex back when it shows.
  * @group Rendering helpers
  */
 export function fitCellItems(row: HTMLElement, signal: AbortSignal): void {
@@ -35,13 +37,15 @@ export function fitCellItems(row: HTMLElement, signal: AbortSignal): void {
 
   ellipsis.style.display = 'none';
 
-  fits.set(row, {items, ellipsis});
+  fits.set(row, {items, ellipsis, tabIndexes: new Map()});
 
   observer ??= new ResizeObserver(fitRows);
   observer.observe(row);
 
+  // A line that connects again, as a sort moves its row, fits anew from the tabindex of its own markup
   signal.addEventListener('abort', () => {
     observer?.unobserve(row);
+    fits.get(row)?.tabIndexes.forEach(returnToTabOrder);
     fits.delete(row);
   }, {once: true});
 }
@@ -51,6 +55,8 @@ interface BroItemsFit {
   items: HTMLElement[];
   ellipsis: HTMLElement;
   widths?: number[];
+  /** The hidden items out of the tab order, each with the tabindex, or null for none, of the elements it took out. */
+  tabIndexes: Map<HTMLElement, Map<Element, string | null>>;
 }
 
 /** The lines that the observer follows. */
@@ -94,7 +100,7 @@ function fitRows(entries: ResizeObserverEntry[]): void {
     fit.widths = widths;
   });
 
-  lines.forEach(({fit: {items, ellipsis, widths}, width}) => {
+  lines.forEach(({fit: {items, ellipsis, widths, tabIndexes}, width}) => {
     items[0].style.flexShrink = '';
 
     // The most items that fit; the first one shows anyway
@@ -105,10 +111,56 @@ function fitRows(entries: ResizeObserverEntry[]): void {
     }
 
     items.forEach((item: HTMLElement, i: number) => {
-      item.classList.toggle(hiddenClassName, i >= count);
+      const hidden = (i >= count);
+
+      item.classList.toggle(hiddenClassName, hidden);
+
+      if (hidden && !tabIndexes.has(item)) {
+        tabIndexes.set(item, takeOutOfTabOrder(item));
+      } else if (!hidden && tabIndexes.has(item)) {
+        returnToTabOrder(tabIndexes.get(item)!);
+        tabIndexes.delete(item);
+      }
     });
 
     ellipsis.style.display = (count < items.length) ? '' : 'none';
+  });
+}
+
+/**
+ * Takes the elements of a hidden item out of the tab order: the links and controls that the markup of an item can hold,
+ * and the boxes that scroll, which Tab reaches once the item shrinks to one pixel, such as the action of a chip of
+ * Material. An element out of the tab order already stays as it is.
+ * @param item - the hidden item
+ * @returns the tabindex, or null for none, of each element that it took out
+ */
+function takeOutOfTabOrder(item: HTMLElement): Map<Element, string | null> {
+  const tabIndexes = new Map<Element, string | null>();
+
+  [item, ...Array.from(item.querySelectorAll('*'))].forEach((el: Element) => {
+    const {overflowX, overflowY} = getComputedStyle(el);
+    const scrolls = [overflowX, overflowY].some(overflow => overflow === 'auto' || overflow === 'scroll');
+
+    if (el.getAttribute('tabindex') !== '-1' && (scrolls || el.matches(focusableSelector))) {
+      tabIndexes.set(el, el.getAttribute('tabindex'));
+      el.setAttribute('tabindex', '-1');
+    }
+  });
+
+  return tabIndexes;
+}
+
+/**
+ * Gives the elements that takeOutOfTabOrder() took out their own tabindex back.
+ * @param tabIndexes - the tabindex, or null for none, of each element
+ */
+function returnToTabOrder(tabIndexes: Map<Element, string | null>): void {
+  tabIndexes.forEach((tabIndex: string | null, el: Element) => {
+    if (tabIndex === null) {
+      el.removeAttribute('tabindex');
+    } else {
+      el.setAttribute('tabindex', tabIndex);
+    }
   });
 }
 

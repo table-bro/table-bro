@@ -219,6 +219,54 @@ for (const skin of ['nv', 'bs']) {
   });
 }
 
+for (const skin of ['mat', 'nv']) {
+  test(`Tab skips the tags of the ${skin} skin that do not fit their cell and gives them their tabindex back once they show`, async ({page}) => {
+    // The tags of nv are links, a column with html; a chip of mat that a hidden tag shrinks to one pixel scrolls
+    const tags = ['first', 'second', 'third'].map(tag => (skin === 'nv') ? `<a href="#${tag}">${tag} tag</a>` : `${tag} tag`);
+    const table = await mount(page, `
+      const tags = ${JSON.stringify(tags)};
+      const col = {title: 'Tags', name: 'tags', html: ${skin === 'nv'}, component: {selector: 'bro-${skin}-tags'}};
+
+      el.configure({cols: [cols[0], col], rows: ['b', 'a', 'c'].map(name => ({name, tags})), conf: {skin: '${skin}'}});
+      document.body.append(el);`);
+
+    const lines = bodyTable(table).locator(`tbody > tr[data-row-number] bro-${skin}-tags`);
+    const hidden = bodyTable(table).locator('.bro-cell-item-hidden');
+
+    await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+    await lines.evaluateAll(elements => elements.forEach(el => Object.assign((el as HTMLElement).style, {display: 'block', width: '130px'})));
+    await expect(hidden).toHaveCount(6);
+
+    // From the last header through the body: no hidden tag takes the focus, the tags that show do
+    await table.locator('table.bro-table-header th').last().locator('.bro-sort-header-container, .mat-sort-header-container').focus();
+
+    const focused: string[] = [];
+
+    for (let i = 0; i < 12; i++) {
+      await page.keyboard.press('Tab');
+
+      const step = await page.evaluate(() => {
+        const el = document.activeElement!;
+
+        return el.closest('table-bro tbody') ? (el.closest('.bro-cell-item-hidden') ? 'hidden ' : '') + el.textContent!.trim() : '';
+      });
+
+      if (!step) {
+        break;
+      }
+
+      focused.push(step);
+    }
+
+    expect(focused).toEqual((skin === 'nv') ? ['first tag', 'first tag', 'first tag'] : []);
+
+    // The tags that show again take their own tabindex back
+    await lines.evaluateAll(elements => elements.forEach(el => (el as HTMLElement).style.width = '600px'));
+    await expect(hidden).toHaveCount(0);
+    await expect(lines.locator('[tabindex]')).toHaveCount(0);
+  });
+}
+
 test('the page size list and the progress of the nv skin have names', async ({page}) => {
   const table = await mount(page, `
     el.configure({cols, rows, conf: {skin: 'nv'}});
