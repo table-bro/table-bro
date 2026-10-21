@@ -1,3 +1,5 @@
+import type {TableBroHTMLElement} from '@table-bro/core';
+
 import {expect, type Locator, test} from '@playwright/test';
 
 import {mount} from './table-bro.mount';
@@ -57,5 +59,23 @@ for (const skin of ['bs', 'nv']) {
     await expectDisabled(previous, false);
     await expectDisabled(next, true);
     await expectDisabled(last, true);
+  });
+}
+
+for (const [skin, control] of [['bs', '.dropdown-toggle'], ['nv', 'select']]) {
+  test(`the page size list of the ${skin} paginator is disabled while the table loads, as the one of the mat skin, and works with rows`, async ({page}) => {
+    const table = await mount(page, `
+      el.configure({cols, conf: {skin: '${skin}'}});
+      document.body.append(el);
+    `);
+    const list = table.locator(`.bro-paginator-page-size ${control}`);
+
+    await expect(list).toBeDisabled();
+
+    await table.evaluate((el, rows) => (el as TableBroHTMLElement).replaceRows(rows), [{name: 'b', price: 3}, {name: 'a', price: 1}]);
+    await expect(list).toBeEnabled();
+
+    await table.evaluate(el => (el as TableBroHTMLElement).setState('loading'));
+    await expect(list).toBeDisabled();
   });
 }

@@ -90,8 +90,9 @@ export class BroController {
       render: frame => {
         const {page, pageSize, total} = this.state.pagination;
 
-        // The paginator comes first: a body that fails shows the fail state with it, and later rows find it
-        this.ctx.view.regions.renderPaginator({page, pageSize, total});
+        // The paginator comes first: a body that fails shows the fail state with it, and later rows find it. It renders
+        // disabled as renderStatus sets it, since the elements of a prerender get no attribute after their render
+        this.ctx.view.regions.renderPaginator({page, pageSize, total, disabled: this.state.status !== 'idle' || !this.state.rows?.length});
 
         this.bodyCtrl.mountTableBody(frame);
 

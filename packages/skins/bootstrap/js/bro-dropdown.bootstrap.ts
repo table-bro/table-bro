@@ -102,6 +102,7 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
     this.insertAdjacentHTML('afterbegin', this.template());
 
     this.dropdownToggleEl = <HTMLElement>this.querySelector('.dropdown-toggle');
+    this.renderDisabled();
 
     // A prerender runs no scripts of the browser: Bootstrap takes the toggle in the table that the browser renders
     if (!this.config.prerender) {
@@ -144,17 +145,12 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
     });
   }
 
-  attributeChangedCallback(name: string, previousValue: string, currentValue: string) {
-    if (name === 'disabled') {
+  attributeChangedCallback(name: string) {
+    // Before its render the element has no toggle: the render takes the attribute
+    if (name === 'disabled' && this.dropdownToggleEl) {
       clearTimeout(this.disabledTimer);
 
-      this.disabledTimer = window.setTimeout(() => { // postpone to the next event loop after `bootstrap.Dropdown`-updates
-        if (currentValue === 'true') {
-          this.dropdownToggleEl.setAttribute('disabled', currentValue);
-        } else {
-          this.dropdownToggleEl.removeAttribute('disabled');
-        }
-      });
+      this.disabledTimer = window.setTimeout(() => this.renderDisabled()); // postpone to the next event loop after `bootstrap.Dropdown`-updates
     }
   }
 
@@ -190,6 +186,15 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
    * A list with a label says it with the value that it shows, as a select does: Items per page: 5. Without a label the
    * toggle takes its name from its title.
    */
+  /** The toggle is disabled by the attribute disabled="true". */
+  private renderDisabled(): void {
+    if (this.getAttribute('disabled') === 'true') {
+      this.dropdownToggleEl.setAttribute('disabled', 'true');
+    } else {
+      this.dropdownToggleEl.removeAttribute('disabled');
+    }
+  }
+
   private renderName(): void {
     if (this.label) {
       this.dropdownToggleEl.setAttribute('aria-label', `${this.label} ${this.dropdownToggleEl.textContent?.trim() ?? ''}`);

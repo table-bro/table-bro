@@ -49,6 +49,27 @@ describe('prerenderTableBro', () => {
     expect(isPrerendered(<Element>element.querySelector('test-sort-header'))).toBe(true);
   });
 
+  it('renders the paginator disabled in the loading state: an element of the prerender gets no attribute after its render', () => {
+    const disabled: (string | null)[] = [];
+
+    // The paginator of a skin reads the attribute at its render, as the paginator of the vanilla skins
+    customElements.define('test-prerender-paginator', class extends HTMLElement {
+      connectedCallback() {
+        disabled.push(this.getAttribute('disabled'));
+      }
+    });
+    registerSkin('test-prerender-paginator', {...skin, components: {...skin.components, paginator: {selector: 'test-prerender-paginator'}}});
+
+    const element = document.createElement('table-bro');
+
+    document.body.append(element);
+    prerenderTableBro(element, {cols: [{title: 'Name', name: 'name'}], conf: {skin: 'test-prerender-paginator'}});
+
+    expect(disabled).toEqual(['true']);
+
+    element.remove();
+  });
+
   it('keeps the theme of the page with the theme auto: the server knows no theme of the system', () => {
     const element = serverElement();
 

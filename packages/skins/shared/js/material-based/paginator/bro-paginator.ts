@@ -331,6 +331,8 @@ export class BroPaginatorComponent extends BroHTMLElement implements BroView, Br
     broDropdown.setAttribute('button-title', this.pageSize.toString());
     broDropdown.setAttribute('options', JSON.stringify(this.pageSizeDropdown));
     broDropdown.setAttribute('label', this.texts!.itemsPerPage);
+    // The list takes the state of the paginator at its render, as the select of MatPaginator does
+    broDropdown.setAttribute('disabled', this.disabled.toString());
 
     this.eventsPageSize(broDropdown);
 
