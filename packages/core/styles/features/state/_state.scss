@@ -53,17 +53,3 @@ table-bro[data-bro-prerender] #{$bro-state-container} .bro-state-icon {
 #{$bro-state-message} {
   opacity: 0;
 }
-
-// The live region of the table: screen readers say its text, and the page does not show it
-#{$bro-live-status} {
-  position: absolute;
-
-  overflow: hidden;
-
-  width: 1px;
-  height: 1px;
-
-  white-space: nowrap;
-
-  clip-path: inset(50%);
-}

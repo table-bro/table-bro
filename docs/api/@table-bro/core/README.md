@@ -75,6 +75,7 @@
 - [BroProgressMode](type-aliases/BroProgressMode.md)
 - [BroSkin](type-aliases/BroSkin.md)
 - [broCellSelectors](variables/broCellSelectors.md)
+- [broVisuallyHidden](variables/broVisuallyHidden.md)
 - [registerSkin](functions/registerSkin.md)
 
 ## Rendering helpers

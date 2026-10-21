@@ -39,7 +39,7 @@ export class BroTableRegions implements BroView {
     tableContainer.el.append(headerContainer.render());
 
     this.liveStatus = this.ctx.dom.createElement('div');
-    this.liveStatus.className = selectors.liveStatus;
+    this.liveStatus.className = `${selectors.liveStatus} ${selectors.visuallyHidden}`;
     this.liveStatus.setAttribute('role', 'status');
     this.liveStatus.setAttribute('aria-atomic', 'true');
     host.append(this.liveStatus);

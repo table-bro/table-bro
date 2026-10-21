@@ -528,10 +528,29 @@ for (const skin of ['mat', 'bs', 'nv']) {
       await table.getByRole('combobox', {name: 'More'}).selectOption('print');
     } else {
       await table.getByRole('button', {name: 'More'}).click();
-      await page.getByText('Print', {exact: true}).click();
+      // An item of the menu of bs says what it is with its visually hidden words
+      await page.getByText(skin === 'bs' ? 'Print menu item' : 'Print', {exact: true}).click();
     }
 
     await expect.poll(() => actions(page, ['export', 'print'])).toEqual(['print']);
+  });
+}
+
+for (const skin of ['bs', 'nv']) {
+  test(`the links of the toolbar of the ${skin} skin say what they are with visually hidden words`, async ({page}) => {
+    const table = await mount(page, `
+      el.configure({cols, rows, conf: {skin: '${skin}', toolbarTitle: 'Orders', components: {toolbarMain: {buttons: [{buttonTitle: 'Filters', eventType: 'bro-filters-toggle'}, ${moreMenu}]}}}});
+      document.body.append(el);
+    `);
+
+    await expect(table.getByRole('link', {name: 'Search for Orders', exact: true})).toBeVisible();
+    await expect(table.getByRole('link', {name: 'Filters button', exact: true})).toBeVisible();
+
+    // The menu of nv is a select of its own, without the word
+    if (skin === 'bs') {
+      await table.getByRole('button', {name: 'More menu', exact: true}).click();
+      await expect(page.getByRole('link', {name: 'Print menu item', exact: true})).toBeVisible();
+    }
   });
 }
 

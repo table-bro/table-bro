@@ -1,0 +1,14 @@
+// Hides an element from the eye, not from screen readers. The one rule of the core and the skins: the class
+// bro-visually-hidden of the core and the hidden items of a component cell of the skins (mixin bro-cell-items) take it
+@mixin bro-visually-hidden() {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+
+  white-space: nowrap;
+
+  clip-path: inset(50%);
+}

@@ -378,6 +378,10 @@ interface BroTexts {
     loadingProgress: string;
     states: Partial<Record<keyof BroStates, string>>;
     search: string;
+    searchRole: (title: string) => string;
+    buttonRole: string;
+    menuRole: string;
+    menuItemRole: string;
     searchField: string;
     back: string;
     clear: string;
@@ -668,5 +672,6 @@ export declare const broCellSelectors: Readonly<{
     ellipsisContainer: string;
     ellipsis: string;
 }>;
+export declare const broVisuallyHidden: string;
 export { type BroActionDataMap, type BroActionDetail, type BroAdvancedFilterGroup, type BroAppendRowsOptions, type BroButton, type BroCellActionData, type BroCellElement, type BroCol, type BroColDataType, type BroColSort, type BroConfig, type BroConfigCSS, type BroConfigureOptions, type BroConfiguredElement, type BroCustomElementConfig, type BroCustomElementValueFn, type BroDeepPartial, type BroDropdown, type BroDropdownOption, type BroEmptyState, type BroErrorCode, type BroErrorDetail, type BroFilterCondition, type BroFilterDrawerHTMLElement, type BroFilterDrawerHTMLElementEventMap, type BroFilterValue, type BroFilters, type BroFiltersTransform, type BroPageChange, type BroPaginatorElement, type BroPaginatorPageEvent, type BroProgressBar, type BroProgressMode, type BroQuery, type BroReplaceRowsOptions, type BroResolvedConfig, type BroRow, type BroRowDetailsElement, type BroSkin, type BroSkinComponents, type BroSkinConfig, type BroSortDirection, type BroSortHeader, type BroSortSpec, type BroStates, type BroTableAction, type BroTableState, type BroTextEllipsis, type BroTexts, type BroToolbarElement, type BroToolbarMain, type TableBroHTMLElement, type TableBroHTMLElementEventMap, events_d_exports as events };
 ```

@@ -145,6 +145,11 @@ state of the table and the loading of row details from the server, `detailsLoadi
 `MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of the skins `bs` and `nv`
 takes its title and the name of its close button from its own property `texts`.
 
+The toolbar links of the skins `bs` and `nv` say what they are with visually hidden words after their titles, for screen
+readers and search engines: `searchRole(title)` by the title of the toolbar (Search for Orders, Search for rows without
+a title), `buttonRole` (Filters button), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs`
+(Print menu item). An empty string adds no words.
+
 ### Errors
 
 A wrong call throws at once: `configure()` without a registered skin, `replaceRows()` without an array, a method before

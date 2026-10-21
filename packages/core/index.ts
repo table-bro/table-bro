@@ -1,4 +1,5 @@
 import {selectors as sharedSelectors} from './shared/shared-selectors';
+import {selectors}                    from './table-bro-selectors';
 import './table-bro';
 
 export type {BroPageChange} from './types/pagination';
@@ -33,3 +34,10 @@ export const broCellSelectors: Readonly<{ellipsisContainer: string; ellipsis: st
   ellipsisContainer: sharedSelectors.tableCellTextEllipsisContainer,
   ellipsis: sharedSelectors.tableCellTextEllipsis
 });
+
+/**
+ * The class that hides an element from the eye, not from screen readers: the CSS of the core has its rule, for skins.
+ * A runtime value, not a re-export of a const enum: a build from the sources may give the production build other names.
+ * @group Skins
+ */
+export const broVisuallyHidden: string = selectors.visuallyHidden;

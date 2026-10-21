@@ -1,4 +1,4 @@
-import {type BroConfiguredElement, type BroDropdown, type BroDropdownOption, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroView, isPrerendered} from '@table-bro/core';
+import {type BroConfiguredElement, type BroDropdown, type BroDropdownOption, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroView, broVisuallyHidden, isPrerendered} from '@table-bro/core';
 
 import {bootstrapClasses} from './bootstrap-classes';
 
@@ -34,11 +34,14 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
           ${this.templateDropdown(this.options)}
         </div>`;
     } else if (this.mode === 'navbar-dropdown') {
+      // The link of the menu says what it is with visually hidden text: Lighthouse reads the text of a link, not its label
+      const menu = this.config.texts.menuRole ? `<span class="${escape(broVisuallyHidden)}"> ${escape(this.config.texts.menuRole)}</span>` : '';
+
       return `
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href=""
              role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            ${escape(this.buttonTitle)}
+            ${escape(this.buttonTitle)}${menu}
           </a>
 
           ${this.templateDropdown(this.options)}
@@ -77,7 +80,8 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
     dropdownMenuEl.addEventListener('click', (event: Event) => {
       event.preventDefault();
 
-      const value = (<HTMLElement>event.target)?.getAttribute('data-value');
+      // An item of the menu of the toolbar holds its hidden word
+      const value = (<HTMLElement>event.target)?.closest('[data-value]')?.getAttribute('data-value');
 
       if (this.mode === 'select') {
         this.dropdownToggleEl.innerText = this.options.find(option => option.value === value)?.title ?? '';
@@ -155,6 +159,9 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
   }
 
   private templateDropdown(options: BroDropdownOption[]): string {
+    // The items of the menu of the toolbar say what they are, as its buttons do
+    const item = (this.mode === 'navbar-dropdown' && this.config.texts.menuItemRole) ? `<span class="${escape(broVisuallyHidden)}"> ${escape(this.config.texts.menuItemRole)}</span>` : '';
+
     return `
       <ul class="dropdown-menu">
         ${options.map((option: BroDropdownOption) => {
@@ -162,7 +169,7 @@ export class BroBootstrapDropdownComponent extends BroHTMLElement implements Bro
             return `
               <li>
                  <a class="dropdown-item" href=""
-                    data-value="${escape(option.value)}">${escape(option.title)}</a>
+                    data-value="${escape(option.value)}">${escape(option.title)}${item}</a>
               </li>`;
           } else if ('divider' in option) {
             return `

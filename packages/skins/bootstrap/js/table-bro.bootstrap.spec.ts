@@ -7,6 +7,9 @@ import {bootstrapSkinConfig, type BroBootstrapClasses, useBootstrap, withSwitch,
 // The CSS of the skin from its build, which grows the bar of a progress of an unknown end; Vite gives it as a string
 const skinCssModule: string = '../dist/table-bro.bootstrap.min.css?inline';
 const {default: skinCss} = <{default: string}>await import(/* @vite-ignore */ skinCssModule);
+// The CSS of the core from its build, which every skin needs: the rule of its class bro-visually-hidden
+const coreCssModule: string = '../../../core/dist/table-bro.min.css?inline';
+const {default: coreCss} = <{default: string}>await import(/* @vite-ignore */ coreCssModule);
 
 // The optional elements, as a page with tags and switches defines them after the import of the skin
 withTags();
@@ -188,6 +191,99 @@ describe('the Bootstrap list of values', () => {
 
     dropdown.querySelector<HTMLElement>('[data-value="10"]')!.click();
     expect(toggle.getAttribute('aria-label')).toBe('Items per page: 10');
+  });
+});
+
+describe('the Bootstrap menu of the toolbar', () => {
+  it('adds the word of the texts to its title as visually hidden text', () => {
+    // The element releases its dropdown when the test removes it
+    useBootstrap({
+      'Dropdown': class {
+        dispose(): void {
+          // Nothing to dispose
+        }
+      },
+      'Tooltip': tooltip
+    });
+
+    const options = JSON.stringify([{value: 'print', title: 'Print'}]);
+    const dropdown = element('bro-bs-dropdown', {mode: 'navbar-dropdown', 'button-title': 'More', options});
+    const toggle = dropdown.querySelector('a.dropdown-toggle')!;
+
+    expect(toggle.textContent!.replace(/\s+/g, ' ').trim()).toBe('More menu');
+    expect(toggle.querySelector('.bro-visually-hidden')!.textContent).toBe(' menu');
+    expect(dropdown.querySelector('a.dropdown-item')!.textContent).toBe('Print menu item');
+
+    const withoutWord = element('bro-bs-dropdown', {mode: 'navbar-dropdown', 'button-title': 'More', options}, {config: {...config, texts: {...config.texts, menuRole: '', menuItemRole: ''}}});
+
+    expect(withoutWord.querySelector('.bro-visually-hidden')).toBeNull();
+  });
+
+  it('sends the value of an item from a click on its hidden word', () => {
+    const dropdown = element('bro-bs-dropdown', {mode: 'navbar-dropdown', 'button-title': 'More', options: JSON.stringify([{value: 'print', title: 'Print'}])});
+    const values: string[] = [];
+
+    dropdown.addEventListener('value', event => values.push((<CustomEvent>event).detail));
+    dropdown.querySelector<HTMLElement>('a.dropdown-item .bro-visually-hidden')!.click();
+
+    expect(values).toEqual(['print']);
+  });
+});
+
+describe('the links of the Bootstrap toolbar', () => {
+  // The texts that the audit link-text of Lighthouse 12 finds not descriptive, in English (core/audits/seo/link-text.js)
+  const nonDescriptiveTexts = ['click here', 'click this', 'go', 'here', 'information', 'learn more', 'more', 'more info', 'more information', 'right here', 'read more', 'see more', 'start', 'this'];
+
+  /**
+   * The texts of the links of a toolbar whose application names its search, its button, its menu and its item as the
+   * audit does not like, as the audit reads them: innerText, with the CSS of the core and of the skin.
+   * @param texts - the texts of the config
+   * @param toolbarTitle - the title of the toolbar
+   */
+  function linkTexts(texts: Partial<BroResolvedConfig['texts']>, toolbarTitle: string = ''): string[] {
+    const style = document.createElement('style');
+
+    style.textContent = coreCss + skinCss;
+    document.body.className = 'bs';
+    document.body.append(style);
+
+    const buttons = [
+      {buttonTitle: 'Read more', eventType: 'read'},
+      {buttonTitle: 'More', mode: 'navbar-dropdown', options: [{value: 'details', title: 'Learn more'}]}
+    ];
+    const components = {...config.components, toolbarMain: {...config.components.toolbarMain, buttons}};
+    const toolbar = element('bro-toolbar-main', {}, {config: {...config, components, toolbarTitle, texts: {...config.texts, search: 'Go', ...texts}}});
+
+    return Array.from(toolbar.querySelectorAll('a'), link => link.innerText.replace(/\s+/g, ' ').trim().toLowerCase());
+  }
+
+  it('have descriptive texts for the audit link-text of Lighthouse with any title of the application', () => {
+    useBootstrap({
+      'Dropdown': class {
+        dispose(): void {
+          // Nothing to dispose
+        }
+      },
+      'Tooltip': tooltip
+    });
+
+    const texts = linkTexts({});
+
+    expect(texts).toEqual(['go for rows', 'read more button', 'more menu', 'learn more menu item']);
+    expect(texts.filter(text => nonDescriptiveTexts.includes(text))).toEqual([]);
+
+    // The words hide: the toolbar shows the titles only
+    const word = document.querySelector<HTMLElement>('bro-toolbar-main .bro-visually-hidden')!;
+
+    expect([word.offsetWidth, word.offsetHeight, getComputedStyle(word).clipPath]).toEqual([1, 1, 'inset(50%)']);
+  });
+
+  it('name the rows that the search searches by the title of the toolbar', () => {
+    expect(linkTexts({}, 'Orders')[0]).toBe('go for orders');
+  });
+
+  it('keep the titles of the application without the words', () => {
+    expect(linkTexts({searchRole: () => '', buttonRole: '', menuRole: '', menuItemRole: ''}, 'Orders')).toEqual(['go', 'read more', 'more', 'learn more']);
   });
 });
 

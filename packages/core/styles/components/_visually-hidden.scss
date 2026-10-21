@@ -1,0 +1,9 @@
+@use "table-bro-selector-map" as *;
+@use "../mixins/visually-hidden" as *;
+
+// Screen readers read the element, and the page does not show it: the live region of the table, the words after the
+// titles of the toolbar links of the skins. The rule of the core, not .visually-hidden of Bootstrap, which a build of
+// Bootstrap without its helpers leaves out
+#{$bro-visually-hidden} {
+  @include bro-visually-hidden;
+}

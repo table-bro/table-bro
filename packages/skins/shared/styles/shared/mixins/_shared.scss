@@ -1,4 +1,5 @@
 @use "../variables" as *;
+@use "../../../mixins/visually-hidden" as *;
 
 // The same mixin is in components/material-based/_table.scss of the core: the core and the skins are separate packages,
 // which share no Sass module but the maps of the selectors
@@ -58,16 +59,7 @@
 
     // An item that does not fit the line: hidden from the eye, not from screen readers (fitCellItems)
     > .bro-cell-item-hidden {
-      position: absolute;
-
-      overflow: hidden;
-
-      width: 1px;
-      height: 1px;
-
-      white-space: nowrap;
-
-      clip-path: inset(50%);
+      @include bro-visually-hidden;
     }
   }
 }

@@ -10,6 +10,10 @@ export const enum selectors {
   /** The live region of the table: screen readers say its text. */
   liveStatus = 'bro-live-status',
 
+  // Accessibility
+  /** Hides an element from the eye, not from screen readers: the live region, the words of the toolbar links of the skins. */
+  visuallyHidden = 'bro-visually-hidden',
+
   /** The key of the column on its header and body cells: the rules of the column widths find the cells by it. */
   columnKeyAttribute = 'data-bro-column-key',
   /** The instance of the table on its host: the rules of its <style> elements find it by it, also when another table has its id. */

@@ -1,4 +1,4 @@
-import {type BroButton, type BroConfiguredElement, BroDom, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, events, isPrerendered} from '@table-bro/core';
+import {type BroButton, type BroConfiguredElement, BroDom, type BroDropdown, BroHTML, BroHTMLElement, type BroResolvedConfig, type BroSkinComponents, type BroToolbarMain, type BroView, broVisuallyHidden, events, isPrerendered} from '@table-bro/core';
 
 import type {BroToolbarComponent} from './bro-toolbar';
 
@@ -119,11 +119,21 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
     return new BroDom(this.ownerDocument);
   }
 
-  private templateToolbarButton(buttonTitle: string, iconHTML?: string, className?: string): HTMLElement {
+  /**
+   * A link of the toolbar.
+   * @param buttonTitle - the title of the link
+   * @param role - the words after the title, as visually hidden text, as button; none without a title
+   * @param iconHTML - the icon before the title
+   * @param className - a class of the link
+   */
+  private templateToolbarButton(buttonTitle: string, role: string, iconHTML?: string, className?: string): HTMLElement {
+    // A link says what it is with visually hidden text: Lighthouse reads the text of a link, not its label
+    const word = (buttonTitle && role) ? `<span class="${escape(broVisuallyHidden)}"> ${escape(role)}</span>` : '';
+
     return this.dom.createFromHTML(`
       <li class="${escape(this.css.navbarCollapse.ul.li.className)}">
         <a class="${escape(this.css.navbarCollapse.ul.li.a.className)}${className ? ` ${escape(className)}` : ''}" href="">
-           ${iconHTML || ''}${escape(buttonTitle)}
+           ${iconHTML || ''}${escape(buttonTitle)}${word}
         </a>
       </li>`);
   }
@@ -135,7 +145,8 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
 
     const buttonTitle = broButton.getAttribute('button-title') ?? '';
 
-    return this.templateToolbarButton(buttonTitle, broButton.iconHTML, 'bro-toolbar-button-search');
+    // The search says what it searches: the rows of the table that the toolbar names
+    return this.templateToolbarButton(buttonTitle, this.config.texts.searchRole(this.config.toolbarTitle), broButton.iconHTML, 'bro-toolbar-button-search');
   }
 
   private renderButtons(): HTMLElement[] {
@@ -163,7 +174,7 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
 
         return broDropdown;
       } else {
-        const buttonEl = this.templateToolbarButton(button.buttonTitle, button.iconHTML);
+        const buttonEl = this.templateToolbarButton(button.buttonTitle, this.config.texts.buttonRole, button.iconHTML);
 
         // A config button sends its eventType as a toolbar action, as the Material toolbar does
         buttonEl.querySelector('a')?.addEventListener('click', () => {
