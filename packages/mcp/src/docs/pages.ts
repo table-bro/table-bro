@@ -5,7 +5,7 @@ import type {BroSpecSkin}           from '../spec/spec.js';
 export interface BroDocFile {
   /** The name of the file, unique on its page; the text shows the file by the line {{file}}. */
   file: string;
-  /** The language of the code, as of a Markdown code block: ts, js, scss, css, html, json, bash or text. */
+  /** The language of the code, as of a Markdown code block: ts, tsx, js, scss, css, html, vue, svelte, json, bash or text. */
   language: string;
   code: string;
 }
@@ -60,6 +60,53 @@ function setup(target: BroTarget, skin: BroSpecSkin): {text: string; files: BroD
 const setupMat = setup('angular', 'mat');
 const setupBs = setup('vanilla', 'bs');
 const setupNv = setup('vanilla', 'nv');
+const setupNgBs = setup('angular', 'bs');
+const setupNgNv = setup('angular', 'nv');
+
+/** The files of the setup that every page of Frameworks shows, as each project of samples/frameworks has them. */
+const frameworkInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/native
+`};
+const frameworkSkin: BroDocFile = {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin nv
+import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/native/dist/table-bro.native.min.css';
+import '@table-bro/native';
+
+import './sample-page.css';
+`};
+const frameworkOrders: BroDocFile = {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+export interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+export const cols: BroCol<Order>[] = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+export const rows: Order[] = [
+  {
+    description: 'Modern Cotton Chair',
+    price: 100
+  }, {
+    description: 'Awesome Concrete Ball',
+    price: 200
+  }
+];
+
+export const conf: BroConfig = {
+  skin: 'nv',
+  toolbarTitle: 'Orders'
+};
+`};
 
 /** The pages of Docs, in the order of reading. Island Details have their own pages on the site, apart from this package. */
 export const docPages: BroDocPage[] = [
@@ -1472,6 +1519,710 @@ const cols: BroCol<Order>[] = [
     sortKey: 'timestamp'
   }
 ];
+`}
+    ]
+  },
+  {
+    path: 'frameworks',
+    name: 'Frameworks',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`: every framework that renders HTML elements renders it, without a wrapper package. A page gives the table its columns, rows and config by \`configure({cols, rows, conf})\`, listens to its \`bro-action\` events and sets its \`theme\` attribute; each framework does it in its own way. The pages of this section show it in Angular, whose package \`@table-bro/angular\` gives the component \`‹table-bro-ng›\` with inputs and outputs, and in Preact, React, Solid, Svelte and Vue, each with a working page of its sample project in the repository and StackBlitz. How each framework passes data and events to Custom Elements is tested by [Custom Elements Everywhere](https://custom-elements-everywhere.com/).
+
+<!-- polymer -->
+#### Polymer and Lit
+
+Polymer and Lit build Custom Elements themselves, so their templates render \`‹table-bro›\` as any HTML element, without a wrapper: the code of the element calls \`configure()\` of the table and listens to its \`bro-action\` events as of any element ([Polymer, Custom element concepts](https://polymer-library.polymer-project.org/3.0/docs/devguide/custom-elements), [Lit, What is Lit?](https://lit.dev/docs/)).`,
+    files: []
+  },
+  {
+    path: 'frameworks/angular',
+    name: 'Angular data table',
+    text: `<!-- intro -->
+Table, Bro has its own package for Angular, \`@table-bro/angular\`: the component \`‹table-bro-ng›\` renders the Custom Element \`‹table-bro›\`, gives it the signal inputs \`cols\`, \`rows\` and \`conf\`, and turns its \`bro-action\` events into the outputs \`action\` and \`query\`. It works with the three skins: Angular Material, Vanilla Bootstrap and Vanilla HTML. The page below is the [working page](https://table-bro.com/samples/angular-material) of the sample project \`samples/angular-material\` of the repository, with Angular 22 and Angular Material; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/angular-material) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in Angular?
+
+The steps of each skin; the component of the table is the same in all three.
+
+##### Angular Material
+
+${setupMat.text}
+
+##### Vanilla Bootstrap
+
+${setupNgBs.text}
+
+##### Vanilla HTML
+
+${setupNgNv.text}
+
+#### How do I pass cols, rows and conf?
+
+\`‹table-bro-ng›\` takes them as inputs, here from signals of the component ([Angular, Accepting data with input properties](https://angular.dev/guide/components/inputs)). A new value of \`rows\` replaces the rows of the table, and \`conf.skin\` names the registered skin. \`src/app/orders.component.ts\`:
+
+{{src/app/orders.component.ts}}
+
+#### How do I listen to bro-action?
+
+The output \`action\` emits the detail of every \`bro-action\` event of the table, a \`BroActionDetail\`: custom cells, the toolbar, the paginator. The output \`query\` emits the queries of a table with server-side data instead ([Angular, Custom events with outputs](https://angular.dev/guide/components/outputs)). In the template: \`(action)="onAction($event)"\`.
+
+#### How do I switch the theme?
+
+The input \`theme\` of \`‹table-bro-ng›\` is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; without it the table takes \`config.theme\`, \`'auto'\` by default. The table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does the template need CUSTOM_ELEMENTS_SCHEMA?
+
+Not for \`‹table-bro-ng›\`: it is a component of Angular in \`imports\` of the component. A template that renders \`‹table-bro›\` itself needs [CUSTOM_ELEMENTS_SCHEMA](https://angular.dev/api/core/CUSTOM_ELEMENTS_SCHEMA). Angular also turns its own components into Custom Elements ([Angular, Custom Elements](https://angular.dev/guide/elements)).
+
+##### Does it work with server-side rendering?
+
+Yes. The server render of Angular renders the table in its loading state, and the browser renders the table with its rows in the same element: the page shows the table before the application starts.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      ...setupMat.files,
+      ...setupNgBs.files,
+      ...setupNgNv.files,
+      {file: 'src/app/orders.component.ts', language: 'ts', code: `import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+
+import {TableBroNg}                     from '@table-bro/angular';
+import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+@Component({
+  selector: 'app-orders',
+  template: \`
+    <table-bro-ng class="bro-table-shadow-container" tableId="orders"
+                  [cols]="cols()" [rows]="rows()" [conf]="conf()"></table-bro-ng>\`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    TableBroNg
+  ]
+})
+export class OrdersComponent {
+  cols = signal<BroCol<Order>[]>([
+    {
+      title: 'Description',
+      name: 'description'
+    }, {
+      title: 'Price',
+      name: 'price',
+      dataType: 'number',
+      className: 'bro-col_text-right'
+    }
+  ]);
+
+  rows = signal<Order[]>([
+    {
+      description: 'Modern Cotton Chair',
+      price: 100
+    }, {
+      description: 'Awesome Concrete Ball',
+      price: 200
+    }
+  ]);
+
+  conf = signal<BroConfig>({
+    skin: 'mat',
+    toolbarTitle: 'Orders'
+  });
+}
+`}
+    ]
+  },
+  {
+    path: 'frameworks/preact',
+    name: 'Preact data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, the prop \`onbro-action\` listens to its events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/preact) of the sample project \`samples/frameworks/preact\` of the repository, with Preact 11; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/preact) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in Preact?
+
+1. **Install the packages**
+
+   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+
+   {{install.sh}}
+
+2. **Register the element and the skin**
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+
+   {{src/skin.ts}}
+
+3. **Describe the columns, the rows and the config**
+
+   \`conf.skin\` names the registered skin. \`src/orders.ts\`:
+
+   {{src/orders.ts}}
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call. Preact adds a listener for an event prop it does not know by the exact name after \`on\`, \`bro-action\` for \`onbro-action\` ([Preact, Web Components](https://preactjs.com/guide/v10/web-components/)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+
+{{src/OrdersTable.tsx}}
+
+\`"jsxImportSource": "preact"\` in \`tsconfig.json\` of the sample gives the JSX runtime of Preact to TypeScript and to Vite, without a plugin.
+
+#### How does TypeScript know the element?
+
+A declaration adds \`‹table-bro›\` to the JSX of Preact, with the methods of \`TableBroHTMLElement\` and the prop \`onbro-action\`. \`src/elements.d.ts\`:
+
+{{src/elements.d.ts}}
+
+#### How do I render it?
+
+\`src/main.tsx\` imports the skin before the tables:
+
+{{src/main.tsx}}
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does Preact need a wrapper for Custom Elements?
+
+No. Preact passes all 32 tests of [Custom Elements Everywhere](https://custom-elements-everywhere.com/). Its package \`preact-custom-element\` also turns a Preact component into a Custom Element ([Preact, preact-custom-element](https://preactjs.com/guide/v10/preact-custom-element/)).
+
+##### Can I bind cols and rows as props?
+
+The table takes its data by \`configure()\`, one call for the columns, the rows and the config. New rows go by \`replaceRows(rows)\` on the same ref.
+
+##### Does preact/compat change it?
+
+No: \`‹table-bro›\` is an element of the DOM, the same in Preact and in React through \`preact/compat\`.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      frameworkInstall,
+      frameworkSkin,
+      frameworkOrders,
+      {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of Preact, with its attribute theme and its event bro-action
+import type {HTMLAttributes} from 'preact';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+declare module 'preact' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'table-bro': HTMLAttributes<TableBroHTMLElement> & {theme?: 'light' | 'dark' | 'auto'; 'onbro-action'?: (event: CustomEvent<BroActionDetail>) => void};
+    }
+  }
+}
+`},
+      {file: 'src/OrdersTable.tsx', language: 'tsx', code: `import {useEffect, useRef} from 'preact/hooks';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+import {cols, conf, rows} from './orders';
+
+export function OrdersTable() {
+  const table = useRef<TableBroHTMLElement>(null);
+
+  useEffect(() => {
+    table.current!.configure({cols, rows, conf});
+  }, []);
+
+  return (
+    <div class="bro-table-shadow-container">
+      <table-bro id="orders" ref={table} theme="auto"
+                 onbro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}></table-bro>
+    </div>
+  );
+}
+`},
+      {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
+import './skin';
+
+import {render} from 'preact';
+
+import {OrdersTable} from './OrdersTable';
+
+render(<OrdersTable />, document.getElementById('app')!);
+`}
+    ]
+  },
+  {
+    path: 'frameworks/react',
+    name: 'React data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders it in JSX as it is, without a wrapper package. A ref gives the element its columns, rows and config by \`configure()\`, an effect adds the listener of its \`bro-action\` events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/react) of the sample project \`samples/frameworks/react\` of the repository, with React 19.3; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/react) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in React?
+
+1. **Install the packages**
+
+   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+
+   {{install.sh}}
+
+2. **Register the element and the skin**
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+
+   {{src/skin.ts}}
+
+3. **Describe the columns, the rows and the config**
+
+   \`conf.skin\` names the registered skin. \`src/orders.ts\`:
+
+   {{src/orders.ts}}
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call after the first render. The same effect adds the listener of \`bro-action\` and removes it at the end; the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+
+{{src/OrdersTable.tsx}}
+
+React 19 sets a prop of a custom element as a property when the element has a property of that name, and as an attribute otherwise ([React 19, Support for Custom Elements](https://react.dev/blog/2024/12/05/react-19)): \`theme\` is a property of \`‹table-bro›\`. \`"jsx": "react-jsx"\` in \`tsconfig.json\` of the sample gives the JSX runtime of React to TypeScript and to Vite.
+
+#### How does TypeScript know the element?
+
+JSX of React knows the HTML elements only; a declaration adds \`‹table-bro›\` with the methods of \`TableBroHTMLElement\`. \`src/elements.d.ts\`:
+
+{{src/elements.d.ts}}
+
+#### How do I render it?
+
+\`src/main.tsx\` imports the skin before the tables:
+
+{{src/main.tsx}}
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does React 19 need a wrapper for Custom Elements?
+
+No. React 19 passes the props of a custom element as properties or attributes ([React, Custom HTML elements](https://react.dev/reference/react-dom/components#custom-html-elements)) and passes all 32 tests of [Custom Elements Everywhere](https://custom-elements-everywhere.com/). Table, Bro takes its data by \`configure()\` through a ref, which works in every version of React.
+
+##### Can I listen to bro-action without a ref?
+
+The sample uses \`addEventListener\` in an effect: it works in React 18 and 19 and removes the listener on unmount.
+
+##### Does it work with Next.js?
+
+The table renders in the browser: \`configure()\` runs in an effect, so a client component (\`'use client'\`) works, and the server render leaves the element empty.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      frameworkInstall,
+      frameworkSkin,
+      frameworkOrders,
+      {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of React, with its attribute theme
+import type {DetailedHTMLProps, HTMLAttributes} from 'react';
+
+import type {TableBroHTMLElement} from '@table-bro/core';
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'table-bro': DetailedHTMLProps<HTMLAttributes<TableBroHTMLElement>, TableBroHTMLElement> & {theme?: 'light' | 'dark' | 'auto'};
+    }
+  }
+}
+`},
+      {file: 'src/OrdersTable.tsx', language: 'tsx', code: `import {useEffect, useRef} from 'react';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+import {cols, conf, rows} from './orders';
+
+export function OrdersTable() {
+  const table = useRef<TableBroHTMLElement>(null);
+
+  useEffect(() => {
+    const element = table.current!;
+    const onAction = (event: CustomEvent<BroActionDetail>) => console.log(event.detail.action);
+
+    element.configure({cols, rows, conf});
+    element.addEventListener('bro-action', onAction);
+
+    return () => element.removeEventListener('bro-action', onAction);
+  }, []);
+
+  return (
+    <div className="bro-table-shadow-container">
+      <table-bro id="orders" ref={table} theme="auto"></table-bro>
+    </div>
+  );
+}
+`},
+      {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
+import './skin';
+
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
+
+import {OrdersTable} from './OrdersTable';
+
+createRoot(document.getElementById('app')!).render(
+  <StrictMode>
+    <OrdersTable />
+  </StrictMode>
+);
+`}
+    ]
+  },
+  {
+    path: 'frameworks/solid',
+    name: 'Solid data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, \`on:bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/solid) of the sample project \`samples/frameworks/solid\` of the repository, with Solid 1.9; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/solid) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in Solid?
+
+1. **Install the packages**
+
+   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+
+   {{install.sh}}
+
+2. **Register the element and the skin**
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+
+   {{src/skin.ts}}
+
+3. **Describe the columns, the rows and the config**
+
+   \`conf.skin\` names the registered skin. \`src/orders.ts\`:
+
+   {{src/orders.ts}}
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`ref\` gives the element ([Solid, ref](https://docs.solidjs.com/reference/jsx-attributes/ref)), \`onMount\` makes the call. \`on:bro-action\` adds the listener of the event by its exact name ([Solid, on:*](https://docs.solidjs.com/reference/jsx-attributes/on)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+
+{{src/OrdersTable.tsx}}
+
+\`vite-plugin-solid\` compiles the JSX of Solid, and \`"jsx": "preserve"\` with \`"jsxImportSource": "solid-js"\` in \`tsconfig.json\` gives its types to TypeScript. \`vite.config.ts\`:
+
+{{vite.config.ts}}
+
+\`mergeConfig\` adds \`sample-page.config.ts\` of the sample, the source maps and the readable code of its working page; a project of its own exports \`defineConfig()\` with the plugins alone.
+
+#### How does TypeScript know the element?
+
+A declaration adds \`‹table-bro›\` to the JSX of Solid, with the methods of \`TableBroHTMLElement\`, and \`bro-action\` to its events of \`on:\`. \`src/elements.d.ts\`:
+
+{{src/elements.d.ts}}
+
+#### How do I render it?
+
+\`src/main.tsx\` imports the skin before the tables:
+
+{{src/main.tsx}}
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does Solid need a wrapper for Custom Elements?
+
+No. Solid passes all 32 tests of [Custom Elements Everywhere](https://custom-elements-everywhere.com/); \`on:\` listens to an event by its exact name, as \`bro-action\`. Its package \`solid-element\` also turns a Solid component into a Custom Element ([Solid, solid-element](https://www.npmjs.com/package/solid-element)).
+
+##### Can I bind cols and rows as props?
+
+The table takes its data by \`configure()\`, one call for the columns, the rows and the config. New rows go by \`replaceRows(rows)\` on the same ref, as in an effect of a signal of the rows.
+
+##### Does it work with SolidStart?
+
+The element needs the browser: \`onMount\` runs only there, so the server render leaves the element empty and the browser fills it.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      frameworkInstall,
+      frameworkSkin,
+      frameworkOrders,
+      {file: 'vite.config.ts', language: 'ts', code: `import {defineConfig, mergeConfig} from 'vite';
+import solid                       from 'vite-plugin-solid';
+
+import {samplePage} from './sample-page.config.ts';
+
+export default mergeConfig(samplePage, defineConfig({
+  plugins: [
+    solid()
+  ]
+}));
+`},
+      {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of Solid, with its attribute theme and its event bro-action for on:bro-action
+import type {JSX as SolidJSX} from 'solid-js';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+declare module 'solid-js' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'table-bro': SolidJSX.HTMLAttributes<TableBroHTMLElement> & {theme?: 'light' | 'dark' | 'auto'};
+    }
+
+    interface CustomEvents {
+      'bro-action': CustomEvent<BroActionDetail>;
+    }
+  }
+}
+`},
+      {file: 'src/OrdersTable.tsx', language: 'tsx', code: `import {onMount} from 'solid-js';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+import {cols, conf, rows} from './orders';
+
+export function OrdersTable() {
+  let table!: TableBroHTMLElement;
+
+  onMount(() => table.configure({cols, rows, conf}));
+
+  return (
+    <div class="bro-table-shadow-container">
+      <table-bro id="orders" ref={table} theme="auto"
+                 on:bro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}></table-bro>
+    </div>
+  );
+}
+`},
+      {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
+import './skin';
+
+import {render} from 'solid-js/web';
+
+import {OrdersTable} from './OrdersTable';
+
+render(() => <OrdersTable />, document.getElementById('app')!);
+`}
+    ]
+  },
+  {
+    path: 'frameworks/svelte',
+    name: 'Svelte data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders it in markup as it is. \`bind:this\` gives the element its columns, rows and config by \`configure()\`, the attribute \`onbro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/svelte) of the sample project \`samples/frameworks/svelte\` of the repository, with Svelte 5.57; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/svelte) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in Svelte?
+
+1. **Install the packages**
+
+   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+
+   {{install.sh}}
+
+2. **Register the element and the skin**
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+
+   {{src/skin.ts}}
+
+3. **Describe the columns, the rows and the config**
+
+   \`conf.skin\` names the registered skin. \`src/orders.ts\`:
+
+   {{src/orders.ts}}
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`bind:this\` gives the element ([Svelte, bind:this](https://svelte.dev/docs/svelte/bind)), \`onMount\` makes the call ([Svelte, Lifecycle hooks](https://svelte.dev/docs/svelte/lifecycle-hooks)). An attribute that starts with \`on\` adds a listener of the event of its name, \`bro-action\` for \`onbro-action\` ([Svelte, Events](https://svelte.dev/docs/svelte/basic-markup)); the sample logs the name of each action. \`src/OrdersTable.svelte\`:
+
+{{src/OrdersTable.svelte}}
+
+#### How do I render it?
+
+\`src/main.ts\` imports the skin before the tables. A project of \`npm create vite@latest\` with the Svelte template needs no other setup for \`‹table-bro›\`:
+
+{{src/main.ts}}
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does Svelte need a wrapper for Custom Elements?
+
+No. Svelte passes all 32 tests of [Custom Elements Everywhere](https://custom-elements-everywhere.com/). Svelte also compiles its own components into Custom Elements ([Svelte, Custom elements](https://svelte.dev/docs/svelte/custom-elements)).
+
+##### Can I bind cols and rows as props?
+
+The table takes its data by \`configure()\`, one call for the columns, the rows and the config. New rows go by \`replaceRows(rows)\` on the same element.
+
+##### Does it work with SvelteKit?
+
+The element needs the browser: \`onMount\` runs only there, so the server render of SvelteKit leaves the element empty and the browser fills it.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      frameworkInstall,
+      frameworkSkin,
+      frameworkOrders,
+      {file: 'src/OrdersTable.svelte', language: 'svelte', code: `<script lang="ts">
+  import {onMount} from 'svelte';
+
+  import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+  import {cols, conf, rows} from './orders';
+
+  let table: TableBroHTMLElement;
+
+  onMount(() => table.configure({cols, rows, conf}));
+</script>
+
+<div class="bro-table-shadow-container">
+  <table-bro id="orders" bind:this={table} theme="auto"
+             onbro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}></table-bro>
+</div>
+`},
+      {file: 'src/main.ts', language: 'ts', code: `// The skin is registered before the tables
+import './skin';
+
+import {mount} from 'svelte';
+
+import OrdersTable from './OrdersTable.svelte';
+
+mount(OrdersTable, {target: document.getElementById('app')!});
+`}
+    ]
+  },
+  {
+    path: 'frameworks/vue',
+    name: 'Vue 3 data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it in a template once the compiler knows the tag: \`compilerOptions.isCustomElement\` of \`@vitejs/plugin-vue\`. A template ref gives the element its columns, rows and config by \`configure()\`, \`@bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/vue) of the sample project \`samples/frameworks/vue\` of the repository, with Vue 3.5; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/vue) opens it in the browser.
+
+<!-- setup -->
+#### How do I install Table, Bro in Vue?
+
+1. **Install the packages**
+
+   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+
+   {{install.sh}}
+
+2. **Register the element and the skin**
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+
+   {{src/skin.ts}}
+
+3. **Describe the columns, the rows and the config**
+
+   \`conf.skin\` names the registered skin. \`src/orders.ts\`:
+
+   {{src/orders.ts}}
+
+#### How do I tell Vue that table-bro is a Custom Element?
+
+Without it, Vue resolves \`‹table-bro›\` as a component of the app and warns that it fails. \`isCustomElement\` of the template compiler skips the tags of Table, Bro ([Vue, Using Custom Elements in Vue](https://vuejs.org/guide/extras/web-components.html)). \`vite.config.ts\`:
+
+{{vite.config.ts}}
+
+\`mergeConfig\` adds \`sample-page.config.ts\` of the sample, the source maps and the readable code of its working page; a project of its own exports \`defineConfig()\` with the plugins alone.
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`useTemplateRef\` gives the element, \`onMounted\` makes the call. \`@bro-action\` adds the listener of the event, which logs the name of each action, and \`theme\` sets the theme; a binding \`:theme\` goes to the property \`theme\` of the element, since Vue sets a binding of a custom element as a property when the element has it. \`src/OrdersTable.vue\`:
+
+{{src/OrdersTable.vue}}
+
+#### How do I render it?
+
+\`src/main.ts\` imports the skin before the tables:
+
+{{src/main.ts}}
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does Vue need a wrapper for Custom Elements?
+
+No. Vue passes all 32 tests of [Custom Elements Everywhere](https://custom-elements-everywhere.com/); it only needs \`isCustomElement\` for the tags of Table, Bro.
+
+##### Can I bind cols and rows as props?
+
+The table takes its data by \`configure()\`, one call for the columns, the rows and the config. New rows go by \`replaceRows(rows)\` on the same ref.
+
+##### Does it work with Nuxt?
+
+The element needs the browser: render the component on the client, as \`‹ClientOnly›\` does; \`isCustomElement\` goes to \`vue.compilerOptions\` of \`nuxt.config.ts\`.
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
+    files: [
+      frameworkInstall,
+      frameworkSkin,
+      frameworkOrders,
+      {file: 'vite.config.ts', language: 'ts', code: `import vue                         from '@vitejs/plugin-vue';
+import {defineConfig, mergeConfig} from 'vite';
+
+import {samplePage} from './sample-page.config.ts';
+
+export default mergeConfig(samplePage, defineConfig({
+  plugins: [
+    // Vue compiles <table-bro> of its templates as a Custom Element, not as a component of Vue
+    vue({template: {compilerOptions: {isCustomElement: tag => tag.startsWith('table-bro')}}})
+  ]
+}));
+`},
+      {file: 'src/OrdersTable.vue', language: 'vue', code: `<script setup lang="ts">
+import {onMounted, useTemplateRef} from 'vue';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+import {cols, conf, rows} from './orders';
+
+const table = useTemplateRef<TableBroHTMLElement>('table');
+
+onMounted(() => table.value!.configure({cols, rows, conf}));
+
+function onAction(event: CustomEvent<BroActionDetail>) {
+  console.log(event.detail.action);
+}
+</script>
+
+<template>
+  <div class="bro-table-shadow-container">
+    <table-bro id="orders" ref="table" theme="auto" @bro-action="onAction"></table-bro>
+  </div>
+</template>
+`},
+      {file: 'src/main.ts', language: 'ts', code: `// The skin is registered before the tables
+import './skin';
+
+import {createApp} from 'vue';
+
+import OrdersTable from './OrdersTable.vue';
+
+createApp(OrdersTable).mount('#app');
 `}
     ]
   }

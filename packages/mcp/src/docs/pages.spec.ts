@@ -12,13 +12,23 @@ import {docPages}     from './pages.js';
 
 // The files of code of Docs against the sources of Table, Bro: a file that a change of the library leaves behind fails
 // here, before a reader copies it. The TypeScript files compile with the options of the repository, the styles compile with Sass,
-// and the files and the CSS variables that they name exist.
+// and the files and the CSS variables that they name exist. The files of the pages of Frameworks are the files of their
+// sample projects in samples/, which build:samples compiles with the frameworks and its e2e tests run.
 
 /** The sources of Table, Bro in this repository. */
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/native'].map(folder => path.join(root, 'packages', folder, 'styles'));
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
+
+/** The files of the pages of Frameworks from their sample projects: the TypeScript of the repository has no frameworks to compile them with. */
+const frameworkFiles = docFiles.filter(docFile => docFile.page.startsWith('frameworks/') && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
+
+/**
+ * The sample project of a page of Frameworks: samples/frameworks/<name>, or the sample of Angular Material for Angular.
+ * @param page - the path of the page
+ */
+const sampleOf = (page: string): string => (page === 'frameworks/angular') ? 'samples/angular-material' : `samples/${page}`;
 
 /** The place of a file of code among the files of the compiler: its page is its folder, so a file imports another one of its page. */
 const docFilePath = (page: string, file: string): string => path.join(root, 'docs-files', page, file);
@@ -27,7 +37,7 @@ const docFilePath = (page: string, file: string): string => path.join(root, 'doc
 function typeScriptErrors(): string[] {
   const config = ts.readConfigFile(path.join(root, 'tsconfig.json'), ts.sys.readFile);
   const {options} = ts.parseJsonConfigFileContent(config.config, ts.sys, root);
-  const files = new Map(docFiles.filter(docFile => docFile.language === 'ts').map(docFile => [docFilePath(docFile.page, docFile.file), docFile.code]));
+  const files = new Map(docFiles.filter(docFile => docFile.language === 'ts' && !frameworkFiles.includes(docFile)).map(docFile => [docFilePath(docFile.page, docFile.file), docFile.code]));
 
   // The project of a reader installs the types of Bootstrap in the setup of the skin bs: the repository has none
   files.set(docFilePath('', 'bootstrap.d.ts'), 'declare module \'bootstrap\';\n');
@@ -66,7 +76,7 @@ async function eslintRemarks(): Promise<string[]> {
   const eslint = new ESLint({cwd: root, overrideConfig: {rules: {'@typescript-eslint/no-unused-vars': 'off'}}});
   const remarks: string[] = [];
 
-  for (const docFile of docFiles.filter(item => item.language === 'ts')) {
+  for (const docFile of docFiles.filter(item => item.language === 'ts' && !frameworkFiles.includes(item))) {
     const [result] = await eslint.lintText(docFile.code, {filePath: path.join(root, 'docs-files', docFile.page, docFile.file)});
 
     remarks.push(...result.messages.map(message => `${docFile.page}/${docFile.file}:${message.line} ${message.message} (${message.ruleId})`));
@@ -121,6 +131,12 @@ describe('the files of code of Docs', () => {
       for (const [name] of docFile.code.matchAll(/--bro-[a-z-]+/g)) {
         expect(names.has(name), `${docFile.page}/${docFile.file}: ${name}`).toBe(true);
       }
+    }
+  });
+
+  it('of the pages of Frameworks are the files of their sample projects', () => {
+    for (const docFile of frameworkFiles) {
+      expect(docFile.code, `${docFile.page}/${docFile.file}`).toBe(fs.readFileSync(path.join(root, sampleOf(docFile.page), docFile.file), 'utf8'));
     }
   });
 
