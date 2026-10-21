@@ -44,6 +44,18 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
       event.preventDefault();
     });
 
+    // A link in the role of a button takes Space as a button does, instead of scrolling the page; Enter clicks a link anyway.
+    // A button of the skin in the toolbar, as Back of the search, takes Space itself
+    this.addEventListener('keydown', (event: KeyboardEvent) => {
+      const link = (<HTMLElement>event.target).closest?.('a[role="button"]');
+
+      if (event.key === ' ' && !event.repeat && !event.defaultPrevented && link) {
+        event.preventDefault();
+
+        (<HTMLElement>link).click();
+      }
+    });
+
     const searchLink = this.navContentEl.children[0];
 
     searchLink.addEventListener('click', () => {
@@ -122,18 +134,22 @@ export class BroToolbarMainComponent extends BroHTMLElement implements BroView, 
   /**
    * A link of the toolbar.
    * @param buttonTitle - the title of the link
-   * @param role - the words after the title, as visually hidden text, as button; none without a title
+   * @param word - the words after the title, as visually hidden text, as for Orders; none without a title
    * @param iconHTML - the icon before the title
    * @param className - a class of the link
    */
-  private templateToolbarButton(buttonTitle: string, role: string, iconHTML?: string, className?: string): HTMLElement {
-    // A link says what it is with visually hidden text: Lighthouse reads the text of a link, not its label
-    const word = (buttonTitle && role) ? `<span class="${escape(broVisuallyHidden)}"> ${escape(role)}</span>` : '';
+  private templateToolbarButton(buttonTitle: string, word: string, iconHTML?: string, className?: string): HTMLElement {
+    // A link says what it is with visually hidden text: Lighthouse reads the text of a link, not its label. The word of
+    // the role button repeats the role of the link to a screen reader, so only the text of the link keeps it
+    const hidden = (word === this.config.texts.buttonRole) ? ' aria-hidden="true"' : '';
+    const wordHTML = (buttonTitle && word) ? `<span class="${escape(broVisuallyHidden)}"${hidden}> ${escape(word)}</span>` : '';
 
+    // The link acts on the table and goes nowhere: a button, as Bootstrap has a link with the classes of a button
     return this.dom.createFromHTML(`
       <li class="${escape(this.css.navbarCollapse.ul.li.className)}">
-        <a class="${escape(this.css.navbarCollapse.ul.li.a.className)}${className ? ` ${escape(className)}` : ''}" href="">
-           ${iconHTML || ''}${escape(buttonTitle)}${word}
+        <a class="${escape(this.css.navbarCollapse.ul.li.a.className)}${className ? ` ${escape(className)}` : ''}" href=""
+           role="button">
+           ${iconHTML || ''}${escape(buttonTitle)}${wordHTML}
         </a>
       </li>`);
   }

@@ -1,4 +1,4 @@
-import {type BroResolvedConfig, resolveTexts} from '@table-bro/core';
+import {type BroResolvedConfig, events, resolveTexts} from '@table-bro/core';
 
 import {afterEach, describe, expect, it} from 'vitest';
 
@@ -284,6 +284,34 @@ describe('the links of the Bootstrap toolbar', () => {
 
   it('keep the titles of the application without the words', () => {
     expect(linkTexts({searchRole: () => '', buttonRole: '', menuRole: '', menuItemRole: ''}, 'Orders')).toEqual(['go', 'read more', 'more', 'learn more']);
+  });
+
+  it('are buttons that act on the table, and the items of the menu are links, as the markup of Bootstrap has them', () => {
+    linkTexts({}, 'Orders');
+
+    const links = Array.from(document.querySelectorAll('bro-toolbar-main a'));
+
+    expect(links.map(link => link.getAttribute('role'))).toEqual(['button', 'button', 'button', null]);
+
+    // A screen reader hears the role of a button from the role, not twice: the word button stays in the text of the link only
+    expect(Array.from(document.querySelectorAll('bro-toolbar-main .bro-visually-hidden'), word => [word.textContent, word.getAttribute('aria-hidden')])).toEqual([
+      [' for Orders', null], [' button', 'true'], [' menu', null], [' menu item', null]
+    ]);
+  });
+
+  it('take Space as buttons do', () => {
+    linkTexts({});
+
+    const toolbar = document.querySelector('bro-toolbar-main')!;
+    const actions: unknown[] = [];
+
+    toolbar.addEventListener(events.toolbarEvent, event => actions.push((<CustomEvent>event).detail));
+
+    const space = new KeyboardEvent('keydown', {key: ' ', bubbles: true, cancelable: true});
+
+    toolbar.querySelectorAll('a')[1].dispatchEvent(space);
+
+    expect([actions, space.defaultPrevented]).toEqual([['read'], true]);
   });
 });
 

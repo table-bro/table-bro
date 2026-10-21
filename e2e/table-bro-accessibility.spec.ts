@@ -537,20 +537,28 @@ for (const skin of ['mat', 'bs', 'nv']) {
 }
 
 for (const skin of ['bs', 'nv']) {
-  test(`the links of the toolbar of the ${skin} skin say what they are with visually hidden words`, async ({page}) => {
+  test(`the links of the toolbar of the ${skin} skin are buttons and say what they are with visually hidden words`, async ({page}) => {
     const table = await mount(page, `
       el.configure({cols, rows, conf: {skin: '${skin}', toolbarTitle: 'Orders', components: {toolbarMain: {buttons: [{buttonTitle: 'Filters', eventType: 'bro-filters-toggle'}, ${moreMenu}]}}}});
       document.body.append(el);
     `);
 
-    await expect(table.getByRole('link', {name: 'Search for Orders', exact: true})).toBeVisible();
-    await expect(table.getByRole('link', {name: 'Filters button', exact: true})).toBeVisible();
+    // A link that acts on the table has the role button, as Bootstrap gives it; the word button stays out of its name
+    await expect(table.getByRole('button', {name: 'Search for Orders', exact: true})).toBeVisible();
+    await expect(table.getByRole('button', {name: 'Filters', exact: true})).toBeVisible();
+    await expect(table.locator('bro-toolbar-main').getByRole('link')).toHaveCount(0);
 
-    // The menu of nv is a select of its own, without the word
+    // The menu of nv is a select of its own, without the word; the items of the menu of bs are links, as in Bootstrap
     if (skin === 'bs') {
       await table.getByRole('button', {name: 'More menu', exact: true}).click();
       await expect(page.getByRole('link', {name: 'Print menu item', exact: true})).toBeVisible();
     }
+
+    // Space opens the search, as on a button
+    await table.getByRole('button', {name: 'Search for Orders', exact: true}).focus();
+    await page.keyboard.press('Space');
+
+    await expect(table.getByRole('button', {name: 'Back', exact: true})).toBeVisible();
   });
 }
 

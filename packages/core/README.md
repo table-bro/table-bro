@@ -145,10 +145,13 @@ state of the table and the loading of row details from the server, `detailsLoadi
 `MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of the skins `bs` and `nv`
 takes its title and the name of its close button from its own property `texts`.
 
-The toolbar links of the skins `bs` and `nv` say what they are with visually hidden words after their titles, for screen
-readers and search engines: `searchRole(title)` by the title of the toolbar (Search for Orders, Search for rows without
-a title), `buttonRole` (Filters button), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs`
-(Print menu item). An empty string adds no words.
+The toolbar links of the skins `bs` and `nv` that act on the table, the search, the buttons and the menu, have the role
+`button`, as Bootstrap gives it to a link that goes nowhere, and take Space; the items of the menu of `bs` and the
+links of the paginator stay links, as in the markup of Bootstrap. The toolbar links say what they are with visually
+hidden words after their titles, for screen readers and search engines: `searchRole(title)` by the title of the toolbar
+(Search for Orders, Search for rows without a title), `buttonRole` (Filters button, for search engines only: a screen
+reader hears the role), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs` (Print menu item).
+An empty string adds no words.
 
 ### Errors
 

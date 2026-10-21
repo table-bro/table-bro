@@ -910,8 +910,8 @@ export interface BroTexts {
   searchRole: (title: string) => string;
   /**
    * The word after the titles of the buttons of the toolbar of the skins bs and nv, as visually hidden text: their role.
-   * Their links, as Filters or Read more, get a descriptive text for screen readers and search engines, Filters button.
-   * An empty word adds no text.
+   * Their links, as Filters or Read more, get a descriptive text for search engines, Filters button. A screen reader
+   * hears the role button of the link and not the word. An empty word adds no text.
    */
   buttonRole: string;
   /**
