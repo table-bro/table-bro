@@ -1,11 +1,11 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, model, output, signal, viewChild} from '@angular/core';
 
-import {MatIconButton}                                                                                                                                                  from '@angular/material/button';
-import {MatIcon}                                                                                                                                                        from '@angular/material/icon';
-import {MatDrawer, MatDrawerContainer, MatDrawerContent, type MatDrawerMode}                                                                                            from '@angular/material/sidenav';
-import {MatToolbar}                                                                                                                                                     from '@angular/material/toolbar';
-import {type BroServerFacade, TableBroNg}                                                                                                                               from '@table-bro/angular';
-import {type BroActionDetail, type BroCol, type BroConfig, type BroEmptyState, type BroFilters, type BroQuery, type BroUserTheme, dispatchAction, events, resolveTexts} from '@table-bro/core';
+import {MatIconButton}                                                                                                                                                                                  from '@angular/material/button';
+import {MatIcon}                                                                                                                                                                                        from '@angular/material/icon';
+import {MatDrawer, MatDrawerContainer, MatDrawerContent, type MatDrawerMode}                                                                                                                            from '@angular/material/sidenav';
+import {MatToolbar}                                                                                                                                                                                     from '@angular/material/toolbar';
+import {type BroServerFacade, TableBroNg}                                                                                                                                                               from '@table-bro/angular';
+import {type BroActionDetail, type BroCol, type BroConfig, type BroEmptyState, type BroFilters, type BroQuery, type BroUserTheme, dispatchAction, events, registerFilterDrawerProperties, resolveTexts} from '@table-bro/core';
 
 import {matSkinConfig} from './table-bro.angular-material.config';
 
@@ -154,6 +154,9 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
 
   constructor() {
     const destroyRef = inject(DestroyRef);
+
+    // The card moves by the transition of --bro-filter-drawer-opened, which the script registers
+    registerFilterDrawerProperties();
 
     // A narrower or a wider page moves the opened drawer over the table or next to it. The observer exists in the
     // browser only: a server render of the app, as a prerender, creates the component without one

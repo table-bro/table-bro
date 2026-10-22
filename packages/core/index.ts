@@ -22,8 +22,9 @@ export {BroHTML, BroHTMLElement}          from './shared/html';
 export {getSkin, registerSkin}            from './shared/skins';
 export {isPrerendered, prerenderTableBro} from './table-bro';
 
-// <table-bro-filter-drawer-container> is defined on demand, by the application
-export {defineTableBroFilterDrawerContainer} from './view/features/filters/filter-drawer.view';
+// <table-bro-filter-drawer-container> is defined on demand, by the application; the drawer of the mat skin registers
+// the properties of its motion as the definition does
+export {defineTableBroFilterDrawerContainer, registerFilterDrawerProperties} from './view/features/filters/filter-drawer.view';
 
 /**
  * The classes of the text ellipsis in cells, for skins.

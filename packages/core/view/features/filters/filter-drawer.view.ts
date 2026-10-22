@@ -12,10 +12,35 @@ import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, B
  * @group Filter drawer
  */
 export function defineTableBroFilterDrawerContainer(): void {
+  registerFilterDrawerProperties();
+
   // Only in the browser: without a DOM, as in the server render, there is nothing to define
   if (typeof customElements !== 'undefined' && !customElements.get('table-bro-filter-drawer-container')) {
     customElements.define('table-bro-filter-drawer-container', TableBroFilterDrawerContainer);
   }
+}
+
+/**
+ * Registers the custom properties that the filter drawers move by a transition from 0 to 1: --bro-filter-drawer-opened,
+ * how far a drawer is opened, and --bro-filter-drawer-modal, how far it lies over its table. The script registers them,
+ * not an @property rule of the CSS: whenever the style sheets of the document change, as when a table writes the widths
+ * of its columns or a tooltip adds its styles while the drawer moves, WebKit drops the running transition of a property
+ * of an @property rule, and the drawer would jump to its end. The drawer of the core and the one of the mat skin call this.
+ * @group Filter drawer
+ */
+export function registerFilterDrawerProperties(): void {
+  // Only in the browser: without a DOM, as in the server render, there are no styles
+  if (typeof CSS === 'undefined') {
+    return;
+  }
+
+  ['--bro-filter-drawer-opened', '--bro-filter-drawer-modal'].forEach(name => {
+    try {
+      CSS.registerProperty({name, syntax: '<number>', inherits: true, initialValue: '0'});
+    } catch {
+      // Registered already, as by an earlier call, or a browser without the registration of properties
+    }
+  });
 }
 
 /**

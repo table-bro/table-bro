@@ -55,19 +55,10 @@
   syntax: '<length>';
 }
 
-// How far the filter drawer is opened, from 0 to 1: the registration lets the drawer move it by a transition
-@property --bro-filter-drawer-opened {
-  inherits: true;
-  initial-value: 0;
-  syntax: '<number>';
-}
-
-// How far the filter drawer lies over its table, from 0 to 1: the scrim comes and goes with it by a transition
-@property --bro-filter-drawer-modal {
-  inherits: true;
-  initial-value: 0;
-  syntax: '<number>';
-}
+// How far the filter drawer is opened and how far it lies over its table, --bro-filter-drawer-opened and
+// --bro-filter-drawer-modal, from 0 to 1, move by a transition: the script of the drawer registers them
+// (registerFilterDrawerProperties), as WebKit drops the running transition of a property of an @property rule when
+// the style sheets of the document change
 
 @property --bro-table-body-container-z-index {
   inherits: true;

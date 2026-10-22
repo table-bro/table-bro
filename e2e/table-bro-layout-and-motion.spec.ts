@@ -278,3 +278,126 @@ test.describe('the modes of the filter drawer', () => {
     await expect(drawer).not.toHaveAttribute('modal');
   });
 });
+
+test.describe('the motion of the filter drawer', () => {
+  /** The toggles of the skins of the stand. */
+  const skinToggles = {mat: 'Angular Material', bs: 'Vanilla Bootstrap', nv: 'Vanilla HTML'};
+
+  for (const skin of ['mat', 'bs', 'nv'] as const) {
+    test(`the filter drawer of the ${skin} skin opens and closes by its transition in every frame, also in Safari`, {tag: '@smoke'}, async ({page}) => {
+      await page.setViewportSize({width: 1280, height: 800});
+      await page.goto('/', {waitUntil: 'networkidle'});
+      await page.getByText(skinToggles[skin]).click();
+
+      const container = page.locator((skin === 'mat') ? 'table-bro-filter-drawer-container-ng' : 'table-bro-filter-drawer-container');
+      const table = container.locator('table-bro');
+
+      await expect(bodyTable(table).locator('tbody > tr[data-row-number]').first()).toBeVisible();
+
+      // The filters in a color of their own: the width of the color in a frame is the part by which the drawer is opened
+      const filters = container.locator((skin === 'mat') ? '.mat-drawer .bro-filter-drawer-card > :last-child' : ':scope > [slot="filters"]');
+
+      await page.addStyleTag({content: `${(skin === 'mat') ? '.mat-drawer .bro-filter-drawer-card > :last-child' : 'table-bro-filter-drawer-container > [slot="filters"]'} { background: rgb(255, 0, 255); }`});
+
+      // The frames of the screencast show the page as the window draws it. One screencast for both motions: a new one
+      // in WebKit may give no frame for a while after its start
+      const frames: Buffer[] = [];
+
+      // A copy of each frame: Firefox may give the next frame in the same memory
+      await page.screencast.start({onFrame: ({data}) => {
+        frames.push(Buffer.from(data));
+      }, size: {width: 1280, height: 800}, quality: 90});
+      await page.waitForTimeout(500);
+
+      /**
+       * Clicks the button with the pointer, as the user does, and returns the frames of the screencast of the motion and
+       * whether the transition of the drawer has its keyframes in every frame of the page. WebKit dropped the keyframes of
+       * a transition of a property of an @property rule when the style sheets changed, as when the table wrote the widths
+       * of its columns or Material added the styles of the tooltip of the button: the drawer jumped to its end, while
+       * the columns moved for the whole duration.
+       * @param button - the button that opens or closes the drawer
+       */
+      const motion = async (button: Locator) => {
+        await page.evaluate(selector => {
+          const element = document.querySelector(selector)!;
+          const w = window as typeof window & {e2eKeyframes: number[]; e2eFrame?: number};
+
+          w.e2eKeyframes = [];
+          cancelAnimationFrame(w.e2eFrame ?? 0);
+
+          const frame = () => {
+            const transition = element.getAnimations().find(animation => (animation as CSSTransition).transitionProperty === '--bro-filter-drawer-opened');
+
+            if (transition) {
+              w.e2eKeyframes.push((transition.effect as KeyframeEffect).getKeyframes().length);
+            }
+
+            w.e2eFrame = requestAnimationFrame(frame);
+          };
+
+          w.e2eFrame = requestAnimationFrame(frame);
+        }, (skin === 'mat') ? 'table-bro-filter-drawer-container-ng .bro-filter-drawer-card' : 'table-bro-filter-drawer-container');
+
+        const first = frames.length;
+
+        await button.click();
+        await page.waitForTimeout(1000);
+
+        return {frames: frames.slice(first), keyframes: await page.evaluate(() => (window as typeof window & {e2eKeyframes: number[]}).e2eKeyframes)};
+      };
+
+      /**
+       * The widths of the color of the filters in the frames, on a line through their top padding.
+       * @param frames - the frames of the screencast
+       */
+      const widths = async (frames: Buffer[]) => {
+        const box = (await filters.boundingBox())!;
+
+        return page.evaluate(async ([sources, top]) => {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d', {willReadFrequently: true})!;
+
+          return Promise.all(sources.map(async src => {
+            const img = new Image();
+
+            img.src = src;
+            await img.decode();
+
+            // The screencast may scale the page down to the width of the video of a test, as in Firefox
+            const scale = img.naturalWidth / 1280;
+
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            context.drawImage(img, 0, 0);
+
+            const data = context.getImageData(0, Math.round(top * scale), img.naturalWidth, 1).data;
+            let count = 0;
+
+            for (let i = 0; i < data.length; i += 4) {
+              count += (data[i] > 200 && data[i + 1] < 90 && data[i + 2] > 200) ? 1 : 0;
+            }
+
+            return Math.round(count / scale);
+          }));
+        }, [frames.map(frame => `data:image/jpeg;base64,${frame.toString('base64')}`), Math.round(box.y) + 3] as const);
+      };
+
+      const filtersButton = table.getByRole('button', {name: 'Filters', exact: true});
+      const opening = await motion(filtersButton);
+      const full = Math.round((await filters.boundingBox())!.width);
+      const closing = await motion(container.getByRole('button', {name: 'Close', exact: true}));
+
+      await page.screencast.stop();
+
+      for (const [name, {frames, keyframes}] of Object.entries({opening, closing})) {
+        const shown = await widths(frames);
+        const between = shown.filter(width => width > 0.05 * full && width < 0.95 * full);
+
+        // The drawer passes the widths between closed and opened in several frames, and the transition keeps its keyframes
+        expect(between.length, `${name}: ${shown.join(' ')} of ${full}`).toBeGreaterThanOrEqual(3);
+        expect(keyframes.length, name).toBeGreaterThan(3);
+        expect(keyframes.filter(count => count !== 2), `${name}: ${keyframes.join(' ')}`).toEqual([]);
+      }
+    });
+  }
+});
