@@ -175,6 +175,26 @@ test('the native outline of the links of the toolbar of the nv skin is one recta
   await page.screencast.stop();
 });
 
+test('the menu of the toolbar of the nv skin shows its whole title, also in Safari', {tag: '@smoke'}, async ({page, browserName}) => {
+  const table = await mount(page, `
+    el.configure({cols, rows, conf: {skin: 'nv', toolbarTitle: 'Orders', components: {toolbarMain: {buttons: [{buttonTitle: 'Filters', eventType: 'bro-filters-toggle'}, ${moreMenu}]}}}});
+    document.body.append(el);
+  `);
+
+  // The select keeps the place of its arrow beside its title: about 20px in Chrome, more in WebKit, which cut the title
+  // of a select of 60px to "Mo"
+  const select = table.getByRole('combobox', {name: 'More'});
+  const place = await select.evaluate(el => {
+    const context = document.createElement('canvas').getContext('2d')!;
+
+    context.font = getComputedStyle(el).font;
+
+    return el.getBoundingClientRect().width - context.measureText((el as HTMLSelectElement).selectedOptions[0].text).width;
+  });
+
+  expect(place).toBeGreaterThanOrEqual((browserName === 'webkit') ? 30 : 15);
+});
+
 for (const skin of ['mat', 'nv', 'bs']) {
   test(`the back and clear buttons of the search of the ${skin} skin have names`, async ({page}) => {
     const table = await mount(page, detailsTable(skin));

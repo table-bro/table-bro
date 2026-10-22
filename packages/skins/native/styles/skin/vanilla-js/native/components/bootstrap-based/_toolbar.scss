@@ -88,6 +88,14 @@ ul.bro-navbar-nav {
     width: 60px;
 
     margin-left: $bro-margin;
+
+    // The native select of WebKit keeps a wider place for its arrow than the one of Chrome, and 60px cut its title to
+    // "Mo": there it takes the width of its title. Only WebKit knows the system font -apple-system-body
+    @supports (font: -apple-system-body) {
+      width: auto;
+
+      field-sizing: content;
+    }
   }
 }
 
