@@ -149,6 +149,9 @@ for (const skin of ['mat', 'nv', 'bs']) {
     const field = table.getByRole('textbox', {name: 'Search in table'});
 
     await expect(field).toBeFocused();
+
+    // The field in focus has no outline in any skin: the core takes it away from the search
+    await expect(field).toHaveCSS('outline-style', 'none');
     await field.fill('a');
     await expect.poll(() => cellTexts(table, 2)).toEqual(['a']);
 
