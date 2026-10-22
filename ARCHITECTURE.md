@@ -100,6 +100,8 @@ defines the update and its frame.
 9. The controller neither writes nor measures the DOM: the views do.
 10. The element renders no regions: `BroTableRegions` renders them.
 11. Each method and function of the controller names its phase with `@phase`.
+12. The stylesheets of the skins write the classes of the selector maps of the core through the variables of the maps:
+    a build from the sources, as the one of the site, shortens the classes there.
 
 Rule 4 and the rules below hold by review, as a search cannot check them:
 

@@ -13,6 +13,8 @@
 // 10. the element renders no regions: BroTableRegions renders them;
 // 11. each method and function of the controller names its part in update() in its JSDoc: @phase input, state, render
 //     or events (BroUpdate); the constructors and update() itself are the frame of it.
+// 12. the stylesheets of the skins write the classes of the selector maps of the core through the variables of the maps:
+//     a build from the sources, as the one of the site, shortens the classes there, and a literal class matches nothing.
 // The rules 6 to 10 keep the boundaries of the parts: the controller decides, the views render, measure and write the
 // DOM, the models keep the data; the rule 11 keeps the phases of an update visible in the controller.
 // ARCHITECTURE.md describes the rules and the parts they keep apart.
@@ -193,9 +195,34 @@ for (const file of [...files(core), ...skins.flatMap(dir => files(dir)), ...file
   }
 }
 
+// Rule 12: the classes of the selector maps of the core, not literal in the stylesheets of the skins
+const mappedClasses = ['styles/_table-bro-selectors.scss', 'styles/shared/_shared-selectors.scss']
+  .flatMap(file => [...fs.readFileSync(path.join(core, file), 'utf8').matchAll(/'\.([\w-]+)'/g)].map(match => match[1]));
+
+/** The stylesheets under a folder of the skins. */
+function stylesheets(dir) {
+  return fs.readdirSync(dir, {withFileTypes: true}).flatMap(entry => {
+    const file = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      return ['dist', 'node_modules'].includes(entry.name) ? [] : stylesheets(file);
+    }
+
+    return /\.scss$/.test(entry.name) ? [file] : [];
+  });
+}
+
+for (const file of stylesheets(path.join(root, 'packages/skins'))) {
+  const code = fs.readFileSync(file, 'utf8').replace(/\/\/.*$/gm, '');
+
+  for (const name of mappedClasses.filter(name => new RegExp(`\\.${name}(?![\\w-])`).test(code))) {
+    report(file, `rule 12: the class .${name} of a selector map of the core is written as it is; use its variable`);
+  }
+}
+
 if (errors.length) {
   console.error(`check:arch failed, ARCHITECTURE.md describes the rules in its section The rules:\n${errors.join('\n')}`);
   process.exit(1);
 }
 
-console.log('check:arch: rules 1, 2, 3, 5, 6, 7, 8, 9, 10 and 11 hold');
+console.log('check:arch: rules 1, 2, 3, 5, 6, 7, 8, 9, 10, 11 and 12 hold');
