@@ -7,6 +7,7 @@
 @use "./skin/vanilla-js/bootstrap/vendor-extensions/navbar" as bootstrap-navbar-extension;
 @use "./skin/vanilla-js/bootstrap/vendor-extensions/pagination" as bootstrap-pagination-extension;
 @use "./skin/vanilla-js/bootstrap/vendor-extensions/table" as bootstrap-table-extension;
+@use "./skin/vanilla-js/bootstrap/table-bro/details-button" as bootstrap-details-button;
 @use "./skin/vanilla-js/bootstrap/table-bro/filter-drawer" as bootstrap-filter-drawer;
 @use "./skin/vanilla-js/bootstrap/table-bro/paginator" as bootstrap-paginator;
 @use "./skin/vanilla-js/bootstrap/table-bro/progress-bar" as bootstrap-progress-bar;
@@ -32,6 +33,7 @@
 
   /* Table-bro extensions */
   #{$bro-skin} {
+    @include bootstrap-details-button.styles;
     @include bootstrap-paginator.styles;
     @include bootstrap-progress-bar.styles;
     @include bootstrap-slide-toggle.styles;

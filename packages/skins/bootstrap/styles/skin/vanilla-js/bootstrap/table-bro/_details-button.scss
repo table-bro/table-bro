@@ -1,0 +1,19 @@
+@use "../../shared/bootstrap-adapter" as *;
+
+@mixin styles {
+  $prefix: "bs-";
+
+  // The details button keeps the focus ring of Bootstrap within its row, whatever --bro-row-height: its vertical padding
+  // is what the row leaves to it after its text, its border and the ring on both sides, 3px in a row of 40px, and never
+  // more than the padding of a button of Bootstrap
+  bro-details-button .btn {
+    --#{$prefix}btn-padding-y: clamp(0px, (var(--bro-row-height) - var(--#{$prefix}btn-line-height) * var(--#{$prefix}btn-font-size) - 2 * var(--#{$prefix}btn-border-width) - 2 * var(--#{$prefix}focus-ring-width)) / 2, #{$btn-padding-y});
+  }
+
+  // The component clips its overflow only once the focus ring of Bootstrap has faded out by the transition of the button,
+  // .15s in $btn-transition: else the clip comes back the moment the focus leaves and cuts the fading ring to its corners
+  bro-details-button.bro-cell_component:not(:has(:focus-visible)) {
+    // --bro-duration-scale is 0 under prefers-reduced-motion: reduce, where Bootstrap takes the transition of the button
+    transition: width calc(var(--bro-column-width-duration) * var(--bro-duration-scale)) ease, overflow 0s calc(.15s * var(--bro-duration-scale)) allow-discrete;
+  }
+}

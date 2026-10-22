@@ -219,6 +219,122 @@ for (const skin of ['nv', 'bs']) {
   });
 }
 
+/**
+ * The share of the pixels of the focus ring of Bootstrap in the strips of 2px on each side of the focused control, in
+ * the middle of the ring of 4px and without its corners: 1 when the ring shows whole there. The ring of a .btn-link is
+ * a light blue box-shadow; elementsFromPoint cannot tell it, it finds the boxes at a point, never their shadows.
+ * @param page - the page of the test
+ * @param control - the control around which the ring shows, the focused one by default
+ */
+async function focusRingSides(page: Page, control: Locator = page.locator(':focus')): Promise<{top: number; bottom: number; left: number; right: number}> {
+  const r = await control.evaluate(e => {
+    const {left, top, right, bottom} = e.getBoundingClientRect();
+
+    return {left: Math.round(left), top: Math.round(top), right: Math.round(right), bottom: Math.round(bottom)};
+  });
+
+  /**
+   * The share of the pixels of the ring in a strip of the page.
+   * @param x - the left edge of the strip, in CSS px
+   * @param y - the top edge of the strip, in CSS px
+   * @param width - the width of the strip
+   * @param height - the height of the strip
+   */
+  const ring = async (x: number, y: number, width: number, height: number) => {
+    const png = `data:image/png;base64,${(await page.screenshot({clip: {x, y, width, height}, scale: 'css'})).toString('base64')}`;
+
+    return page.evaluate(async src => {
+      const img = new Image();
+
+      img.src = src;
+      await img.decode();
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      const data = context.getImageData(0, 0, img.width, img.height).data;
+      let count = 0;
+
+      for (let i = 0; i < data.length; i += 4) {
+        count += (data[i + 2] > 235 && data[i + 2] - data[i] > 30) ? 1 : 0;
+      }
+
+      return count / (data.length / 4);
+    }, png);
+  };
+
+  const width = r.right - r.left - 8;
+  const height = r.bottom - r.top - 8;
+
+  return {
+    top: await ring(r.left + 4, r.top - 3, width, 2),
+    bottom: await ring(r.left + 4, r.bottom + 1, width, 2),
+    left: await ring(r.left - 3, r.top + 4, 2, height),
+    right: await ring(r.right + 1, r.top + 4, 2, height)
+  };
+}
+
+test('the focus ring of the details button of the bs skin keeps within its row: the first one under the header, a closed and an open one', {tag: '@smoke'}, async ({page}) => {
+  // The whole ring at once: Bootstrap grows it by a transition
+  await page.emulateMedia({reducedMotion: 'reduce'});
+
+  const table = await mount(page, detailsTable('bs'));
+
+  await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+  const button = (rowNumber: number) => bodyTable(table).locator(`tr[data-row-number="${rowNumber}"]:not(.bro-details_tr) bro-details-button button`);
+
+  // Row 2 opens its details below it
+  await button(2).click();
+  await expect(bodyTable(table).locator('tr.bro-details_tr')).toHaveCount(1);
+
+  for (const rowNumber of [1, 3, 2]) {
+    // The focus of the keyboard
+    await button(rowNumber).focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab');
+    await expect(button(rowNumber)).toBeFocused();
+
+    // The ring of 4px around a button of 32px fills the row of 40px, so the header above the first row cuts none of it
+    await expect(button(rowNumber)).toHaveCSS('height', '32px');
+    expect(await focusRingSides(page)).toEqual({top: 1, bottom: 1, left: 1, right: 1});
+  }
+});
+
+test('the focus ring of the details button of the bs skin fades out whole once the focus leaves it', {tag: '@smoke'}, async ({page}) => {
+  const table = await mount(page, detailsTable('bs'));
+
+  await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+  const button = bodyTable(table).locator('tr[data-row-number="1"]:not(.bro-details_tr) bro-details-button button');
+
+  // The focus of the keyboard
+  await button.focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await expect(button).toBeFocused();
+  // The whole ring, once Bootstrap has grown it by its transition
+  await expect(button).toHaveCSS('box-shadow', /0px 0px 0px 4px$/);
+
+  // The first frame of the transitions that start as the focus leaves: Bootstrap fades the ring out in .15s
+  await button.evaluate(e => e.addEventListener('focusout', () => queueMicrotask(() => {
+    // getAnimations() computes the styles that the focus left, so the transitions have started
+    for (const animation of document.getAnimations()) {
+      animation.pause();
+    }
+  }), {once: true}));
+  await page.keyboard.press('Tab');
+  await expect(button).not.toBeFocused();
+  await button.scrollIntoViewIfNeeded();
+
+  // The component around the button clips again only after the ring is gone, so no frame cuts the ring to its corners
+  expect(await focusRingSides(page, button)).toEqual({top: 1, bottom: 1, left: 1, right: 1});
+});
+
 for (const skin of ['mat', 'nv']) {
   test(`Tab skips the tags of the ${skin} skin that do not fit their cell and gives them their tabindex back once they show`, async ({page}) => {
     // The tags of nv are links, a column with html; a chip of mat that a hidden tag shrinks to one pixel scrolls
