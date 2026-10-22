@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "../variables" as *;
 @use "shared-selector-map" as *;
 @use "../../../shared/mixins/progress-bar" as *;
@@ -19,6 +20,26 @@
   #{$bro-table-aux} {
     bro-nv-progress-bar progress {
       top: calc(var(--bro-row-height) - #{$bro-details-progress - $bro-nv-details-progress-inner-vertical-space});
+    }
+  }
+
+  // WebKit and Firefox draw their native bar over the height of the box, at most 8px and 6px, and Chrome draws it at
+  // half the height of the box, in its middle. In WebKit, which alone knows the system font -apple-system-body, and in
+  // Firefox, which alone knows ::-moz-progress-bar, the box takes the height and the place of the bar of Chrome, so
+  // their bars have them too.
+  @supports (font: -apple-system-body) or selector(::-moz-progress-bar) {
+    #{$bro-table-header} {
+      bro-nv-progress-bar progress {
+        height: math.div($bro-global-progress, 2);
+        margin-top: math.div($bro-global-progress, 4);
+      }
+    }
+
+    #{$bro-table-aux} {
+      bro-nv-progress-bar progress {
+        height: math.div($bro-details-progress, 2);
+        margin-top: math.div($bro-details-progress, 4);
+      }
     }
   }
 }

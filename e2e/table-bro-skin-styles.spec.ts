@@ -170,3 +170,114 @@ test('the filter drawer of the mat skin lies over a table that would be narrower
   await container.evaluate((el: HTMLElement) => el.style.width = '800px');
   await expect(drawer).toHaveClass(/mat-drawer-side/);
 });
+
+test('the native bars of the nv skin have in WebKit and Firefox the height and the place of the bars of Chromium', {tag: '@smoke'}, async ({page}) => {
+  await page.goto('/', {waitUntil: 'networkidle'});
+
+  // The details of the row c never end their loading: its bar stays in the aux row, with the bar of the loading in the header
+  await page.evaluate(() => {
+    if (!customElements.get('bro-e2e-slow-details')) {
+      customElements.define('bro-e2e-slow-details', class extends HTMLElement {
+        row!: {name: string};
+
+        connectedCallback() {
+          if (this.row.name === 'c' || this.innerHTML) {
+            return;
+          }
+
+          this.innerHTML = '<div style="height: 40px">Server details</div>';
+          this.dispatchEvent(new CustomEvent('bro-details-server-loaded', {detail: 1}));
+        }
+      });
+    }
+
+    const el = document.createElement('table-bro') as TableBroHTMLElement;
+    const details = {title: '', name: 'details' as const, component: {selector: 'bro-details-button', attrs: {title: 'Details', name: 'bro-details-toggle'}, event: 'action'}};
+
+    el.id = 'e2e-skin-table';
+    el.style.width = '600px';
+    el.configure({cols: [{title: 'Name', name: 'name'}, details], rows: [{name: 'a', details: ''}, {name: 'b', details: ''}, {name: 'c', details: ''}], conf: {skin: 'nv', debug: true, rowDetailsComponent: 'bro-e2e-slow-details', rowDetailsServer: true}});
+    document.body.prepend(el);
+  });
+
+  const table = page.locator('table-bro#e2e-skin-table');
+
+  await bodyTable(table).locator('tr[data-row-number] bro-details-button').nth(2).click();
+  await table.evaluate((el: TableBroHTMLElement) => el.setState('loading'));
+
+  // The details open and the bars fade in: the screenshots wait for the end of the motion
+  await table.evaluate((el: E2EDebugTable) => el[Symbol.for('table-bro:debug')].motion.idle());
+
+  const bars = table.locator('bro-nv-progress-bar progress');
+
+  await expect(bars).toHaveCount(2);
+
+  // A value: the bar of an unknown end moves, and the screenshots with and without it would differ outside it
+  await bars.evaluateAll((elements: HTMLProgressElement[]) => elements.forEach(el => {
+    el.max = 100;
+    el.value = 40;
+  }));
+
+  // Chromium draws the bar at half the height of its box, in its middle: 5px of the header box of 10px, whose middle is
+  // 2px above the header bottom, and 3px of the details box of 6px, 1px above the bottom of the row
+  const expected = await bars.evaluateAll((elements: HTMLElement[]) => elements.map(el => {
+    const header = !!el.closest('.bro-table-header');
+    const style = getComputedStyle(el);
+    const top = el.offsetParent!.getBoundingClientRect().top;
+
+    return header
+      ? {middle: top + parseFloat(style.getPropertyValue('--bro-header-height')) - 2, height: 5}
+      : {middle: top + parseFloat(style.getPropertyValue('--bro-row-height')) - 1, height: 3};
+  }));
+
+  const box = (await table.boundingBox())!;
+  const clip = {x: box.x, y: box.y, width: box.width, height: box.height};
+  const shown = (await page.screenshot({clip, scale: 'css'})).toString('base64');
+
+  await bars.evaluateAll((elements: HTMLElement[]) => elements.forEach(el => el.style.visibility = 'hidden'));
+
+  const hidden = (await page.screenshot({clip, scale: 'css'})).toString('base64');
+
+  // The rows of the pixels that the bars change, each bar within 8px of its middle
+  const painted = await page.evaluate(async ([shown, hidden, middles]) => {
+    const pixels = async (src: string) => {
+      const img = new Image();
+
+      img.src = `data:image/png;base64,${src}`;
+      await img.decode();
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context.drawImage(img, 0, 0);
+
+      return context.getImageData(0, 0, img.width, img.height);
+    };
+
+    const [a, b] = [await pixels(shown), await pixels(hidden)];
+
+    return middles.map(middle => {
+      const rows: number[] = [];
+
+      for (let y = Math.max(0, Math.round(middle) - 8); y < Math.min(a.height, Math.round(middle) + 8); y++) {
+        for (let x = 0; x < a.width; x++) {
+          const i = (y * a.width + x) * 4;
+
+          if (Math.abs(a.data[i] - b.data[i]) + Math.abs(a.data[i + 1] - b.data[i + 1]) + Math.abs(a.data[i + 2] - b.data[i + 2]) > 24) {
+            rows.push(y);
+            break;
+          }
+        }
+      }
+
+      return {middle: (rows[0] + rows.at(-1)! + 1) / 2, height: rows.length};
+    });
+  }, [shown, hidden, expected.map(bar => bar.middle - box.y)] as const);
+
+  for (const [i, bar] of painted.entries()) {
+    expect(Math.abs(bar.middle + box.y - expected[i].middle)).toBeLessThanOrEqual(1);
+    expect(Math.abs(bar.height - expected[i].height)).toBeLessThanOrEqual(1);
+  }
+});
