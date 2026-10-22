@@ -1,3 +1,4 @@
+@use "table-bro-selector-map" as *;
 @use "../themes" as *;
 @use "../../shared/table-bro/toolbar" as *;
 
@@ -8,6 +9,17 @@ $bro-nav-link-padding: 0.5rem;
 
   .bro-navbar {
     border-bottom: 1px solid $bro-border-color;
+  }
+
+  // The visually hidden end of the title of a link lies in the middle of the link: the native outline of WebKit takes
+  // in its box, which at the end of the text reached above the link and drew a step of the outline in its corner
+  .bro-nav-link {
+    position: relative;
+
+    > #{$bro-visually-hidden} {
+      top: 50%;
+      left: 50%;
+    }
   }
 
   .bro-dark-theme &:not(.bro-light-theme),

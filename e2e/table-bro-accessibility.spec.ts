@@ -103,6 +103,78 @@ test('the native outline of the sort header of the nv skin is one rectangle, als
   expect(below).toBe(0);
 });
 
+test('the native outline of the links of the toolbar of the nv skin is one rectangle, also in Safari', {tag: '@smoke'}, async ({page, browserName}) => {
+  await page.setViewportSize({width: 800, height: 600});
+
+  const table = await mount(page, `
+    el.configure({cols, rows, conf: {skin: 'nv', toolbarTitle: 'Orders', components: {toolbarMain: {buttons: [{buttonTitle: 'Filters', eventType: 'bro-filters-toggle'}]}}}});
+    document.body.append(el);
+  `);
+
+  // Safari takes links into the order of Tab with Option
+  const tab = (browserName === 'webkit') ? 'Alt+Tab' : 'Tab';
+
+  // The frames of the screencast show the page as the window draws it: a screenshot of WebKit paints the page anew
+  // and draws no step
+  let frame: Buffer | undefined;
+
+  await page.screencast.start({onFrame: ({data}) => {
+    frame = data;
+  }, size: {width: 800, height: 600}, quality: 100});
+
+  for (const link of [table.locator('.bro-toolbar-button-search'), table.getByRole('button', {name: 'Filters', exact: true})]) {
+    await link.focus();
+    await page.keyboard.press(`Shift+${tab}`);
+    await page.keyboard.press(tab);
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS('outline-style', 'auto');
+
+    frame = undefined;
+    await expect.poll(() => !!frame).toBe(true);
+    await page.waitForTimeout(300);
+
+    // The pixels of the outline, which is blue in all browsers, over the top right and the top left corner of the link:
+    // WebKit took in the box of the visually hidden end of the title, above the end of the text, and drew a step of the
+    // outline over the top right corner
+    const box = (await link.boundingBox())!;
+    const corners = await page.evaluate(async ([src, left, right, top]) => {
+      const img = new Image();
+
+      img.src = src;
+      await img.decode();
+
+      // The screencast may scale the page down: the canvas takes the size of the viewport
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+
+      canvas.width = 800;
+      canvas.height = 600;
+      context.drawImage(img, 0, 0, 800, 600);
+
+      /**
+       * The blue pixels in a square of 12px.
+       * @param x - the left edge of the square
+       */
+      const blue = (x: number) => {
+        const data = context.getImageData(x, top, 12, 12).data;
+        let count = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+          count += (data[i + 2] > 150 && data[i + 2] - data[i] > 30) ? 1 : 0;
+        }
+
+        return count;
+      };
+
+      return {left: blue(left), right: blue(right)};
+    }, [`data:image/jpeg;base64,${frame!.toString('base64')}`, Math.round(box.x) - 6, Math.round(box.x + box.width) - 6, Math.round(box.y) - 10] as const);
+
+    expect(Math.abs(corners.right - corners.left), JSON.stringify(corners)).toBeLessThanOrEqual(3);
+  }
+
+  await page.screencast.stop();
+});
+
 for (const skin of ['mat', 'nv', 'bs']) {
   test(`the back and clear buttons of the search of the ${skin} skin have names`, async ({page}) => {
     const table = await mount(page, detailsTable(skin));
