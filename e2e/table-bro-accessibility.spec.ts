@@ -1202,3 +1202,71 @@ test('the mat paginator that new rows render anew keeps the focus of the keyboar
   await expect.poll(() => cellTexts(table, 2)).toEqual(['d', 'e', 'f']);
   await expect(next()).toBeFocused();
 });
+
+for (const skin of ['mat', 'bs', 'nv'] as const) {
+  test(`the filter drawer of the ${skin} skin gives the focus back to its Filters button, without a ring after the pointer, also in Safari`, {tag: '@smoke'}, async ({page, browserName}) => {
+    await page.goto('/', {waitUntil: 'networkidle'});
+    // The skin without a focus by a click: as on a page where nothing had the focus, Safari showed the ring of the button
+    // that got the focus after the focus that the script gave the filters
+    await page.getByText({mat: 'Angular Material', bs: 'Vanilla Bootstrap', nv: 'Vanilla HTML'}[skin]).dispatchEvent('click');
+
+    const container = page.locator((skin === 'mat') ? 'table-bro-filter-drawer-container-ng' : 'table-bro-filter-drawer-container');
+    const table = container.locator('table-bro');
+    const filters = table.getByRole('button', {name: 'Filters', exact: true});
+    const close = container.getByRole('button', {name: 'Close', exact: true});
+    const opened = () => container.evaluate(element => element.hasAttribute('opened') || !!element.querySelector('.mat-drawer-opened'));
+    // The ring of the native focus, or the focus indicator of a button of Material: a focus by the keyboard or by a script
+    const ring = () => filters.evaluate(element => element.matches(':focus-visible') || element.matches('.cdk-keyboard-focused, .cdk-program-focused'));
+    // Safari takes links into the order of Tab with Option
+    const tab = (browserName === 'webkit') ? 'Alt+Tab' : 'Tab';
+
+    await expect(bodyTable(table).locator('tbody > tr[data-row-number]').first()).toBeVisible();
+
+    // The pointer, with the time of a click of a person: Safari focuses no link and no button by a click, and the drawer
+    // took the focus to the page
+    for (const closer of [close, filters]) {
+      await filters.click({delay: 120});
+      await expect.poll(opened).toBe(true);
+
+      // As in Chrome, where the click focuses the button: the mat skin keeps the focus on it, where Safari left it
+      // on the page, the drawer of the core takes it into its filters
+      if (skin === 'mat') {
+        await expect(filters).toBeFocused();
+        expect(await ring()).toBe(false);
+      } else {
+        await expect(container.locator('[slot="filters"]').locator(':focus')).toHaveCount(1);
+      }
+
+      // The close button comes with the card: Material starts its motion a few frames after the click, and a button
+      // that still moves leaves the pointer before it is released
+      await expect.poll(() => page.evaluate(() => document.getAnimations().filter(animation => animation instanceof CSSTransition).length)).toBe(0);
+      await closer.click({delay: 120});
+      await expect.poll(opened).toBe(false);
+      await expect(filters).toBeFocused();
+      expect(await ring()).toBe(false);
+    }
+
+    // The keyboard: the close button of the mat skin, Escape in the filters of the drawer of the core
+    const target = (skin === 'mat') ? close : filters;
+
+    await filters.click();
+    await expect.poll(opened).toBe(true);
+    await target.focus();
+    await page.keyboard.press(`Shift+${tab}`);
+    await page.keyboard.press(tab);
+    await expect(target).toBeFocused();
+
+    if (skin !== 'mat') {
+      await page.keyboard.press('Enter');
+      await expect.poll(opened).toBe(false);
+      await page.keyboard.press('Enter');
+      await expect.poll(opened).toBe(true);
+      await expect(container.locator('[slot="filters"]').locator(':focus')).toHaveCount(1);
+    }
+
+    await page.keyboard.press((skin === 'mat') ? 'Enter' : 'Escape');
+    await expect.poll(opened).toBe(false);
+    await expect(filters).toBeFocused();
+    expect(await ring()).toBe(true);
+  });
+}

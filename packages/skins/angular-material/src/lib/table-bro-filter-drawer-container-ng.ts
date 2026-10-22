@@ -1,5 +1,6 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, model, output, signal, viewChild} from '@angular/core';
 
+import {FocusMonitor, InputModalityDetector}                                                                                                                                                            from '@angular/cdk/a11y';
 import {MatIconButton}                                                                                                                                                                                  from '@angular/material/button';
 import {MatIcon}                                                                                                                                                                                        from '@angular/material/icon';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent, type MatDrawerMode}                                                                                                                            from '@angular/material/sidenav';
@@ -20,7 +21,7 @@ import {matSkinConfig} from './table-bro.angular-material.config';
 @Component({
   selector: 'table-bro-filter-drawer-container-ng',
   template: `
-    <mat-drawer-container [class.bro-filter-drawer_no-shadow]="!shadowsEnabled()">
+    <mat-drawer-container [class.bro-filter-drawer_no-shadow]="!shadowsEnabled()" (backdropClick)="onBackdropClick()">
       <mat-drawer-content>
         <table-bro-ng [class.bro-table-shadow-container]="shadowsEnabled()"
                       [tableId]="tableId()" [cols]="cols()" [rows]="rows()" [conf]="conf()"
@@ -33,7 +34,7 @@ import {matSkinConfig} from './table-bro.angular-material.config';
 
       <mat-drawer position="end"
                   [class.bro-filter-drawer_no-shadow]="!shadowsEnabled()" [mode]="drawerMode()"
-                  [opened]="opened()" (openedChange)="opened.set($event)">
+                  [opened]="opened()" (openedChange)="opened.set($event)" (closedStart)="restoreFocus(false)">
         <div class="bro-filter-drawer-card" [class]="shadowClassName()">
           <div class="bro-filter-drawer-header">
             <mat-toolbar>
@@ -146,11 +147,19 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
   /** The host of the table has the class of its own light theme: the container stays light under a dark ancestor too. */
   protected light = signal<boolean>(false);
 
+  private focusMonitor = inject(FocusMonitor);
   private host = inject(ElementRef);
+  private inputModality = inject(InputModalityDetector);
+
   private container = viewChild.required(MatDrawerContainer);
   private content = viewChild.required(MatDrawerContent, {read: ElementRef});
   private drawer = viewChild.required(MatDrawer);
   private drawerElement = viewChild.required(MatDrawer, {read: ElementRef});
+
+  /** The last click in the component: while the page dispatches it, the control that it reached sends its action. */
+  private lastClick: Event | null = null;
+  /** The button that opened the drawer, as the Filters button of the table: the focus goes back to it. */
+  private opener: HTMLElement | null = null;
 
   constructor() {
     const destroyRef = inject(DestroyRef);
@@ -165,6 +174,12 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
 
       resizeObserver.observe(this.host.nativeElement);
       destroyRef.onDestroy(() => resizeObserver.disconnect());
+    });
+
+    afterNextRender(() => {
+      this.host.nativeElement.addEventListener('click', (event: Event) => {
+        this.lastClick = event;
+      }, true);
     });
 
     // The theme of the table is the class of its host, which the table changes with its theme
@@ -196,7 +211,19 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
   /** The Filters button of the table toolbar opens the drawer; every action goes on to the page. */
   protected onTableAction(event: BroActionDetail<MODEL>): void {
     if (event.action === events.filtersToggleEvent) {
+      // The toolbar sends the action: the button is the one that the click being dispatched reached, else the one that
+      // has the focus. Safari gives the focus to no button by a click
+      const clicked = (this.lastClick && this.lastClick.eventPhase !== Event.NONE) ? (<Element>this.lastClick.target).closest<HTMLElement>('a[href], button') : null;
+      const opener = clicked ?? <HTMLElement | null>this.host.nativeElement.ownerDocument.activeElement;
+
+      this.opener = (opener && this.content().nativeElement.contains(opener)) ? opener : this.opener;
       this.toggle();
+
+      // Chrome focuses the button by the click that opens the drawer; Safari leaves the focus on the page, and the button
+      // takes it as in Chrome. The drawer of the side mode does not take the focus, the one of the mode over takes it later
+      if (this.opened()) {
+        this.restoreFocus(true);
+      }
     }
 
     this.action.emit(event);
@@ -220,6 +247,38 @@ export class TableBroFilterDrawerContainerNg<MODEL extends object> implements Br
 
     this.drawer().toggle(opened);
     this.container().updateContentMargins();
+
+    if (!opened) {
+      this.restoreFocus(true);
+    }
+  }
+
+  /**
+   * A click on the scrim of the mode over: Material closes the drawer right after it tells it, and gives the focus to the
+   * element that had it before the drawer opened, in Safari the page; then the focus goes back to the button.
+   */
+  protected onBackdropClick(): void {
+    queueMicrotask(() => this.restoreFocus(true));
+  }
+
+  /**
+   * The focus in the closing drawer goes back to the button that opened it, as from the drawer of the core: Material keeps
+   * it in the drawer of the side mode. A click that closes the drawer gives back also the focus that Safari, which focuses
+   * no button by a click, lost to the page; a later start of the closing leaves it to the page, which may have moved it
+   * since. The Filters button that opens the drawer takes the focus from the page the same way. The focus comes by
+   * the last input, as Material restores it: the button shows no focus after the pointer.
+   * @param fromPage - the focus on the page, not in an element, goes back too
+   */
+  protected restoreFocus(fromPage: boolean): void {
+    const focused = this.host.nativeElement.ownerDocument.activeElement;
+
+    if (this.opener && (this.drawerElement().nativeElement.contains(focused) || (fromPage && focused === this.host.nativeElement.ownerDocument.body))) {
+      const origin = this.inputModality.mostRecentModality ?? 'program';
+      // The options of the DOM: the CDK gives them to focus() as they are, and its own type knows no focusVisible
+      const options: FocusOptions = (origin === 'mouse' || origin === 'touch') ? {preventScroll: true, focusVisible: false} : {preventScroll: true};
+
+      this.focusMonitor.focusVia(this.opener, origin, options);
+    }
   }
 
   /**

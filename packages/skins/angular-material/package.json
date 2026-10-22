@@ -44,6 +44,7 @@
   },
   "sideEffects": false,
   "peerDependencies": {
+    "@angular/cdk": ">=20 <23",
     "@angular/common": ">=20 <23",
     "@angular/core": ">=20 <23",
     "@angular/elements": ">=20 <23",

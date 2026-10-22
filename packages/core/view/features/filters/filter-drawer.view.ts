@@ -64,6 +64,8 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
 
   /** The element that opened the drawer, as the Filters button of the table: it says whether the drawer is expanded, and the focus goes back to it. */
   private opener: HTMLElement | null = null;
+  /** The last click in this element: while the page dispatches it, the control that it reached sends its action. */
+  private lastClick: Event | null = null;
 
   /** The classes of the skin on this element, to take them off when the skin changes. */
   private skinClassName: string = '';
@@ -82,13 +84,19 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
   constructor() {
     super();
 
+    this.addEventListener('click', event => {
+      this.lastClick = event;
+    }, true);
+
     // The Filters button of the table toolbar: the bro-action event of the table bubbles up to this element
     this.addEventListener(actionEvent, event => {
       if ((<CustomEvent<BroEventDetail>>event).detail?.action === filtersToggleEvent) {
-        // The button of the toolbar has the focus: the toolbar sends the action from its own element
-        const focused = <HTMLElement | null>document.activeElement;
+        // The toolbar sends the action from its own element: the button is the one that the click being dispatched
+        // reached, else the one that has the focus. Safari gives the focus to no link and no button by a click
+        const clicked = (this.lastClick && this.lastClick.eventPhase !== Event.NONE) ? (<Element>this.lastClick.target).closest<HTMLElement>(focusableSelector) : null;
+        const opener = clicked ?? <HTMLElement | null>document.activeElement;
 
-        this.opener = (focused && this.contains(focused) && !this.inDrawer(focused)) ? focused : this.opener;
+        this.opener = (opener && this.contains(opener) && !this.inDrawer(opener)) ? opener : this.opener;
         this.toggle();
       }
     });
@@ -336,7 +344,11 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
 
       target?.focus({preventScroll: true});
     } else if (this.inDrawer(document.activeElement) || document.activeElement === document.body) {
-      this.opener?.focus({preventScroll: true});
+      // After a click of the pointer the button shows no ring, as in Chrome, where the click took the focus from the
+      // filters; Safari would show it after the focus that the filters got from the script
+      const pointer = !!this.lastClick && this.lastClick.eventPhase !== Event.NONE && (<MouseEvent>this.lastClick).detail > 0;
+
+      this.opener?.focus(pointer ? {preventScroll: true, focusVisible: false} : {preventScroll: true});
     }
   }
 
