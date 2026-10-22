@@ -103,6 +103,86 @@ test('the native outline of the sort header of the nv skin is one rectangle, als
   expect(below).toBe(0);
 });
 
+test('the native outline of the details link of an open row of the nv skin is one rectangle, also in Safari', {tag: '@smoke'}, async ({page, browserName}) => {
+  await page.setViewportSize({width: 800, height: 600});
+
+  const table = await mount(page, detailsTable('nv'));
+
+  await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+  // The cell of the link in a layer of its own, as Island Details gives it in WebKit for the focus of the keyboard
+  await page.addStyleTag({content: 'table-bro tbody > tr > td:has(:focus-visible) { will-change: transform; }'});
+
+  // The open row turns the arrow of its link
+  const link = bodyTable(table).locator('tr[data-row-number="1"]:not(.bro-details_tr)').getByRole('button', {name: 'Details', exact: true});
+
+  // The arrow has a layer of its own in WebKit from the start, without focus too: the layers around it change with the
+  // focus, and Safari 26.4 kept an old arrow in a layer that had painted it under the turning one
+  const layer = (browserName === 'webkit') ? 'transform' : 'auto';
+
+  await expect(link.locator('.bro-button-toggle')).toHaveCSS('will-change', layer);
+  await link.click();
+  await expect(bodyTable(table).locator('tr.bro-details_tr')).toHaveCount(1);
+
+  // The focus of the keyboard: Safari takes links into the order of Tab with Option
+  const tab = (browserName === 'webkit') ? 'Alt+Tab' : 'Tab';
+
+  // A frame of the screencast, which shows the page as the window draws it: a screenshot of WebKit paints the page anew
+  // and draws no step
+  const viewport = page.viewportSize()!;
+  let frame: Buffer | undefined;
+
+  await page.screencast.start({onFrame: ({data}) => {
+    frame = data;
+  }, size: viewport, quality: 100});
+
+  await link.focus();
+  await page.keyboard.press(`Shift+${tab}`);
+  await page.keyboard.press(tab);
+  await expect(link).toBeFocused();
+  await expect(link).toHaveCSS('outline-style', 'auto');
+
+  // The link clips its overflow, not its paint: Safari 26.4 left the old arrow of a link with paint containment on the
+  // screen while the new one turned, which the frames of WebKit of Playwright do not show
+  await expect(link).toHaveCSS('contain', 'none');
+
+  await expect(link.locator('.bro-button-toggle')).toHaveCSS('will-change', layer);
+
+  frame = undefined;
+  await expect.poll(() => !!frame).toBe(true);
+  await page.waitForTimeout(300);
+  await page.screencast.stop();
+
+  // The pixels of the outline, which is blue in all browsers, in the strip from 6px to 16px below the link: WebKit took
+  // in the box of the turned arrow and drew a step of the outline below the link
+  const box = (await link.boundingBox())!;
+  const below = await page.evaluate(async ([src, x, y, width, viewportWidth, viewportHeight]) => {
+    const img = new Image();
+
+    img.src = src;
+    await img.decode();
+
+    // The screencast may scale the page down: the canvas takes the size of the viewport
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d')!;
+
+    canvas.width = viewportWidth;
+    canvas.height = viewportHeight;
+    context.drawImage(img, 0, 0, viewportWidth, viewportHeight);
+
+    const data = context.getImageData(x, y, width, 10).data;
+    let count = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      count += (data[i + 2] > 150 && data[i + 2] - data[i] > 30) ? 1 : 0;
+    }
+
+    return count;
+  }, [`data:image/jpeg;base64,${frame!.toString('base64')}`, Math.round(box.x) - 8, Math.round(box.y + box.height) + 6, Math.round(box.width) + 16, viewport.width, viewport.height] as const);
+
+  expect(below).toBe(0);
+});
+
 test('the native outline of the links of the toolbar of the nv skin is one rectangle, also in Safari', {tag: '@smoke'}, async ({page, browserName}) => {
   await page.setViewportSize({width: 800, height: 600});
 
@@ -114,8 +194,7 @@ test('the native outline of the links of the toolbar of the nv skin is one recta
   // Safari takes links into the order of Tab with Option
   const tab = (browserName === 'webkit') ? 'Alt+Tab' : 'Tab';
 
-  // The frames of the screencast show the page as the window draws it: a screenshot of WebKit paints the page anew
-  // and draws no step
+  // The frames of the screencast show the page as the window draws it, as the frames of the details link above
   let frame: Buffer | undefined;
 
   await page.screencast.start({onFrame: ({data}) => {

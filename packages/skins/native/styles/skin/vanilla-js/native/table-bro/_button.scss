@@ -10,6 +10,20 @@
     // not the box of the text with the taller box of the icon
     a:has(> .bro-button-toggle) {
       display: inline-block;
+
+      // The native outline of WebKit takes in the box of the turned icon of an open row, which reaches below the link,
+      // unless the link clips its overflow. It clips it across alone: a clip down the link moves its baseline in WebKit.
+      // Only WebKit knows the system font -apple-system-body; Chrome draws the text of a link that clips its overflow
+      // with other pixels. The icon paints in a layer of its own there, from the start: the layers around it change
+      // with the focus of the keyboard, as the cell of a row of Island Details takes one, and Safari kept an old icon
+      // in a layer that had painted it next to the new one. An icon in its own layer paints into no other layer
+      @supports (font: -apple-system-body) {
+        overflow-x: clip;
+
+        > .bro-button-toggle {
+          will-change: transform;
+        }
+      }
     }
   }
 
