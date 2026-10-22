@@ -19,6 +19,11 @@
 .bro-sort-header-container {
   display: flex;
 
+  // The native outline of Safari takes in the boxes of the content, and the arrow, turned by its transform, gave it a
+  // step below the arrow: a header that clips its content has the outline of its own box. The arrow stays within
+  // the header, and the pseudo-element below is positioned by .bro-sort-header outside it, so the clip leaves both whole
+  overflow: hidden;
+
   width: fit-content;
   max-width: 100%;
 

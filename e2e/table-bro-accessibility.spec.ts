@@ -56,6 +56,53 @@ for (const skin of ['nv', 'bs']) {
   });
 }
 
+test('the native outline of the sort header of the nv skin is one rectangle, also in Safari', {tag: '@smoke'}, async ({page}) => {
+  // The header and the strip below it within the page, which the stand does not scroll
+  await page.setViewportSize({width: 1280, height: 1100});
+
+  const table = await mount(page, detailsTable('nv'));
+
+  await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+  const header = table.locator('table.bro-table-header th').nth(2).locator('.bro-sort-header-container');
+
+  // The focus of the keyboard
+  await table.locator('table.bro-table-header th').nth(1).locator('.bro-sort-header-container').focus();
+  await page.keyboard.press('Tab');
+  await expect(header).toBeFocused();
+  await expect(header).toHaveCSS('outline-style', 'auto');
+
+  // The pixels of the outline, which is blue in all browsers, in the strip from 6px below the header: WebKit took in the
+  // box of the arrow, turned by its transform, and drew a step of the outline there. A screenshot of the strip alone
+  // shows no outline in WebKit, so the screenshot takes in the header too.
+  const box = (await header.boundingBox())!;
+  const png = `data:image/png;base64,${(await page.screenshot({clip: {x: box.x - 8, y: box.y, width: box.width + 16, height: box.height + 16}, scale: 'css'})).toString('base64')}`;
+  const below = await page.evaluate(async ([src, top]) => {
+    const img = new Image();
+
+    img.src = src;
+    await img.decode();
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d')!;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+    context.drawImage(img, 0, 0);
+
+    const data = context.getImageData(0, top, img.width, img.height - top).data;
+    let count = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      count += (data[i + 2] > 150 && data[i + 2] - data[i] > 30) ? 1 : 0;
+    }
+
+    return count;
+  }, [png, Math.round(box.height) + 6] as const);
+
+  expect(below).toBe(0);
+});
+
 for (const skin of ['mat', 'nv', 'bs']) {
   test(`the back and clear buttons of the search of the ${skin} skin have names`, async ({page}) => {
     const table = await mount(page, detailsTable(skin));
