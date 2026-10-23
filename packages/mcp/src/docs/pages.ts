@@ -14,8 +14,11 @@ export interface BroDocFile {
 /**
  * A page of Docs: the one source of the page of Docs on table-bro.com and of its topic of get_docs. The text is
  * Markdown of a few forms: paragraphs, headings ###, #### and #####, ordered lists whose items continue with blocks
- * indented by three spaces, `code`, **strong**, _emphasis_ and [links](url). A line {{file}} shows a file of code, and a line
- * <!-- name --> starts the part of the page that the site shows at that name, next to its tables.
+ * indented by three spaces, tables | a | b | with the line | --- | --- | after the head, `code`, **strong**, _emphasis_ and
+ * [links](url); the _emphasis_ at the end of a heading is its note, as #### Loading _with Lottie_. A line {{file}} shows a
+ * file of code, and a line <!-- name --> starts the part of the page that the site shows at that name, next to its tables.
+ * An API that came after 1.1.0 names the version it came in: a section by the note of its heading, as
+ * #### Prerendering _since 1.2.0_, a field in a table of fields by the column Since, as | Field | Default | Since |.
  */
 export interface BroDocPage {
   /** The path of the page under /docs. */
