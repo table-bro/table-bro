@@ -1,5 +1,6 @@
 import {type BroTarget, setupSteps} from '../generate/setup.js';
 import type {BroSpecSkin}           from '../spec/spec.js';
+import {tableBroVersion}            from '../version.js';
 
 /** A file of code of a page of Docs, which the text of the page shows. */
 export interface BroDocFile {
@@ -161,15 +162,15 @@ A page without a bundler takes the same packages from [jsDelivr](https://www.jsd
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Table, Bro + Vanilla HTML without a build</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/native@1.1.0/dist/table-bro.native.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/native@${tableBroVersion}/dist/table-bro.native.min.css" />
     <!-- The page around the table, as on table-bro.com -->
     <link rel="stylesheet" href="sample-page.css" />
     <script type="importmap">
       {
         "imports": {
-          "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.esm.js",
-          "@table-bro/native": "https://cdn.jsdelivr.net/npm/@table-bro/native@1.1.0/dist/table-bro.native.esm.js"
+          "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.esm.js",
+          "@table-bro/native": "https://cdn.jsdelivr.net/npm/@table-bro/native@${tableBroVersion}/dist/table-bro.native.esm.js"
         }
       }
     </script>
