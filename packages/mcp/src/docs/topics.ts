@@ -128,7 +128,7 @@ ${JSON.stringify(builtinSpecs[0].spec, null, 2)}
 
 The columns of a page are \`BroCol<Row>[]\` of its row type: TypeScript checks \`name\` and \`sortKey\` against the fields of the row.
 
-A date or an amount of money is a string field that holds the text as the cell shows it, as \`"Sep 1, 2026"\` or \`"$15"\`, formatted for the language of the user by \`Intl.DateTimeFormat\` and \`Intl.NumberFormat\` with its currency, never the raw \`2026-09-01\` or \`15\`: the search of the toolbar looks in the string fields of the columns, so the user finds what he sees on the screen. For the order of the sort add a number field with the time or the amount (\`createdAt\`, \`total\`) and name it in \`sortKey\` of the column; the filters (\`range\`) read that number field too.
+A date or an amount of money is a string field that holds the text as the cell shows it, as \`"Sep 1, 2026"\` or \`"$15"\`, formatted by \`Intl.DateTimeFormat\` and \`Intl.NumberFormat\` with its currency in the language of the other texts of the page (\`'en-US'\` for a page in English, not the default language of the browser, which would mix two languages on one page), never the raw \`2026-09-01\` or \`15\`: the search of the toolbar looks in the string fields of the columns, so the user finds what he sees on the screen. For the order of the sort add a number field with the time or the amount (\`createdAt\`, \`total\`) and name it in \`sortKey\` of the column; the filters (\`range\`) read that number field too.
 
 The table measures the widths of the columns itself. A column may get narrower down to the width of its short title, by default the first word of the title; \`config.shortColumnTitle(col)\` gives other short titles. A column of a component is never narrower than its content.
 
