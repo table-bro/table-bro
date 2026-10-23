@@ -239,6 +239,8 @@ The filters of the application live outside of the table, in the Filter Drawer n
 | mat | \`<table-bro-filter-drawer-container-ng>\` of table-bro.angular-material: it takes the inputs and outputs of \`<table-bro-ng>\` and renders the table | its content |
 | bs, nv | \`<table-bro-filter-drawer-container skin="bs">\` of the core, defined by \`defineTableBroFilterDrawerContainer()\` | an element with \`slot="filters"\` next to the table |
 
+The title of the drawer and the name of its close button come from \`texts.filterDrawer\` (\`title\`, \`close\`) of the config of the table in every skin (since 1.2.0); the container of bs and nv reads them when it connects and when it opens, so a new \`configure()\` of the table shows at the next opening. The property \`texts\` of \`<table-bro-filter-drawer-container>\` of 1.1.0 still works and wins over the config of the table; it is deprecated and removed in 2.0.
+
 - The page gives the filters to the table: the input \`filter\` of the wrapper, or the action \`bro-filters-filter\` in Vanilla JS. The table accumulates the changes, so a cleared field goes as \`undefined\`.
 - Local mode: the table searches by itself; the other filters go through \`config.filtersTransform(rows, filters)\`. The table calls it only when some filter has a value: undefined, null and '' clear a filter, false and 0 are values. \`matchesFilterCondition(value, {eq, in, contains, startsWith, gte, lte})\` of @table-bro/core compares one value; an undefined condition matches.
 - Server mode: the filters come in \`query.filter\`, and the server applies them.
