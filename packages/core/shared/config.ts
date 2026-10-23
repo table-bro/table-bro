@@ -10,7 +10,6 @@ export function resolveConfig<T extends object>(skinConfig: BroSkinConfig, confi
   // A config without a title gives a toolbar without text, and not the text undefined
   Object.assign(resolved, {
     theme: 'auto',
-    texts: resolveTexts(),
     shadowsEnabled: true,
     toolbarTitle: '',
     shortColumnTitle: (col: BroCol) => col.title?.split(' ')[0],
@@ -20,6 +19,8 @@ export function resolveConfig<T extends object>(skinConfig: BroSkinConfig, confi
   });
 
   merge(resolved, deepCopy(config ?? {}));
+  // The texts of the config over the English ones
+  resolved.texts = resolveTexts(resolved.texts);
 
   // A table without shadows gives its regions no class of the shadow
   if (!resolved.shadowsEnabled) {
@@ -33,11 +34,14 @@ export function resolveConfig<T extends object>(skinConfig: BroSkinConfig, confi
 const rangeNumber = new Intl.NumberFormat('en-US');
 
 /**
- * The texts of a table: the ones of a config over the English ones. The default range is the one of MatPaginatorIntl
- * of Angular Material (MIT), with its numbers formatted.
+ * The texts of a table: the ones of a config over the English ones. A text that is undefined leaves the English one.
+ * The default range is the one of MatPaginatorIntl of Angular Material (MIT), with its numbers formatted.
  * @group Configuration
  */
 export function resolveTexts(texts?: Partial<BroTexts>): BroTexts {
+  // The fields that are set, and the messages of the states that are set
+  const resolved: Record<string, unknown> = {...defined(texts), states: defined(texts?.states)};
+
   return {
     rowCounter: 'No',
     rowCounterName: 'Row number',
@@ -79,8 +83,16 @@ export function resolveTexts(texts?: Partial<BroTexts>): BroTexts {
     clear: 'Clear',
     noItems: 'No data',
     detailsLoading: 'Loading details',
-    ...texts
+    ...resolved
   };
+}
+
+/**
+ * The fields of an object of texts without the undefined ones, which leave the texts below them.
+ * @param texts - the texts, or none
+ */
+function defined(texts: object = {}): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(texts).filter(([, value]) => value !== undefined));
 }
 
 function deepCopy<T extends object>(object: T): T {

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import type {BroConfig, BroSkinConfig} from '../types/table-bro';
-import {resolveConfig}                 from './config';
+import {resolveConfig, resolveTexts}   from './config';
 
 describe('resolveConfig', () => {
   it('gives an empty title to a config without one', () => {
@@ -27,5 +27,16 @@ describe('resolveConfig', () => {
     expect(JSON.stringify([skin, app])).toBe(before);
     expect(config.css.table?.className).toBe('orders');
     expect(config.texts.noItems).toBe('Nothing');
+  });
+});
+
+describe('resolveTexts', () => {
+  it('leaves the text below an undefined one, the English one', () => {
+    const texts = resolveTexts({search: undefined, pagination: 'Pages', states: {fail: 'Error', loading: undefined}});
+
+    expect([texts.search, texts.pagination]).toEqual(['Search', 'Pages']);
+    expect(texts.states).toEqual({fail: 'Error'});
+    // The config of a table goes through the same texts
+    expect(resolveConfig(<BroSkinConfig>{}, {skin: 'nv', texts: {search: undefined}}).texts.search).toBe('Search');
   });
 });
