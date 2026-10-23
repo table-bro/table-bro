@@ -1,10 +1,10 @@
-import {resolveTexts}                                                                                                               from '../../../shared/config';
-import {BroDom}                                                                                                                     from '../../../shared/dom';
-import {actionEvent, columnsWidthEvent, filtersCloseEvent, filtersOpenEvent, filtersToggleEvent}                                    from '../../../shared/events';
-import {BroHTMLElement, classAttr}                                                                                                  from '../../../shared/html';
-import {dispatchAction, focusableSelector}                                                                                          from '../../../shared/interaction';
-import {getSkin}                                                                                                                    from '../../../shared/skins';
-import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, BroSkin, BroSkinConfig, BroTexts, BroToolbarElement} from '../../../types/table-bro';
+import {resolveTexts}                                                                                                                     from '../../../shared/config';
+import {BroDom}                                                                                                                           from '../../../shared/dom';
+import {actionEvent, columnsWidthEvent, filtersCloseEvent, filtersOpenEvent, filtersToggleEvent}                                          from '../../../shared/events';
+import {BroHTMLElement, classAttr}                                                                                                        from '../../../shared/html';
+import {dispatchAction, focusableSelector}                                                                                                from '../../../shared/interaction';
+import {getSkin}                                                                                                                          from '../../../shared/skins';
+import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, BroSkin, BroSkinConfig, BroTextsConfig, BroToolbarElement} from '../../../types/table-bro';
 
 /**
  * Defines <table-bro-filter-drawer-container> on demand: the core does not define it on import, the application calls
@@ -60,7 +60,7 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     return ['mode', 'opened', 'skin'];
   }
 
-  private ownTexts?: Partial<BroTexts>;
+  private ownTexts?: BroTextsConfig;
 
   /** The element that opened the drawer, as the Filters button of the table: it says whether the drawer is expanded, and the focus goes back to it. */
   private opener: HTMLElement | null = null;
@@ -151,11 +151,11 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
   }
 
   /** The texts of the drawer, as the texts of its table: its title and the name of its close button. */
-  get texts(): Partial<BroTexts> | undefined {
+  get texts(): BroTextsConfig | undefined {
     return this.ownTexts;
   }
 
-  set texts(value: Partial<BroTexts> | undefined) {
+  set texts(value: BroTextsConfig | undefined) {
     this.ownTexts = value;
 
     if (this.isConnected) {

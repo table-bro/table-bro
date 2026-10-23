@@ -1,4 +1,4 @@
-import type {BroCol, BroConfig, BroResolvedConfig, BroSkinConfig, BroTexts} from '../types/table-bro';
+import type {BroCol, BroConfig, BroCoreTexts, BroResolvedConfig, BroSkinConfig, BroTextGroupName, BroTextGroupTexts, BroTexts, BroTextsConfig} from '../types/table-bro';
 
 /**
  * The instance config: a copy of the skin config, the defaults, then a copy of the user config on top.
@@ -19,7 +19,7 @@ export function resolveConfig<T extends object>(skinConfig: BroSkinConfig, confi
   });
 
   merge(resolved, deepCopy(config ?? {}));
-  // The texts of the config over the English ones
+  // The texts of the config, by their groups or flat, over the English ones
   resolved.texts = resolveTexts(resolved.texts);
 
   // A table without shadows gives its regions no class of the shadow
@@ -30,34 +30,77 @@ export function resolveConfig<T extends object>(skinConfig: BroSkinConfig, confi
   return resolved;
 }
 
+/** The fields of BroTexts by the names of the fields of the groups of the texts of a config, where the names differ. */
+const groupFields: {[K in BroTextGroupName]?: Partial<Record<keyof BroTextGroupTexts[K], keyof BroTexts>>} = {
+  filterDrawer: {title: 'filters'},
+  paginator: {
+    itemsPerPageLabel: 'itemsPerPage',
+    nextPageLabel: 'nextPage',
+    previousPageLabel: 'previousPage',
+    firstPageLabel: 'firstPage',
+    lastPageLabel: 'lastPage',
+    getRangeLabel: 'rangeLabel',
+    label: 'pagination',
+    navigationLabel: 'pageNavigation',
+    firstText: 'first',
+    previousText: 'previous',
+    nextText: 'next',
+    lastText: 'last'
+  },
+  progressBar: {label: 'loadingProgress'},
+  toolbarSearch: {field: 'searchField'}
+};
+
+/** The fields of BroTexts by the names of the texts of the core in a config. */
+const coreFields: Record<keyof BroCoreTexts, keyof BroTexts> = {
+  rowCounterTitle: 'rowCounter',
+  rowCounterLabel: 'rowCounterName',
+  rowDetailsLoadingMessage: 'detailsLoading'
+};
+
 /** The numbers of the range of the paginator, as 1,234. */
 const rangeNumber = new Intl.NumberFormat('en-US');
 
 /**
- * The texts of a table: the ones of a config over the English ones. A text that is undefined leaves the English one.
+ * The texts of a table: the ones of a config over the English ones, a field of a group or a text of the core over its
+ * deprecated flat field. A text that is undefined leaves the one below it, the flat field or the English one.
  * The default range is the one of MatPaginatorIntl of Angular Material (MIT), with its numbers formatted.
+ * @param texts - the texts of a config, by their groups or flat
  * @group Configuration
  */
-export function resolveTexts(texts?: Partial<BroTexts>): BroTexts {
-  // The fields that are set, and the messages of the states that are set
-  const resolved: Record<string, unknown> = {...defined(texts), states: defined(texts?.states)};
+export function resolveTexts(texts?: BroTextsConfig): BroTexts {
+  const {rowCounterTitle, rowCounterLabel, rowDetailsLoadingMessage, filterDrawer, paginator, progressBar, state, toolbarMain, toolbarSearch, ...flat} = texts ?? {};
+  // The flat fields that are set, and the messages of the group state over the flat ones, each by its state
+  const resolved: Record<string, unknown> = {...defined(flat), states: {...defined(flat.states), ...defined(state)}};
+
+  // A text of the core goes into the flat field of its part
+  for (const [name, value] of Object.entries(defined({rowCounterTitle, rowCounterLabel, rowDetailsLoadingMessage}))) {
+    resolved[coreFields[<keyof BroCoreTexts>name]] = value;
+  }
+
+  // A field of a group goes into the flat field of its name in groupFields, or of its own name
+  for (const [name, group] of Object.entries({filterDrawer, paginator, progressBar, toolbarMain, toolbarSearch})) {
+    for (const [field, value] of Object.entries(defined(group))) {
+      resolved[(<Record<string, Record<string, string> | undefined>>groupFields)[name]?.[field] ?? field] = value;
+    }
+  }
 
   return {
+    // Core texts
     rowCounter: 'No',
     rowCounterName: 'Row number',
+    detailsLoading: 'Loading details',
+
+    // Skin component texts: filterDrawer
     filters: 'Filters',
     close: 'Close',
-    pagination: 'Pagination',
-    pageNavigation: 'Table page navigation',
+
+    // Skin component texts: paginator
     itemsPerPage: 'Items per page:',
-    firstPage: 'First page',
-    previousPage: 'Previous page',
     nextPage: 'Next page',
+    previousPage: 'Previous page',
+    firstPage: 'First page',
     lastPage: 'Last page',
-    first: 'First',
-    previous: 'Previous',
-    next: 'Next',
-    last: 'Last',
     rangeLabel: (page: number, pageSize: number, length: number) => {
       if (length === 0 || pageSize === 0) {
         return `0 of ${rangeNumber.format(length)}`;
@@ -71,18 +114,33 @@ export function resolveTexts(texts?: Partial<BroTexts>): BroTexts {
 
       return `${rangeNumber.format(start + 1)} – ${rangeNumber.format(end)} of ${rangeNumber.format(length)}`;
     },
+    pagination: 'Pagination',
+    pageNavigation: 'Table page navigation',
+    first: 'First',
+    previous: 'Previous',
+    next: 'Next',
+    last: 'Last',
+
+    // Skin component texts: progressBar
     loadingProgress: 'Loading progress',
+
+    // Skin component texts: state
     states: {},
+
+    // Skin component texts: toolbarMain
     search: 'Search',
     searchRole: (title: string) => `for ${title || 'rows'}`,
     buttonRole: 'button',
     menuRole: 'menu',
     menuItemRole: 'menu item',
+
+    // Skin component texts: toolbarSearch
     searchField: 'Search in table',
     back: 'Back',
     clear: 'Clear',
+
+    // Skin tags texts
     noItems: 'No data',
-    detailsLoading: 'Loading details',
     ...resolved
   };
 }

@@ -1,4 +1,4 @@
-import type {BroActionDetail, BroCellElement, BroCol, BroConfig, BroFilterDrawerHTMLElement, BroRow, BroTableAction, TableBroHTMLElement} from '@table-bro/core';
+import type {BroActionDetail, BroCellElement, BroCol, BroConfig, BroFilterDrawerHTMLElement, BroRow, BroTableAction, BroTextsConfig, TableBroHTMLElement} from '@table-bro/core';
 
 import {expect, type Locator, type Page, test} from '@playwright/test';
 import {compile, compileString}                from 'sass';
@@ -1700,28 +1700,28 @@ test('a link button takes Space, and the links of a disabled paginator say so', 
 
 test('the texts of the config name the parts of the table in the language of the application', async ({page}) => {
   const texts = {
-    rowCounter: 'Nr.', search: 'Suche', searchField: 'In der Tabelle suchen', back: 'Zurück', clear: 'Leeren', pagination: 'Seiten',
-    pageNavigation: 'Seitennavigation', itemsPerPage: 'Zeilen pro Seite:', nextPage: 'Nächste Seite', next: 'Weiter',
-    states: {'no-data': 'Keine Daten'}
+    rowCounter: 'Num.', search: 'Find', searchField: 'Find in table', back: 'Return', clear: 'Erase', pagination: 'Pages',
+    pageNavigation: 'Page links', itemsPerPage: 'Rows per page:', nextPage: 'Go to next page', next: 'Forward',
+    states: {'no-data': 'Nothing here'}
   };
   const rows = Array.from({length: 1234}, (_, index) => ({name: `row ${index}`, price: index}));
   const table = await mountTable(page, {cols: priceCols, rows, config: {skin: 'nv', texts}});
 
-  await expect(table.locator('thead th').first()).toContainText('Nr.');
-  await expect(table.locator('.bro-paginator')).toHaveAttribute('aria-label', 'Seiten');
-  await expect(table.locator('nav[aria-label="Seitennavigation"] a[aria-label="Nächste Seite"]')).toContainText('Weiter');
-  await expect(table.locator('.bro-paginator-page-size-label')).toContainText('Zeilen pro Seite:');
+  await expect(table.locator('thead th').first()).toContainText('Num.');
+  await expect(table.locator('.bro-paginator')).toHaveAttribute('aria-label', 'Pages');
+  await expect(table.locator('nav[aria-label="Page links"] a[aria-label="Go to next page"]')).toContainText('Forward');
+  await expect(table.locator('.bro-paginator-page-size-label')).toContainText('Rows per page:');
   // The numbers of the range are formatted
   await expect(table.locator('.bro-paginator-range-label')).toHaveText('1 – 5 of 1,234');
 
   await table.locator('.bro-toolbar-button-search').click();
-  await expect(table.locator('.bro-table-toolbar_container input')).toHaveAttribute('aria-label', 'In der Tabelle suchen');
-  await expect(table.locator('.bro-toolbar-clear a')).toHaveAttribute('aria-label', 'Leeren');
+  await expect(table.locator('.bro-table-toolbar_container input')).toHaveAttribute('aria-label', 'Find in table');
+  await expect(table.locator('.bro-toolbar-clear a')).toHaveAttribute('aria-label', 'Erase');
 
   const empty = await mountTable(page, {cols: priceCols, rows: [], config: {skin: 'mat', texts}});
 
-  await expect(empty.locator('.bro-state-message')).toHaveText('Keine Daten');
-  await expect(empty.locator('.bro-toolbar-button-search')).toHaveAttribute('aria-label', 'Suche');
+  await expect(empty.locator('.bro-state-message')).toHaveText('Nothing here');
+  await expect(empty.locator('.bro-toolbar-button-search')).toHaveAttribute('aria-label', 'Find');
 });
 
 test('the vanilla filter drawer takes its title and the name of its close button from its texts', async ({page}) => {
@@ -1733,13 +1733,53 @@ test('the vanilla filter drawer takes its title and the name of its close button
     drawer.id = 'e2e-drawer';
     drawer.setAttribute('skin', 'nv');
     document.body.append(drawer);
-    drawer.texts = {filters: 'Filter', close: 'Schließen'};
+    drawer.texts = {filters: 'Refine', close: 'Dismiss'};
   });
 
   const drawer = page.locator('#e2e-drawer');
 
-  await expect(drawer.locator('.bro-filter-drawer-title')).toHaveText('Filter');
-  await expect(drawer.locator('.bro-filter-drawer-header a[aria-label="Schließen"]')).toHaveCount(1);
+  await expect(drawer.locator('.bro-filter-drawer-title')).toHaveText('Refine');
+  await expect(drawer.locator('.bro-filter-drawer-header a[aria-label="Dismiss"]')).toHaveCount(1);
+});
+
+test('the groups of the texts of the config name the same parts of the table, over the flat fields', async ({page}) => {
+  const texts: BroTextsConfig = {
+    // The field of the group wins over the flat field
+    itemsPerPage: 'Rows:',
+    rowCounterTitle: 'Num.',
+    toolbarMain: {search: 'Find'},
+    toolbarSearch: {field: 'Find in table', clear: 'Erase'},
+    paginator: {label: 'Pages', navigationLabel: 'Page links', itemsPerPageLabel: 'Rows per page:', nextPageLabel: 'Go to next page', nextText: 'Forward'}
+  };
+  const rows = Array.from({length: 12}, (_, index) => ({name: `row ${index}`, price: index}));
+  const table = await mountTable(page, {cols: priceCols, rows, config: {skin: 'nv', texts}});
+
+  await expect(table.locator('thead th').first()).toContainText('Num.');
+  await expect(table.locator('.bro-paginator')).toHaveAttribute('aria-label', 'Pages');
+  await expect(table.locator('nav[aria-label="Page links"] a[aria-label="Go to next page"]')).toContainText('Forward');
+  await expect(table.locator('.bro-paginator-page-size-label')).toContainText('Rows per page:');
+
+  await table.locator('.bro-toolbar-button-search').click();
+  await expect(table.locator('.bro-table-toolbar_container input')).toHaveAttribute('aria-label', 'Find in table');
+  await expect(table.locator('.bro-toolbar-clear a')).toHaveAttribute('aria-label', 'Erase');
+
+  const mat = await mountTable(page, {cols: priceCols, rows, config: {skin: 'mat', texts}});
+
+  await expect(mat.locator('.bro-toolbar-button-search')).toHaveAttribute('aria-label', 'Find');
+
+  await page.evaluate(() => {
+    const drawer = document.createElement('table-bro-filter-drawer-container') as BroFilterDrawerHTMLElement;
+
+    drawer.id = 'e2e-grouped-drawer';
+    drawer.setAttribute('skin', 'nv');
+    document.body.append(drawer);
+    drawer.texts = {filterDrawer: {title: 'Refine', close: 'Dismiss'}};
+  });
+
+  const drawer = page.locator('#e2e-grouped-drawer');
+
+  await expect(drawer.locator('.bro-filter-drawer-title')).toHaveText('Refine');
+  await expect(drawer.locator('.bro-filter-drawer-header a[aria-label="Dismiss"]')).toHaveCount(1);
 });
 
 test('screen readers hear the states of the table from its live region', async ({page}) => {

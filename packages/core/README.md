@@ -127,28 +127,42 @@ for its first render and apply in their order. A new `configure()` drops the cal
 not set stay the standard ones. A table with words of its own, for example:
 
 ```ts
-const texts: Partial<BroTexts> = {
-  rowCounter: '#',
-  rowCounterName: 'Order number',
-  search: 'Find',
-  searchField: 'Find an order',
-  itemsPerPage: 'Rows per page:',
-  rangeLabel: (page, pageSize, length) => `Rows ${page * pageSize + 1}–${Math.min((page + 1) * pageSize, length)} of ${length}`,
-  states: {'no-data': 'Nothing here yet', 'not-found': 'No matches'}
+const texts: BroTextsConfig = {
+  // Core texts
+  rowCounterTitle: '#',
+  rowCounterLabel: 'Order number',
+
+  // Skin component texts
+  paginator: {
+    itemsPerPageLabel: 'Rows per page:',
+    getRangeLabel: (page, pageSize, length) => `Rows ${page * pageSize + 1}–${Math.min((page + 1) * pageSize, length)} of ${length}`
+  },
+  state: {'no-data': 'Nothing here yet', 'not-found': 'No matches'},
+  toolbarMain: {search: 'Find'},
+  toolbarSearch: {field: 'Find an order'}
 };
 ```
 
+Since 1.2.0 the texts of the parts that the core renders are flat, named as the options of the config:
+`rowCounterTitle` and `rowCounterLabel` of the column of the row numbers, `rowDetailsLoadingMessage` of the row details.
+The texts of a component of the skin go in a group named as the component, in the order of the components of a skin
+config, and the fields of a group have short names: `filterDrawer` (`title`, `close`), `paginator`, whose labels have
+the names of `MatPaginatorIntl`, as `itemsPerPageLabel` and `getRangeLabel`, `progressBar` (`label`), `state`, with the
+messages of the states by their names, `toolbarMain` and `toolbarSearch`.
+The flat fields of 1.1.0, as `{itemsPerPage: 'Rows per page:'}`, still work and are deprecated; they are removed in 2.0. A
+field in a group and a text of the core win over their flat field; a text that is undefined keeps the one below it.
+
 The fields name the buttons of the search line and of the filter drawer, the paginator of the skins `bs` and `nv`, the
-cell of tags without items and the messages of the states. For screen readers `rowCounterName` names the column of the
+cell of tags without items and the messages of the states. For screen readers `rowCounterLabel` names the column of the
 row numbers, whose title is short. A live region of the table has screen readers say the
-state of the table and the loading of row details from the server, `detailsLoading`. The skin `mat` takes the texts of its paginator from
+state of the table and the loading of row details from the server, `rowDetailsLoadingMessage`. The skin `mat` takes the texts of its paginator from
 `MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of the skins `bs` and `nv`
 takes its title and the name of its close button from its own property `texts`.
 
 The toolbar links of the skins `bs` and `nv` that act on the table, the search, the buttons and the menu, have the role
 `button`, as Bootstrap gives it to a link that goes nowhere, and take Space; the items of the menu of `bs` and the
 links of the paginator stay links, as in the markup of Bootstrap. The toolbar links say what they are with visually
-hidden words after their titles, for screen readers and search engines: `searchRole(title)` by the title of the toolbar
+hidden words after their titles, for screen readers and search engines, in `toolbarMain`: `searchRole(title)` by the title of the toolbar
 (Search for Orders, Search for rows without a title), `buttonRole` (Filters button, for search engines only: a screen
 reader hears the role), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs` (Print menu item).
 An empty string adds no words.

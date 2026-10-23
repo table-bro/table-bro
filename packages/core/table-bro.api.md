@@ -155,7 +155,7 @@ interface BroConfig<T extends object = BroRow> {
     theme?: BroUserTheme;
     components?: BroDeepPartial<BroSkinComponents>;
     css?: BroDeepPartial<BroConfigCSS>;
-    texts?: Partial<BroTexts>;
+    texts?: BroTextsConfig;
     shadowsEnabled?: boolean;
     styleNonce?: string;
     server?: boolean;
@@ -361,20 +361,21 @@ interface BroConfigCSS {
 interface BroTexts {
     rowCounter: string;
     rowCounterName: string;
+    detailsLoading: string;
     filters: string;
     close: string;
+    itemsPerPage: string;
+    nextPage: string;
+    previousPage: string;
+    firstPage: string;
+    lastPage: string;
+    rangeLabel: (page: number, pageSize: number, length: number) => string;
     pagination: string;
     pageNavigation: string;
-    itemsPerPage: string;
-    firstPage: string;
-    previousPage: string;
-    nextPage: string;
-    lastPage: string;
     first: string;
     previous: string;
     next: string;
     last: string;
-    rangeLabel: (page: number, pageSize: number, length: number) => string;
     loadingProgress: string;
     states: Partial<Record<keyof BroStates, string>>;
     search: string;
@@ -386,8 +387,88 @@ interface BroTexts {
     back: string;
     clear: string;
     noItems: string;
-    detailsLoading: string;
 }
+interface BroCoreTexts {
+    rowCounterTitle: string;
+    rowCounterLabel: string;
+    rowDetailsLoadingMessage: string;
+}
+interface BroFilterDrawerTexts {
+    title: string;
+    close: string;
+}
+interface BroPaginatorTexts {
+    itemsPerPageLabel: string;
+    nextPageLabel: string;
+    previousPageLabel: string;
+    firstPageLabel: string;
+    lastPageLabel: string;
+    getRangeLabel: (page: number, pageSize: number, length: number) => string;
+    label: string;
+    navigationLabel: string;
+    firstText: string;
+    previousText: string;
+    nextText: string;
+    lastText: string;
+}
+interface BroProgressBarTexts {
+    label: string;
+}
+type BroStateTexts = Record<keyof BroStates, string>;
+interface BroToolbarMainTexts {
+    search: string;
+    searchRole: (title: string) => string;
+    buttonRole: string;
+    menuRole: string;
+    menuItemRole: string;
+}
+interface BroToolbarSearchTexts {
+    field: string;
+    back: string;
+    clear: string;
+}
+type BroTextGroupName = keyof Pick<BroSkinComponents, "filterDrawer" | "paginator" | "progressBar" | "state" | "toolbarMain" | "toolbarSearch">;
+interface BroTextGroupTexts {
+    filterDrawer: BroFilterDrawerTexts;
+    paginator: BroPaginatorTexts;
+    progressBar: BroProgressBarTexts;
+    state: BroStateTexts;
+    toolbarMain: BroToolbarMainTexts;
+    toolbarSearch: BroToolbarSearchTexts;
+}
+type BroTextGroups = {
+    [K in BroTextGroupName]?: Partial<BroTextGroupTexts[K]>;
+};
+interface BroFlatTexts {
+    rowCounter?: BroTexts["rowCounter"];
+    rowCounterName?: BroTexts["rowCounterName"];
+    detailsLoading?: BroTexts["detailsLoading"];
+    filters?: BroTexts["filters"];
+    close?: BroTexts["close"];
+    itemsPerPage?: BroTexts["itemsPerPage"];
+    nextPage?: BroTexts["nextPage"];
+    previousPage?: BroTexts["previousPage"];
+    firstPage?: BroTexts["firstPage"];
+    lastPage?: BroTexts["lastPage"];
+    rangeLabel?: BroTexts["rangeLabel"];
+    pagination?: BroTexts["pagination"];
+    pageNavigation?: BroTexts["pageNavigation"];
+    first?: BroTexts["first"];
+    previous?: BroTexts["previous"];
+    next?: BroTexts["next"];
+    last?: BroTexts["last"];
+    loadingProgress?: BroTexts["loadingProgress"];
+    states?: BroTexts["states"];
+    search?: BroTexts["search"];
+    searchRole?: BroTexts["searchRole"];
+    buttonRole?: BroTexts["buttonRole"];
+    menuRole?: BroTexts["menuRole"];
+    menuItemRole?: BroTexts["menuItemRole"];
+    searchField?: BroTexts["searchField"];
+    back?: BroTexts["back"];
+    clear?: BroTexts["clear"];
+}
+type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & Partial<Pick<BroTexts, "noItems">> & BroFlatTexts;
 type BroFiltersTransform = {
     filtersTransform(rows: BroRow[], filters: BroFilters): BroRow[];
 }["filtersTransform"];
@@ -467,7 +548,7 @@ interface BroPaginatorPageEvent {
 interface BroFilterDrawerHTMLElement extends HTMLElement {
     opened: boolean;
     mode: "side" | "over";
-    texts?: Partial<BroTexts>;
+    texts?: BroTextsConfig;
     toggle(): void;
     addEventListener<T extends object = BroRow, A extends string = string>(type: "bro-action", listener: (this: BroFilterDrawerHTMLElement, event: CustomEvent<BroActionDetail<T, A>>) => void, options?: boolean | AddEventListenerOptions): void;
     addEventListener<K extends keyof BroFilterDrawerHTMLElementEventMap>(type: K, listener: (this: BroFilterDrawerHTMLElement, event: BroFilterDrawerHTMLElementEventMap[K]) => void, options?: boolean | AddEventListenerOptions): void;
@@ -498,7 +579,7 @@ export interface BroView {
     renderAnimation?(...args: unknown[]): void;
 }
 export declare function fitCellItems(row: HTMLElement, signal: AbortSignal): void;
-export declare function resolveTexts(texts?: Partial<BroTexts>): BroTexts;
+export declare function resolveTexts(texts?: BroTextsConfig): BroTexts;
 export declare class BroDom {
     readonly document: Document;
     constructor(document: Document);
@@ -674,5 +755,5 @@ export declare const broCellSelectors: Readonly<{
     ellipsis: string;
 }>;
 export declare const broVisuallyHidden: string;
-export { type BroActionDataMap, type BroActionDetail, type BroAdvancedFilterGroup, type BroAppendRowsOptions, type BroButton, type BroCellActionData, type BroCellElement, type BroCol, type BroColDataType, type BroColSort, type BroConfig, type BroConfigCSS, type BroConfigureOptions, type BroConfiguredElement, type BroCustomElementConfig, type BroCustomElementValueFn, type BroDeepPartial, type BroDropdown, type BroDropdownOption, type BroEmptyState, type BroErrorCode, type BroErrorDetail, type BroFilterCondition, type BroFilterDrawerHTMLElement, type BroFilterDrawerHTMLElementEventMap, type BroFilterValue, type BroFilters, type BroFiltersTransform, type BroPageChange, type BroPaginatorElement, type BroPaginatorPageEvent, type BroProgressBar, type BroProgressMode, type BroQuery, type BroReplaceRowsOptions, type BroResolvedConfig, type BroRow, type BroRowDetailsElement, type BroSkin, type BroSkinComponents, type BroSkinConfig, type BroSortDirection, type BroSortHeader, type BroSortSpec, type BroStates, type BroTableAction, type BroTableState, type BroTextEllipsis, type BroTexts, type BroToolbarElement, type BroToolbarMain, type TableBroHTMLElement, type TableBroHTMLElementEventMap, events_d_exports as events };
+export { type BroActionDataMap, type BroActionDetail, type BroAdvancedFilterGroup, type BroAppendRowsOptions, type BroButton, type BroCellActionData, type BroCellElement, type BroCol, type BroColDataType, type BroColSort, type BroConfig, type BroConfigCSS, type BroConfigureOptions, type BroConfiguredElement, type BroCoreTexts, type BroCustomElementConfig, type BroCustomElementValueFn, type BroDeepPartial, type BroDropdown, type BroDropdownOption, type BroEmptyState, type BroErrorCode, type BroErrorDetail, type BroFilterCondition, type BroFilterDrawerHTMLElement, type BroFilterDrawerHTMLElementEventMap, type BroFilterDrawerTexts, type BroFilterValue, type BroFilters, type BroFiltersTransform, type BroFlatTexts, type BroPageChange, type BroPaginatorElement, type BroPaginatorPageEvent, type BroPaginatorTexts, type BroProgressBar, type BroProgressBarTexts, type BroProgressMode, type BroQuery, type BroReplaceRowsOptions, type BroResolvedConfig, type BroRow, type BroRowDetailsElement, type BroSkin, type BroSkinComponents, type BroSkinConfig, type BroSortDirection, type BroSortHeader, type BroSortSpec, type BroStateTexts, type BroStates, type BroTableAction, type BroTableState, type BroTextEllipsis, type BroTextGroupName, type BroTextGroupTexts, type BroTextGroups, type BroTexts, type BroTextsConfig, type BroToolbarElement, type BroToolbarMain, type BroToolbarMainTexts, type BroToolbarSearchTexts, type TableBroHTMLElement, type TableBroHTMLElementEventMap, events_d_exports as events };
 ```

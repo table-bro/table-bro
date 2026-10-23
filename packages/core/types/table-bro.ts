@@ -350,8 +350,11 @@ export interface BroConfig<T extends object = BroRow> {
   components?: BroDeepPartial<BroSkinComponents>;
   /** The classes of the table: the config of the application changes those of the skin, at any depth. */
   css?: BroDeepPartial<BroConfigCSS>;
-  /** The texts of the table in the language of the application: a config gives the ones it changes. */
-  texts?: Partial<BroTexts>;
+  /**
+   * The texts of the table in the language of the application: a config gives the ones it changes, by the part of the
+   * table, as texts.paginator. The flat fields of 1.1.0 still work and are deprecated.
+   */
+  texts?: BroTextsConfig;
   /** The shadows of the table and of its regions, on by default; false leaves out the class css.shadow. */
   shadowsEnabled?: boolean;
   /**
@@ -848,39 +851,44 @@ export interface BroConfigCSS {
 }
 
 /**
- * The texts of the table: its words and the names of its controls, English by default. The skin mat takes the texts
- * of its paginator from MatPaginatorIntl of Angular Material, as its applications do.
+ * The texts of the table: its words and the names of its controls, English by default, as the skins read them. A config
+ * gives them by the part of the table, BroTextsConfig. The skin mat takes the texts of its paginator from
+ * MatPaginatorIntl of Angular Material, as its applications do.
  * @group Configuration
  */
 export interface BroTexts {
-  // The column of the row numbers
+  // Core texts
   /** The title of the column of the row numbers. */
   rowCounter: string;
   /** The name of the column of the row numbers for screen readers, whose short title they would read as a word. */
   rowCounterName: string;
+  /** What screen readers say when row details load from the server. */
+  detailsLoading: string;
 
-  // The filter drawer
+  // Skin component texts: filterDrawer
   /** The title of the filter drawer. */
   filters: string;
   /** The name of the close button of the filter drawer. */
   close: string;
 
-  // The paginator
-  /** The name of the paginator, the group of its controls. */
-  pagination: string;
-  /** The paginator of the vanilla skins: the name of its navigation, the label of its page sizes, the names of its buttons. */
-  pageNavigation: string;
+  // Skin component texts: paginator
   /** The label of the page sizes of the paginator. */
   itemsPerPage: string;
-  /** The name of the first page button. */
-  firstPage: string;
-  /** The name of the previous page button. */
-  previousPage: string;
   /** The name of the next page button. */
   nextPage: string;
+  /** The name of the previous page button. */
+  previousPage: string;
+  /** The name of the first page button. */
+  firstPage: string;
   /** The name of the last page button. */
   lastPage: string;
-  /** The paginator of the vanilla skins: the words of its buttons. */
+  /** The range of the rows of a page, as 1 – 5 of 20, by the index of the page: as getRangeLabel of MatPaginatorIntl. */
+  rangeLabel: (page: number, pageSize: number, length: number) => string;
+  /** The name of the paginator, the group of its controls. */
+  pagination: string;
+  /** The name of the navigation of the paginator of the vanilla skins. */
+  pageNavigation: string;
+  /** The word of the first page button of the paginator of the vanilla skins. */
   first: string;
   /** The word of the previous page button. */
   previous: string;
@@ -888,18 +896,16 @@ export interface BroTexts {
   next: string;
   /** The word of the last page button. */
   last: string;
-  /** The range of the rows of a page, as 1 – 5 of 20, by the index of the page: as getRangeLabel of MatPaginatorIntl. */
-  rangeLabel: (page: number, pageSize: number, length: number) => string;
 
-  // The progress bar
+  // Skin component texts: progressBar
   /** The name of the progress bar of the vanilla skins, bs and nv. */
   loadingProgress: string;
 
-  // The states
+  // Skin component texts: state
   /** The messages of the states; a state without one takes the message of the skin. */
   states: Partial<Record<keyof BroStates, string>>;
 
-  // The toolbar
+  // Skin component texts: toolbarMain
   /** The search button of the toolbar. */
   search: string;
   /**
@@ -927,22 +933,271 @@ export interface BroTexts {
    */
   menuItemRole: string;
 
-  // The search line
+  // Skin component texts: toolbarSearch
   /** The placeholder and the name of the field of the search line. */
   searchField: string;
-  /** The names of the buttons of the search line. */
+  /** The name of the back button of the search line. */
   back: string;
   /** The name of the clear button of the search line. */
   clear: string;
 
-  // The tags
+  // Skin tags texts
   /** A cell of tags without items. */
   noItems: string;
-
-  // The row details
-  /** What screen readers say when row details load from the server. */
-  detailsLoading: string;
 }
+
+/**
+ * The texts of the parts of the table that the core renders, which no component of a skin holds: flat at the top level
+ * of the texts of a config, named as the options of BroConfig, rowCounter* for the column of the row numbers and
+ * rowDetails* for the row details.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroCoreTexts {
+  /** The title of the column of the row numbers. */
+  rowCounterTitle: string;
+  /** The name of the column of the row numbers for screen readers, whose short title they would read as a word. */
+  rowCounterLabel: string;
+  /** The message of the live region of the table while row details load from the server, for screen readers. */
+  rowDetailsLoadingMessage: string;
+}
+
+/**
+ * The texts of the filter drawer, components.filterDrawer of a skin: the group filterDrawer of the texts of a config.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroFilterDrawerTexts {
+  /** The title of the filter drawer. */
+  title: string;
+  /** The name of the close button of the filter drawer. */
+  close: string;
+}
+
+/**
+ * The texts of the paginator, components.paginator of a skin: the group paginator of the texts of a config. Its labels
+ * have the names of MatPaginatorIntl of Angular Material; the skin mat takes them from its MatPaginatorIntl, as its
+ * applications do, and only label from here.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroPaginatorTexts {
+  /** The label of the page sizes of the paginator. */
+  itemsPerPageLabel: string;
+  /** The name of the next page button. */
+  nextPageLabel: string;
+  /** The name of the previous page button. */
+  previousPageLabel: string;
+  /** The name of the first page button. */
+  firstPageLabel: string;
+  /** The name of the last page button. */
+  lastPageLabel: string;
+  /** The range of the rows of a page, as 1 – 5 of 20, by the index of the page, as in MatPaginatorIntl. */
+  getRangeLabel: (page: number, pageSize: number, length: number) => string;
+  /** The name of the paginator, the group of its controls. */
+  label: string;
+  /** The name of the navigation of the paginator of the vanilla skins. */
+  navigationLabel: string;
+  /** The word of the first page button of the paginator of the vanilla skins. */
+  firstText: string;
+  /** The word of the previous page button of the paginator of the vanilla skins. */
+  previousText: string;
+  /** The word of the next page button of the paginator of the vanilla skins. */
+  nextText: string;
+  /** The word of the last page button of the paginator of the vanilla skins. */
+  lastText: string;
+}
+
+/**
+ * The texts of the progress bar of the vanilla skins bs and nv, components.progressBar of a skin: the group progressBar
+ * of the texts of a config.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroProgressBarTexts {
+  /** The name of the progress bar. */
+  label: string;
+}
+
+/**
+ * The messages of the states by their names, components.state of a skin: the group state of the texts of a config. A
+ * state without one takes the message of the skin.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export type BroStateTexts = Record<keyof BroStates, string>;
+
+/**
+ * The texts of the main line of the toolbar, components.toolbarMain of a skin: the group toolbarMain of the texts of a
+ * config.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroToolbarMainTexts {
+  /** The search button of the toolbar. */
+  search: string;
+  /**
+   * The words after the title of the search of the toolbar of the skins bs and nv, as visually hidden text, by the title
+   * of the toolbar: what it searches. Its link, as Search, gets a descriptive text for screen readers and search engines,
+   * Search for Orders, or Search for rows without a title. An empty string that it returns adds no text.
+   */
+  searchRole: (title: string) => string;
+  /**
+   * The word after the titles of the buttons of the toolbar of the skins bs and nv, as visually hidden text: their role.
+   * Their links, as Filters or Read more, get a descriptive text for search engines, Filters button. A screen reader
+   * hears the role button of the link and not the word. An empty word adds no text.
+   */
+  buttonRole: string;
+  /**
+   * The word after the title of the menu of the toolbar of the skin bs, as visually hidden text: its role. The link of
+   * the menu, as More, gets a descriptive text for screen readers and search engines, More menu. An empty word adds no
+   * text.
+   */
+  menuRole: string;
+  /**
+   * The words after the titles of the items of the menu of the toolbar of the skin bs, as visually hidden text: their
+   * role. Their links, as Print or Learn more, get a descriptive text for screen readers and search engines, Print menu
+   * item. An empty string adds no text.
+   */
+  menuItemRole: string;
+}
+
+/**
+ * The texts of the search line of the toolbar, components.toolbarSearch of a skin: the group toolbarSearch of the
+ * texts of a config.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroToolbarSearchTexts {
+  /** The placeholder and the name of the field of the search line. */
+  field: string;
+  /** The name of the back button of the search line. */
+  back: string;
+  /** The name of the clear button of the search line. */
+  clear: string;
+}
+
+/**
+ * The names of the groups of the texts of a config: the components of a skin whose texts they hold, by their keys in
+ * BroSkinComponents, as paginator for components.paginator. Pick takes only keys of BroSkinComponents, so a component
+ * renamed there fails to compile here.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export type BroTextGroupName = keyof Pick<BroSkinComponents, 'filterDrawer' | 'paginator' | 'progressBar' | 'state' | 'toolbarMain' | 'toolbarSearch'>;
+
+/**
+ * The texts of each part of the table, by the name of its group.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroTextGroupTexts {
+  /** The filter drawer. */
+  filterDrawer: BroFilterDrawerTexts;
+  /** The paginator. */
+  paginator: BroPaginatorTexts;
+  /** The progress bar. */
+  progressBar: BroProgressBarTexts;
+  /** The messages of the states. */
+  state: BroStateTexts;
+  /** The main line of the toolbar. */
+  toolbarMain: BroToolbarMainTexts;
+  /** The search line of the toolbar. */
+  toolbarSearch: BroToolbarSearchTexts;
+}
+
+/**
+ * The texts of a config by the part of the table: each group gives the texts of its part that the config changes, as
+ * {paginator: {nextPageLabel: 'Go to next page'}}.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export type BroTextGroups = {[K in BroTextGroupName]?: Partial<BroTextGroupTexts[K]>};
+
+/**
+ * The flat fields of the texts of a config of 1.1.0, which have a group or a name of the core since 1.2.0, as search for
+ * toolbarMain.search and rowCounter for rowCounterTitle. They still work and are deprecated: 2.0 removes them. A field in
+ * a group takes the place of its flat field.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export interface BroFlatTexts {
+  // Core texts
+  /** @deprecated Use texts.rowCounterTitle; the flat field is removed in 2.0. */
+  rowCounter?: BroTexts['rowCounter'];
+  /** @deprecated Use texts.rowCounterLabel; the flat field is removed in 2.0. */
+  rowCounterName?: BroTexts['rowCounterName'];
+  /** @deprecated Use texts.rowDetailsLoadingMessage; the flat field is removed in 2.0. */
+  detailsLoading?: BroTexts['detailsLoading'];
+
+  // Skin component texts: filterDrawer
+  /** @deprecated Use texts.filterDrawer.title; the flat field is removed in 2.0. */
+  filters?: BroTexts['filters'];
+  /** @deprecated Use texts.filterDrawer.close; the flat field is removed in 2.0. */
+  close?: BroTexts['close'];
+
+  // Skin component texts: paginator
+  /** @deprecated Use texts.paginator.itemsPerPageLabel; the flat field is removed in 2.0. */
+  itemsPerPage?: BroTexts['itemsPerPage'];
+  /** @deprecated Use texts.paginator.nextPageLabel; the flat field is removed in 2.0. */
+  nextPage?: BroTexts['nextPage'];
+  /** @deprecated Use texts.paginator.previousPageLabel; the flat field is removed in 2.0. */
+  previousPage?: BroTexts['previousPage'];
+  /** @deprecated Use texts.paginator.firstPageLabel; the flat field is removed in 2.0. */
+  firstPage?: BroTexts['firstPage'];
+  /** @deprecated Use texts.paginator.lastPageLabel; the flat field is removed in 2.0. */
+  lastPage?: BroTexts['lastPage'];
+  /** @deprecated Use texts.paginator.getRangeLabel; the flat field is removed in 2.0. */
+  rangeLabel?: BroTexts['rangeLabel'];
+  /** @deprecated Use texts.paginator.label; the flat field is removed in 2.0. */
+  pagination?: BroTexts['pagination'];
+  /** @deprecated Use texts.paginator.navigationLabel; the flat field is removed in 2.0. */
+  pageNavigation?: BroTexts['pageNavigation'];
+  /** @deprecated Use texts.paginator.firstText; the flat field is removed in 2.0. */
+  first?: BroTexts['first'];
+  /** @deprecated Use texts.paginator.previousText; the flat field is removed in 2.0. */
+  previous?: BroTexts['previous'];
+  /** @deprecated Use texts.paginator.nextText; the flat field is removed in 2.0. */
+  next?: BroTexts['next'];
+  /** @deprecated Use texts.paginator.lastText; the flat field is removed in 2.0. */
+  last?: BroTexts['last'];
+
+  // Skin component texts: progressBar
+  /** @deprecated Use texts.progressBar.label; the flat field is removed in 2.0. */
+  loadingProgress?: BroTexts['loadingProgress'];
+
+  // Skin component texts: state
+  /** @deprecated Use texts.state; the flat field is removed in 2.0. */
+  states?: BroTexts['states'];
+
+  // Skin component texts: toolbarMain
+  /** @deprecated Use texts.toolbarMain.search; the flat field is removed in 2.0. */
+  search?: BroTexts['search'];
+  /** @deprecated Use texts.toolbarMain.searchRole; the flat field is removed in 2.0. */
+  searchRole?: BroTexts['searchRole'];
+  /** @deprecated Use texts.toolbarMain.buttonRole; the flat field is removed in 2.0. */
+  buttonRole?: BroTexts['buttonRole'];
+  /** @deprecated Use texts.toolbarMain.menuRole; the flat field is removed in 2.0. */
+  menuRole?: BroTexts['menuRole'];
+  /** @deprecated Use texts.toolbarMain.menuItemRole; the flat field is removed in 2.0. */
+  menuItemRole?: BroTexts['menuItemRole'];
+
+  // Skin component texts: toolbarSearch
+  /** @deprecated Use texts.toolbarSearch.field; the flat field is removed in 2.0. */
+  searchField?: BroTexts['searchField'];
+  /** @deprecated Use texts.toolbarSearch.back; the flat field is removed in 2.0. */
+  back?: BroTexts['back'];
+  /** @deprecated Use texts.toolbarSearch.clear; the flat field is removed in 2.0. */
+  clear?: BroTexts['clear'];
+}
+
+/**
+ * The texts of a config: the texts of the table that it changes, by their groups, with the texts of the core and noItems
+ * of the tags flat at the top level. The flat fields of 1.1.0 still work and are deprecated.
+ * @group Configuration
+ * @since 1.2.0
+ */
+export type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & Partial<Pick<BroTexts, 'noItems'>> & BroFlatTexts;
 
 /**
  * The filters of the application in the local mode: the rows that the filters leave. The type of a method, whose
@@ -1188,8 +1443,8 @@ export interface BroFilterDrawerHTMLElement extends HTMLElement {
    * narrower than its minimum width; over: the drawer lies over the table always. Reflects the mode attribute.
    */
   mode: 'side' | 'over';
-  /** The texts of the drawer, as the texts of its table: its title and the name of its close button. */
-  texts?: Partial<BroTexts>;
+  /** The texts of the drawer, as the texts of its table: its title and the name of its close button, in filterDrawer. */
+  texts?: BroTextsConfig;
 
   /** Opens a closed drawer and closes an opened one. */
   toggle(): void;

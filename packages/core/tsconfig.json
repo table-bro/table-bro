@@ -21,6 +21,9 @@
   "include": [
     "./**/*"
   ],
+  "files": [
+    "./shared/config.spec.ts"
+  ],
   "exclude": [
     "**/*.spec.ts",
     "dist",
