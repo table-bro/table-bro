@@ -79,6 +79,10 @@ Or define an element itself: `customElements.define('bro-nv-tags', BroNativeTags
 and has the same functions on its global, as `TableBroNative.withTags()`. A table that uses an element that is not defined
 names its function in the console.
 
+A cell of tags without items shows No data: `withTags({texts: {empty: 'No tags'}})` gives the text of the
+application, and `setTagsTexts({empty})` changes it at any time, as when the language of the page changes; the tags on
+the page take it at once. Since 1.2.0; the deprecated `texts.noItems` of a config still works below them.
+
 | Element | Value |
 | --- | --- |
 | `bro-nv-tags` | An array of strings in `row[col.name]`; the tags that do not fit become an ellipsis |

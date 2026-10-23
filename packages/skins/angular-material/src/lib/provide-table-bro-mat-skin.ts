@@ -4,7 +4,7 @@ import {TABLE_BRO_ELEMENTS} from '@table-bro/angular';
 import {registerSkin}       from '@table-bro/core';
 
 import {BroMaterialSlideToggleComponent}                from './bro-slide-toggle.material.component';
-import {BroMaterialTagsComponent}                       from './bro-tags.material.component';
+import {BroMaterialTagsComponent, TableBroMatTagsTexts} from './bro-tags.material.component';
 import {defineTableBroMatElements, tableBroMatElements} from './define-table-bro-mat-elements';
 import {matSkinConfig}                                  from './table-bro.angular-material.config';
 import {BroMaterialToolbarMoreComponent}                from './toolbar/bro-toolbar-more.material.component';
@@ -13,6 +13,8 @@ import {BroMaterialToolbarMoreComponent}                from './toolbar/bro-tool
 export interface TableBroMatSkinFeature {
   /** The tag of the element and its component. */
   readonly elements: Record<string, Type<unknown>>;
+  /** Sets up the element when the application starts, in the injection context of the application. */
+  readonly init?: () => void;
 }
 
 /**
@@ -27,15 +29,29 @@ export function provideTableBroMatSkin(...features: TableBroMatSkinFeature[]): E
   return makeEnvironmentProviders([
     provideAppInitializer(() => {
       registerSkin('mat', matSkinConfig);
+      features.forEach(feature => feature.init?.());
       defineTableBroMatElements(inject(EnvironmentInjector), elements);
     }),
     {provide: TABLE_BRO_ELEMENTS, useValue: {skin: 'mat', elements: {...tableBroMatElements, ...elements}}, multi: true}
   ]);
 }
 
-/** The element bro-mat-tags: the items of a column as the chips of Material. */
-export function withTags(): TableBroMatSkinFeature {
-  return {elements: {'bro-mat-tags': BroMaterialTagsComponent}};
+/**
+ * The element bro-mat-tags: the items of a column as the chips of Material.
+ * @param options - the texts of the tags, as {texts: {empty: 'No tags'}}; TableBroMatTagsTexts changes them later
+ * @param options.texts - the texts of the tags
+ */
+export function withTags(options: {texts?: {empty?: string}} = {}): TableBroMatSkinFeature {
+  const empty = options.texts?.empty;
+
+  return {
+    elements: {'bro-mat-tags': BroMaterialTagsComponent},
+    init: () => {
+      if (empty !== undefined) {
+        inject(TableBroMatTagsTexts).empty.set(empty);
+      }
+    }
+  };
 }
 
 /** The element bro-mat-slide-toggle: a boolean of a column as a slide toggle. */

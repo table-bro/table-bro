@@ -80,7 +80,7 @@ describe('resolveTexts', () => {
     expect([texts.first, texts.previous, texts.next, texts.last, texts.rangeLabel]).toEqual(['Start', 'Return', 'Forward', 'End', range]);
     expect([texts.loadingProgress, texts.states, texts.detailsLoading]).toEqual(['Load progress', {'no-data': 'Nothing here'}, 'Fetching details']);
     expect(Object.keys(texts)).toEqual(Object.keys(english));
-    // The groups and the texts of the core hold every text of the table but noItems of the tags, at the top level
+    // The groups and the texts of the core hold every text of the table but the one of the tags, which the skin gives
     expect(Object.keys(texts).filter(key => texts[<keyof BroTexts>key] === english[<keyof BroTexts>key])).toEqual(['noItems']);
   });
 

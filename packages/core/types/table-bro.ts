@@ -1116,8 +1116,8 @@ export type BroTextGroups = {[K in BroTextGroupName]?: Partial<BroTextGroupTexts
 
 /**
  * The flat fields of the texts of a config of 1.1.0, which have a group or a name of the core since 1.2.0, as search for
- * toolbarMain.search and rowCounter for rowCounterTitle. They still work and are deprecated: 2.0 removes them. A field in
- * a group takes the place of its flat field.
+ * toolbarMain.search and rowCounter for rowCounterTitle, and noItems, which the tags of a skin take from withTags(). They still work and are deprecated: 2.0 removes them. A
+ * field in a group takes the place of its flat field.
  * @group Configuration
  * @since 1.2.0
  */
@@ -1189,15 +1189,19 @@ export interface BroFlatTexts {
   back?: BroTexts['back'];
   /** @deprecated Use texts.toolbarSearch.clear; the flat field is removed in 2.0. */
   clear?: BroTexts['clear'];
+
+  // Skin tags texts
+  /** @deprecated Use withTags({texts: {empty}}) of the skin; the flat field is removed in 2.0. */
+  noItems?: BroTexts['noItems'];
 }
 
 /**
- * The texts of a config: the texts of the table that it changes, by their groups, with the texts of the core and noItems
- * of the tags flat at the top level. The flat fields of 1.1.0 still work and are deprecated.
+ * The texts of a config: the texts of the table that it changes, by their groups, with the texts of the core flat at the
+ * top level. The flat fields of 1.1.0 still work and are deprecated.
  * @group Configuration
  * @since 1.2.0
  */
-export type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & Partial<Pick<BroTexts, 'noItems'>> & BroFlatTexts;
+export type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & BroFlatTexts;
 
 /**
  * The filters of the application in the local mode: the rows that the filters leave. The type of a method, whose

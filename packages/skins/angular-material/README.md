@@ -68,6 +68,11 @@ provideTableBroMatSkin(withTags(), withSwitch(), withToolbarMenu())
 
 In the dev mode a table that uses an optional element without its function writes the function to add in the console.
 
+A cell of tags without items shows No data: `withTags({texts: {empty: 'No tags'}})` gives the text of the
+application, and the signal `empty` of the service `TableBroMatTagsTexts` changes it at any time, as when the language of
+the page changes: `inject(TableBroMatTagsTexts).empty.set('No tags')`. Since 1.2.0; the deprecated `texts.noItems`
+of a config still works below them.
+
 The skin shows the ligature icons of Material. Load the font in `index.html`:
 
 ```html

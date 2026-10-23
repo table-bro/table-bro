@@ -4,6 +4,27 @@ Written by `npm run check:api -- --update` from the types of the build, without 
 
 ```ts
 import { BroCellElement, BroCol, BroConfiguredElement, BroHTMLElement, BroResolvedConfig, BroRow, BroView } from "@table-bro/core";
+interface BroTagsTexts {
+    empty: string;
+}
+export declare function setTagsTexts(texts: Partial<BroTagsTexts>): void;
+declare abstract class BroTagsComponent extends BroHTMLElement implements BroView, BroCellElement, BroConfiguredElement {
+    template(): string;
+    row?: BroRow;
+    col?: BroCol;
+    config?: BroResolvedConfig;
+    items: string[];
+    private empty;
+    private fitting?;
+    private rendered;
+    render(): void;
+    renderEmpty(): void;
+    private renderTag;
+    private emptyText;
+    protected abstract readonly tagHTML: string;
+    connectedCallback(): void;
+    disconnectedCallback(): void;
+}
 export declare const bootstrapSkinConfig: {
     themeAttribute: string;
     css: {
@@ -147,19 +168,6 @@ export declare const bootstrapSkinConfig: {
     };
     defineElements: (registry: CustomElementRegistry) => void;
 };
-declare abstract class BroTagsComponent extends BroHTMLElement implements BroView, BroCellElement, BroConfiguredElement {
-    template(): string;
-    row?: BroRow;
-    col?: BroCol;
-    config?: BroResolvedConfig;
-    items: string[];
-    private fitting?;
-    private rendered;
-    render(): void;
-    protected abstract readonly tagHTML: string;
-    connectedCallback(): void;
-    disconnectedCallback(): void;
-}
 export declare class BroBootstrapTagsComponent extends BroTagsComponent {
     protected readonly tagHTML: string;
 }
@@ -188,6 +196,8 @@ interface BroBootstrapInstance {
     dispose(): void;
 }
 export declare function useBootstrap(bootstrap: BroBootstrapClasses): void;
-export declare function withTags(): void;
-export type { BroBootstrapClasses, BroBootstrapInstance };
+export declare function withTags(options?: {
+    texts?: Partial<BroTagsTexts>;
+}): void;
+export type { BroBootstrapClasses, BroBootstrapInstance, BroTagsTexts };
 ```

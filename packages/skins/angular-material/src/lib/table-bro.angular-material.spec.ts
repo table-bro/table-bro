@@ -8,7 +8,7 @@ import {type BroActionDetail, dispatchAction, events, registerSkin, resolveTexts
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {BroMaterialSortHeaderComponent}                                from './bro-sort-header.material.component';
-import {BroMaterialTagsComponent}                                      from './bro-tags.material.component';
+import {BroMaterialTagsComponent, TableBroMatTagsTexts}                from './bro-tags.material.component';
 import {defineTableBroMatElements}                                     from './define-table-bro-mat-elements';
 import {provideTableBroMatSkin, withSwitch, withTags, withToolbarMenu} from './provide-table-bro-mat-skin';
 import {TableBroFilterDrawerContainerNg}                               from './table-bro-filter-drawer-container-ng';
@@ -102,6 +102,14 @@ describe('BroMaterialTagsComponent', () => {
     await fixture.whenStable();
 
     expect(chips()).toEqual(['Nothing']);
+
+    // The text of TableBroMatTagsTexts goes over the one of the config, into the chips in the DOM
+    TestBed.inject(TableBroMatTagsTexts).empty.set('No tags');
+    await fixture.whenStable();
+
+    expect(chips()).toEqual(['No tags']);
+
+    TestBed.inject(TableBroMatTagsTexts).empty.set(undefined);
   });
 });
 

@@ -105,9 +105,10 @@ defines the update and its frame.
 
 Rule 4 and the rules below hold by review, as a search cannot check them:
 
-- **4.** Mutable state at the level of a module that changes what a table does exists in three places only: the
-  registry of the skins, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, and the extension module
-  that `useIslandDetails()` connects. Apart from them modules keep caches only: weak maps by element, class or table,
+- **4.** Mutable state at the level of a module that changes what a table does exists in four places only: the
+  registry of the skins, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, the extension module
+  that `useIslandDetails()` connects, and the texts of the optional elements of a skin, which `withTags()` and
+  `setTagsTexts()` of `bs` and `nv` set, with the set of their elements in the DOM that takes a new text. Apart from them modules keep caches only: weak maps by element, class or table,
   one shared `ResizeObserver` of the items of cells, and a canvas and a range for measurements.
 - Only the controller writes `ctx.state`.
 - A new class takes `ctx` as its first parameter and takes no objects of the table as separate parameters.

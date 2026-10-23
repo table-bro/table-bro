@@ -4,6 +4,27 @@ Written by `npm run check:api -- --update` from the types of the build, without 
 
 ```ts
 import { BroCellElement, BroCol, BroConfiguredElement, BroHTMLElement, BroResolvedConfig, BroRow, BroView } from "@table-bro/core";
+interface BroTagsTexts {
+    empty: string;
+}
+export declare function setTagsTexts(texts: Partial<BroTagsTexts>): void;
+declare abstract class BroTagsComponent extends BroHTMLElement implements BroView, BroCellElement, BroConfiguredElement {
+    template(): string;
+    row?: BroRow;
+    col?: BroCol;
+    config?: BroResolvedConfig;
+    items: string[];
+    private empty;
+    private fitting?;
+    private rendered;
+    render(): void;
+    renderEmpty(): void;
+    private renderTag;
+    private emptyText;
+    protected abstract readonly tagHTML: string;
+    connectedCallback(): void;
+    disconnectedCallback(): void;
+}
 export declare const nativeSkinConfig: {
     css: {
         table: {
@@ -136,19 +157,6 @@ export declare const nativeSkinConfig: {
     };
     defineElements: (registry: CustomElementRegistry) => void;
 };
-declare abstract class BroTagsComponent extends BroHTMLElement implements BroView, BroCellElement, BroConfiguredElement {
-    template(): string;
-    row?: BroRow;
-    col?: BroCol;
-    config?: BroResolvedConfig;
-    items: string[];
-    private fitting?;
-    private rendered;
-    render(): void;
-    protected abstract readonly tagHTML: string;
-    connectedCallback(): void;
-    disconnectedCallback(): void;
-}
 export declare class BroNativeTagsComponent extends BroTagsComponent {
     protected readonly tagHTML: string;
 }
@@ -164,6 +172,8 @@ export declare class BroSwitchComponent extends BroHTMLElement implements BroVie
     connectedCallback(): void;
 }
 export declare function withSwitch(): void;
-export declare function withTags(): void;
-export {};
+export declare function withTags(options?: {
+    texts?: Partial<BroTagsTexts>;
+}): void;
+export type { BroTagsTexts };
 ```

@@ -467,8 +467,9 @@ interface BroFlatTexts {
     searchField?: BroTexts["searchField"];
     back?: BroTexts["back"];
     clear?: BroTexts["clear"];
+    noItems?: BroTexts["noItems"];
 }
-type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & Partial<Pick<BroTexts, "noItems">> & BroFlatTexts;
+type BroTextsConfig = Partial<BroCoreTexts> & BroTextGroups & BroFlatTexts;
 type BroFiltersTransform = {
     filtersTransform(rows: BroRow[], filters: BroFilters): BroRow[];
 }["filtersTransform"];

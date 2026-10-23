@@ -2,7 +2,7 @@ import {type BroConfigureOptions, type BroResolvedConfig, prerenderTableBro, res
 
 import {afterEach, describe, expect, it} from 'vitest';
 
-import {nativeSkinConfig, withSwitch, withTags} from './table-bro.native';
+import {nativeSkinConfig, setTagsTexts, withSwitch, withTags} from './table-bro.native';
 
 // The optional elements, as a page with tags and switches defines them after the import of the skin
 withTags();
@@ -67,6 +67,28 @@ describe('the native tags', () => {
 
     expect(Array.from(tags.querySelectorAll('mark')).map(mark => mark.textContent)).toEqual(['<i>a</i>', 'b']);
     expect(empty.textContent).toBe('Nothing');
+  });
+
+  it('take the text of a cell without items from setTagsTexts() over the one of the config, also in the DOM', () => {
+    const tags = {col: {name: 'tags'}, row: {tags: []}};
+    const empty = element('bro-nv-tags', {}, tags);
+    const full = element('bro-nv-tags', {}, {col: {name: 'tags'}, row: {tags: ['a']}});
+
+    setTagsTexts({empty: 'No tags'});
+
+    expect([empty.textContent, full.textContent]).toEqual(['No tags', 'a']);
+    expect(element('bro-nv-tags', {}, tags).textContent).toBe('No tags');
+
+    // Tags out of the DOM take the new text when they connect again
+    empty.remove();
+    setTagsTexts({empty: 'Empty'});
+    document.body.append(empty);
+
+    expect(empty.textContent).toBe('Empty');
+
+    setTagsTexts({empty: undefined});
+
+    expect(element('bro-nv-tags', {}, tags).textContent).toBe('Nothing');
   });
 });
 

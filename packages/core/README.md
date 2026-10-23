@@ -148,12 +148,14 @@ Since 1.2.0 the texts of the parts that the core renders are flat, named as the 
 The texts of a component of the skin go in a group named as the component, in the order of the components of a skin
 config, and the fields of a group have short names: `filterDrawer` (`title`, `close`), `paginator`, whose labels have
 the names of `MatPaginatorIntl`, as `itemsPerPageLabel` and `getRangeLabel`, `progressBar` (`label`), `state`, with the
-messages of the states by their names, `toolbarMain` and `toolbarSearch`.
+messages of the states by their names, `toolbarMain` and `toolbarSearch`. The text of a cell of tags without items
+belongs to the tags of the skin: `withTags({texts: {empty: 'No tags'}})`, and later `setTagsTexts()` of `bs` and `nv` or
+`TableBroMatTagsTexts` of `mat`.
 The flat fields of 1.1.0, as `{itemsPerPage: 'Rows per page:'}`, still work and are deprecated; they are removed in 2.0. A
 field in a group and a text of the core win over their flat field; a text that is undefined keeps the one below it.
 
-The fields name the buttons of the search line and of the filter drawer, the paginator of the skins `bs` and `nv`, the
-cell of tags without items and the messages of the states. For screen readers `rowCounterLabel` names the column of the
+The fields name the buttons of the search line and of the filter drawer, the paginator of the skins `bs` and `nv` and
+the messages of the states. For screen readers `rowCounterLabel` names the column of the
 row numbers, whose title is short. A live region of the table has screen readers say the
 state of the table and the loading of row details from the server, `rowDetailsLoadingMessage`. The skin `mat` takes the texts of its paginator from
 `MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of the skins `bs` and `nv`
