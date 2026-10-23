@@ -1270,3 +1270,74 @@ for (const skin of ['mat', 'bs', 'nv'] as const) {
     expect(await ring()).toBe(true);
   });
 }
+
+test('Escape in the filter drawer of the mat skin closes it and gives the focus back to its Filters button', {tag: '@smoke'}, async ({page}) => {
+  await page.goto('/', {waitUntil: 'networkidle'});
+  await page.getByText('Angular Material').dispatchEvent('click');
+
+  const container = page.locator('table-bro-filter-drawer-container-ng');
+  const table = container.locator('table-bro');
+  const filters = table.getByRole('button', {name: 'Filters', exact: true});
+  const opened = () => container.locator('mat-drawer').evaluate(element => element.classList.contains('mat-drawer-opened'));
+
+  await expect(bodyTable(table).locator('tbody > tr[data-row-number]').first()).toBeVisible();
+
+  // Escape on the close button and in a field of the filters, as in the drawer of Material
+  for (const target of [container.getByRole('button', {name: 'Close', exact: true}), container.locator('input[name="featureName"]')]) {
+    await filters.click();
+    await expect.poll(opened).toBe(true);
+    await expect.poll(() => page.evaluate(() => document.getAnimations().filter(animation => animation instanceof CSSTransition).length)).toBe(0);
+
+    await target.focus();
+    await page.keyboard.press('Escape');
+    await expect.poll(opened).toBe(false);
+    await expect(filters).toBeFocused();
+  }
+});
+
+test('Enter and Space sort a column of the mat skin as a click on the sort header of Material does', {tag: '@smoke'}, async ({page}) => {
+  const header = (table: Locator) => table.locator('table.bro-table-header th').nth(2).locator('[role="button"]');
+  let table = await mount(page, detailsTable('mat'));
+  const clicked: string[][] = [];
+
+  await expect.poll(() => cellTexts(table, 3)).toEqual(['3', '1', '2']);
+
+  for (let i = 0; i < 2; i++) {
+    const before = (await cellTexts(table, 3)).join();
+
+    await header(table).click();
+    await expect.poll(async () => (await cellTexts(table, 3)).join()).not.toBe(before);
+    clicked.push(await cellTexts(table, 3));
+  }
+
+  table = await mount(page, detailsTable('mat'));
+  await expect.poll(() => cellTexts(table, 3)).toEqual(['3', '1', '2']);
+
+  await header(table).focus();
+  await page.keyboard.press('Enter');
+  await expect.poll(() => cellTexts(table, 3)).toEqual(clicked[0]);
+
+  await page.keyboard.press(' ');
+  await expect.poll(() => cellTexts(table, 3)).toEqual(clicked[1]);
+  await expect(header(table)).toBeFocused();
+});
+
+for (const skin of ['mat', 'bs', 'nv']) {
+  test(`Enter and Space open and close the row details of the ${skin} skin, and the focus stays on the details button`, {tag: '@smoke'}, async ({page}) => {
+    const table = await mount(page, detailsTable(skin));
+
+    await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
+
+    const button = bodyTable(table).locator('tr[data-row-number="1"]').getByRole('button', {name: 'Details'});
+    const details = bodyTable(table).locator('tr.bro-details_tr');
+
+    await button.focus();
+
+    for (const [key, open] of [['Enter', true], [' ', false], [' ', true], ['Enter', false]] as const) {
+      await page.keyboard.press(key);
+      await expect(details).toHaveCount(open ? 1 : 0);
+      await expect(button).toHaveAttribute('aria-expanded', `${open}`);
+      await expect(button).toBeFocused();
+    }
+  });
+}
