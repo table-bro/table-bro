@@ -103,8 +103,9 @@ describe('generateCode', () => {
     expect(page).toContain("customElements.define('bro-cell-order-actions', createCustomElement(OrderActionsCell, {injector: this.injector}));");
     expect(page).toContain("rowDetailsComponent: 'bro-cell-order-details'");
     expect(page).toContain("shortColumnTitle: (col: BroCol<Order>) => shortTitles[col.title] ?? col.title?.split(' ')[0]");
-    // The message of a state goes into the texts, and the icon stays the one of the skin, also an animation of Lottie
-    expect(page).toContain("        'no-data': 'No orders yet',");
+    // The message of a state goes into the group state of the texts, and the icon stays the one of the skin, also an
+    // animation of Lottie
+    expect(page).toContain("      state: {\n        'no-data': 'No orders yet',");
     expect(page).not.toContain('components.state.states');
     expect(page.indexOf('  cols = signal<BroCol<Order>[]>(')).toBeLessThan(page.indexOf('  rows = signal<Order[] | undefined>([\n    {\n'));
     expect(page.indexOf('  rows = signal<Order[] | undefined>(')).toBeLessThan(page.indexOf('  conf = signal<BroConfig<Order>>('));

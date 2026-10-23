@@ -63,12 +63,12 @@ export function configCode(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroS
 
   merge(components, {toolbarMain: {buttons: toolbarButtons(spec, skin, hasFilters)}});
 
-  // The messages of the states go into the texts: the icons stay the ones of the skin, a font icon, an emoji or an
-  // animation of Lottie, which the page may give the skin
+  // The messages of the states go into the group state of the texts: the icons stay the ones of the skin, a font icon,
+  // an emoji or an animation of Lottie, which the page may give the skin
   const states = Object.entries(spec.stateMessages ?? {});
 
   if (states.length) {
-    value['texts'] = {states: Object.fromEntries(states)};
+    value['texts'] = {state: Object.fromEntries(states)};
   }
 
   for (const callback of spec.skinConfig?.[skin]?.callbacks ?? []) {

@@ -115,6 +115,24 @@ describe('the knowledge of the MCP and the sources of Table, Bro', () => {
     }
   });
 
+  it('names the texts of the core and their groups', () => {
+    const texts = topicText('config').split('\n').find(line => line.startsWith('| `texts` |'))!;
+    const named = new Set([...texts.matchAll(/`([a-zA-Z]+)[`(]/g)].map(match => match[1]));
+    const groups = checker.getPropertiesOfType(interfaceType('BroTextGroupTexts'));
+    // The fields of the group state are the names of the states, which the reference names with the states
+    const groupFields = groups.filter(group => group.name !== 'state').flatMap(group => checker.getPropertiesOfType(checker.getTypeOfSymbol(group)).map(symbol => symbol.name));
+    const coreTexts = checker.getPropertiesOfType(interfaceType('BroCoreTexts')).map(symbol => symbol.name);
+    const fields = checker.getPropertiesOfType(interfaceType('BroTexts')).map(symbol => symbol.name);
+
+    expect(groups.length).toBeGreaterThan(0);
+    // Every field of BroTexts has its deprecated flat field, and the reference names its new place
+    expect(fields.filter(field => !checker.getPropertiesOfType(interfaceType('BroFlatTexts')).some(symbol => symbol.name === field))).toEqual([]);
+
+    for (const name of [...groups.map(group => group.name), ...groupFields, ...coreTexts]) {
+      expect(named.has(name), name).toBe(true);
+    }
+  });
+
   it('has the functions of the skin config of the core', () => {
     const components = interfaceType('BroSkinComponents');
     const functions = checker.getPropertiesOfType(components).flatMap(component => {
