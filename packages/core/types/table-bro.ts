@@ -1447,7 +1447,11 @@ export interface BroFilterDrawerHTMLElement extends HTMLElement {
    * narrower than its minimum width; over: the drawer lies over the table always. Reflects the mode attribute.
    */
   mode: 'side' | 'over';
-  /** The texts of the drawer, as the texts of its table: its title and the name of its close button, in filterDrawer. */
+  /**
+   * The texts of the drawer, as the texts of its table: its title and the name of its close button, in filterDrawer.
+   * Set, they replace the texts of the config of the table, which the drawer takes otherwise.
+   * @deprecated Set texts.filterDrawer in the config of the table; the property is removed in 2.0.
+   */
   texts?: BroTextsConfig;
 
   /** Opens a closed drawer and closes an opened one. */

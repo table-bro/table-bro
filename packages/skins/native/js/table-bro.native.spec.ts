@@ -1,4 +1,4 @@
-import {type BroConfigureOptions, type BroResolvedConfig, prerenderTableBro, resolveTexts, type TableBroHTMLElement} from '@table-bro/core';
+import {type BroConfigureOptions, type BroResolvedConfig, type BroTextsConfig, defineTableBroFilterDrawerContainer, prerenderTableBro, resolveTexts, type TableBroHTMLElement} from '@table-bro/core';
 
 import {afterEach, describe, expect, it} from 'vitest';
 
@@ -161,5 +161,93 @@ describe('a prerendered native table', () => {
     expect(table.hasAttribute('data-bro-prerender')).toBe(false);
     expect(headers()).toEqual([1, 1]);
     expect(toolbars()).toBe(1);
+  });
+});
+
+describe('the filter drawer of the core around a native table', () => {
+  /** A drawer with its table on the page, as in the markup, and the title and the name of the close button of its header. */
+  function drawerWithTable() {
+    const drawer = document.createElement('table-bro-filter-drawer-container');
+    const table = <HTMLElement & TableBroHTMLElement>drawer.appendChild(document.createElement('table-bro'));
+    const filters = drawer.appendChild(document.createElement('form'));
+    const header = () => [drawer.querySelector('.bro-filter-drawer-title')?.textContent, drawer.querySelector('.bro-filter-drawer-close')?.getAttribute('label'), filters.getAttribute('aria-label')];
+    const configure = (texts?: BroTextsConfig) => table.configure({cols: [], conf: {skin: 'nv', texts}});
+
+    drawer.setAttribute('skin', 'nv');
+    filters.setAttribute('slot', 'filters');
+    document.body.append(drawer);
+
+    return {drawer, configure, header};
+  }
+
+  // The first test: the element is not defined yet
+  it('takes the texts of a table that rendered before the element was defined', () => {
+    const {configure, header} = drawerWithTable();
+
+    configure({filterDrawer: {title: 'Refine'}});
+    expect(header()).toEqual([undefined, undefined, null]);
+
+    defineTableBroFilterDrawerContainer();
+    expect(header()).toEqual(['Refine', 'Close', 'Refine']);
+  });
+
+  it('takes its title, the name of its close button and of its filters from the config of its table configured after it, when it opens', () => {
+    const {drawer, configure, header} = drawerWithTable();
+
+    configure({filterDrawer: {title: 'Refine', close: 'Dismiss'}});
+    drawer.opened = true;
+    expect(header()).toEqual(['Refine', 'Dismiss', 'Refine']);
+
+    // A new config of the table shows at the next opening
+    configure({filters: 'Narrow down'});
+    drawer.toggle();
+    drawer.toggle();
+    expect(header()).toEqual(['Narrow down', 'Close', 'Narrow down']);
+  });
+
+  it('keeps the flat text or the English one under a text of the group that is undefined', () => {
+    const {drawer, configure, header} = drawerWithTable();
+
+    configure({filters: 'Refine', filterDrawer: {title: undefined, close: undefined}});
+    drawer.opened = true;
+    expect(header()).toEqual(['Refine', 'Close', 'Refine']);
+  });
+
+  it('shows the English texts when it opens before its table has a config', () => {
+    const {drawer, header} = drawerWithTable();
+
+    drawer.opened = true;
+    expect(header()).toEqual(['Filters', 'Close', 'Filters']);
+  });
+
+  it('takes its own texts over the ones of the table while they are set', () => {
+    const {drawer, configure, header} = drawerWithTable();
+
+    configure({filterDrawer: {title: 'Refine'}});
+    drawer.texts = {filterDrawer: {close: 'Hide'}};
+    drawer.opened = true;
+    expect(header()).toEqual(['Filters', 'Hide', 'Filters']);
+
+    drawer.texts = undefined;
+    expect(header()).toEqual(['Refine', 'Close', 'Refine']);
+  });
+
+  it('keeps a name of the filters that the page gave them', () => {
+    const {drawer, configure, header} = drawerWithTable();
+
+    drawer.querySelector('form')!.setAttribute('aria-label', 'Order filters');
+    configure({filterDrawer: {title: 'Refine'}});
+    drawer.opened = true;
+    expect(header()).toEqual(['Refine', 'Close', 'Order filters']);
+  });
+
+  it('takes the texts of its own table, not of a table in the drawer after it', () => {
+    const {drawer, configure, header} = drawerWithTable();
+    const inner = <HTMLElement & TableBroHTMLElement>drawer.querySelector('form')!.appendChild(document.createElement('table-bro'));
+
+    configure({filterDrawer: {title: 'Refine'}});
+    inner.configure({cols: [], conf: {skin: 'nv', texts: {filterDrawer: {title: 'Details'}}}});
+    drawer.opened = true;
+    expect(header()).toEqual(['Refine', 'Close', 'Refine']);
   });
 });

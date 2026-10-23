@@ -1,10 +1,11 @@
-import {resolveTexts}                                                                                                                     from '../../../shared/config';
-import {BroDom}                                                                                                                           from '../../../shared/dom';
-import {actionEvent, columnsWidthEvent, filtersCloseEvent, filtersOpenEvent, filtersToggleEvent}                                          from '../../../shared/events';
-import {BroHTMLElement, classAttr}                                                                                                        from '../../../shared/html';
-import {dispatchAction, focusableSelector}                                                                                                from '../../../shared/interaction';
-import {getSkin}                                                                                                                          from '../../../shared/skins';
-import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, BroSkin, BroSkinConfig, BroTextsConfig, BroToolbarElement} from '../../../types/table-bro';
+import {resolveTexts}                                                                                                                               from '../../../shared/config';
+import {BroDom}                                                                                                                                     from '../../../shared/dom';
+import {actionEvent, columnsWidthEvent, filtersCloseEvent, filtersOpenEvent, filtersToggleEvent}                                                    from '../../../shared/events';
+import {BroHTMLElement, classAttr}                                                                                                                  from '../../../shared/html';
+import {dispatchAction, focusableSelector}                                                                                                          from '../../../shared/interaction';
+import {getSkin}                                                                                                                                    from '../../../shared/skins';
+import type {BroConfiguredElement, BroEventDetail, BroFilterDrawerHTMLElement, BroSkin, BroSkinConfig, BroTexts, BroTextsConfig, BroToolbarElement} from '../../../types/table-bro';
+import {renderedTables}                                                                                                                             from '../../dom/table-container/table-body-container/scrolling-container/table/tbody/tr/td/content/td-content.view';
 
 /**
  * Defines <table-bro-filter-drawer-container> on demand: the core does not define it on import, the application calls
@@ -54,6 +55,8 @@ export function registerFilterDrawerProperties(): void {
  * A table that would get narrower than its minimum width next to the drawer keeps its width: the modal attribute lays
  * the drawer over it with a scrim, as the modal side sheet of Material 3 on a compact window. A click on the scrim
  * closes the drawer. The attribute mode="over" lays the drawer over the table always.
+ * The title and the name of the close button come from texts.filterDrawer of the config of the table, which the drawer
+ * reads when it renders and opens: a new configure() of the table changes them at the next opening.
  */
 export class TableBroFilterDrawerContainer extends BroHTMLElement implements BroFilterDrawerHTMLElement {
   static get observedAttributes(): string[] {
@@ -61,6 +64,8 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
   }
 
   private ownTexts?: BroTextsConfig;
+  /** The name that the drawer gave to the filters of the page, which had no name of the page. */
+  private filtersLabel?: string;
 
   /** The element that opened the drawer, as the Filters button of the table: it says whether the drawer is expanded, and the focus goes back to it. */
   private opener: HTMLElement | null = null;
@@ -150,7 +155,11 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     this.renderFiltersRegion();
   }
 
-  /** The texts of the drawer, as the texts of its table: its title and the name of its close button. */
+  /**
+   * The texts of the drawer, as the texts of its table: its title and the name of its close button. Set, they replace
+   * the texts of the config of the table.
+   * @deprecated Set texts.filterDrawer in the config of the table; the property is removed in 2.0.
+   */
   get texts(): BroTextsConfig | undefined {
     return this.ownTexts;
   }
@@ -197,6 +206,8 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     if (name === 'opened') {
       if ((oldValue === null) !== (value === null)) {
         if (this.opened) {
+          // The table may have got a new config since the last render: the drawer shows its texts
+          this.render();
           this.toggleAttribute('modal', this.mode === 'over' || !this.fitsNextToDrawer(this.querySelector('table-bro')));
         }
 
@@ -324,8 +335,9 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
       filters.setAttribute('role', 'region');
     }
 
-    if (!filters.hasAttribute('aria-label') && !filters.hasAttribute('aria-labelledby')) {
-      filters.setAttribute('aria-label', resolveTexts(this.ownTexts).filters);
+    // The name that the drawer gave follows its title
+    if (filters.getAttribute('aria-label') === this.filtersLabel || (!filters.hasAttribute('aria-label') && !filters.hasAttribute('aria-labelledby'))) {
+      filters.setAttribute('aria-label', this.filtersLabel = this.resolvedTexts().filters);
     }
 
     this.opener?.setAttribute('aria-controls', filters.id);
@@ -364,6 +376,11 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     this.renderFiltersRegion();
   }
 
+  /** The texts of the drawer: its own ones of 1.1.0, else the ones of the config of its table. */
+  private resolvedTexts(): BroTexts {
+    return resolveTexts(this.ownTexts ?? renderedTables.get(<Element>this.querySelector('table-bro'))?.config.texts);
+  }
+
   private renderHeader(skin: BroSkinConfig): HTMLElement {
     const dom = new BroDom(this.ownerDocument);
     const toolbar = dom.createElement<BroToolbarElement & BroConfiguredElement>(skin.components.toolbar.selector);
@@ -373,7 +390,7 @@ export class TableBroFilterDrawerContainer extends BroHTMLElement implements Bro
     toolbar.setAttribute('class', 'bro-toolbar');
 
     const titleClassName = skin.components.toolbarMain.css?.toolbarTitle.className;
-    const texts = resolveTexts(this.ownTexts);
+    const texts = this.resolvedTexts();
     const title = dom.createFromHTML(`<span ${classAttr('bro-filter-drawer-title', titleClassName)}></span>`);
     const closeButton: HTMLElement = dom.createElement(skin.components.button.selector);
 

@@ -1724,7 +1724,7 @@ test('the texts of the config name the parts of the table in the language of the
   await expect(empty.locator('.bro-toolbar-button-search')).toHaveAttribute('aria-label', 'Find');
 });
 
-test('the vanilla filter drawer takes its title and the name of its close button from its texts', async ({page}) => {
+test('the vanilla filter drawer takes its title and the name of its close button from its own texts of 1.1.0', async ({page}) => {
   await page.goto('/', {waitUntil: 'networkidle'});
 
   await page.evaluate(() => {
@@ -1767,13 +1767,17 @@ test('the groups of the texts of the config name the same parts of the table, ov
 
   await expect(mat.locator('.bro-toolbar-button-search')).toHaveAttribute('aria-label', 'Find');
 
+  // The drawer takes the group filterDrawer of the config of its table
   await page.evaluate(() => {
-    const drawer = document.createElement('table-bro-filter-drawer-container') as BroFilterDrawerHTMLElement;
+    const drawer = document.createElement('table-bro-filter-drawer-container');
+    const table = document.createElement('table-bro') as TableBroHTMLElement;
 
     drawer.id = 'e2e-grouped-drawer';
     drawer.setAttribute('skin', 'nv');
+    table.configure({cols: [{title: 'Name', name: 'name'}], rows: [], conf: {skin: 'nv', texts: {filters: 'Filters', filterDrawer: {title: 'Refine', close: 'Dismiss'}}}});
+    drawer.append(table);
     document.body.append(drawer);
-    drawer.texts = {filterDrawer: {title: 'Refine', close: 'Dismiss'}};
+    (drawer as BroFilterDrawerHTMLElement).opened = true;
   });
 
   const drawer = page.locator('#e2e-grouped-drawer');

@@ -158,8 +158,8 @@ The fields name the buttons of the search line and of the filter drawer, the pag
 the messages of the states. For screen readers `rowCounterLabel` names the column of the
 row numbers, whose title is short. A live region of the table has screen readers say the
 state of the table and the loading of row details from the server, `rowDetailsLoadingMessage`. The skin `mat` takes the texts of its paginator from
-`MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of the skins `bs` and `nv`
-takes its title and the name of its close button from its own property `texts`.
+`MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of every skin takes its title
+and the name of its close button from `texts.filterDrawer` of the config of its table.
 
 The toolbar links of the skins `bs` and `nv` that act on the table, the search, the buttons and the menu, have the role
 `button`, as Bootstrap gives it to a link that goes nowhere, and take Space; the items of the menu of `bs` and the
@@ -325,7 +325,10 @@ class `bro-light-theme` sets `color-scheme: light`.
 `<table-bro-filter-drawer-container skin="nv">` holds a table and the filters of the application, an element with
 `slot="filters"`, in a drawer next to the table, for the skins `nv` and `bs`. Call
 `defineTableBroFilterDrawerContainer()` once before using it. The skin `mat` has its own container in
-`@table-bro/angular-material`.
+`@table-bro/angular-material`. The title of the drawer and the name of its close button come from
+`texts.filterDrawer` of the config of the table, as in the container of `mat`: the drawer reads them when it connects
+and when it opens, so a new `configure()` of the table shows at the next opening. The property `texts` of the
+container of 1.1.0 still works and wins over the config of the table; it is deprecated and removed in 2.0.
 
 The filters are the region of the drawer, named by its title unless the application names them. The drawer opened from
 the Filters button of the table takes the focus into the filters, Escape in it closes it, and the focus goes back to the
