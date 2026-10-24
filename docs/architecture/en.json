@@ -4,9 +4,9 @@
     "themeAuto": "AUTO",
     "themeLight": "LIGHT",
     "themeDark": "DARK",
-    "eyebrow": "@table-bro/* 1.1 · architecture for library developers",
+    "eyebrow": "@table-bro/* 1.2 · architecture for library developers",
     "h1": "How Table, Bro is built",
-    "lede": "A Web Components table engine on top of existing UI components. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Views write the DOM, skins supply the UI components, framework wrappers translate inputs into the methods of the element, and the Island Details module extends the body through one interface. The core follows MVC with passive views and a one-way data flow.",
+    "lede": "A Web Components table engine on top of existing UI components. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Views write the DOM, skins supply the UI components, framework wrappers translate inputs into the methods of the element, and the Island Details module extends the body through one interface. The core follows MVC with passive views and a one-way data flow. On a server, `prerenderTableBro()` renders the loading state of a table into the document of its host, and the browser renders the table in its place.",
     "tabMvc": "Layers (MVC)",
     "tabPkg": "Packages",
     "mvcTitle": "Layers: model, view, controller",
@@ -15,7 +15,7 @@
     "mvcCaption": "Data goes one way and comes back only as an event: view → bro-action → element → controller → model → view. A view never calls the controller, and the context has no methods to do it. Show the forbidden links to see the arrows that check:arch rejects.",
     "forbidBtn": "✕ Forbidden links",
     "forbidHead": "Forbidden links",
-    "forbidLede": "Red marks are the arrows that the rules forbid; each one keeps a boundary of the loop. Rules 3 and 10 check the text of the code and have no arrow.",
+    "forbidLede": "Red marks are the arrows that the rules forbid; each one keeps a boundary of the loop. Rules 3, 10 and 11 check the text of the code and have no arrow.",
     "contract": "contract",
     "ctxNoMethods": "BroContext has no methods: a view cannot reach the controller through it.",
     "islandNoCtx": "Island Details never gets the context, only BroIslandTable.",
@@ -58,7 +58,7 @@
     "rulesTitle": "Dependency rules",
     "rulesLede": "npm run check:arch checks them by searching the code (scripts/check-arch.mjs); npm test runs it first. Unit specs are exempt.",
     "domTitle": "Views and the DOM of the host",
-    "domLede": "A view implements BroView (types/view.ts). A parent view creates its children and assigns them to the registry ctx.view right before it renders them; the directories of view/dom follow this tree.",
+    "domLede": "A view implements BroView (types/view.ts) and creates its nodes through ctx.dom, in the document of the host. A parent view creates its children and assigns them to the registry ctx.view right before it renders them; the directories of view/dom follow this tree.",
     "blocksTitle": "Blocks",
     "blocksLede": "Each block on its own: where it is defined and what it does. Paths are relative to the repository root; the core is in packages/core.",
     "footer": "Built from the sources of the library. The page has no external resources; serve the docs folder over HTTP to open it, for example `npx http-server docs`.",
@@ -277,7 +277,7 @@
     "skin": {
       "t": "Skin registration",
       "steps": {
-        "0": "On import the skin defines its elements in the browser, prefixed `bro-nv-*`, and the shared ones; its optional elements come with `withTags()` and `withSwitch()`.",
+        "0": "On import in the browser the skin calls `defineElements(customElements)` of its config: its elements, prefixed `bro-nv-*`, and the shared ones; its optional elements come with `withTags()` and `withSwitch()`.",
         "1": "The elements extend `BroHTMLElement` and implement `BroView` and the element interfaces of the core.",
         "2": "`registerSkin('nv', config)` stores its `BroSkinConfig`: class names and component selectors.",
         "3": "`configure({conf: {skin: 'nv'}})` requires the registered skin and merges its config."
@@ -306,6 +306,21 @@
         "3": "The shown state renders again with the icons of the new theme."
       },
       "note": "The attribute `theme` of `<table-bro>` sets an explicit theme through `setExplicitTheme`."
+    },
+    "prerender": {
+      "t": "Prerender",
+      "trig": "prerenderTableBro() · Angular server-side rendering",
+      "steps": {
+        "0": "During Angular server-side rendering `TableBroNg` creates `<table-bro>` in the server DOM and calls `prerenderTableBro()`; without Angular the page calls it on its own server DOM, as linkedom or happy-dom.",
+        "1": "`prerenderTableBro()` resolves the columns and the config as `configure()` does, with `config.prerender`: the table measures nothing, runs no animation of its own and subscribes to nothing.",
+        "2": "It calls `defineElements(registry)` of the skin config with the registry of the server DOM; `TableBroNg` gives the server DOM of Angular one while the core renders. The mat skin gives the components of its elements through `TABLE_BRO_ELEMENTS` instead.",
+        "3": "`createContext()` takes `prerenderStyles` instead of the computed style of the host and makes `ctx.dom`, a `BroDom` of `host.ownerDocument`.",
+        "4": "`BroTableRegions` and the views create every node through `ctx.dom`, in the document of the host: a server DOM has no global document.",
+        "5": "`controller.mount()` without rows renders the loading state; the heights of the body and its shadows are `calc()` of `--bro-row-height` and `--bro-shadow-size`.",
+        "6": "The skin elements render their markup without the scripts of the browser. The host gets `data-bro-prerender`, and `isPrerendered()` tells the elements to keep that markup in the browser.",
+        "7": "In the browser `configure()` renders the table into the same element at the same height and continues the CSS animations of the prerender at their start times."
+      },
+      "note": "The prerender shows no rows: a server DOM has no layout to measure the columns in. A skin with neither `defineElements()` nor `TABLE_BRO_ELEMENTS` leaves the host empty on the server."
     }
   },
   "phases": {
@@ -382,8 +397,13 @@
     },
     "skinsThroughA": {
       "t": "Skins through a registry",
-      "d": "A skin imports only `@table-bro/core` and registers a `BroSkinConfig` and its elements; the core reads class names and selectors from it. No module touches `window` or `document` on load.",
+      "d": "A skin imports only `@table-bro/core` and registers a `BroSkinConfig` and its elements; the core reads class names and selectors from it. No module touches `window` or `document` on load, and a prerender defines the elements in the registry of its server DOM through `defineElements()`.",
       "r": "swappable skins, server render"
+    },
+    "nodesInTheHost": {
+      "t": "Nodes in the document of the host",
+      "d": "The views create their nodes through `ctx.dom`, a `BroDom` of `host.ownerDocument`, and a skin element through the document of its own element. The render needs no global `document`, so the same views render into the server DOM of any framework.",
+      "r": "a prerender on any server DOM"
     }
   },
   "cmp": {
@@ -458,6 +478,10 @@
     "everyControllerMethod": {
       "t": "Every controller method names its phase",
       "d": "Its JSDoc has @phase input, state, render or events."
+    },
+    "skinStylesheets": {
+      "t": "Skin stylesheets write core classes through variables",
+      "d": "The classes of the selector maps of the core go through the variables of the maps, so a build that shortens the classes, as the one of the site, keeps the rules of the skins matching."
     }
   },
   "tree": {
@@ -478,7 +502,7 @@
   },
   "treeSide": {
     "broView": {
-      "p": "`render()` renders the element or fills it in place; optional `template()`, `events()` and `renderAnimation()`. `el` keeps the rendered element."
+      "p": "`render()` renders the element or fills it in place, with the nodes of `ctx.dom`; optional `template()`, `events()` and `renderAnimation()`. `el` keeps the rendered element."
     },
     "ctxView": {
       "p": "The registry is filled in render order: regions, table container, header container, thead, paginator, body container and its children, details. The paginator comes before the body, so a body that fails shows the fail state with it."
@@ -496,14 +520,15 @@
         "broColumnsController": "Measures the header and the body in the aux table and fits the columns to a width.",
         "broBodyController": "Render phase of the rows: body, states, empty rows of the last page, scroll to the page, details, paginator, status.",
         "broDetailsController": "Opens and closes the details of a row; loads server details at the first opening.",
-        "broHostWidthController": "Observes the host width; takes the width a filter drawer declares for its transition."
+        "broHostWidthController": "Observes the host width; takes the width a filter drawer declares for its transition.",
+        "prerenderTableBro": "Renders a <table-bro> of a server DOM in its loading state with config.prerender: nothing is measured, animated by the table or subscribed to, and the skin defines its elements in the registry of the server DOM. Marks the host with data-bro-prerender; isPrerendered() tells a skin element to keep that markup."
       }
     },
     "state": {
       "t": "Core: context, state, models",
       "s": "data of one instance",
       "items": {
-        "broContext": "Frozen data of the instance: cols, columns, config, styles, state, model, view, layout, motion, themeService, host, signal. No methods. Models, views and layout declare their fields with declare module, so there is no import cycle.",
+        "broContext": "Frozen data of the instance: cols, columns, config, styles, state, model, view, layout, motion, themeService, host, dom, signal. No methods. Models, views and layout declare their fields with declare module, so there is no import cycle.",
         "broDataState": "sourceRows, rows, filter, sort, pagination, status, load. Pure functions of the state phase.",
         "broModels": "rowHeights, slots, details, emptyRows and the column measurements; the controller makes them, no DOM.",
         "broRowSlot": "One slot per displayed row with all its layers and the state of its details; diff by key keeps the rows of kept keys.",
@@ -519,7 +544,8 @@
         "broDetailsView": "Rows of the details in the body and aux tables, their heights and animations.",
         "broMotion": "All animations of an instance on one frame loop; keyed tracks, kinetic and eased runs, durationScale, reduced motion.",
         "broThemeService": "Computes the light or dark theme from the config, the page attribute and the color scheme; sends bro-theme-change.",
-        "resolveStyles": "Reads sizes and timings once at render from the computed --bro-* properties that the core CSS registers.",
+        "resolveStyles": "Reads sizes and timings once at render from the computed --bro-* properties that the core CSS registers. A prerender computes no style: it takes prerenderStyles, and the CSS sizes its heights.",
+        "broDom": "Creates the nodes of a table in the document of its host: ctx.dom in the views, new BroDom(this.ownerDocument) in a custom element. In a prerender that is the document of the server DOM.",
         "dispatchAction": "Sends a bubbling bro-action {action, selector, data}; the event names are constants.",
         "filterDrawer": "The table and the filters of the application in a grid; the drawer is outside the table. Defined on demand."
       }
@@ -539,7 +565,8 @@
     "frameworkWrapper": {
       "t": "Framework wrapper",
       "items": {
-        "tableBroNg": "Inputs cols, conf, rows, rowsToAppend, total, loading, failed, filter, emptyState, theme, tableId → methods of the element; outputs action and query. Renders nothing of its own and keeps no pagination, sort or filters.",
+        "tableBroNg": "Inputs cols, conf, rows, rowsToAppend, total, loading, failed, filter, emptyState, theme, tableId → methods of the element; outputs action and query. Renders nothing of its own and keeps no pagination, sort or filters. During server-side rendering it prerenders the loading state; in the browser its first table renders into that element.",
+        "prerender": "The components of the elements of a skin of Angular components, which provideTableBroMatSkin() gives for mat; the prerender renders them into the elements of the table. The server DOM of Angular gets a registry of custom elements and the methods of ParentNode only while the core renders.",
         "broFacade": "Contracts of a page with server data: a BroQuery maps to an API request and the answer maps back to a BroServerPage."
       }
     },

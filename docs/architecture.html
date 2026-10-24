@@ -1759,7 +1759,7 @@
       {v: '6', l: T('facts.1.l')},
       {v: '3', l: T('facts.2.l')},
       {v: '1', l: T('facts.3.l')},
-      {v: '10', l: T('facts.4.l')}
+      {v: '11', l: T('facts.4.l')}
     ];
 
     /* ---------- map model ---------- */
@@ -1985,6 +1985,23 @@
         ],
         edges: ['browser-theme'],
         note: T('flows.theme.note')
+      },
+      {
+        id: 'prerender', col: 'env',
+        t: T('flows.prerender.t'),
+        trig: T('flows.prerender.trig'),
+        steps: [
+          ['ng', T('flows.prerender.steps.0')],
+          ['element', T('flows.prerender.steps.1')],
+          ['nv', T('flows.prerender.steps.2')],
+          ['context', T('flows.prerender.steps.3')],
+          ['regions', T('flows.prerender.steps.4')],
+          ['body', T('flows.prerender.steps.5')],
+          ['elements', T('flows.prerender.steps.6')],
+          ['element', T('flows.prerender.steps.7')]
+        ],
+        edges: ['ng-el', 'nv-elements', 'el-ctx', 'el-ctrl', 'body-views', 'views-elements'],
+        note: T('flows.prerender.note')
       }
     ];
 
@@ -2049,7 +2066,10 @@
         r: T('why.oneInterfaceFor.r')},
       {m: 'skins', t: T('why.skinsThroughA.t'),
         d: T('why.skinsThroughA.d'),
-        r: T('why.skinsThroughA.r')}
+        r: T('why.skinsThroughA.r')},
+      {m: 'ctx.dom', t: T('why.nodesInTheHost.t'),
+        d: T('why.nodesInTheHost.d'),
+        r: T('why.nodesInTheHost.r')}
     ];
 
     const CMP = [
@@ -2072,7 +2092,8 @@
       {t: T('rules.modelsWriteNo.t'), d: T('rules.modelsWriteNo.d')},
       {t: T('rules.theControllerNeither.t'), d: T('rules.theControllerNeither.d')},
       {t: T('rules.theElementRenders.t'), d: T('rules.theElementRenders.d')},
-      {t: T('rules.everyControllerMethod.t'), d: T('rules.everyControllerMethod.d')}
+      {t: T('rules.everyControllerMethod.t'), d: T('rules.everyControllerMethod.d')},
+      {t: T('rules.skinStylesheets.t'), d: T('rules.skinStylesheets.d')}
     ];
 
     /* ---------- DOM tree ---------- */
@@ -2115,7 +2136,8 @@
         ['BroColumnsController', 'controller/columns.controller.ts', T('groups.core.items.broColumnsController')],
         ['BroBodyController', 'controller/body.controller.ts', T('groups.core.items.broBodyController')],
         ['BroDetailsController', 'controller/details.controller.ts', T('groups.core.items.broDetailsController')],
-        ['BroHostWidthController', 'controller/host-width.controller.ts', T('groups.core.items.broHostWidthController')]
+        ['BroHostWidthController', 'controller/host-width.controller.ts', T('groups.core.items.broHostWidthController')],
+        ['prerenderTableBro · isPrerendered', 'table-bro.ts', T('groups.core.items.prerenderTableBro')]
       ]},
       {z: 'z-core', t: T('groups.state.t'), s: T('groups.state.s'), items: [
         ['BroContext', 'types/context.ts · shared/context.ts', T('groups.state.items.broContext')],
@@ -2132,6 +2154,7 @@
         ['BroMotion', 'shared/motion.ts', T('groups.views.items.broMotion')],
         ['BroThemeService', 'shared/theme.service.ts', T('groups.views.items.broThemeService')],
         ['resolveStyles', 'shared/styles.ts', T('groups.views.items.resolveStyles')],
+        ['BroDom', 'shared/dom.ts', T('groups.views.items.broDom')],
         ['dispatchAction', 'shared/interaction.ts · shared/events.ts', T('groups.views.items.dispatchAction')],
         ['<table-bro-filter-drawer-container>', 'view/features/filters/filter-drawer.view.ts', T('groups.views.items.filterDrawer')]
       ]},
@@ -2144,6 +2167,7 @@
       ]},
       {z: 'z-wrap', t: T('groups.frameworkWrapper.t'), s: '@table-bro/angular · packages/angular', items: [
         ['TableBroNg', 'src/lib/table-bro-ng.ts', T('groups.frameworkWrapper.items.tableBroNg')],
+        ['TABLE_BRO_ELEMENTS · prerender', 'src/lib/table-bro-prerender.ts', T('groups.frameworkWrapper.items.prerender')],
         ['BroFacade · BroService', 'src/lib/table-bro.facade.ts · table-bro.service.ts', T('groups.frameworkWrapper.items.broFacade')]
       ]},
       {z: 'z-mod', t: T('groups.extensionModule.t'), s: '@table-bro-extended/island-details', items: [
