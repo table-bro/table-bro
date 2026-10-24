@@ -75,6 +75,8 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   const calls = features.map(feature => `${feature}()`).join(', ');
   // The elements that only some tables use: a project that registers the skin already adds the ones of a new table
   const optional = `The elements that only some tables use come with their functions: ${(<BroSkinFeature[]>['withTags', 'withSwitch', ...((skin === 'mat') ? ['withToolbarMenu'] : [])]).map(feature => featureRoles[feature]).join(', ')}; a project that registers the skin already adds the ones of a new table${(skin === 'mat') ? ' to the call' : `. A page may define them itself, as \`customElements.define('bro-${skin}-tags', ${(skin === 'bs') ? 'BroBootstrapTagsComponent' : 'BroNativeTagsComponent'})\``}.`;
+  // Angular server-side rendering renders a vanilla skin only when the server bundle imports its package
+  const ssrImport = (pkg: string): string => ` With Angular server-side rendering, \`app.config.ts\` imports the package as well, \`import '${pkg}';\`, so that the server renders the skin too: [Prerendering](https://table-bro.com/docs/ssr/prerendering).`;
   // A vanilla skin registers itself on its import, and its optional elements come with calls after it
   const vanillaCalls = features.map(feature => `${feature}();`);
   const packages = ['@table-bro/core', ...(angular ? ['@table-bro/angular'] : []), ...{
@@ -152,7 +154,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   } else if (skin === 'bs') {
     steps.push({
       title: 'Register the skin',
-      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin, which takes the classes of Bootstrap. ${optional}`,
+      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin, which takes the classes of Bootstrap. ${optional}${angular ? ssrImport('@table-bro/bootstrap') : ''}`,
       code: [
         imports({bootstrap: ['Dropdown', 'Tooltip'], '@table-bro/bootstrap': ['useBootstrap', ...features]}),
         '',
@@ -164,7 +166,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   } else {
     steps.push({
       title: 'Register the skin',
-      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin. ${optional}`,
+      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin. ${optional}${angular ? ssrImport('@table-bro/native') : ''}`,
       code: features.length ? [imports({'@table-bro/native': features}), '', ...vanillaCalls].join('\n') : 'import \'@table-bro/native\';',
       language: 'typescript'
     });
