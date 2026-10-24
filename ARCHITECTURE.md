@@ -139,11 +139,12 @@ defines the update and its frame.
 
 Rule 4 and the rules below hold by review; `check:arch` does not check them:
 
-- **4.** Mutable state at the level of a module that changes what a table does exists in four places only: the
-  registry of the skins, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, the extension module
-  that `useIslandDetails()` connects, and the texts of the optional elements of a skin, which `withTags()` and
-  `setTagsTexts()` of `bs` and `nv` set, with the set of their elements in the DOM that takes a new text. Apart from them modules keep caches only: weak maps by element, class or table,
-  one shared `ResizeObserver` of the items of cells, and a canvas and a range for measurements.
+- **4.** Mutable state at the level of a module that changes what a table does exists in four places only: the registry
+  of the skins, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, the extension module that
+  `useIslandDetails()` connects, and the texts of the optional elements of a skin, which `withTags()` and
+  `setTagsTexts()` of `bs` and `nv` set, with the set of their elements in the DOM that takes a new text. Apart from
+  them modules keep caches only: weak maps by element, class or table, one shared `ResizeObserver` of the items of
+  cells, and a canvas and a range for measurements.
 - Only the controller writes `ctx.state`.
 - A new class takes `ctx` as its first parameter and takes no objects of the table as separate parameters.
 - Listeners and timers of the views live with `ctx.signal`, so the release of a render removes them all.
