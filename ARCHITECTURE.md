@@ -1,10 +1,11 @@
 # Architecture
 
-This document describes how Table, Bro is built: the parts and what each of them owns, the lifecycle of a table, the
-phases of an update, the rules between the parts, how to add a feature, the words of the code, and the decisions that a
-reviewer may question, with their reasons. The [Interactive diagram](https://table-bro.com/architecture) shows the same
-parts and flows as diagrams. Its source is [docs/architecture.html](docs/architecture.html); serve the folder `docs`
-over HTTP to open it locally, for example with `npx http-server docs`.
+This document describes how Table, Bro is built: the parts and what each of them owns, the lifecycle of a table, its
+prerender on a server, the phases of an update, the rules between the parts, how to add a feature, the words of the
+code, and the decisions that a reviewer may question, with their reasons. The
+[Interactive diagram](https://table-bro.com/architecture) shows the same parts and flows as diagrams. Its source is
+[docs/architecture.html](docs/architecture.html); serve the folder `docs` over HTTP to open it locally, for example
+with `npx http-server docs`.
 
 ## The parts
 
@@ -12,10 +13,10 @@ The packages build on each other, from the bottom up:
 
 | Part | Package, folder | What it owns |
 | --- | --- | --- |
-| The core | `@table-bro/core`, `packages/core` | The element `<table-bro>`, the state of each table, its geometry, its DOM, its motion and its public types. No runtime dependencies |
-| The vanilla skins | `@table-bro/native`, `@table-bro/bootstrap`, `packages/skins/{native,bootstrap,shared}` | The look and the controls of a UI library: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config, and CSS |
-| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The same for Angular Material: Angular components that the table creates as Custom Elements, and the filter drawer of Material |
-| The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, and the contracts of a page and of its service |
+| The core | `@table-bro/core`, `packages/core` | The element `<table-bro>`, the state of each table, its geometry, its DOM, its motion, its prerender and its public types. No runtime dependencies |
+| The vanilla skins | `@table-bro/native`, `@table-bro/bootstrap`, `packages/skins/{native,bootstrap,shared}` | The look and the controls of a UI library: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
+| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The same for Angular Material: Angular components that the table creates as Custom Elements, the filter drawer of Material, and the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`) |
+| The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, its prerender during Angular server-side rendering, and the contracts of a page and of its service |
 | The MCP server | `@table-bro/mcp`, `packages/mcp` | The reference, the spec check and the code generator of a table for AI coding agents. It reads, never writes |
 
 A skin, the wrapper and the Material skin import the core only by its name, `@table-bro/core`, as an application does.
@@ -28,13 +29,14 @@ place that changes it, and views that only draw it:
 
 | Layer | Where | What it owns |
 | --- | --- | --- |
-| The element | `table-bro.ts` | The public API and the lifecycle. At every render it makes the context and the controller and asks `BroTableRegions` to render the regions. The one place where the objects of a table are made |
-| The context `ctx` | `types/context.ts`, `shared/context.ts` | The data of one table: its columns, config, state, models, views, services and the signal of its render. Frozen and without methods, so no view can reach the controller through it |
+| The element | `table-bro.ts` | The public API, the lifecycle and the prerender, `prerenderTableBro()`. At every render it makes the context and the controller and asks `BroTableRegions` to render the regions. The one place where the objects of a table are made |
+| The context `ctx` | `types/context.ts`, `shared/context.ts` | The data of one table: its columns, config, state, models, views, services, the document of its nodes and the signal of its render. Frozen and without methods, so no view can reach the controller through it |
 | The controller | `controller/` | The only writer of the state. It takes the calls of the API and the actions of the views, makes the models and calls the views. `BroController` maps each action to its handler; `BroBodyController` writes the rows, `BroColumnsController` measures and lays out the columns, `BroHostWidthController` follows the width of the host, `BroDetailsController` opens and loads the row details |
 | The state `ctx.state` | `controller/state.ts` | What the table shows: the rows, the filter, the sort, the pagination, the status. Its transitions are functions of the state, the columns and the config, tested without the DOM |
 | The models `ctx.model` | `model/` | The geometry: the slots of the displayed rows, the heights of the rows and their details, the measurements and widths of the columns. Plain objects without the DOM |
 | The views | `view/dom/`, `view/features/` | The DOM of their regions, the measurements of the layout and the animations. A tree: the regions, the toolbar, the header, the body, the paginator |
 | The layout of the body `ctx.layout` | `view/features/body-layout/` | The gaps between the rows, their decorations and the window of the page. The one extension point of the body: an extension module, as Island Details, connects by `useIslandDetails()` |
+| The document `ctx.dom` | `shared/dom.ts` | `BroDom` of `host.ownerDocument`, the document where the views create the nodes of the table: the page in the browser, a server DOM in a prerender. A custom element makes its own, `new BroDom(this.ownerDocument)` |
 | The motion `ctx.motion` | `shared/motion.ts`, `shared/clock.ts` | Every animation of the table in one frame loop: named tracks, cancelling, kinetic and eased motion, `prefers-reduced-motion` |
 | The services | `shared/` | The theme, the sizes and timings read from the CSS variables of the skin, the config of the skin under the config of the table, the registry of the skins |
 
@@ -46,7 +48,8 @@ application. A view never calls the controller, and two regions talk only throug
 ## The lifecycle of a table
 
 1. **Creation.** `document.createElement('table-bro')` or markup. The import of `@table-bro/core` defined the element;
-   in a browser without `customElements`, as a server render, the import defines nothing and touches no DOM.
+   in a browser without `customElements`, as a server render, the import defines nothing and touches no DOM. A server
+   render prerenders the table with `prerenderTableBro()` (next section).
 2. **`configure({cols, rows, conf})`.** The element copies the columns and the rows, finds the skin of `conf.skin` in
    the registry, resolves the config of the table over the config of the skin, and gives the host an `id` and an
    instance attribute. A connected table renders at once; one not in the document waits for its connection. A missing
@@ -64,6 +67,37 @@ application. A view never calls the controller, and two regions talk only throug
    observer and animation of the render, and disposes the controller.
 7. **Reconnection.** A released table renders again from an empty host with its current rows.
 8. **A new `configure()`** builds the table anew: new columns or a new config always mean a new table.
+
+## The prerender
+
+`prerenderTableBro(element, {cols, conf})` renders a `<table-bro>` of a server DOM in its loading state, so a page
+rendered on a server shows the layout of the table before any script runs. A server DOM, as the one of Angular,
+linkedom or happy-dom, has no layout, no global `document`, and custom elements only where its window has a registry.
+
+1. **The config.** The columns and the config resolve as in `configure()`, with `config.prerender` and
+   `autoColumnWidth: false`. The table measures nothing, runs no animation of its own and subscribes to nothing: the
+   context takes `prerenderStyles` instead of the computed style of the host, the heights of the body, the loading row
+   and the shadows are `calc()` of `--bro-row-height` and `--bro-shadow-size`, the theme `auto` keeps the theme of the
+   page, and Island Details does not connect.
+2. **The nodes.** The views create their nodes through `ctx.dom`, in the document of the host; a custom element creates
+   them through `new BroDom(this.ownerDocument)`.
+3. **The elements of the skin.** The module of a skin loaded without a DOM defines nothing, so `prerenderTableBro()`
+   calls `BroSkinConfig.defineElements(registry)` with the registry of the window of the server DOM. The elements
+   render their markup without the scripts of the browser, as the dropdowns and the tooltips of a UI library.
+4. **The mark.** The host gets `data-bro-prerender`. `isPrerendered(element)` tells an element of the skin in it to
+   keep the markup of the prerender when the browser defines the element.
+5. **The browser.** `configure()` on the same element renders the table in its place, at the same height. Before it
+   clears the host, the render reads the start times of the CSS animations of the prerender by their names; then it
+   starts the animations of the same names in the new elements at those times, so the progress bar goes on instead of
+   starting over. The render removes `data-bro-prerender` and the `--bro-shadow-size` of the prerender.
+
+`TableBroNg` prerenders the table during Angular server-side rendering. The server DOM of Angular has no registry of
+custom elements and no `append()`, `prepend()` and `replaceChildren()`: the wrapper adds them only while the core
+renders. A skin of Angular components, as `mat`, gives the components of its elements through `TABLE_BRO_ELEMENTS`,
+which `provideTableBroMatSkin()` fills: the wrapper renders them into the elements of the table, as Angular elements do
+in the browser, with `BrowserAnimations` in their injector, and destroys them with itself and before the next
+prerender. A skin with neither `defineElements()` nor `TABLE_BRO_ELEMENTS` leaves the host empty on the server. In the
+browser the first table of the wrapper renders into the prerendered `<table-bro>`; hydration does not check it.
 
 ## The phases of an update
 
@@ -103,7 +137,7 @@ defines the update and its frame.
 12. The stylesheets of the skins write the classes of the selector maps of the core through the variables of the maps:
     a build from the sources, as the one of the site, shortens the classes there.
 
-Rule 4 and the rules below hold by review, as a search cannot check them:
+Rule 4 and the rules below hold by review; `check:arch` does not check them:
 
 - **4.** Mutable state at the level of a module that changes what a table does exists in four places only: the
   registry of the skins, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, the extension module
@@ -115,21 +149,31 @@ Rule 4 and the rules below hold by review, as a search cannot check them:
 - Listeners and timers of the views live with `ctx.signal`, so the release of a render removes them all.
 - Values of the application go into the DOM by `textContent` and `setAttribute`; only a column with `html: true`
   inserts HTML.
+- The views create the nodes of the table through `ctx.dom`, a custom element through `new BroDom(this.ownerDocument)`,
+  never in the global `document`, which a server DOM does not have. `BroHTML.createElement()` and `createTemplate()`
+  keep the global document of 1.1.0 and are deprecated; 2.0 removes them.
+- In a prerender (`ctx.config.prerender`) a view or an element of a skin measures nothing, starts no animation of
+  `BroMotion`, subscribes to nothing and runs no script of a UI library. An element of a skin keeps its markup while
+  `isPrerendered(this)`.
 
 ## How to add a feature
 
 1. **A new option.** A field in `BroConfig` or `BroSkinConfig` (`types/table-bro.ts`), its default in
    `resolveConfig()` (`shared/config.ts`).
 2. **A new field of the state.** A field in `BroDataState` (`controller/state.ts`); only the controller writes it.
-3. **A new region of the DOM.** A new view with the constructor `(ctx, local arguments)`. Its parent view or the
-   controller makes it and puts it into `ctx.view`.
+3. **A new region of the DOM.** A new view with the constructor `(ctx, local arguments)`, which creates its nodes
+   through `ctx.dom`. Its parent view or the controller makes it and puts it into `ctx.view`. What it measures,
+   animates or subscribes to, it skips in a prerender.
 4. **A new action of the user.** A constant in `shared/events.ts`, the type of its data in `BroActionDataMap`, the
    dispatch by `dispatchAction()`, and its handler in the map `actions` of `BroController`.
 5. **A new animation.** A named track of `ctx.motion`, never `requestAnimationFrame`.
-6. **A new control of a skin.** A Custom Element in the package of the skin and its selector in the config of the skin.
+6. **A new control of a skin.** A Custom Element in the package of the skin, defined in `defineElements()` of the
+   config of the skin, and its selector in that config. In a prerender it renders its markup without the scripts of
+   the browser, and it keeps that markup while `isPrerendered(this)`.
 7. **A new method of the controller.** Its `@phase` in the JSDoc: an entry in `BroController` or one of its parts, a
    transition of the state as a function in `controller/state.ts`, the writes of the rows in `BroBodyController`.
-8. **The check.** `npm run check:arch`, then `npm test`.
+8. **The check.** `npm run check:arch`, then `npm test`. A change of what a prerender renders gets a case in
+   `packages/core/table-bro.prerender.spec.ts` or in the spec of the skin.
 
 ## Glossary
 
@@ -159,6 +203,11 @@ Rule 4 and the rules below hold by review, as a search cannot check them:
   outside the table.
 - **The composition root** is the one place where the objects of a table are made and linked: the render of the
   element.
+- **A server DOM** is a DOM without a browser, as the one of Angular's server-side rendering, linkedom or happy-dom: no
+  layout, no global `document`, and custom elements only where its window has a registry.
+- **The prerender** is the render of a table in its loading state into a server DOM, by `prerenderTableBro()`, with
+  `config.prerender`. **A prerendered table** has `data-bro-prerender` until the browser renders it.
+- **The document of the host** is `host.ownerDocument`, where a table creates its nodes through `ctx.dom`.
 
 ## Decisions a reviewer may question
 
@@ -176,7 +225,8 @@ These are deliberate decisions. They stay, and here are the reasons.
   so a column fits its content and the widths can move with an animation.
 - **The element registers itself on import.** `import '@table-bro/core'` defines `<table-bro>`, as the import of a
   skin registers the skin: no setup call to forget or to order. Outside a browser the import defines nothing, so a
-  server render imports the packages safely.
+  server render imports the packages safely; a prerender defines the elements of the skin in the registry of its
+  server DOM, by `defineElements()`.
 - **No defaults for a setup that does not work.** The table reads its sizes and timings from the CSS variables of its
   skin and does not repeat them in its script: every byte counts, and one source of the values keeps the CSS and the
   script in agreement. The consequence to know: without the CSS of the skin the durations are `NaN`, an animation never
@@ -198,3 +248,13 @@ These are deliberate decisions. They stay, and here are the reasons.
 - **The free core names the paid module in its error.** A table with `rowDetailsIsland` and without the module shows
   its fail state, and `bro-error` says which package gives the mode: `@table-bro-extended/island-details`. The
   message names what fixes the error, as any error of the table does.
+- **A prerender shows the loading state, not the rows.** A server DOM has no layout, so the table cannot measure its
+  columns and fit them to the rows: the rows wait for the browser, which measures them. The loading state takes the
+  height of the page in CSS, so the table of the browser renders at the same height.
+- **The browser renders the table anew in place of the prerender.** The prerender is markup only: the state, the
+  listeners and the measurements of a table belong to its render in the browser. The render continues the CSS
+  animations of the prerender at their start times, so the switch does not restart the progress bar.
+- **`TableBroNg` changes the server DOM of Angular for the time of a prerender.** The core adds nodes with the methods
+  of `ParentNode`, and the elements of the vanilla skins render as custom elements; the server DOM of Angular has
+  neither. The wrapper adds the methods and a registry only while the core renders and removes them after it, so the
+  application and the other renders of the process get the server DOM as Angular made it.
