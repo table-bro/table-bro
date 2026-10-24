@@ -65,6 +65,26 @@ theme of your application instead of bringing its own.
 - **Server mode.** Pages, search, sort, filters and details go to your server as one query object; the emulated server
   of the Docs shows the contract.
 
+## Server-side rendering
+
+- **Prerendered loading state.** On the server the table renders its toolbar, header, loading row and paginator, so
+  the page shows its layout before any script runs; in the browser the table takes its place, and the loading
+  animation goes on.
+- **Angular SSR.** `<table-bro-ng>` prerenders during Angular server-side rendering in the skins `mat`, `bs` and `nv`,
+  with the template of the browser; `prerenderTableBro()` renders the same loading state into a server DOM without
+  Angular.
+
+## Accessibility and localization
+
+- **Screen readers.** The toolbar links of the Bootstrap and Native skins say what they do, the ones that act on the
+  table are buttons, and a live region tells the state of the table and the loading of row details.
+- **Keyboard and focus.** Focus rings show in full, the hidden items of a cell are out of the tab order, and the focus
+  goes back to the Filters button when the filter drawer closes.
+- **Texts in the language of the application.** `config.texts` sets the words of the toolbar, the search line, the
+  filter drawer, the paginator, the progress bar, the states and the row numbers, by the component of the skin; the
+  texts it does not set stay English. The paginator of the Angular Material skin takes its texts from
+  `MatPaginatorIntl`.
+
 ## AI
 
 - **MCP server for AI coding agents.** `@table-bro/mcp` gives Claude Code, Codex, Cursor or VS Code the reference of the

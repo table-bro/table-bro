@@ -121,6 +121,15 @@ object of a class: the table takes the values of its getters with the rows, as t
 The calls of `replaceRows`, `appendRows` and `setState` before the table renders, as before it is in the document, wait
 for its first render and apply in their order. A new `configure()` drops the calls that wait.
 
+### Server-side rendering
+
+Since 1.2.0 a page that a server renders shows the table before any script runs. `prerenderTableBro(element, {cols,
+conf})` renders a `<table-bro>` of a server DOM in its loading state: the toolbar, the column headers, the loading row
+and the paginator, with the elements of the skins `bs` and `nv` where the window of the server DOM has
+`customElements`. The rows wait for the browser: there `configure()` on the same element renders the table with its
+rows in its place, and the loading animation goes on. `<table-bro-ng>` of `@table-bro/angular` prerenders the table
+itself during Angular server-side rendering. More in [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+
 ### Texts
 
 `config.texts` changes the words of the table, as for the language or the tone of the application; the texts it does
@@ -168,6 +177,10 @@ hidden words after their titles, for screen readers and search engines, in `tool
 (Search for Orders, Search for rows without a title), `buttonRole` (Filters button, for search engines only: a screen
 reader hears the role), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs` (Print menu item).
 An empty string adds no words.
+
+More in [Texts and localization](https://table-bro.com/docs/accessibility/localization), [Keyboard and
+focus](https://table-bro.com/docs/accessibility/keyboard-and-focus) and [Screen
+readers](https://table-bro.com/docs/accessibility/screen-readers).
 
 ### Errors
 

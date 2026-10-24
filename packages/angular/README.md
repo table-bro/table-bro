@@ -67,6 +67,9 @@ export class OrdersComponent {
 }
 ```
 
+During Angular server-side rendering `<table-bro-ng>` prerenders the table in its loading state with the same template:
+[Prerendering](https://table-bro.com/docs/ssr/prerendering).
+
 ### The server mode
 
 With `server: true` the table sorts, filters and pages nothing itself: it gives every gesture of the user as a
