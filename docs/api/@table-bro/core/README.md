@@ -14,11 +14,23 @@
 
 - [BroConfig](interfaces/BroConfig.md)
 - [BroConfigCSS](interfaces/BroConfigCSS.md)
+- [BroCoreTexts](interfaces/BroCoreTexts.md)
+- [BroFilterDrawerTexts](interfaces/BroFilterDrawerTexts.md)
+- [BroFlatTexts](interfaces/BroFlatTexts.md)
+- [BroPaginatorTexts](interfaces/BroPaginatorTexts.md)
+- [BroProgressBarTexts](interfaces/BroProgressBarTexts.md)
 - [BroResolvedConfig](interfaces/BroResolvedConfig.md)
 - [BroStates](interfaces/BroStates.md)
+- [BroTextGroupTexts](interfaces/BroTextGroupTexts.md)
 - [BroTexts](interfaces/BroTexts.md)
+- [BroToolbarMainTexts](interfaces/BroToolbarMainTexts.md)
+- [BroToolbarSearchTexts](interfaces/BroToolbarSearchTexts.md)
 - [BroDeepPartial](type-aliases/BroDeepPartial.md)
 - [BroFiltersTransform](type-aliases/BroFiltersTransform.md)
+- [BroStateTexts](type-aliases/BroStateTexts.md)
+- [BroTextGroupName](type-aliases/BroTextGroupName.md)
+- [BroTextGroups](type-aliases/BroTextGroups.md)
+- [BroTextsConfig](type-aliases/BroTextsConfig.md)
 - [BroTheme](type-aliases/BroTheme.md)
 - [BroUserTheme](type-aliases/BroUserTheme.md)
 - [resolveTexts](functions/resolveTexts.md)
@@ -76,15 +88,19 @@
 - [BroSkin](type-aliases/BroSkin.md)
 - [broCellSelectors](variables/broCellSelectors.md)
 - [broVisuallyHidden](variables/broVisuallyHidden.md)
+- [getSkin](functions/getSkin.md)
 - [registerSkin](functions/registerSkin.md)
 
 ## Rendering helpers
 
+- [BroDom](classes/BroDom.md)
 - [BroHTML](classes/BroHTML.md)
 - [BroMotion](classes/BroMotion.md)
 - [BroView](interfaces/BroView.md)
 - [BroHTMLElement](variables/BroHTMLElement.md)
 - [fitCellItems](functions/fitCellItems.md)
+- [isPrerendered](functions/isPrerendered.md)
+- [prerenderTableBro](functions/prerenderTableBro.md)
 - [useIslandDetails](functions/useIslandDetails.md)
 
 ## Filter drawer
@@ -92,3 +108,4 @@
 - [BroFilterDrawerHTMLElement](interfaces/BroFilterDrawerHTMLElement.md)
 - [BroFilterDrawerHTMLElementEventMap](interfaces/BroFilterDrawerHTMLElementEventMap.md)
 - [defineTableBroFilterDrawerContainer](functions/defineTableBroFilterDrawerContainer.md)
+- [registerFilterDrawerProperties](functions/registerFilterDrawerProperties.md)

@@ -283,8 +283,13 @@ Whether the drawer is opened; reflects the opened attribute.
 
 ***
 
-### texts?
+### ~~texts?~~
 
-> `optional` **texts?**: `Partial`\<[`BroTexts`](BroTexts.md)\>
+> `optional` **texts?**: [`BroTextsConfig`](../type-aliases/BroTextsConfig.md)
 
-The texts of the drawer, as the texts of its table: its title and the name of its close button.
+The texts of the drawer, as the texts of its table: its title and the name of its close button, in filterDrawer.
+Set, they replace the texts of the config of the table, which the drawer takes otherwise.
+
+#### Deprecated
+
+Set texts.filterDrawer in the config of the table; the property is removed in 2.0.

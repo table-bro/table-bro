@@ -1,6 +1,7 @@
 # Class: BroHTML
 
-A helper of the HTML of the views and the skins: elements and templates from markup, text for markup and back.
+A helper of the HTML of the views and the skins: text for markup and back. BroDom creates the elements and the
+templates of markup in the document of the table.
 
 ## Constructors
 
@@ -14,25 +15,36 @@ A helper of the HTML of the views and the skins: elements and templates from mar
 
 ## Methods
 
-### createElement()
+### ~~createElement()~~
 
 > `static` **createElement**(`html`): `HTMLElement`
+
+The element of markup, in the global document.
 
 #### Parameters
 
 ##### html
 
 `string`
+
+the markup of the element
 
 #### Returns
 
 `HTMLElement`
 
+#### Deprecated
+
+Use createFromHTML() of BroDom, in the document of the table: ctx.dom in a view, new
+BroDom(this.ownerDocument) in a custom element. 2.0 removes it.
+
 ***
 
-### createTemplate()
+### ~~createTemplate()~~
 
 > `static` **createTemplate**(`html`): `HTMLTemplateElement`
+
+The template of markup, in the global document.
 
 #### Parameters
 
@@ -40,9 +52,16 @@ A helper of the HTML of the views and the skins: elements and templates from mar
 
 `string`
 
+the markup of the template
+
 #### Returns
 
 `HTMLTemplateElement`
+
+#### Deprecated
+
+Use createTemplate() of BroDom, in the document of the table: ctx.dom in a view, new
+BroDom(this.ownerDocument) in a custom element. 2.0 removes it.
 
 ***
 

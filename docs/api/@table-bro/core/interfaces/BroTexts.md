@@ -1,7 +1,8 @@
 # Interface: BroTexts
 
-The texts of the table: its words and the names of its controls, English by default. The skin mat takes the texts
-of its paginator from MatPaginatorIntl of Angular Material, as its applications do.
+The texts of the table: its words and the names of its controls, English by default, as the skins read them. A config
+gives them by the part of the table, BroTextsConfig. The skin mat takes the texts of its paginator from
+MatPaginatorIntl of Angular Material, as its applications do.
 
 ## Properties
 
@@ -9,7 +10,7 @@ of its paginator from MatPaginatorIntl of Angular Material, as its applications 
 
 > **back**: `string`
 
-The names of the buttons of the search line.
+The name of the back button of the search line.
 
 ***
 
@@ -59,7 +60,7 @@ The title of the filter drawer.
 
 > **first**: `string`
 
-The paginator of the vanilla skins: the words of its buttons.
+The word of the first page button of the paginator of the vanilla skins.
 
 ***
 
@@ -151,7 +152,7 @@ A cell of tags without items.
 
 > **pageNavigation**: `string`
 
-The paginator of the vanilla skins: the name of its navigation, the label of its page sizes, the names of its buttons.
+The name of the navigation of the paginator of the vanilla skins.
 
 ***
 

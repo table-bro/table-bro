@@ -3,6 +3,8 @@
 The Angular wrapper of \<table-bro\>: it translates the inputs into the methods of the element and the bro-action event
 into the outputs. The table stays one: the wrapper renders nothing of its own and keeps no pagination, sort or filters.
 The table works outside the Angular zone, so its animation frames start no change detection; the outputs emit inside it.
+The server render of Angular renders the table in its loading state (prerenderTableBroNg), and the browser renders the
+table in that element: the page shows the table before the application starts.
 
 ## Type Parameters
 

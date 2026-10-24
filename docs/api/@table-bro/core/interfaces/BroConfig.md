@@ -230,9 +230,10 @@ elements of its column widths. The application passes the nonce of its page.
 
 ### texts?
 
-> `optional` **texts?**: `Partial`\<[`BroTexts`](BroTexts.md)\>
+> `optional` **texts?**: [`BroTextsConfig`](../type-aliases/BroTextsConfig.md)
 
-The texts of the table in the language of the application: a config gives the ones it changes.
+The texts of the table in the language of the application: a config gives the ones it changes, by the part of the
+table, as texts.paginator. The flat fields of 1.1.0 still work and are deprecated.
 
 ***
 

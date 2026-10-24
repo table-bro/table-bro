@@ -122,6 +122,16 @@ The page sizes of the paginator, [5, 10, 15, 20, 25, 50, 100] by default.
 
 ***
 
+### prerender?
+
+> `optional` **prerender?**: `boolean`
+
+The table renders into a server DOM, as of a prerender (prerenderTableBro): it shows its loading state, measures and
+animates nothing, and its heights come from the custom properties of the skin in CSS. The elements of the skin render
+their markup without the scripts of the browser, as the tooltips and the dropdowns of a UI library.
+
+***
+
 ### rowCounter
 
 > **rowCounter**: `boolean`
