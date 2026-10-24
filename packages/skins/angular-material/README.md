@@ -14,7 +14,7 @@ Cursor or Codex: the agent installs the packages, generates the table, its setup
 checks the result.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
 ```
 
 The setup for Cursor, Codex and VS Code is in the README of

@@ -22,7 +22,7 @@ Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs t
 setup and its cells from one request, and checks the result.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
 ```
 
 The setup for Cursor, Codex and VS Code is in the README of
@@ -90,8 +90,8 @@ The UMD builds put the core on the `TableBro` global and the skins on `TableBroN
 Load the core first:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/native@1.1.0/dist/table-bro.native.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.2.0/dist/table-bro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/native@1.2.0/dist/table-bro.native.umd.js"></script>
 ```
 
 ## CSS
@@ -403,7 +403,7 @@ table.configure({
 
 A page without a bundler loads the player by
 `<script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2.0.12/dist/lottie-player.js"></script>` and may
-take the animations from the CDN of the package: `https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/lottie/mat`.
+take the animations from the CDN of the package: `https://cdn.jsdelivr.net/npm/@table-bro/core@1.2.0/dist/lottie/mat`.
 
 ## Styling
 

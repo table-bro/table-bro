@@ -5,7 +5,7 @@ labels: bug
 ---
 
 **Packages and versions**
-`@table-bro/core` 1.1.0, the skin package, Angular and Angular Material if used, the browser.
+`@table-bro/core` 1.2.0, the skin package, Angular and Angular Material if used, the browser.
 
 **What happens**
 

@@ -16,9 +16,9 @@
     "@angular/forms": "^22.2.0",
     "@angular/material": "^22.2.2",
     "@angular/platform-browser": "^22.2.0",
-    "@table-bro/angular": "^1.1.0",
-    "@table-bro/angular-material": "^1.1.0",
-    "@table-bro/core": "^1.1.0",
+    "@table-bro/angular": "^1.2.0",
+    "@table-bro/angular-material": "^1.2.0",
+    "@table-bro/core": "^1.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

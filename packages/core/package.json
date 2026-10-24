@@ -1,6 +1,6 @@
 {
   "name": "@table-bro/core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Pixel-perfect Material data tables for Angular, and more. A Web Components table engine on top of existing UI components.",
   "keywords": [
     "table",

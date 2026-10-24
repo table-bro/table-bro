@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@table-bro/bootstrap": "^1.1.0",
-    "@table-bro/core": "^1.1.0",
+    "@table-bro/bootstrap": "^1.2.0",
+    "@table-bro/core": "^1.2.0",
     "bootstrap": "^5.3.0"
   },
   "devDependencies": {

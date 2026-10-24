@@ -93,7 +93,7 @@ theme of your application instead of bringing its own.
   measured with Claude Opus, Sonnet and Haiku.
 
   ```sh
-  claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+  claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
   ```
 
 ## On the roadmap
@@ -254,7 +254,7 @@ themes, the styling, the CSS variables `--bro-*` and loading without a bundler. 
 
 ### With an AI coding agent
 
-`npx -y @table-bro/mcp@1.1.0` starts the MCP server: the agent gets the docs, checks a table spec and generates the
+`npx -y @table-bro/mcp@1.2.0` starts the MCP server: the agent gets the docs, checks a table spec and generates the
 code of the table for your project. The README of [`@table-bro/mcp`](packages/mcp) gives the setup for each agent, and
 the site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-server).
 

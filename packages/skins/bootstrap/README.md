@@ -10,7 +10,7 @@ Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent ins
 its setup and its cells from one request, and checks the result.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
 ```
 
 The setup for Cursor, Codex and VS Code is in the README of
@@ -69,8 +69,8 @@ Without a bundler, load the scripts in this order: Bootstrap, the core, the skin
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.1.0/dist/table-bro.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@1.1.0/dist/table-bro.bootstrap.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.2.0/dist/table-bro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@1.2.0/dist/table-bro.bootstrap.umd.js"></script>
 ```
 
 Load one vanilla skin per page: `@table-bro/bootstrap` and `@table-bro/native` share elements, and the skin loaded

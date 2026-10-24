@@ -7,7 +7,7 @@ reference of the table, the check of a table spec and the code generator of a ta
 Material), `bs` (Bootstrap 5) and `nv` (native HTML). The agent writes the files; the server only reads.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
 ```
 
 The setup for the other agents is [below](#setup). Docs: [MCP server](https://table-bro.com/docs/ai/mcp-server),
@@ -24,7 +24,7 @@ The setup for the other agents is [below](#setup). Docs: [MCP server](https://ta
 
 ## Setup
 
-The server describes one version of Table, Bro: run the version of `@table-bro/core` that the project has, as `1.1.0` below.
+The server describes one version of Table, Bro: run the version of `@table-bro/core` that the project has, as `1.2.0` below.
 After an update of Table, Bro, change the version in the setup of the agent too; `inspect_project` compares the
 versions and gives the line to change.
 
@@ -33,17 +33,17 @@ versions and gives the line to change.
 **Claude Code**, `.mcp.json` in the root of the project:
 
 ```json
-{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.1.0"]}}}
+{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.2.0"]}}}
 ```
 
-or `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0`.
+or `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0`.
 
 **Codex**, `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.table-bro]
 command = "npx"
-args = ["-y", "@table-bro/mcp@1.1.0"]
+args = ["-y", "@table-bro/mcp@1.2.0"]
 ```
 
 Codex calls the tools of the server when `AGENTS.md` of the project says so:
@@ -55,19 +55,19 @@ The tables of this project are Table, Bro. Its MCP server table-bro has the refe
 **Cursor**, `.cursor/mcp.json` in the project:
 
 ```json
-{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.1.0"]}}}
+{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.2.0"]}}}
 ```
 
 **VS Code**, `.vscode/mcp.json` in the project:
 
 ```json
-{"servers": {"table-bro": {"type": "stdio", "command": "npx", "args": ["-y", "@table-bro/mcp@1.1.0"]}}}
+{"servers": {"table-bro": {"type": "stdio", "command": "npx", "args": ["-y", "@table-bro/mcp@1.2.0"]}}}
 ```
 
 **Claude Desktop**, `claude_desktop_config.json`:
 
 ```json
-{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.1.0"]}}}
+{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.2.0"]}}}
 ```
 
 ## The folder of the project
@@ -83,7 +83,7 @@ A paid module of Table, Bro adds its fields of the config, its topics and its se
 started with its name, and the module is installed in the project:
 
 ```json
-{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.1.0", "--extension", "<the package of the module>"]}}}
+{"mcpServers": {"table-bro": {"command": "npx", "args": ["-y", "@table-bro/mcp@1.2.0", "--extension", "<the package of the module>"]}}}
 ```
 
 The server runs the code of no other package.

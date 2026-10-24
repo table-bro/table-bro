@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.2.0
+
+Accessibility, localization and server-side rendering.
+
+### Accessibility and localization
+
+- Screen readers: the links of the `bs` and `nv` toolbars say what they do, the ones that act on the table are
+  buttons, and the live region is hidden again in the production build.
+- Keyboard focus: it goes back to the Filters button when the filter drawer closes, focus rings are no longer cut
+  off, and the hidden items of a cell are out of the tab order.
+- `config.texts` by the component of the skin, as `{paginator: {nextPageLabel: 'Go to next page'}}`, also for the
+  filter drawer of `bs` and `nv` and for the tags.
+
+### Server-side rendering
+
+- `<table-bro-ng>` prerenders the table during Angular server-side rendering, in the skins `mat`, `bs` and `nv`, so
+  the page shows its layout before any script runs.
+- `prerenderTableBro()` renders a table in its loading state into a server DOM without Angular.
+
+### Fixed
+
+- The progress bars and the menu select of `nv` in WebKit and Firefox, and the transition of the filter drawer in
+  Safari.
+
 ## 1.1.0
 
 The first open source release, and the first release on the public npm registry.
