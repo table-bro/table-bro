@@ -1,9 +1,9 @@
 # @table-bro/mcp
 
 The MCP server of [Table, Bro](https://table-bro.com): pixel-perfect Material (M3) data tables for Angular, and more.
-Add it to Claude Code, Cursor or Codex, tell the agent what table you need, and it installs the packages and generates the
-table, its setup and its cells from one request, for React, Vue, Svelte, Angular and plain HTML. The server gives the agent
-the reference of the table, the check of a table spec and the code generator of a table, with the skins `mat` (Angular
+Add it to Claude Code, Cursor or Codex, tell the agent what table you need, and it installs the packages and generates
+the table, its setup and its cells from one request, for Angular and Vanilla JS. The server gives the agent the
+reference of the table, the check of a table spec and the code generator of a table, with the skins `mat` (Angular
 Material), `bs` (Bootstrap 5) and `nv` (native HTML). The agent writes the files; the server only reads.
 
 ```sh
