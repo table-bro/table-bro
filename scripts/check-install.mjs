@@ -310,9 +310,13 @@ async function checkAngular(dir, major, ssr, tarballs) {
   if (ssr) {
     const html = fs.readFileSync(path.join(browser, 'index.html'), 'utf8');
 
-    // The server renders the host of the wrapper; the table itself starts in the browser
+    // The server renders the host of the wrapper and prerenders the table in it in its loading state
     if (!/<table-bro-ng[\s>]/.test(html) || !html.includes('ng-server-context')) {
       throw new Error('The prerendered page has no table-bro-ng');
+    }
+
+    if (!/<table-bro\s[^>]*data-bro-prerender/.test(html)) {
+      throw new Error('The prerendered page has no table-bro in its loading state');
     }
   }
 
