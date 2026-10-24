@@ -184,6 +184,12 @@
     },
     "spaces": {
       "s": "spaces, shadows, rounded corners"
+    },
+    "prerender": {
+      "s": "on a server DOM"
+    },
+    "broDom": {
+      "s": "ctx.dom · document of the host"
     }
   },
   "edges": {
@@ -311,7 +317,7 @@
       "t": "Prerender",
       "trig": "prerenderTableBro() · Angular server-side rendering",
       "steps": {
-        "0": "During Angular server-side rendering `TableBroNg` creates `<table-bro>` in the server DOM and calls `prerenderTableBro()`; without Angular the page calls it on its own server DOM, as linkedom or happy-dom.",
+        "0": "During Angular server-side rendering `TableBroNg` creates `<table-bro>` in the server DOM and calls `prerenderTableBro()`; without Angular the page calls it on its own server DOM.",
         "1": "`prerenderTableBro()` resolves the columns and the config as `configure()` does, with `config.prerender`: the table measures nothing, runs no animation of its own and subscribes to nothing.",
         "2": "It calls `defineElements(registry)` of the skin config with the registry of the server DOM; `TableBroNg` gives the server DOM of Angular one while the core renders. The mat skin gives the components of its elements through `TABLE_BRO_ELEMENTS` instead.",
         "3": "`createContext()` takes `prerenderStyles` instead of the computed style of the host and makes `ctx.dom`, a `BroDom` of `host.ownerDocument`.",

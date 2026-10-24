@@ -1777,7 +1777,8 @@
       browser: {x: 36, y: 440, w: 156, h: 56, z: 'z-app', t: T('nodes.browser.t'), s: T('nodes.browser.s')},
 
       ng: {x: 240, y: 150, w: 178, h: 56, z: 'z-wrap', t: 'TableBroNg', s: '<table-bro-ng>'},
-      drawer: {x: 240, y: 260, w: 178, h: 56, z: 'z-wrap', t: T('nodes.drawer.t'), s: T('nodes.drawer.s')},
+      prerender: {x: 240, y: 226, w: 178, h: 56, z: 'z-core', t: 'prerenderTableBro', s: T('nodes.prerender.s')},
+      drawer: {x: 240, y: 302, w: 178, h: 56, z: 'z-wrap', t: T('nodes.drawer.t'), s: T('nodes.drawer.s')},
 
       element: {x: 466, y: 70, w: 604, h: 56, z: 'z-core', t: 'TableBro  <table-bro>', s: T('nodes.element.s')},
       controller: {x: 466, y: 150, w: 284, h: 340, z: 'z-core', container: 1, t: 'BroController'},
@@ -1807,6 +1808,7 @@
       elements: {x: 1130, y: 480, w: 270, h: 56, z: 'z-skin', t: T('nodes.elements.t'), s: T('nodes.elements.s')},
 
       dom: {mvcOnly: 1, z: 'z-app', t: T('nodes.dom.t'), s: T('nodes.dom.s')},
+      broDom: {mvcOnly: 1, z: 'z-core', t: 'BroDom', s: T('nodes.broDom.s')},
 
       island: {x: 1130, y: 710, w: 270, h: 56, z: 'z-mod', t: 'BroIslandDetails', s: '@table-bro-extended/island-details'},
       spaces: {x: 1130, y: 786, w: 270, h: 48, z: 'z-mod', t: 'Spaces · RowShadows · Corners', s: T('nodes.spaces.s')}
@@ -1819,8 +1821,10 @@
       {id: 'el-app', from: 'element', to: 'app', dashed: 1, pts: [[700, 70], [700, 26], [60, 26], [60, 150]], l: 'bro-action · bro-error'},
       {id: 'app-srv', from: 'app', to: 'server', pts: [[114, 190], [114, 260]], l: 'BroQuery'},
       {id: 'app-ng', from: 'app', to: 'ng', pts: [[192, 170], [240, 170]]},
-      {id: 'ng-el', from: 'ng', to: 'element', pts: [[418, 186], [452, 186], [452, 108], [466, 108]]},
-      {id: 'drawer-el', from: 'drawer', to: 'element', dashed: 1, pts: [[418, 288], [459, 288], [459, 118], [466, 118]], l: 'bro-columns-width', lp: [338, 336]},
+      {id: 'ng-el', from: 'ng', to: 'element', pts: [[418, 186], [449, 186], [449, 100], [466, 100]]},
+      {id: 'ng-prerender', from: 'ng', to: 'prerender', pts: [[329, 206], [329, 226]]},
+      {id: 'prerender-el', from: 'prerender', to: 'element', pts: [[418, 254], [455, 254], [455, 109], [466, 109]]},
+      {id: 'drawer-el', from: 'drawer', to: 'element', dashed: 1, pts: [[418, 330], [461, 330], [461, 118], [466, 118]], l: 'bro-columns-width', lp: [338, 376]},
       {id: 'el-ctrl', from: 'element', to: 'controller', pts: [[608, 126], [608, 150]]},
       {id: 'el-ctx', from: 'element', to: 'context', pts: [[925, 126], [925, 150]]},
       {id: 'css-ctx', from: 'css', to: 'context', dashed: 1, pts: [[1130, 106], [1100, 106], [1100, 178], [1070, 178]], l: 'resolveStyles', lp: [1100, 140]},
@@ -1992,7 +1996,7 @@
         trig: T('flows.prerender.trig'),
         steps: [
           ['ng', T('flows.prerender.steps.0')],
-          ['element', T('flows.prerender.steps.1')],
+          ['prerender', T('flows.prerender.steps.1')],
           ['nv', T('flows.prerender.steps.2')],
           ['context', T('flows.prerender.steps.3')],
           ['regions', T('flows.prerender.steps.4')],
@@ -2000,7 +2004,7 @@
           ['elements', T('flows.prerender.steps.6')],
           ['element', T('flows.prerender.steps.7')]
         ],
-        edges: ['ng-el', 'nv-elements', 'el-ctx', 'el-ctrl', 'body-views', 'views-elements'],
+        edges: ['ng-prerender', 'prerender-el', 'nv-elements', 'el-ctx', 'el-ctrl', 'body-views', 'views-broDom', 'broDom-dom', 'views-elements'],
         note: T('flows.prerender.note')
       }
     ];
@@ -2219,8 +2223,9 @@
         app: [36, 150, 156, 40],
         server: [36, 228, 156, 52],
         ng: [36, 300, 156, 56],
-        drawer: [36, 380, 156, 56],
-        browser: [36, 560, 156, 56],
+        prerender: [36, 380, 156, 56],
+        drawer: [36, 460, 156, 56],
+        browser: [36, 590, 156, 56],
         element: [250, 70, 520, 56],
         context: [800, 70, 390, 56],
         controller: [246, 200, 268, 350],
@@ -2242,6 +2247,7 @@
         motion: [566, 810, 300, 56],
         registry: [886, 810, 308, 56],
         dom: [1244, 110, 246, 80],
+        broDom: [1244, 214, 246, 52],
         island: [1244, 350, 246, 56],
         spaces: [1244, 430, 246, 48],
         css: [1244, 570, 246, 48],
@@ -2254,8 +2260,10 @@
         'el-app': {pts: [[600, 70], [600, 26], [60, 26], [60, 150]]},
         'app-srv': {pts: [[114, 190], [114, 228]], lp: [114, 209]},
         'app-ng': {pts: [[36, 175], [26, 175], [26, 328], [36, 328]]},
-        'ng-el': {pts: [[192, 328], [234, 328], [234, 110], [250, 110]]},
-        'drawer-el': {pts: [[192, 408], [241, 408], [241, 118], [250, 118]], lp: [114, 452]},
+        'ng-el': {pts: [[192, 328], [228, 328], [228, 104], [250, 104]]},
+        'ng-prerender': {pts: [[114, 356], [114, 380]]},
+        'prerender-el': {pts: [[192, 408], [235, 408], [235, 112], [250, 112]]},
+        'drawer-el': {pts: [[192, 488], [242, 488], [242, 120], [250, 120]], lp: [114, 532]},
         'el-ctrl': {pts: [[380, 126], [380, 200]]},
         'el-ctx': {pts: [[770, 98], [800, 98]]},
         'css-ctx': {pts: [[1490, 594], [1510, 594], [1510, 30], [1000, 30], [1000, 70]], lp: [1250, 30]},
@@ -2264,8 +2272,8 @@
         'body-views': {pts: [[500, 388], [886, 388]], l: T('mvc.edges.body-views.l'), lp: [700, 388]},
         'details-views': {pts: [[500, 442], [886, 442]]},
         'host-views': {pts: [[500, 502], [856, 502], [856, 478], [886, 478]]},
-        'browser-host': {pts: [[192, 580], [238, 580], [238, 502], [260, 502]], lp: [114, 538]},
-        'browser-theme': {pts: [[192, 600], [222, 600], [222, 838], [246, 838]], lp: [114, 636]},
+        'browser-host': {pts: [[192, 610], [238, 610], [238, 502], [260, 502]], lp: [114, 572]},
+        'browser-theme': {pts: [[192, 630], [222, 630], [222, 838], [246, 838]], lp: [114, 666]},
         'reg-ctrl': {pts: [[960, 810], [960, 792], [470, 792], [470, 550]], lp: [600, 792]},
         'ctrl-layout': {pts: [[514, 530], [852, 530], [852, 598], [886, 598]], l: 'extend()', lp: [690, 530]},
         'views-layout': {pts: [[1040, 540], [1040, 570]]},
@@ -2283,7 +2291,9 @@
         'island-spaces': {pts: [[1367, 406], [1367, 430]]}
       },
       extra: [
-        {id: 'views-dom', from: 'views', to: 'dom', pts: [[1194, 240], [1210, 240], [1210, 150], [1244, 150]], l: T('mvc.extra.views-dom.l'), lp: [1222, 210]},
+        {id: 'views-dom', from: 'views', to: 'dom', pts: [[1194, 222], [1210, 222], [1210, 150], [1244, 150]], l: T('mvc.extra.views-dom.l'), lp: [1222, 186]},
+        {id: 'views-broDom', from: 'views', to: 'broDom', pts: [[1194, 250], [1244, 250]]},
+        {id: 'broDom-dom', from: 'broDom', to: 'dom', pts: [[1367, 214], [1367, 190]]},
         {id: 'dom-el', from: 'dom', to: 'element', dashed: 1, pts: [[1300, 110], [1300, 54], [720, 54], [720, 70]], l: 'bro-action', lp: [1010, 54]},
         {id: 'views-read', from: 'views', to: 'models', dashed: 1, pts: [[886, 320], [834, 320]], l: T('mvc.extra.views-read.l'), lp: [860, 308]}
       ],
