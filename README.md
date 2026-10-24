@@ -3,14 +3,82 @@
 Pixel-perfect Material data tables for Angular, and more.\
 A Web Components table engine on top of existing UI components.
 
-The table is the Custom Element `<table-bro>`: pages, sort, search, row details, a filter drawer, a server mode, light
-and dark themes, a kinetic page scroll and animated row details. A skin gives it the look and the controls of a UI
-library: Angular Material, Bootstrap 5, or plain HTML. The core has no runtime dependencies and works with any framework or none;
-Angular gets its own wrapper.
+Table, Bro is the Custom Element `<table-bro>`, a data table built for the look of a design system and the speed of a
+native page. Rows of a fixed height render without measurement, pages turn with a kinetic scroll, row details open as
+animated islands with Material 3 corners, and search, sort and filters run on the client or go to your server as one
+query. The core has no runtime dependencies and works with any framework or none; Angular gets its own wrapper. The look
+and the controls of the table come from a skin: a thin layer that puts the components of a UI library into the toolbar,
+the paginator, the cells and the filter drawer. Three skins ship with the table, Angular Material, Bootstrap 5 and plain
+HTML, and a skin for your own design system is written the same way, so the table uses your components and follows the
+theme of your application instead of bringing its own.
 
 [Demo](https://table-bro.com) · [Docs](https://table-bro.com/docs) · [Examples](https://table-bro.com/examples) ·
 [Architecture](ARCHITECTURE.md) · [Interactive diagram](https://table-bro.com/architecture) ·
 [API reference](docs/api/README.md) · [Changelog](CHANGELOG.md)
+
+## Basics
+
+- **Fixed row height.** Every body row has one height, so the table never measures rows and never reflows on data: a
+  page of 1000 rows renders as fast as a page of 10.
+- **Stable column widths.** Set a width per column, or let the table measure the content once and keep that width: the
+  columns never shift while the pages scroll, whatever the next page holds.
+- **Truncated text with hover tooltips.** Cell content stays on one line; what does not fit becomes an ellipsis with the
+  full value on hover, tags included.
+- **Animated pagination and page size.** A page turn is a kinetic scroll, a page size change grows or shrinks the table
+  in place.
+- **Animated table states.** Every state of the table is designed with its own motion: loading, empty, error and data
+  change into each other without a jump of the layout.
+
+## Design
+
+- **CSS styling of a real `<table>`.** The table is a plain `<table>` in the light DOM: your stylesheet, your selectors,
+  your design tokens apply as they are.
+- **Custom content through Custom Elements.** A cell renders any Custom Element: buttons, toggles, tags, icons, your own
+  components, with the data of the row as attributes.
+- **Shadows and rounded corners.** Material 3 elevation and corner radius on every piece of the table, the open details
+  included, with the corners animated as the details open.
+- **Dark and light mode.** The table follows the color scheme of the page, with a theme attribute for a page of the
+  other scheme.
+- **Any design system through a skin.** The Angular Material skin follows the theme of the application through Material
+  system tokens; the Bootstrap skin uses the variables of Bootstrap 5; the Native skin is plain HTML. They are the base
+  and the reference: a skin for your own component library gives the table your buttons, fields, toggles and tags.
+
+## Details
+
+- **Island Details as expansion panels.** A row opens into an island: a panel with Material 3 corners, a shared clip box
+  with its row and a liquid merge with the header and the paginator. Available as the paid module
+  `@table-bro-extended/island-details`.
+- **Default details as a regular row below.** Free row details render as one more row under the row, with the same
+  animation.
+- **Server-side details.** Both kinds load their content from a server on open, with a loading state in the panel.
+- **Details height computed on render.** The height of the details is measured at render time, so a panel of any content
+  opens to exactly its size.
+
+## Filtering and sorting
+
+- **Toolbar with search.** A toolbar in the style of the skin, with a title, a search field and the buttons of the
+  table.
+- **Custom user filters and sorting rules.** Filters and sort rules are functions of your own; the table applies them on
+  the client or passes them to the server in its query.
+- **Filter Drawer.** A side drawer with the filters of the table, in the controls of the skin: Material form fields,
+  Bootstrap inputs or native ones.
+- **Server mode.** Pages, search, sort, filters and details go to your server as one query object; the emulated server
+  of the Docs shows the contract.
+
+## AI
+
+- **MCP server for AI coding agents.** `@table-bro/mcp` gives Claude Code, Codex, Cursor or VS Code the reference of the
+  table, a check of a table spec and a code generator for Angular and Vanilla JS with the three skins. The agent writes
+  the files; the server only reads. With it an agent builds a full table up to 2× faster and with ~45% fewer tokens,
+  measured with Claude Opus, Sonnet and Haiku.
+
+  ```sh
+  claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.1.0
+  ```
+
+## On the roadmap
+
+Responsive layout for mobile, multi-row selection and inline cell editing.
 
 ## Packages
 
