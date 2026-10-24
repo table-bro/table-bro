@@ -28,6 +28,7 @@ describe('the reference', () => {
 
   it('finds the topics of a query', () => {
     expect(getDocs({query: 'filter drawer of the bs skin'})).toContain('# Filters and the Filter Drawer');
+    expect(getDocs({query: 'server-side rendering of the table'})).toContain('# Server-side rendering, the prerender');
   });
 
   it('weighs a rare word of a query more than a common one', () => {

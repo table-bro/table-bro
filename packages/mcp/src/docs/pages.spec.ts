@@ -41,6 +41,9 @@ function typeScriptErrors(): string[] {
 
   // The project of a reader installs the types of Bootstrap in the setup of the skin bs: the repository has none
   files.set(docFilePath('', 'bootstrap.d.ts'), 'declare module \'bootstrap\';\n');
+  // The project of a reader installs the server render of Angular in the steps of Prerendering, as the project angular-ssr
+  // of check:install does: the repository has none
+  files.set(docFilePath('', 'angular-ssr.d.ts'), 'declare module \'@angular/ssr\';\n');
 
   const folders = new Set([...files.keys()].flatMap(file => {
     const parts = path.relative(root, path.dirname(file)).split(path.sep);

@@ -1583,7 +1583,7 @@ Not for \`‹table-bro-ng›\`: it is a component of Angular in \`imports\` of t
 
 ##### Does it work with server-side rendering?
 
-Yes. The server render of Angular renders the table in its loading state, and the browser renders the table with its rows in the same element: the page shows the table before the application starts.
+Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the server-side rendering of Angular, as [Prerendering](https://table-bro.com/docs/ssr/prerendering) shows.
 
 #### Related
 
@@ -2228,6 +2228,189 @@ import OrdersTable from './OrdersTable.vue';
 
 createApp(OrdersTable).mount('#app');
 `}
+    ]
+  },
+  {
+    path: 'ssr/prerendering',
+    name: 'Prerendering',
+    text: `<!-- intro -->
+A page that a server renders shows the table before any script runs. The prerender renders the table in its loading state: the toolbar, the column headers, the loading row and the paginator, in the markup of its skin. The CSS of the skin sizes it, so the table takes its place on the page at once, and the page has no layout shift when the table renders in the browser. There the table renders with its rows in the same element, and the loading animation goes on instead of starting over.
+
+<!-- angular -->
+#### Angular SSR _since 1.2.0_
+
+\`‹table-bro-ng›\` prerenders the table itself during the server-side rendering of Angular, in the skins \`mat\`, \`bs\` and \`nv\`: the component of the table stays as it is in the browser. The application needs only the server render of Angular ([Angular, Server-side and hybrid rendering](https://angular.dev/guide/ssr)): the steps below are the ones of the project \`angular-ssr\` of the [installation check](https://github.com/table-bro/table-bro/blob/main/scripts/check-install.mjs) of Table, Bro, which prerenders a page with a table at the build and hydrates it in the browser.
+
+1. **Install the server render of Angular**
+
+   {{install-ssr.sh}}
+
+2. **Build the entry of the server**
+
+   To \`"options"\` of the build in \`angular.json\`: the entry of the server, and the prerender of the pages at the build.
+
+   {{angular.json}}
+
+3. **Start the application on the server**
+
+   \`src/main.server.ts\` starts the application with its config and the server render of its routes:
+
+   {{src/main.server.ts}}
+
+4. **Hydrate the page in the browser**
+
+   \`provideClientHydration()\` joins the providers of the application, next to the skin:
+
+   {{src/app.config.ts}}
+
+5. **Keep the table as it is**
+
+   {{src/app.ts}}
+
+The skin \`mat\` renders its elements on the server with the Angular components that \`provideTableBroMatSkin()\` provides. The skins \`bs\` and \`nv\` render their Custom Elements there when the server render loads the package of the skin: import \`@table-bro/bootstrap\` or \`@table-bro/native\` in a file that the server bundle has too, as \`app.config.ts\` or the component of the table. The import works without a DOM: it registers the skin and defines no elements. A skin that only \`main.ts\` registers is a skin of the browser: \`‹table-bro-ng›\` stays empty on the server, and the table renders in the browser.
+
+In the browser the first table of \`‹table-bro-ng›\` renders in the prerendered \`‹table-bro›\`, and the hydration of Angular does not check it.
+
+<!-- function -->
+#### prerenderTableBro() _since 1.2.0_
+
+Without Angular, \`prerenderTableBro(element, {cols, conf})\` of \`@table-bro/core\` renders the table into a \`‹table-bro›\` element of a server DOM, a DOM without a browser. It takes the columns and the config of \`configure()\`; the rows wait for the browser. The table creates its nodes in the document of the element, so the server needs no global \`document\`, and the imports of the core and of the skins \`bs\` and \`nv\` work without a DOM. The element goes into its document before the call, so that the elements of the skin render their markup as they connect:
+
+{{src/prerender.ts}}
+
+In the browser, \`configure()\` on the same element renders the table with its rows in place of the prerender:
+
+{{src/browser.ts}}
+
+The columns, the rows and the config come from \`src/orders.ts\`:
+
+{{src/orders.ts}}
+
+<!-- limits -->
+#### Limits
+
+1. **The loading state only**
+
+   The prerender renders the table without rows, in its loading state: the rows, the sort and the pages come with the table of the browser.
+
+2. **The theme auto**
+
+   The server does not know the color scheme of the system of the user. With the theme \`auto\` the prerendered table takes no class of a theme and shows the theme of the page; the table of the browser then follows the system. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+3. **The elements of the skin**
+
+   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
+
+4. **Critical CSS**
+
+   Angular inlines the critical CSS of a prerendered page with Beasties, which drops the selectors that start with a pseudo-class. The CSS of the core and of the skins keeps the layout of a prerendered table there: the sizes of a skin come also by \`table-bro:where([data-bro-prerender].<skin>)\`, so the prerendered table keeps its size before the stylesheets of the page load.
+
+<!-- related -->
+#### Related
+
+[Angular data table](https://table-bro.com/docs/frameworks/angular), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'install-ssr.sh', language: 'bash', code: `npm install @angular/platform-server @angular/ssr
+`},
+      {file: 'angular.json', language: 'json', code: `"server": "src/main.server.ts",
+"outputMode": "static"
+`},
+      {file: 'src/main.server.ts', language: 'ts', code: `import {mergeApplicationConfig}                         from '@angular/core';
+import {bootstrapApplication, type BootstrapContext}    from '@angular/platform-browser';
+import {provideServerRendering, RenderMode, withRoutes} from '@angular/ssr';
+
+import {App}       from './app';
+import {appConfig} from './app.config';
+
+const serverConfig = mergeApplicationConfig(appConfig, {providers: [provideServerRendering(withRoutes([{path: '**', renderMode: RenderMode.Prerender}]))]});
+
+export default (context: BootstrapContext) => bootstrapApplication(App, serverConfig, context);
+`},
+      {file: 'src/app.config.ts', language: 'ts', code: `import {type ApplicationConfig, provideZonelessChangeDetection} from '@angular/core';
+import {provideClientHydration}                                 from '@angular/platform-browser';
+
+import {provideTableBroMatSkin} from '@table-bro/angular-material';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZonelessChangeDetection(),
+    provideTableBroMatSkin(),
+    provideClientHydration()
+  ]
+};
+`},
+      {file: 'src/app.ts', language: 'ts', code: `import {Component} from '@angular/core';
+
+import {TableBroNg}             from '@table-bro/angular';
+import type {BroCol, BroConfig} from '@table-bro/core';
+
+interface Price {
+  name: string;
+  price: number;
+}
+
+// The template of the browser: the server render of Angular prerenders the table in its loading state
+@Component({
+  selector: 'app-root',
+  template: '<table-bro-ng [cols]="cols" [rows]="rows" [conf]="conf"></table-bro-ng>',
+  imports: [
+    TableBroNg
+  ]
+})
+export class App {
+  cols: BroCol<Price>[] = [
+    {
+      title: 'Name',
+      name: 'name'
+    }, {
+      title: 'Price',
+      name: 'price',
+      dataType: 'number'
+    }
+  ];
+
+  rows: Price[] = [
+    {
+      name: 'b',
+      price: 3
+    }, {
+      name: 'a',
+      price: 1
+    }, {
+      name: 'c',
+      price: 2
+    }
+  ];
+
+  conf: BroConfig<Price> = {skin: 'mat'};
+}
+`},
+      {file: 'src/prerender.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
+// The import registers the skin nv; without a DOM it defines no elements
+import '@table-bro/native';
+
+import {cols, conf} from './orders';
+
+/**
+ * Renders the table of the orders in its loading state into a page of a server DOM. The element is in the document
+ * first, so the elements of the skin connect and render their markup.
+ * @param page - the document of the page in the server DOM
+ */
+export function prerenderOrders(page: Document): void {
+  const table = page.createElement('table-bro');
+
+  page.body.append(table);
+  prerenderTableBro(table, {cols, conf});
+}
+`},
+      {file: 'src/browser.ts', language: 'ts', code: `import '@table-bro/native';
+
+import {cols, conf, rows} from './orders';
+
+// The prerendered table of the page: configure() renders the table with its rows in its place
+document.querySelector('table-bro')!.configure({cols, rows, conf});
+`},
+      frameworkOrders
     ]
   },
   {

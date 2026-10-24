@@ -384,6 +384,17 @@ Other sizes, fonts and colors of a skin need changes of its SCSS and a new build
 
 The wrapper creates the table outside of the Angular zone; its outputs emit inside it.`
   },
+  {
+    name: 'ssr',
+    title: 'Server-side rendering, the prerender',
+    summary: 'The prerender of the loading state on a server: <table-bro-ng> in Angular SSR, prerenderTableBro() without Angular, and its limits',
+    text: () => `
+- The prerender renders a table in its loading state on a server: the toolbar, the column headers, the loading row and the paginator, in the markup of the skin, sized by its CSS. The page shows the table before any script runs; in the browser the table renders with its rows in the same element, and the loading animation goes on.
+- Angular: \`<table-bro-ng>\` prerenders during the server-side rendering of Angular itself, in the skins mat, bs and nv; the template and the inputs stay as in the browser. The application needs the server render of Angular: \`@angular/ssr\` with \`provideServerRendering()\` in the config of the server, and \`provideClientHydration()\`. The skin mat renders on the server by \`provideTableBroMatSkin()\`. The skins bs and nv render there when a file of the server bundle imports \`@table-bro/bootstrap\` or \`@table-bro/native\`, as \`app.config.ts\` or the component of the table; a skin that only \`main.ts\` imports leaves \`<table-bro-ng>\` empty on the server.
+- Without Angular: \`prerenderTableBro(element, {cols, conf})\` of \`@table-bro/core\` renders into a \`<table-bro>\` of a server DOM, appended to its document before the call. The rows wait for the browser, where \`configure({cols, rows, conf})\` on the same element renders the table in its place. The imports of the core and of the skins bs and nv work without a DOM: they register the skins and define no elements.
+- Limits: the loading state only. With the theme \`auto\` the prerendered table takes no theme class and shows the theme of the page, since the server knows no system theme. The elements of a skin render on the server only where the skin has \`BroSkinConfig.defineElements(registry)\` (bs, nv) and the window of the server DOM has \`customElements\`; else they stay empty tags until the browser renders the table. Angular inlines the critical CSS of a prerendered page with Beasties, and the CSS of the core and of the skins keeps the layout of a prerendered table there.
+- The page of Docs with the code: get_docs topic \`ssr/prerendering\`.`
+  },
   // The pages of Docs on table-bro.com, from the same source as the site
   ...docPages.map(page => ({name: page.path, title: page.name, summary: `The page of Docs ${page.name}, with its code`, text: () => docPageMarkdown(page)}))
 ];
