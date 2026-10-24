@@ -1,3 +1,4 @@
+import {BroDom}                                       from '../../../shared/dom';
 import {BroHTMLElement}                               from '../../../shared/html';
 import {dispatchAction}                               from '../../../shared/interaction';
 import {BroMotion}                                    from '../../../shared/motion';
@@ -191,7 +192,7 @@ export class BroDetailsButton extends BroHTMLElement implements BroView, BroConf
   }
 
   private renderButtonWithIcon(): HTMLElement {
-    const button: HTMLElement = document.createElement(this.config.components.button.selector);
+    const button: HTMLElement = new BroDom(this.ownerDocument).createElement(this.config.components.button.selector);
 
     this.config.components.button.beforeRender(button, this.buttonTitle);
 
