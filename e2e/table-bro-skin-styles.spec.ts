@@ -3,8 +3,8 @@ import type {BroFilterDrawerHTMLElement, TableBroHTMLElement} from '@table-bro/c
 import {expect, type Locator, type Page, test} from '@playwright/test';
 import {compile}                               from 'sass';
 
-import type {createContext} from '../packages/core/shared/context';
-import {bodyTable}          from './table-bro.fixtures';
+import type {createContext}      from '../packages/core/shared/context';
+import {bodyTable, safariStyles} from './table-bro.fixtures';
 
 // The styles that the skins give an application by themselves, without the styles of the stand.
 
@@ -171,8 +171,11 @@ test('the filter drawer of the mat skin lies over a table that would be narrower
   await expect(drawer).toHaveClass(/mat-drawer-side/);
 });
 
-test('the native bars of the nv skin have in WebKit and Firefox the height and the place of the bars of Chromium', {tag: '@smoke'}, async ({page}) => {
+test('the native bars of the nv skin have in WebKit and Firefox the height and the place of the bars of Chromium', {tag: '@smoke'}, async ({page, browserName}) => {
   await page.goto('/', {waitUntil: 'networkidle'});
+
+  // WebKit of Linux takes no styles for Safari and draws its bar over the height of the box
+  test.skip(browserName === 'webkit' && !(await safariStyles(page)), 'the styles for Safari need WebKit of macOS');
 
   // The details of the row c never end their loading: its bar stays in the aux row, with the bar of the loading in the header
   await page.evaluate(() => {

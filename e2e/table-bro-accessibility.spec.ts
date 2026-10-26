@@ -3,9 +3,9 @@ import type {BroActionDetail, BroCellActionData, BroRow, BroRowDetailsElement, T
 import AxeBuilder                              from '@axe-core/playwright';
 import {expect, type Locator, type Page, test} from '@playwright/test';
 
-import type {createContext} from '../packages/core/shared/context';
-import {bodyTable}          from './table-bro.fixtures';
-import {cellTexts, mount}   from './table-bro.mount';
+import type {createContext}      from '../packages/core/shared/context';
+import {bodyTable, safariStyles} from './table-bro.fixtures';
+import {cellTexts, mount}        from './table-bro.mount';
 
 // The accessibility of the skins: the names of the controls, the keyboard, and the table as one table with column
 // headers for screen readers.
@@ -108,6 +108,9 @@ test('the native outline of the details link of an open row of the nv skin is on
 
   const table = await mount(page, detailsTable('nv'));
 
+  // WebKit of Linux takes no styles for Safari, and Option+Tab, the key of Safari for links, does not focus there
+  test.skip(browserName === 'webkit' && !(await safariStyles(page)), 'the styles for Safari need WebKit of macOS');
+
   await expect.poll(() => cellTexts(table, 2)).toEqual(['b', 'a', 'c']);
 
   // The cell of the link in a layer of its own, as Island Details gives it in WebKit for the focus of the keyboard
@@ -191,6 +194,9 @@ test('the native outline of the links of the toolbar of the nv skin is one recta
     document.body.append(el);
   `);
 
+  // WebKit of Linux takes no styles for Safari and draws the step of the outline that they remove
+  test.skip(browserName === 'webkit' && !(await safariStyles(page)), 'the styles for Safari need WebKit of macOS');
+
   // Safari takes links into the order of Tab with Option
   const tab = (browserName === 'webkit') ? 'Alt+Tab' : 'Tab';
 
@@ -254,13 +260,13 @@ test('the native outline of the links of the toolbar of the nv skin is one recta
   await page.screencast.stop();
 });
 
-test('the menu of the toolbar of the nv skin shows its whole title, also in Safari', {tag: '@smoke'}, async ({page, browserName}) => {
+test('the menu of the toolbar of the nv skin shows its whole title, also in Safari', {tag: '@smoke'}, async ({page}) => {
   const table = await mount(page, `
     el.configure({cols, rows, conf: {skin: 'nv', toolbarTitle: 'Orders', components: {toolbarMain: {buttons: [{buttonTitle: 'Filters', eventType: 'bro-filters-toggle'}, ${moreMenu}]}}}});
     document.body.append(el);
   `);
 
-  // The select keeps the place of its arrow beside its title: about 20px in Chrome, more in WebKit, which cut the title
+  // The select keeps the place of its arrow beside its title: about 20px in Chrome, more in Safari, which cut the title
   // of a select of 60px to "Mo"
   const select = table.getByRole('combobox', {name: 'More'});
   const place = await select.evaluate(el => {
@@ -271,7 +277,7 @@ test('the menu of the toolbar of the nv skin shows its whole title, also in Safa
     return el.getBoundingClientRect().width - context.measureText((el as HTMLSelectElement).selectedOptions[0].text).width;
   });
 
-  expect(place).toBeGreaterThanOrEqual((browserName === 'webkit') ? 30 : 15);
+  expect(place).toBeGreaterThanOrEqual((await safariStyles(page)) ? 30 : 15);
 });
 
 for (const skin of ['mat', 'nv', 'bs']) {
