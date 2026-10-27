@@ -972,6 +972,31 @@ test('a refresh fades the cells of the body and lays no white layer over the spa
   await table.evaluate((el: TableBroHTMLElement) => el.setState('idle'));
   await expect.poll(() => cell.evaluate(node => getComputedStyle(node).opacity)).toBe('1');
   await expect(table.locator(':scope > style[data-bro-refresh]')).toHaveText('');
+  expect(await table.evaluate(el => el.style.getPropertyValue('--bro-refresh-cell-opacity'))).toBe('');
+});
+
+test('a refresh writes the rule of its dimming once and animates only the opacity in a custom property', async ({page}) => {
+  const table = await mountTable(page, {cols: priceCols, rows: priceRows, config: {skin: 'mat'}});
+
+  // A new text of a <style> makes WebKit match the rules of the whole document again, at every frame of the fade
+  const writes = await table.evaluate(async (el: TableBroHTMLElement) => {
+    const texts: string[] = [];
+    // Each write of the text replaces the children of the <style>: one record with the style as its target
+    const observer = new MutationObserver(records => records
+      .filter(record => record.target instanceof HTMLStyleElement && record.target.matches('[data-bro-refresh]'))
+      .forEach(record => texts.push(record.target.textContent ?? '')));
+
+    observer.observe(el, {childList: true, subtree: true});
+    el.setState('refreshing');
+    await new Promise(resolve => setTimeout(resolve, 600));
+    el.setState('idle');
+    await new Promise(resolve => setTimeout(resolve, 600));
+    observer.disconnect();
+
+    return texts.filter((text, i) => text !== texts[i - 1]);
+  });
+
+  expect(writes).toEqual([expect.stringContaining('opacity: var(--bro-refresh-cell-opacity)'), '']);
 });
 
 test('the progress of loaded details fades from the first frame of their opening', async ({page}) => {

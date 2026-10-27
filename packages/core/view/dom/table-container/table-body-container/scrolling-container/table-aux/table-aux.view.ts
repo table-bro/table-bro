@@ -13,6 +13,9 @@ import {BroTheadAux}                    from './thead/thead-aux.view';
 /** The canvas that compares the widths of the plain values of a column. */
 let measureCanvas: HTMLCanvasElement | undefined;
 
+/** The custom property of the host with the opacity that a refresh gives the cells of the body. */
+const refreshOpacityProperty: string = '--bro-refresh-cell-opacity';
+
 export class BroTableAux implements BroView {
   static template(config: BroResolvedConfig): string {
     return BroTable.template(config, false, {className: selectors.tableAux, ariaHidden: true});
@@ -40,11 +43,9 @@ export class BroTableAux implements BroView {
 
     // A new body starts without the dimming of a refresh, as before it with a new aux table: the dimming of the previous
     // body would stay in the style of the host
-    const refreshStyle = this.refreshStyle();
-
-    if (refreshStyle) {
+    if (this.refreshStyle()) {
       motion.cancel('refresh-overlay');
-      refreshStyle.textContent = '';
+      this.renderRefreshOpacity(null);
     }
 
     this.tbodyAux = new BroTbodyAux(this.ctx, this.rows);
@@ -413,13 +414,27 @@ export class BroTableAux implements BroView {
     return this.ctx.host.querySelector<HTMLStyleElement>(`:scope > style[data-bro-column-widths="${kind}"]`);
   }
 
-  /** The opacity of the cells of the body in one <style> of the host, and no clicks on them; null takes the rule away. */
+  /**
+   * The opacity of the cells of the body in one <style> of the host, and no clicks on them; null takes the rule away.
+   * The rule is written once per refresh and the frames change only its custom property on the host: WebKit matches
+   * the rules of the whole document again for each new text of a <style>, at each frame of the scroll to a server page.
+   */
   private renderRefreshOpacity(opacity: number | null): void {
     const {host, config} = this.ctx;
 
     this.refreshOpacity = opacity;
 
     let style = this.refreshStyle();
+
+    if (opacity === null) {
+      if (style) {
+        style.textContent = '';
+      }
+
+      host.style.removeProperty(refreshOpacityProperty);
+
+      return;
+    }
 
     if (!style) {
       style = this.ctx.dom.createElement('style');
@@ -433,14 +448,16 @@ export class BroTableAux implements BroView {
       host.prepend(style);
     }
 
+    host.style.setProperty(refreshOpacityProperty, `${opacity}`);
+
     // The body table lies right in the scrolling container: the tables in the details of its rows stay out
-    style.textContent = (opacity === null)
-      ? ''
-      : `
+    if (!style.textContent) {
+      style.textContent = `
       ${this.hostSelector()} .${tableSelectors.tableBody} > table:not(.${selectors.tableAux}) > tbody > tr > td {
-        opacity: ${opacity};
+        opacity: var(${refreshOpacityProperty});
         pointer-events: none;
       }`;
+    }
   }
 
   /** The <style> of the dimming of a refresh in the host, if the table has one. */
