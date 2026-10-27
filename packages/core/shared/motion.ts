@@ -30,13 +30,18 @@ interface BroTrack {
   readonly key: string | null;
   readonly label: string;
   readonly kind: BroMotionTrackInfo['kind'];
-  /** The start on the time of the animations, which stands still during a pause; see now(). */
-  readonly start: number;
+  /**
+   * The start on the time of the animations, which stands still during a pause; see now(). Null until the first frame
+   * of the track, which sets it one frame period before itself: see startOf().
+   */
+  start: number | null;
+  /** The kinetic runs that the track starts with, which share its start. */
+  readonly group?: BroKineticGroup;
   /** The start on the clock, for the performance timeline. */
   readonly clockStart: number;
   readonly params: BroAnimateParamsBase;
-  /** The progress at a frame time: 1 at the end of the track. */
-  readonly progress: (time: number) => number;
+  /** The progress at a time since the start: 1 at the end of the track. */
+  readonly progress: (elapsed: number) => number;
   /** The progress of the last frame. */
   drawn: number | null;
   /** Removed from the tracks: a draw earlier in the same frame may cancel a track that the frame still holds. */
@@ -51,13 +56,26 @@ interface BroTrack {
 interface BroKineticGroup {
   /** The frame count when the runs started. */
   readonly frame: number;
-  readonly start: number;
+  /** Null until the first frame of the runs. */
+  start: number | null;
   /** The share of the distance that may remain at the end; the smallest of the runs wins. */
   endShare: number;
 }
 
 /** How many ended tracks history keeps. */
 const historySize: number = 50;
+
+/** How many of the last intervals between the frames give the frame period of the display. */
+const periodSamples: number = 30;
+
+/** How many intervals the frame period needs: before that the frames keep the times of the browser. */
+const periodMinSamples: number = 5;
+
+/** The frame period until the intervals give it: 60 Hz, the rate of most displays and of the frames of Safari. */
+const defaultFramePeriod: number = 1000 / 60;
+
+/** The share of the difference to the time of the browser by which each frame pulls the grid of the frames to it. */
+const gridPull: number = 0.1;
 
 /** How much config.debugAnimation slows the animations down: 350 ms take about 2 s. */
 export const debugDurationScale: number = 6;
@@ -98,13 +116,27 @@ export class BroMotion {
   /** How far the time of the animations lags behind the clock: the pauses minus the steps. */
   private lag: number = 0;
 
+  /** The frame period of the display in ms, 0 until enough intervals between the frames are known. */
+  private framePeriod: number = 0;
+  /** The last intervals between two frames of the loop, on the clock. */
+  private intervals: number[] = [];
+  /** The time of the browser of the last frame of the loop; null when the loop starts again. */
+  private lastClockFrame: number | null = null;
+  /** The time of the last frame of the loop on the grid of the frame period; null when the loop starts again. */
+  private lastFrame: number | null = null;
+
   private readonly frame = (time: number): void => {
     this.scheduled = false;
 
     // A frame requested before pause() draws nothing
     if (this.pausedAt === null) {
-      this.draw(time - this.lag);
+      this.draw(this.frameTime(time) - this.lag);
       this.schedule();
+
+      // The next run starts a new loop: the time between the two does not count as an interval
+      if (!this.scheduled) {
+        this.lastClockFrame = this.lastFrame = null;
+      }
     }
   };
 
@@ -131,24 +163,23 @@ export class BroMotion {
    * @param params - the duration, the curve and the draw of the run
    */
   animate(key: string | null, params: BroAnimateParams): void {
-    const start = this.now();
     const duration = params.duration * this.durationScale;
 
     this.startTrack({
       key,
       label: params.label || key || 'animation',
       kind: 'eased',
-      start,
+      start: null,
       clockStart: this.clock.now(),
       params,
       drawn: null,
-      progress: (time: number): number => {
+      progress: (elapsed: number): number => {
         // A run without a duration ends at its first frame
         if (duration <= 0) {
           return 1;
         }
 
-        const timeFraction = Math.min((time - start) / duration, 1);
+        const timeFraction = Math.min(elapsed / duration, 1);
 
         return (timeFraction === 1) ? 1 : params.timing(timeFraction);
       }
@@ -170,20 +201,17 @@ export class BroMotion {
       key,
       label: params.label || key || 'animation',
       kind: 'kinetic',
-      start: group.start,
+      start: null,
+      group,
       clockStart: this.clock.now(),
       params,
       drawn: null,
-      progress: (time: number): number => {
+      progress: (elapsed: number): number => {
         if (timeConstant <= 0) {
           return 1;
         }
 
-        const progress = kinetic((time - group.start) / timeConstant);
-
-        if (progress < 0) {
-          return 0;
-        }
+        const progress = kinetic(elapsed / timeConstant);
 
         return (1 - progress < group.endShare) ? 1 : progress;
       }
@@ -206,6 +234,7 @@ export class BroMotion {
   /** Stops the time of the animations: the tracks keep their progress until resume() or step(). */
   pause(): void {
     this.pausedAt ??= this.clock.now();
+    this.lastClockFrame = this.lastFrame = null;
   }
 
   /** Lets the time of the animations go on from where pause() stopped it. */
@@ -231,7 +260,7 @@ export class BroMotion {
   tracks(): BroMotionTrackInfo[] {
     const now = this.now();
 
-    return this.running.map(({key, label, kind, start, drawn}) => ({key, label, kind, elapsed: now - start, progress: drawn}));
+    return this.running.map(({key, label, kind, start, drawn}) => ({key, label, kind, elapsed: (start === null) ? 0 : now - start, progress: drawn}));
   }
 
   /** Resolves when no track runs, at once when none does. */
@@ -244,7 +273,7 @@ export class BroMotion {
   /** The group of the kinetic runs started before the next frame, with the smallest end share among them. */
   private joinKineticGroup(endShare: number): BroKineticGroup {
     if (this.kineticGroup?.frame !== this.frames) {
-      this.kineticGroup = {frame: this.frames, start: this.now(), endShare};
+      this.kineticGroup = {frame: this.frames, start: null, endShare};
     }
 
     this.kineticGroup.endShare = Math.min(this.kineticGroup.endShare, endShare);
@@ -269,7 +298,7 @@ export class BroMotion {
     track.ended = true;
     this.running = this.running.filter(running => running !== track);
 
-    const duration = this.now() - track.start;
+    const duration = (track.start === null) ? 0 : this.now() - track.start;
 
     this.history.push({label: track.label, reason, duration});
     this.history.splice(0, this.history.length - historySize);
@@ -292,6 +321,57 @@ export class BroMotion {
     if (!this.running.length) {
       this.idleResolvers.splice(0).forEach(resolve => resolve());
     }
+  }
+
+  /**
+   * The time of a frame on the grid of the frame period of the display. The browser gives the frames uneven times,
+   * WebKit rounds them to 1 ms and gives 16, 17 and 18 ms at 60 Hz, and a run that draws the position at that time
+   * moves by uneven steps; the frames of the display come at an even period. The grid follows a dropped frame, and
+   * each frame pulls it a little to the time of the browser, so a period a little off does not drift away.
+   * Until the intervals give the period, the frames keep the times of the browser.
+   * @param time - the time of the browser of the frame
+   */
+  private frameTime(time: number): number {
+    if (this.lastClockFrame !== null && time > this.lastClockFrame) {
+      this.intervals.push(time - this.lastClockFrame);
+      this.intervals.splice(0, this.intervals.length - periodSamples);
+      this.framePeriod = framePeriodOf(this.intervals);
+    }
+
+    this.lastClockFrame = time;
+
+    const period = this.framePeriod;
+    let gridTime: number = time;
+
+    if (this.lastFrame !== null && period) {
+      const snapped = this.lastFrame + Math.max(1, Math.round((time - this.lastFrame) / period)) * period;
+
+      // A frame less than half a period after the last one keeps the time of the browser, never earlier than the
+      // last frame
+      gridTime = (Math.abs(snapped - time) <= period / 2) ? snapped + (time - snapped) * gridPull : Math.max(time, this.lastFrame);
+    }
+
+    this.lastFrame = gridTime;
+
+    return gridTime;
+  }
+
+  /**
+   * The start of a track, set at its first frame one frame period before it: the first frame moves the track by one
+   * period, as the next frames do, and a run without a distance ends there. A start at the call would give the first
+   * frame only the time from the call to the frame, a few ms. The kinetic runs of one batch share the start of the
+   * first of them.
+   * @param track - the track to draw
+   * @param time - the time of the animations of the frame
+   */
+  private startOf(track: BroTrack, time: number): number {
+    if (track.start === null) {
+      const start = time - (this.framePeriod || defaultFramePeriod);
+
+      track.start = track.group ? (track.group.start ??= start) : start;
+    }
+
+    return track.start;
   }
 
   /** The time of the animations: the clock without the pauses. */
@@ -329,7 +409,7 @@ export class BroMotion {
       let progress: number;
 
       try {
-        progress = track.progress(time);
+        progress = track.progress(time - this.startOf(track, time));
         track.drawn = progress;
         track.params.draw(progress);
       } catch (error) {
@@ -344,6 +424,23 @@ export class BroMotion {
       }
     }
   }
+}
+
+/**
+ * The frame period of the display: the mean of the intervals near their median. The median leaves out the dropped
+ * frames, and the mean evens out the rounding of the times, as 16 and 17 ms of WebKit at 60 Hz.
+ * @param intervals - the last intervals between two frames
+ */
+function framePeriodOf(intervals: number[]): number {
+  if (intervals.length < periodMinSamples) {
+    return 0;
+  }
+
+  const sorted = [...intervals].sort((a, b) => a - b);
+  const median = sorted[sorted.length >> 1];
+  const near = sorted.filter(interval => interval > median * 0.75 && interval < median * 1.25);
+
+  return near.reduce((sum, interval) => sum + interval, 0) / near.length;
 }
 
 /** Reports an error the way the browser reports an uncaught one: on the console and as the error event of the window. */

@@ -50,6 +50,29 @@ function setup(): {clock: FakeClock; motion: BroMotion; abort: () => void} {
   return {clock, motion: new BroMotion(lifecycle.signal, false, clock), abort: () => lifecycle.abort()};
 }
 
+/**
+ * The time of the first frame of a run started at 0: a run starts one frame period before its first frame, and the
+ * period is 60 Hz until the intervals between the frames give it. From this frame on, the time of a frame is the time
+ * since the start.
+ */
+const firstFrame: number = 1000 / 60;
+
+/**
+ * Draws the frames of a run started at 0 at the times of WebKit at 60 Hz, rounded to 1 ms.
+ * @param clock - the fake clock of the run
+ * @param count - how many frames to draw
+ */
+function webkitFrames(clock: FakeClock, count: number): void {
+  for (let i = 1; i <= count; i++) {
+    clock.frame(Math.round(i * 1000 / 60));
+  }
+}
+
+/** The steps between the progress of the frames. */
+function steps(drawn: number[]): number[] {
+  return drawn.slice(1).map((progress, i) => progress - drawn[i]);
+}
+
 /** The time after which a kinetic run reaches its end: 1 - e^(-t / 350) > 0.9999. */
 const kineticEnd: number = 350 * Math.log(1e4);
 
@@ -60,42 +83,41 @@ describe('BroMotion.animate', () => {
 
     motion.animate('k', {duration: 350, timing: easeInOutSine, draw: progress => drawn.push(progress)});
 
-    clock.frame(100);
+    clock.frame(firstFrame);
     clock.frame(350);
     clock.frame(400);
 
-    expect(drawn).toEqual([easeInOutSine(100 / 350), 1]);
+    expect(drawn).toEqual([easeInOutSine(firstFrame / 350), 1]);
     expect(clock.pending).toBe(0);
   });
 
-  it('passes a frame time before the start to the easing as it is', () => {
+  it('starts at its first frame, one frame period before it, however long the frame takes to come', () => {
     const {clock, motion} = setup();
     const drawn: number[] = [];
 
-    clock.set(100);
-    motion.animate('k', {duration: 350, timing: easeInOutSine, draw: progress => drawn.push(progress)});
-    clock.frame(90);
+    motion.animate('k', {duration: 350, timing: x => x, draw: progress => drawn.push(progress)});
+    clock.set(2);
+    clock.frame(5);
 
-    expect(drawn).toEqual([easeInOutSine(-10 / 350)]);
+    expect(drawn).toEqual([firstFrame / 350]);
   });
 });
 
 describe('BroMotion.animateKinetic', () => {
-  it('decays exponentially, starts at 0 at the latest and snaps to 1 at the end', () => {
+  it('decays exponentially from its first frame and snaps to 1 at the end', () => {
     const {clock, motion} = setup();
     const drawn: number[] = [];
 
-    clock.set(100);
     motion.animateKinetic('k', {duration: 350, draw: progress => drawn.push(progress)});
 
-    clock.frame(90);
-    clock.frame(100 + 350);
-    clock.frame(100 + Math.floor(kineticEnd));
-    clock.frame(100 + Math.ceil(kineticEnd));
-    clock.frame(100 + 4000);
+    clock.frame(firstFrame);
+    clock.frame(350);
+    clock.frame(Math.floor(kineticEnd));
+    clock.frame(Math.ceil(kineticEnd));
+    clock.frame(4000);
 
     expect(drawn.length).toBe(4);
-    expect(drawn[0]).toBe(0);
+    expect(drawn[0]).toBeCloseTo(1 - Math.exp(-firstFrame / 350), 10);
     expect(drawn[1]).toBeCloseTo(1 - Math.exp(-1), 10);
     expect(drawn[2]).toBeLessThan(1);
     expect(drawn[3]).toBe(1);
@@ -111,12 +133,13 @@ describe('BroMotion.animateKinetic with a distance', () => {
 
     motion.animateKinetic('k', {duration: 350, distance: -200, draw: progress => drawn.push(progress)});
 
+    clock.frame(firstFrame);
     clock.frame(Math.floor(end));
     clock.frame(Math.ceil(end));
 
-    expect(drawn[0]).toBeLessThan(1);
-    expect(200 * (1 - drawn[0])).toBeGreaterThanOrEqual(0.5);
-    expect(drawn[1]).toBe(1);
+    expect(drawn[1]).toBeLessThan(1);
+    expect(200 * (1 - drawn[1])).toBeGreaterThanOrEqual(0.5);
+    expect(drawn[2]).toBe(1);
     expect(clock.pending).toBe(0);
   });
 
@@ -131,17 +154,19 @@ describe('BroMotion.animateKinetic with a distance', () => {
 
     const end: number = 350 * Math.log(400);
 
+    clock.frame(firstFrame);
     clock.frame(500);
     clock.frame(Math.floor(end));
     clock.frame(Math.ceil(end));
 
     expect(drawn.scroll).toEqual(drawn.height);
-    expect(drawn.scroll[1]).toBeLessThan(1);
-    expect(drawn.scroll[2]).toBe(1);
+    expect(drawn.scroll[2]).toBeLessThan(1);
+    expect(drawn.scroll[3]).toBe(1);
 
     // A run started after a frame forms its own group
     motion.animateKinetic('pagination', {duration: 350, distance: 20, draw: () => undefined});
-    clock.frame(Math.ceil(end) + Math.ceil(350 * Math.log(40)));
+    clock.frame(Math.ceil(end) + 100);
+    clock.frame(Math.ceil(end) + 100 + Math.ceil(350 * Math.log(40)));
     expect(motion.tracks()).toEqual([]);
   });
 
@@ -332,6 +357,7 @@ describe('BroMotion debugging', () => {
       {key: null, label: 'animation', kind: 'eased', elapsed: 0, progress: null}
     ]);
 
+    clock.frame(firstFrame);
     clock.frame(175);
 
     expect(motion.tracks().map(track => [track.elapsed, track.progress])).toEqual([
@@ -344,7 +370,7 @@ describe('BroMotion debugging', () => {
   it('records why each track ended', () => {
     const {clock, motion, abort} = setup();
 
-    motion.animate('done', {duration: 100, timing: easeInOutSine, draw: () => undefined});
+    motion.animate('done', {duration: 10, timing: easeInOutSine, draw: () => undefined});
     motion.animate('replaced', {duration: 350, timing: easeInOutSine, draw: () => undefined});
     motion.animate('replaced', {duration: 350, timing: easeInOutSine, draw: () => undefined});
     motion.animate('cancel', {duration: 350, timing: easeInOutSine, draw: () => undefined});
@@ -366,7 +392,8 @@ describe('BroMotion debugging', () => {
       'replaced: cancelAll',
       'aborted: aborted'
     ]);
-    expect(motion.history[2].duration).toBe(100);
+    // From the start, one frame period before the first frame, to the end at that frame
+    expect(motion.history[2].duration).toBeCloseTo(firstFrame, 10);
   });
 
   it('keeps the last 50 ended tracks', () => {
@@ -389,7 +416,7 @@ describe('BroMotion debugging', () => {
     motion.animate('k', {duration: 350, timing: easeInOutSine, draw: () => undefined});
     motion.idle().then(() => idle = true);
 
-    clock.frame(100);
+    clock.frame(firstFrame);
     await Promise.resolve();
     expect(idle).toBe(false);
 
@@ -409,11 +436,12 @@ describe('BroMotion.durationScale', () => {
     motion.animate('eased', {duration: 350, timing: easeInOutSine, draw: progress => eased.push(progress)});
     motion.animateKinetic('kinetic', {duration: 350, draw: progress => kinetics.push(progress)});
 
+    clock.frame(firstFrame);
     clock.frame(6 * 175);
     clock.frame(6 * 350);
 
-    expect(eased).toEqual([easeInOutSine(0.5), 1]);
-    expect(kinetics[0]).toBeCloseTo(1 - Math.exp(-0.5), 10);
+    expect(eased.slice(1)).toEqual([easeInOutSine(0.5), 1]);
+    expect(kinetics[1]).toBeCloseTo(1 - Math.exp(-0.5), 10);
   });
 
   it('slows the animations down for config.debugAnimation', () => {
@@ -489,7 +517,9 @@ describe('BroMotion.pause', () => {
 
     motion.animate('k', {duration: 1000, timing: x => x, draw: progress => drawn.push(progress)});
 
+    clock.frame(firstFrame);
     clock.frame(100);
+    drawn.shift();
     motion.pause();
     expect(motion.paused).toBe(true);
 
@@ -521,12 +551,69 @@ describe('BroMotion.pause', () => {
     motion.animateKinetic('pagination', {duration: 350, distance: 200, draw: progress => drawn.scroll.push(progress)});
     motion.animateKinetic('body-height', {duration: 350, distance: 50, draw: progress => drawn.height.push(progress)});
 
+    clock.frame(firstFrame);
     clock.frame(100);
     motion.pause();
     clock.frame(3000);
     motion.step(100);
 
     expect(drawn.scroll).toEqual(drawn.height);
-    expect(drawn.scroll[1]).toBeCloseTo(1 - Math.exp(-200 / 350), 10);
+    expect(drawn.scroll[2]).toBeCloseTo(1 - Math.exp(-200 / 350), 10);
+  });
+});
+
+describe('BroMotion frame times', () => {
+  it('puts the frames on the grid of the display, so a run moves by even steps at the rounded frame times of WebKit', () => {
+    const {clock, motion} = setup();
+    const drawn: number[] = [];
+
+    motion.animate('k', {duration: 2000, timing: x => x, draw: progress => drawn.push(progress)});
+    webkitFrames(clock, 40);
+
+    // The times of the browser alone give steps of 16 and 17 ms; the grid needs five intervals to know the period
+    const even = steps(drawn).slice(6);
+
+    expect(Math.max(...even) / Math.min(...even)).toBeLessThan(1.01);
+    expect(even.reduce((sum, step) => sum + step, 0) / even.length).toBeCloseTo(1000 / 60 / 2000, 5);
+  });
+
+  it('starts a run one frame period of the display before its first frame', () => {
+    const {clock, motion} = setup();
+    const drawn: number[] = [];
+
+    // A 120 Hz display: the first run gives the period
+    motion.animate('warm', {duration: 100, timing: x => x, draw: () => undefined});
+
+    for (let i = 1; i <= 15; i++) {
+      clock.frame(i * 1000 / 120);
+    }
+
+    expect(clock.pending).toBe(0);
+
+    clock.set(1000);
+    motion.animate('k', {duration: 1000, timing: x => x, draw: progress => drawn.push(progress)});
+    clock.frame(1003);
+
+    expect(drawn[0]).toBeCloseTo(1000 / 120 / 1000, 10);
+  });
+
+  it('follows a dropped frame and keeps the time of the browser for a frame that comes early', () => {
+    const {clock, motion} = setup();
+    const drawn: number[] = [];
+    const period: number = 1000 / 60;
+
+    motion.animate('k', {duration: 2000, timing: x => x, draw: progress => drawn.push(progress * 2000)});
+
+    for (let i = 1; i <= 10; i++) {
+      clock.frame(i * period);
+    }
+
+    // Frame 11 is dropped
+    clock.frame(12 * period);
+    expect(drawn[10] - drawn[9]).toBeCloseTo(2 * period, 5);
+
+    // 3 ms after the last frame: the next point of the grid would be 14 ms ahead of the browser
+    clock.frame(12 * period + 3);
+    expect(drawn[11]).toBeCloseTo(12 * period + 3, 5);
   });
 });

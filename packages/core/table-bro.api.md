@@ -662,6 +662,10 @@ export declare class BroMotion {
     private kineticGroup;
     private pausedAt;
     private lag;
+    private framePeriod;
+    private intervals;
+    private lastClockFrame;
+    private lastFrame;
     private readonly frame;
     constructor(signal: AbortSignal, debug?: boolean | undefined, clock?: BroClock);
     get paused(): boolean;
@@ -678,6 +682,8 @@ export declare class BroMotion {
     private startTrack;
     private removeTracks;
     private endTrack;
+    private frameTime;
+    private startOf;
     private now;
     private schedule;
     private draw;
