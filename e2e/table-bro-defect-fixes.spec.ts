@@ -1964,6 +1964,31 @@ test('the config gives the page sizes of the paginator and the delay of the sear
   await expect(bodyTable(table).locator('tbody > tr[data-row-number]')).toHaveCount(1, {timeout: 3000});
 });
 
+for (const skin of ['mat', 'bs', 'nv']) {
+  test(`the ${skin} body keeps its rows on their page when a control of another page takes the focus`, async ({page}) => {
+    const rows = Array.from({length: 12}, (_, index) => ({name: `row ${index + 1}`, price: index}));
+    const table = await mountTable(page, {cols: priceCols, rows, config: {skin, pageSize: 3}});
+    const firstRow = bodyTable(table).locator('tbody > tr[data-row-number="1"]');
+    const top: number = await firstRow.evaluate(row => row.getBoundingClientRect().top);
+
+    // A control of the application in the last row, on the last page, takes the focus by a script: the browser scrolls
+    // to it every box that a script may scroll, and the rows move to their page by a transform only
+    const focused: boolean = await bodyTable(table).locator('tbody > tr[data-row-number="12"] > td').last().evaluate(cell => {
+      const button = cell.ownerDocument.createElement('button');
+
+      button.textContent = 'Edit';
+      cell.append(button);
+      button.focus();
+
+      return cell.ownerDocument.activeElement === button;
+    });
+
+    expect(focused).toBe(true);
+    expect(await table.locator('.bro-table-body_container').evaluate(el => el.scrollTop)).toBe(0);
+    expect(await firstRow.evaluate(row => row.getBoundingClientRect().top)).toBe(top);
+  });
+}
+
 test('a search typed just before the table is removed sends nothing after the removal', async ({page}) => {
   const errors: Error[] = [];
 

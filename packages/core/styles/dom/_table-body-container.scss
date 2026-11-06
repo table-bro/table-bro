@@ -5,7 +5,10 @@
 
   display: block;
 
-  overflow: hidden;
+  // The rows move to their page by a transform only. A clip, unlike hidden, makes no scroll container: a focus() or
+  // a scrollIntoView() of a control in a row out of the window, as while the frames of a hidden tab wait, cannot scroll
+  // the body and leave its rows off their page
+  overflow: clip;
 
   box-sizing: content-box;
   width: 100%;
