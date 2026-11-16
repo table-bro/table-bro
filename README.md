@@ -16,7 +16,9 @@ theme of your application instead of bringing its own.
 [Architecture](ARCHITECTURE.md) · [Interactive diagram](https://table-bro.com/architecture) ·
 [API reference](docs/api/README.md) · [Changelog](CHANGELOG.md)
 
-## Basics
+## Features
+
+### Basics
 
 - **Fixed row height.** Every body row has one height, so the table never measures rows and never reflows on data: a
   page of 1000 rows renders as fast as a page of 10.
@@ -29,7 +31,7 @@ theme of your application instead of bringing its own.
 - **Animated table states.** Every state of the table is designed with its own motion: loading, empty, error and data
   change into each other without a jump of the layout.
 
-## Design
+### Design
 
 - **CSS styling of a real `<table>`.** The table is a plain `<table>` in the light DOM: your stylesheet, your selectors,
   your design tokens apply as they are.
@@ -43,7 +45,7 @@ theme of your application instead of bringing its own.
   system tokens; the Bootstrap skin uses the variables of Bootstrap 5; the Native skin is plain HTML. They are the base
   and the reference: a skin for your own component library gives the table your buttons, fields, toggles and tags.
 
-## Details
+### Details
 
 - **Island Details as expansion panels.** A row opens into an island: a panel with Material 3 corners, a shared clip box
   with its row and a liquid merge with the header and the paginator. Available as the paid module
@@ -54,7 +56,7 @@ theme of your application instead of bringing its own.
 - **Details height computed on render.** The height of the details is measured at render time, so a panel of any content
   opens to exactly its size.
 
-## Filtering and sorting
+### Filtering and sorting
 
 - **Toolbar with search.** A toolbar in the style of the skin, with a title, a search field and the buttons of the
   table.
@@ -65,27 +67,7 @@ theme of your application instead of bringing its own.
 - **Server mode.** Pages, search, sort, filters and details go to your server as one query object; the emulated server
   of the Docs shows the contract.
 
-## Server-side rendering
-
-- **Prerendered loading state.** On the server the table renders its toolbar, header, loading row and paginator, so
-  the page shows its layout before any script runs; in the browser the table takes its place, and the loading
-  animation goes on.
-- **Angular SSR.** `<table-bro-ng>` prerenders during Angular server-side rendering in the skins `mat`, `bs` and `nv`,
-  with the template of the browser; `prerenderTableBro()` renders the same loading state into a server DOM without
-  Angular.
-
-## Accessibility and localization
-
-- **Screen readers.** The toolbar links of the Bootstrap and Native skins say what they do, the ones that act on the
-  table are buttons, and a live region tells the state of the table and the loading of row details.
-- **Keyboard and focus.** Focus rings show in full, the hidden items of a cell are out of the tab order, and the focus
-  goes back to the Filters button when the filter drawer closes.
-- **Texts in the language of the application.** `config.texts` sets the words of the toolbar, the search line, the
-  filter drawer, the paginator, the progress bar, the states and the row numbers, by the component of the skin; the
-  texts it does not set stay English. The paginator of the Angular Material skin takes its texts from
-  `MatPaginatorIntl`.
-
-## AI
+### AI
 
 - **MCP server for AI coding agents.** `@table-bro/mcp` gives Claude Code, Codex, Cursor or VS Code the reference of the
   table, a check of a table spec and a code generator for Angular and Vanilla JS with the three skins. The agent writes
@@ -100,6 +82,43 @@ theme of your application instead of bringing its own.
 
 Responsive layout for mobile, multi-row selection and inline cell editing.
 
+## Frameworks
+
+- **One Custom Element for every framework.** Every framework that renders HTML elements renders `<table-bro>`, without
+  a wrapper package: a page gives the table its columns, rows and config by `configure({cols, rows, conf})`, listens to
+  its `bro-action` events and sets its `theme` attribute.
+  [Custom Elements Everywhere](https://custom-elements-everywhere.com/) tests how each framework passes data and events
+  to Custom Elements.
+- **Angular.** `@table-bro/angular` gives the component `<table-bro-ng>` with the signal inputs `cols`, `rows` and
+  `conf` and the outputs `action` and `query`, in the three skins.
+- **Preact, React, Solid, Svelte and Vue.** Each framework has a Vite project in
+  [`samples/frameworks`](samples/frameworks) with its working page on the site and StackBlitz, and its page of the Docs:
+  [Preact](https://table-bro.com/docs/frameworks/preact), [React](https://table-bro.com/docs/frameworks/react),
+  [Solid](https://table-bro.com/docs/frameworks/solid), [Svelte](https://table-bro.com/docs/frameworks/svelte),
+  [Vue](https://table-bro.com/docs/frameworks/vue).
+- **Polymer and Lit.** They build Custom Elements themselves, so their templates render `<table-bro>` as any HTML
+  element.
+
+## Server-side rendering
+
+- **Prerendered loading state.** On the server the table renders its toolbar, header, loading row and paginator, so
+  the page shows its layout before any script runs; in the browser the table takes its place, and the loading
+  animation goes on.
+- **Angular SSR.** `<table-bro-ng>` prerenders during Angular server-side rendering in the skins `mat`, `bs` and `nv`,
+  with the template of the browser; `prerenderTableBro()` renders the same loading state into a server DOM without
+  Angular.
+
+## Accessibility & localization
+
+- **Screen readers.** The toolbar links of the Bootstrap and Native skins say what they do, the ones that act on the
+  table are buttons, and a live region tells the state of the table and the loading of row details.
+- **Keyboard and focus.** Focus rings show in full, the hidden items of a cell are out of the tab order, and the focus
+  goes back to the Filters button when the filter drawer closes.
+- **Texts in the language of the application.** `config.texts` sets the words of the toolbar, the search line, the
+  filter drawer, the paginator, the progress bar, the states and the row numbers, by the component of the skin; the
+  texts it does not set stay English. The paginator of the Angular Material skin takes its texts from
+  `MatPaginatorIntl`.
+
 ## Packages
 
 | Package | What it gives |
@@ -112,6 +131,12 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
 | [`@table-bro/mcp`](packages/mcp) | The MCP server: the reference, the spec check and the code generator of a table for AI coding agents |
 
 All packages share one version. Angular packages support Angular `>=20 <23`.
+
+### Settings of the table
+
+The table is set up through the core, the same way for every skin: the config, the columns, the server mode, the
+themes, the styling, the CSS variables `--bro-*` and loading without a bundler. The README of
+[`@table-bro/core`](packages/core) describes them.
 
 ## Getting started
 
@@ -245,12 +270,6 @@ document.body.append(table);
 ```
 
 The [working page](https://table-bro.com/samples/native/) of [`samples/native`](samples/native) shows this table.
-
-### Settings of the table
-
-The table is set up through the core, the same way for every skin: the config, the columns, the server mode, the
-themes, the styling, the CSS variables `--bro-*` and loading without a bundler. The README of
-[`@table-bro/core`](packages/core) describes them.
 
 ### With an AI coding agent
 
