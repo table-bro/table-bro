@@ -6,8 +6,8 @@ import {expect, test} from '@playwright/test';
 import {bodyTable} from './table-bro.fixtures';
 
 // The page of samples/no-build, as `npm run build:samples` copies it into dist/samples/no-build: without a bundler, it
-// takes the packages, as npm publishes them, from jsDelivr by an import map. The test needs the network to the CDN and
-// skips without it.
+// takes the packages, as npm publishes them, with Bootstrap and Popper from jsDelivr by an import map. The test needs
+// the network to the CDN and skips without it.
 
 const dist = path.join(__dirname, '../dist/samples/no-build');
 const origin = 'http://samples.localhost';
@@ -42,7 +42,7 @@ test('the sample without a build shows its table from the packages of the CDN an
   const table = page.locator('table-bro#orders');
   const rows = bodyTable(table).locator('tbody > tr[data-row-number]');
 
-  await expect(table).toHaveClass(/\bnv\b/);
+  await expect(table).toHaveClass(/\bbs\b/);
   await expect(rows).toHaveCount(2);
   await expect(rows.first()).toContainText('Modern Cotton Chair');
 

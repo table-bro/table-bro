@@ -156,23 +156,23 @@ ${setupMat.text}
 
 ${setupBs.text}
 
+#### Without a build
+
+[See a working page](https://table-bro.com/samples/no-build), [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/no-build)
+
+A page without a bundler takes the same packages from [jsDelivr](https://www.jsdelivr.com/), the CDN of npm, at an exact version: the CSS by \`‹link›\`, the modules by an import map, which gives \`@table-bro/core\` to the skin and \`@popperjs/core\` to Bootstrap ([MDN, importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)). \`index.html\`:
+
+{{index.html}}
+
+\`app.js\` imports the skin, gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap, and gives the table its columns, rows and config:
+
+{{app.js}}
+
 ### Table, Bro + Vanilla HTML
 
 [See a working page](https://table-bro.com/samples/native)
 
 ${setupNv.text}
-
-#### Without a build
-
-[See a working page](https://table-bro.com/samples/no-build), [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/no-build)
-
-A page without a bundler takes the same packages from [jsDelivr](https://www.jsdelivr.com/), the CDN of npm, at an exact version: the CSS by \`‹link›\`, the modules by an import map, which gives \`@table-bro/core\` to the skin ([MDN, importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)). \`index.html\`:
-
-{{index.html}}
-
-\`app.js\` imports the skin and gives the table its columns, rows and config:
-
-{{app.js}}
 
 ### Create your own skin
 
@@ -185,16 +185,19 @@ Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-br
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Table, Bro + Vanilla HTML without a build</title>
+    <title>Table, Bro + Vanilla Bootstrap without a build</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/native@${tableBroVersion}/dist/table-bro.native.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.min.css" />
     <!-- The page around the table, as on table-bro.com -->
     <link rel="stylesheet" href="sample-page.css" />
     <script type="importmap">
       {
         "imports": {
           "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.esm.js",
-          "@table-bro/native": "https://cdn.jsdelivr.net/npm/@table-bro/native@${tableBroVersion}/dist/table-bro.native.esm.js"
+          "@table-bro/bootstrap": "https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.esm.js",
+          "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.esm.min.js",
+          "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js"
         }
       }
     </script>
@@ -204,8 +207,12 @@ Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-br
   </body>
 </html>
 `},
-      {file: 'app.js', language: 'js', code: `// The import of the skin defines <table-bro> and registers the skin nv
-import '@table-bro/native';
+      {file: 'app.js', language: 'js', code: `// The import of the skin defines <table-bro> and registers the skin bs, and useBootstrap() gives it the Dropdown and
+// the Tooltip of Bootstrap
+import {useBootstrap}      from '@table-bro/bootstrap';
+import {Dropdown, Tooltip} from 'bootstrap';
+
+useBootstrap({Dropdown, Tooltip});
 
 const cols = [
   {
@@ -230,7 +237,7 @@ const rows = [
 ];
 
 const conf = {
-  skin: 'nv',
+  skin: 'bs',
   toolbarTitle: 'Orders'
 };
 

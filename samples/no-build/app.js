@@ -1,5 +1,9 @@
-// The import of the skin defines <table-bro> and registers the skin nv
-import '@table-bro/native';
+// The import of the skin defines <table-bro> and registers the skin bs, and useBootstrap() gives it the Dropdown and
+// the Tooltip of Bootstrap
+import {useBootstrap}      from '@table-bro/bootstrap';
+import {Dropdown, Tooltip} from 'bootstrap';
+
+useBootstrap({Dropdown, Tooltip});
 
 const cols = [
   {
@@ -24,7 +28,7 @@ const rows = [
 ];
 
 const conf = {
-  skin: 'nv',
+  skin: 'bs',
   toolbarTitle: 'Orders'
 };
 
