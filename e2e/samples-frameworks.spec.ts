@@ -6,8 +6,9 @@ import {expect, test} from '@playwright/test';
 import {bodyTable} from './table-bro.fixtures';
 
 // The pages of samples/frameworks, a project of one framework each, as `npm run build:samples` builds them into
-// dist/samples/frameworks under the base path of table-bro.com: in each framework the page configures the table, gives
-// it the theme auto, which follows the color scheme of the system, and logs the names of its bro-action events.
+// dist/samples/frameworks under the base path of table-bro.com: in each framework the page configures the table in the
+// skin bs, gives it the theme auto, which follows the color scheme of the system, and logs the names of its bro-action
+// events.
 
 const dist = path.join(__dirname, '../dist/samples/frameworks');
 const origin = 'http://samples.localhost';
@@ -37,7 +38,7 @@ for (const name of ['react', 'vue', 'svelte', 'solid', 'preact']) {
     const table = page.locator('table-bro#orders');
     const rows = bodyTable(table).locator('tbody > tr[data-row-number]');
 
-    await expect(table).toHaveClass(/\bnv\b/);
+    await expect(table).toHaveClass(/\bbs\b/);
     await expect(rows).toHaveCount(2);
     await expect(rows.first()).toContainText('Modern Cotton Chair');
 

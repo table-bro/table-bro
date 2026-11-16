@@ -68,14 +68,19 @@ const setupNgBs = setup('angular', 'bs');
 const setupNgNv = setup('angular', 'nv');
 
 /** The files of the setup that every page of Frameworks shows, as each project of samples/frameworks has them. */
-const frameworkInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/native
+const frameworkInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/bootstrap bootstrap @types/bootstrap
 `};
-const frameworkSkin: BroDocFile = {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin nv
+const frameworkSkin: BroDocFile = {file: 'src/skin.ts', language: 'ts', code: `// The CSS of Bootstrap, of the core and of the skin, then the skin: its import defines <table-bro> and registers the
+// skin bs, and useBootstrap() gives it the Dropdown and the Tooltip of Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '@table-bro/core/dist/table-bro.min.css';
-import '@table-bro/native/dist/table-bro.native.min.css';
-import '@table-bro/native';
+import '@table-bro/bootstrap/dist/table-bro.bootstrap.min.css';
+import {useBootstrap}      from '@table-bro/bootstrap';
+import {Dropdown, Tooltip} from 'bootstrap';
 
 import './sample-page.css';
+
+useBootstrap({Dropdown, Tooltip});
 `};
 const frameworkOrders: BroDocFile = {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
 
@@ -107,7 +112,7 @@ export const rows: Order[] = [
 ];
 
 export const conf: BroConfig = {
-  skin: 'nv',
+  skin: 'bs', // 'nv' for Vanilla HTML
   toolbarTitle: 'Orders'
 };
 `};
@@ -1530,7 +1535,7 @@ const cols: BroCol<Order>[] = [
     path: 'frameworks',
     name: 'Frameworks',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`: every framework that renders HTML elements renders it, without a wrapper package. A page gives the table its columns, rows and config by \`configure({cols, rows, conf})\`, listens to its \`bro-action\` events and sets its \`theme\` attribute; each framework does it in its own way. The pages of this section show it in Angular, whose package \`@table-bro/angular\` gives the component \`‹table-bro-ng›\` with inputs and outputs, and in Preact, React, Solid, Svelte and Vue, each with a working page of its sample project in the repository and StackBlitz. How each framework passes data and events to Custom Elements is tested by [Custom Elements Everywhere](https://custom-elements-everywhere.com/).
+Table, Bro is the Custom Element \`‹table-bro›\`: every framework that renders HTML elements renders it, without a wrapper package. A page gives the table its columns, rows and config by \`configure({cols, rows, conf})\`, listens to its \`bro-action\` events and sets its \`theme\` attribute; each framework does it in its own way. The pages of this section show it in Angular, whose package \`@table-bro/angular\` gives the component \`‹table-bro-ng›\` with inputs and outputs, and in Preact, React, Solid, Svelte and Vue, each with a working page of its sample project in the repository and StackBlitz in the Bootstrap skin; a skin of your own design system or UI components works in each of them the same way. How each framework passes data and events to Custom Elements is tested by [Custom Elements Everywhere](https://custom-elements-everywhere.com/).
 
 <!-- polymer -->
 #### Polymer and Lit
@@ -1647,20 +1652,20 @@ export class OrdersComponent {
     path: 'frameworks/preact',
     name: 'Preact data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, the prop \`onbro-action\` listens to its events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/preact) of the sample project \`samples/frameworks/preact\` of the repository, with Preact 11; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/preact) opens it in the browser.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, the prop \`onbro-action\` listens to its events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/preact) of the sample project \`samples/frameworks/preact\` of the repository, with Preact 11; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/preact) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
 
 <!-- setup -->
 #### How do I install Table, Bro in Preact?
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
+   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
 
    {{install.sh}}
 
 2. **Register the element and the skin**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
@@ -1764,20 +1769,20 @@ render(<OrdersTable />, document.getElementById('app')!);
     path: 'frameworks/react',
     name: 'React data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders it in JSX as it is, without a wrapper package. A ref gives the element its columns, rows and config by \`configure()\`, an effect adds the listener of its \`bro-action\` events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/react) of the sample project \`samples/frameworks/react\` of the repository, with React 19.3; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/react) opens it in the browser.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders it in JSX as it is, without a wrapper package. A ref gives the element its columns, rows and config by \`configure()\`, an effect adds the listener of its \`bro-action\` events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/react) of the sample project \`samples/frameworks/react\` of the repository, with React 19.3; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/react) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
 
 <!-- setup -->
 #### How do I install Table, Bro in React?
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
+   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
 
    {{install.sh}}
 
 2. **Register the element and the skin**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
@@ -1891,20 +1896,20 @@ createRoot(document.getElementById('app')!).render(
     path: 'frameworks/solid',
     name: 'Solid data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, \`on:bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/solid) of the sample project \`samples/frameworks/solid\` of the repository, with Solid 1.9; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/solid) opens it in the browser.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, \`on:bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/solid) of the sample project \`samples/frameworks/solid\` of the repository, with Solid 1.9; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/solid) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
 
 <!-- setup -->
 #### How do I install Table, Bro in Solid?
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
+   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
 
    {{install.sh}}
 
 2. **Register the element and the skin**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
@@ -2025,20 +2030,20 @@ render(() => <OrdersTable />, document.getElementById('app')!);
     path: 'frameworks/svelte',
     name: 'Svelte data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders it in markup as it is. \`bind:this\` gives the element its columns, rows and config by \`configure()\`, the attribute \`onbro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/svelte) of the sample project \`samples/frameworks/svelte\` of the repository, with Svelte 5.57; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/svelte) opens it in the browser.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders it in markup as it is. \`bind:this\` gives the element its columns, rows and config by \`configure()\`, the attribute \`onbro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/svelte) of the sample project \`samples/frameworks/svelte\` of the repository, with Svelte 5.57; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/svelte) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
 
 <!-- setup -->
 #### How do I install Table, Bro in Svelte?
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
+   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
 
    {{install.sh}}
 
 2. **Register the element and the skin**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
@@ -2117,20 +2122,20 @@ mount(OrdersTable, {target: document.getElementById('app')!});
     path: 'frameworks/vue',
     name: 'Vue 3 data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it in a template once the compiler knows the tag: \`compilerOptions.isCustomElement\` of \`@vitejs/plugin-vue\`. A template ref gives the element its columns, rows and config by \`configure()\`, \`@bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/vue) of the sample project \`samples/frameworks/vue\` of the repository, with Vue 3.5; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/vue) opens it in the browser.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it in a template once the compiler knows the tag: \`compilerOptions.isCustomElement\` of \`@vitejs/plugin-vue\`. A template ref gives the element its columns, rows and config by \`configure()\`, \`@bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/vue) of the sample project \`samples/frameworks/vue\` of the repository, with Vue 3.5; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/vue) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
 
 <!-- setup -->
 #### How do I install Table, Bro in Vue?
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
+   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
 
    {{install.sh}}
 
 2. **Register the element and the skin**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`nv\`. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 

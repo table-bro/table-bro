@@ -28,6 +28,6 @@ export const rows: Order[] = [
 ];
 
 export const conf: BroConfig = {
-  skin: 'nv',
+  skin: 'bs', // 'nv' for Vanilla HTML
   toolbarTitle: 'Orders'
 };
