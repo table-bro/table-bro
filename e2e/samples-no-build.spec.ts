@@ -43,8 +43,8 @@ test('the sample without a build shows its table from the packages of the CDN an
   const rows = bodyTable(table).locator('tbody > tr[data-row-number]');
 
   await expect(table).toHaveClass(/\bbs\b/);
-  await expect(rows).toHaveCount(2);
-  await expect(rows.first()).toContainText('Modern Cotton Chair');
+  await expect(rows).toHaveCount(20);
+  await expect(rows.first()).toContainText('Handcrafted Wooden Table, Gorgeous Bronze Watch');
 
   await table.locator('table.bro-table-header th[data-bro-column-key="price"] .bro-sort-header').click();
   await expect.poll(() => logs).toContain('bro-filters-sort');

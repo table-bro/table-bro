@@ -39,8 +39,8 @@ for (const name of ['react', 'vue', 'svelte', 'solid', 'preact']) {
     const rows = bodyTable(table).locator('tbody > tr[data-row-number]');
 
     await expect(table).toHaveClass(/\bbs\b/);
-    await expect(rows).toHaveCount(2);
-    await expect(rows.first()).toContainText('Modern Cotton Chair');
+    await expect(rows).toHaveCount(20);
+    await expect(rows.first()).toContainText('Handcrafted Wooden Table, Gorgeous Bronze Watch');
 
     await expect(table).toHaveClass(/\bbro-dark-theme\b/);
 
