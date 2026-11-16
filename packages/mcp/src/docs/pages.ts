@@ -1654,7 +1654,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
 
    {{install.sh}}
 
@@ -1771,7 +1771,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders 
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
 
    {{install.sh}}
 
@@ -1898,7 +1898,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it 
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
 
    {{install.sh}}
 
@@ -2032,7 +2032,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders 
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
 
    {{install.sh}}
 
@@ -2124,7 +2124,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it 
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin, \`@table-bro/native\` of plain HTML elements; \`@table-bro/bootstrap\` with \`bootstrap\` gives the skin of Bootstrap 5:
+   The table engine \`@table-bro/core\` and a skin: \`@table-bro/bootstrap\` with \`bootstrap\` for the look of Bootstrap 5, or \`@table-bro/native\` of plain HTML elements, which the command below installs:
 
    {{install.sh}}
 
@@ -2477,7 +2477,7 @@ The filter drawer of every skin takes its title and the name of its close button
 <!-- tags -->
 #### Tags without items _since 1.2.0_
 
-A cell of tags without items shows No data. The text belongs to the tags of the skin: \`withTags({texts: {empty: 'No data'}})\` gives it, and later \`setTagsTexts({empty})\` of \`@table-bro/bootstrap\` and \`@table-bro/native\`, or the signal \`empty\` of the service \`TableBroMatTagsTexts\` of \`@table-bro/angular-material\`, changes it at any time: the tags on the page take it at once. The deprecated \`texts.noItems\` of a config still works below them.
+A cell of tags without items shows No data. The text belongs to the tags of the skin: \`withTags({texts: {empty: 'No data'}})\` gives it, and later the signal \`empty\` of the service \`TableBroMatTagsTexts\` of \`@table-bro/angular-material\`, or \`setTagsTexts({empty})\` of \`@table-bro/bootstrap\` and \`@table-bro/native\`, changes it at any time: the tags on the page take it at once. The deprecated \`texts.noItems\` of a config still works below them.
 
 {{tags.ts}}
 
@@ -2493,7 +2493,7 @@ The skin \`mat\` renders the paginator of Angular Material, which takes its text
 <!-- language -->
 #### Change of the language
 
-The table takes its texts with its config. A new language is a new config: \`configure({cols, rows, conf})\` with the new \`texts\`, or a new value of the input \`conf\` of \`‹table-bro-ng›\`, renders the table anew. The filter drawer takes the new texts of its table, with Bootstrap and Native at its next opening, the tags take their new text from \`setTagsTexts()\` or \`TableBroMatTagsTexts\`, and the paginator of Angular Material takes the new labels of \`MatPaginatorIntl\` after its \`changes.next()\`.
+The table takes its texts with its config. A new language is a new config: \`configure({cols, rows, conf})\` with the new \`texts\`, or a new value of the input \`conf\` of \`‹table-bro-ng›\`, renders the table anew. The paginator of Angular Material takes the new labels of \`MatPaginatorIntl\` after its \`changes.next()\`, the filter drawer takes the new texts of its table, with Bootstrap and Native at its next opening, and the tags take their new text from \`TableBroMatTagsTexts\` or \`setTagsTexts()\`.
 
 {{language.ts}}`,
     files: [
@@ -2659,7 +2659,7 @@ All loaded rows are in the DOM, but only the rows of the current page take the f
 
 2. **Sort headers**
 
-   Enter and Space on a column header sort the column, as a click does: with Bootstrap and Native the header is a control of the skin, with Angular Material the sort header of Material.
+   Enter and Space on a column header sort the column, as a click does: with Angular Material the header is the sort header of Material, with Bootstrap and Native a control of the skin.
 
 3. **Row details**
 
@@ -2671,7 +2671,7 @@ All loaded rows are in the DOM, but only the rows of the current page take the f
 
 5. **Filter Drawer**
 
-   With Bootstrap and Native, the opened drawer takes the focus into your filters, or to its close button when the filters have no control. Escape in the drawer closes it, with Angular Material as in the drawer of Material. With every skin the closed drawer gives the focus back to the button that opened it, when the focus was in the drawer; after a click of the pointer the button shows no focus ring.
+   Escape in the drawer closes it, with Angular Material as in the drawer of Material. With Bootstrap and Native, the opened drawer takes the focus into your filters, or to its close button when the filters have no control. With every skin the closed drawer gives the focus back to the button that opened it, when the focus was in the drawer; after a click of the pointer the button shows no focus ring.
 
 <!-- rings -->
 #### Focus rings
@@ -2732,7 +2732,7 @@ The range of the paginator of Bootstrap and Native, as 6 – 10 of 20, is \`aria
 
 1. **Paginator**
 
-   The paginator of every skin is a group named by \`texts.paginator.label\`, Pagination. With Bootstrap and Native its links are in a \`‹nav›\` named by \`texts.paginator.navigationLabel\`, Table page navigation; the links are named First page, Previous page, Next page and Last page, a disabled link has \`aria-disabled="true"\`, and the page sizes are named Items per page:. The paginator of Angular Material takes its names from \`MatPaginatorIntl\` of the application.
+   The paginator of every skin is a group named by \`texts.paginator.label\`, Pagination. The paginator of Angular Material takes its names from \`MatPaginatorIntl\` of the application. With Bootstrap and Native its links are in a \`‹nav›\` named by \`texts.paginator.navigationLabel\`, Table page navigation; the links are named First page, Previous page, Next page and Last page, a disabled link has \`aria-disabled="true"\`, and the page sizes are named Items per page:.
 
 2. **Column of the row numbers**
 

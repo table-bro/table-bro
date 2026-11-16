@@ -9,9 +9,9 @@ A skin gives it the look and the controls of a UI library:
 | Package | What it gives |
 | --- | --- |
 | `@table-bro/core` | The table itself and the CSS of the core |
-| `@table-bro/native` | The native skin `nv`: plain HTML elements, no UI library |
-| `@table-bro/bootstrap` | The Bootstrap skin `bs` |
 | `@table-bro/angular-material` | The Angular Material skin `mat` |
+| `@table-bro/bootstrap` | The Bootstrap skin `bs` |
+| `@table-bro/native` | The native skin `nv`: plain HTML elements, no UI library |
 | `@table-bro/angular` | `<table-bro-ng>`, the Angular wrapper of the table |
 
 ## With an AI coding agent
@@ -101,9 +101,9 @@ Each package holds its own CSS. A page links the CSS of the core and of its skin
 | File | For |
 | --- | --- |
 | `@table-bro/core/dist/table-bro.min.css` | Every table |
-| `@table-bro/native/dist/table-bro.native.min.css` | The skin `nv` |
-| `@table-bro/bootstrap/dist/table-bro.bootstrap.min.css` | The skin `bs`, after the CSS of Bootstrap |
 | `@table-bro/angular-material/dist/table-bro.material.min.css` | The skin `mat` |
+| `@table-bro/bootstrap/dist/table-bro.bootstrap.min.css` | The skin `bs`, after the CSS of Bootstrap |
+| `@table-bro/native/dist/table-bro.native.min.css` | The skin `nv` |
 
 ## The element
 
@@ -158,8 +158,8 @@ The texts of a component of the skin go in a group named as the component, in th
 config, and the fields of a group have short names: `filterDrawer` (`title`, `close`), `paginator`, whose labels have
 the names of `MatPaginatorIntl`, as `itemsPerPageLabel` and `getRangeLabel`, `progressBar` (`label`), `state`, with the
 messages of the states by their names, `toolbarMain` and `toolbarSearch`. The text of a cell of tags without items
-belongs to the tags of the skin: `withTags({texts: {empty: 'No tags'}})`, and later `setTagsTexts()` of `bs` and `nv` or
-`TableBroMatTagsTexts` of `mat`.
+belongs to the tags of the skin: `withTags({texts: {empty: 'No tags'}})`, and later `TableBroMatTagsTexts` of `mat` or
+`setTagsTexts()` of `bs` and `nv`.
 The flat fields of 1.1.0, as `{itemsPerPage: 'Rows per page:'}`, still work and are deprecated; they are removed in 2.0. A
 field in a group and a text of the core win over their flat field; a text that is undefined keeps the one below it.
 
@@ -336,7 +336,7 @@ class `bro-light-theme` sets `color-scheme: light`.
 ### The filter drawer
 
 `<table-bro-filter-drawer-container skin="nv">` holds a table and the filters of the application, an element with
-`slot="filters"`, in a drawer next to the table, for the skins `nv` and `bs`. Call
+`slot="filters"`, in a drawer next to the table, for the skins `bs` and `nv`. Call
 `defineTableBroFilterDrawerContainer()` once before using it. The skin `mat` has its own container in
 `@table-bro/angular-material`. The title of the drawer and the name of its close button come from
 `texts.filterDrawer` of the config of the table, as in the container of `mat`: the drawer reads them when it connects
@@ -454,7 +454,7 @@ the script of the table take it together.
 | `--bro-refresh-overlay-opacity-dark` | The same in the dark theme |
 | `--bro-table-body-container-z-index` | The layer of the body of the table |
 
-The filter drawer container of the skins `nv` and `bs` reads the variables of the shadow, the corners, the space and
+The filter drawer container of the skins `bs` and `nv` reads the variables of the shadow, the corners, the space and
 the drawer itself. `--bro-duration-scale`, `--bro-filter-drawer-opened` and `--bro-filter-drawer-modal` are not
 settings: the skin sets the scale to 0 for `prefers-reduced-motion`, and the drawer moves the other two as it opens.
 
@@ -541,7 +541,7 @@ registry `ctx.view`, which only the controller reads. A link between two regions
 ## Performance
 
 All loaded rows are in the DOM, so the time of a change grows with their number. Measured in headless Chromium 153 on
-an M-chip 12-core CPU, a table of a name and a price with a page of 50 rows, the nv and mat skins alike:
+an M-chip 12-core CPU, a table of a name and a price with a page of 50 rows, the mat and nv skins alike:
 
 | Rows    | Render | Search | Search cleared | Sort   | Scroll frame, p95 | JS heap | DOM nodes   |
 |---------|--------|--------|----------------|--------|-------------------|---------|-------------|
@@ -552,9 +552,9 @@ an M-chip 12-core CPU, a table of a name and a price with a page of 50 rows, the
 The scroll keeps 60 frames per second at any number of rows. Up to about 10 000 rows a table answers within a second
 or two; with more, let the server mode load the pages that the user opens.
 
-A column of tags costs more. In the nv skin 1 000 rows render in 0.3 s, 10 000 in 5 s. In the mat skin the tags
-are the chips of Angular Material, which weigh much more: about 45 MB for 1 000 rows, also in a production build, and
-10 000 rows of chips exhausted the memory of a tab.
+A column of tags costs more. In the mat skin the tags are the chips of Angular Material, much heavier than the tags of
+nv: about 45 MB for 1 000 rows, also in a production build, and 10 000 rows of chips exhausted the memory of a tab. In
+the nv skin 1 000 rows render in 0.3 s, 10 000 in 5 s.
 
 ## Browsers
 

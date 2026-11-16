@@ -60,7 +60,7 @@ Without a bundler, load the UMD build after the core: it puts the skin on the `T
 <script src="https://cdn.jsdelivr.net/npm/@table-bro/native@1.2.0/dist/table-bro.native.umd.js"></script>
 ```
 
-Load one vanilla skin per page: `@table-bro/native` and `@table-bro/bootstrap` share elements, and the skin loaded
+Load one vanilla skin per page: `@table-bro/bootstrap` and `@table-bro/native` share elements, and the skin loaded
 second warns about it.
 
 ## Elements for cells

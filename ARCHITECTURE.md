@@ -9,13 +9,14 @@ with `npx http-server docs`.
 
 ## The parts
 
-The packages build on each other, from the bottom up:
+The core is the base: the skins and the wrapper import it, and the Material skin also imports the wrapper. The MCP
+server is a package of its own:
 
 | Part | Package, folder | What it owns |
 | --- | --- | --- |
 | The core | `@table-bro/core`, `packages/core` | The element `<table-bro>`, the state of each table, its geometry, its DOM, its motion, its prerender and its public types. No runtime dependencies |
-| The vanilla skins | `@table-bro/native`, `@table-bro/bootstrap`, `packages/skins/{native,bootstrap,shared}` | The look and the controls of a UI library: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
-| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The same for Angular Material: Angular components that the table creates as Custom Elements, the filter drawer of Material, and the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`) |
+| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
+| The vanilla skins | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
 | The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, its prerender during Angular server-side rendering, and the contracts of a page and of its service |
 | The MCP server | `@table-bro/mcp`, `packages/mcp` | The reference, the spec check and the code generator of a table for AI coding agents. It reads, never writes |
 
@@ -243,7 +244,7 @@ These are deliberate decisions. They stay, and here are the reasons.
   selectors `table-bro-ng` and `table-bro-filter-drawer-container-ng`, are Angular components over the Custom Elements
   `<table-bro>` and `<table-bro-filter-drawer-container>` of the same names: the suffix tells an Angular component from
   the Custom Element, in imports and in templates.
-- **The shared elements of the vanilla skins are in each skin.** `@table-bro/native` and `@table-bro/bootstrap` each
+- **The shared elements of the vanilla skins are in each skin.** `@table-bro/bootstrap` and `@table-bro/native` each
   bundle the elements they share, so each skin is one package without a third one. A page loads one vanilla skin; the
   skin loaded second warns that their elements are defined already.
 - **The free core names the paid module in its error.** A table with `rowDetailsIsland` and without the module shows
