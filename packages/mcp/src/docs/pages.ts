@@ -134,6 +134,16 @@ Table, Bro is the Custom Element \`‹table-bro›\`: it takes the columns, the 
 {{orders.ts}}
 
 <!-- setup -->
+### Skins
+
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. Three skins ship today: Angular Material for Angular apps, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+
+| Skin | Package | Framework | UI components |
+| --- | --- | --- | --- |
+| Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
+| Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
+| Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
+
 ### Table, Bro + Angular Material
 
 [See a working page](https://table-bro.com/samples/angular-material)
@@ -162,7 +172,13 @@ A page without a bundler takes the same packages from [jsDelivr](https://www.jsd
 
 \`app.js\` imports the skin and gives the table its columns, rows and config:
 
-{{app.js}}`,
+{{app.js}}
+
+### Create your own skin
+
+A skin is a config that \`registerSkin(name, config)\` of \`@table-bro/core\` registers once, before the tables, and \`conf.skin\` of a table names. The config, \`BroSkinConfig\`, holds the classes of the parts of the table in \`css\`; the Custom Elements of its controls in \`components\`, each by its \`selector\`: the toolbar, the sort header, the paginator, the progress bar, the buttons and the dropdowns; and the attribute of the color mode of your UI library in \`themeAttribute\`, as \`data-bs-theme\` of Bootstrap, which the table sets on its host to \`'light'\` or \`'dark'\`. The table also puts the name of the skin on its host as a class, so the CSS of your skin applies under that class.
+
+Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-bro/native\` and its sources in [packages/skins/native](https://github.com/table-bro/table-bro/tree/main/packages/skins/native) show the parts of a skin. Give the parts the classes of your design system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the components of Angular Material, then register the config under a name of its own: \`registerSkin('brand', brandSkinConfig)\` and \`conf: {skin: 'brand'}\`. To change a part of a shipped skin for one table, \`config.components\` and \`config.css\` of the table are enough: they change any value or function of the config of the skin.`,
     files: [
       {file: 'index.html', language: 'html', code: `<!doctype html>
 <html lang="en">
