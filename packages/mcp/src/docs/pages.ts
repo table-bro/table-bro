@@ -139,16 +139,21 @@ const skinsSection = `#### Which skins can I use?
 
 Table, Bro ships three skins, Angular Material, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
 
-/** The setup of the MCP server for Claude Code, which the installation of every page of Frameworks starts with. */
+/**
+ * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
+ * Frameworks starts with.
+ */
 const mcpInstall: BroDocFile = {file: 'mcp.sh', language: 'bash', code: `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@${tableBroVersion}
 `};
 
 /**
- * The installation with the MCP server, the first one on every page of Frameworks, as in the README of the repository.
- * @param framework - the framework of the page, whose components render the table for Vanilla JS; none for Angular,
- * which the server generates
+ * The installation with the MCP server, the first one on Getting started and on every page of Frameworks, as in the
+ * README of the repository.
+ * @param level - the heading of the section on its page, ### or #####
+ * @param framework - the framework of the page, whose components render the table for Vanilla JS; none for Getting
+ * started and Angular, whose code the server generates
  */
-const mcpSection = (framework?: string): string => `##### With the MCP server
+const mcpSection = (level: string, framework?: string): string => `${level} With the MCP server
 
 The quickest start is the MCP server of Table, Bro: add it to your AI coding agent and describe the table you need. The agent installs the packages, generates the table, its setup and its cells, and checks the result.${framework ? ` In a ${framework} app the server generates the table for Vanilla JS: a module with a function that renders \`‹table-bro›\` into an element, which a component gives it.` : ''} For Claude Code, in the root of the project:
 
@@ -173,6 +178,8 @@ Table, Bro is the Custom Element \`‹table-bro›\`: it takes the columns, the 
 {{orders.ts}}
 
 <!-- setup -->
+${mcpSection('###')}
+
 ### Skins
 
 Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. Three skins ship today: Angular Material for Angular apps, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
@@ -220,6 +227,7 @@ A skin is a config that \`registerSkin(name, config)\` of \`@table-bro/core\` re
 
 Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-bro/native\` and its sources in [packages/skins/native](https://github.com/table-bro/table-bro/tree/main/packages/skins/native) show the parts of a skin. Give the parts the classes of your design system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the components of Angular Material, then register the config under a name of its own: \`registerSkin('brand', brandSkinConfig)\` and \`conf: {skin: 'brand'}\`. To change a part of a shipped skin for one table, \`config.components\` and \`config.css\` of the table are enough: they change any value or function of the config of the skin.`,
     files: [
+      mcpInstall,
       {file: 'index.html', language: 'html', code: `<!doctype html>
 <html lang="en">
   <head>
@@ -1629,7 +1637,7 @@ Table, Bro has its own package for Angular, \`@table-bro/angular\`: the componen
 <!-- setup -->
 #### How do I install Table, Bro in Angular?
 
-${mcpSection()}
+${mcpSection('#####')}
 
 ##### Manual setup
 
@@ -1755,7 +1763,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it
 <!-- setup -->
 #### How do I install Table, Bro in Preact?
 
-${mcpSection('Preact')}
+${mcpSection('#####', 'Preact')}
 
 ##### Manual setup
 
@@ -1879,7 +1887,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders 
 <!-- setup -->
 #### How do I install Table, Bro in React?
 
-${mcpSection('React')}
+${mcpSection('#####', 'React')}
 
 ##### Manual setup
 
@@ -2013,7 +2021,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it 
 <!-- setup -->
 #### How do I install Table, Bro in Solid?
 
-${mcpSection('Solid')}
+${mcpSection('#####', 'Solid')}
 
 ##### Manual setup
 
@@ -2154,7 +2162,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders 
 <!-- setup -->
 #### How do I install Table, Bro in Svelte?
 
-${mcpSection('Svelte')}
+${mcpSection('#####', 'Svelte')}
 
 ##### Manual setup
 
@@ -2253,7 +2261,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it 
 <!-- setup -->
 #### How do I install Table, Bro in Vue?
 
-${mcpSection('Vue')}
+${mcpSection('#####', 'Vue')}
 
 ##### Manual setup
 
