@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.1
+
+Fixes of the page scroll, the refresh and the focus of the body.
+
+### Fixed
+
+- The page scroll moves by even steps in WebKit and on 120 Hz displays: the animations put their frames on the grid
+  of the frame period of the display instead of the rounded frame times of the browser, and a run starts one frame
+  period before its first frame instead of at the call.
+- The dimming of a refresh no longer rewrites a `<style>` at every frame: the rule is written once, and the frames
+  change only a custom property on the host. In the server mode the first frames of the scroll to a loaded page took
+  9–18 ms in WebKit and take about 4 ms now.
+- A `focus()` or a `scrollIntoView()` of a control in a row of another page no longer scrolls the body and leaves the
+  rows off their page: the body container clips its rows with `overflow: clip`.
+
 ## 1.2.0
 
 Accessibility, localization and server-side rendering.
