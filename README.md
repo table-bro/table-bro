@@ -75,11 +75,7 @@ application instead of bringing its own.
 - **MCP server for AI coding agents.** `@table-bro/mcp` gives Claude Code, Codex, Cursor or VS Code the reference of the
   table, a check of a table spec and a code generator for Angular and Vanilla JS with the three skins. The agent writes
   the files; the server only reads. With it an agent builds a full table up to 2× faster and with ~45% fewer tokens,
-  measured with Claude Opus, Sonnet and Haiku.
-
-  ```sh
-  claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
-  ```
+  measured with Claude Opus, Sonnet and Haiku. [Getting started](#getting-started) gives its setup.
 
 ## On the roadmap
 
@@ -143,9 +139,24 @@ themes, the styling, the CSS variables `--bro-*` and loading without a bundler. 
 
 ## Getting started
 
+### With the MCP server
+
+The quickest start is the MCP server of Table, Bro: add it to your AI coding agent and describe the table you need. The
+agent installs the packages, generates the table, its setup and its cells, and checks the result. For Claude Code, in
+the root of the project:
+
+```sh
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.0
+```
+
+The README of [`@table-bro/mcp`](packages/mcp) gives the setup for Codex, Cursor, VS Code and Claude Desktop, and the
+site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-server).
+
+### Manual setup
+
 The site gives these steps on [Getting started](https://table-bro.com/docs/getting-started).
 
-### Angular Material
+#### Angular Material
 
 ```sh
 npm install @table-bro/core @table-bro/angular @table-bro/angular-material @angular/elements
@@ -193,7 +204,7 @@ The [working page](https://table-bro.com/samples/angular-material/) of
 [`samples/angular-material`](samples/angular-material) shows this table. The README of
 [`@table-bro/angular-material`](packages/skins/angular-material) gives the whole setup, with the theme and the icon font.
 
-### Vanilla Bootstrap
+#### Vanilla Bootstrap
 
 ```sh
 npm install @table-bro/core @table-bro/bootstrap bootstrap @types/bootstrap
@@ -240,7 +251,7 @@ The [working page](https://table-bro.com/samples/bootstrap/) of [`samples/bootst
 table. The README of [`@table-bro/bootstrap`](packages/skins/bootstrap) gives the elements of the cells, the settings
 and loading without a bundler.
 
-### Vanilla HTML
+#### Vanilla HTML
 
 ```sh
 npm install @table-bro/core @table-bro/native
@@ -273,12 +284,6 @@ document.body.append(table);
 ```
 
 The [working page](https://table-bro.com/samples/native/) of [`samples/native`](samples/native) shows this table.
-
-### With an AI coding agent
-
-`npx -y @table-bro/mcp@1.2.0` starts the MCP server: the agent gets the docs, checks a table spec and generates the
-code of the table for your project. The README of [`@table-bro/mcp`](packages/mcp) gives the setup for each agent, and
-the site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-server).
 
 ## Development
 
