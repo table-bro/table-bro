@@ -131,6 +131,14 @@ export const conf: BroConfig = {
 };
 `};
 
+/**
+ * The section about the skins after the setup of a page of Frameworks: Getting started describes them and a skin of
+ * one's own.
+ */
+const skinsSection = `#### Which skins can I use?
+
+Table, Bro ships three skins, Angular Material, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+
 /** The pages of Docs, in the order of reading. Island Details have their own pages on the site, apart from this package. */
 export const docPages: BroDocPage[] = [
   {
@@ -188,6 +196,7 @@ A page without a bundler takes the same packages from [jsDelivr](https://www.jsd
 
 ${setupNv.text}
 
+<!-- own-skin -->
 ### Create your own skin
 
 A skin is a config that \`registerSkin(name, config)\` of \`@table-bro/core\` registers once, before the tables, and \`conf.skin\` of a table names. The config, \`BroSkinConfig\`, holds the classes of the parts of the table in \`css\`; the Custom Elements of its controls in \`components\`, each by its \`selector\`: the toolbar, the sort header, the paginator, the progress bar, the buttons and the dropdowns; and the attribute of the color mode of your UI library in \`themeAttribute\`, as \`data-bs-theme\` of Bootstrap, which the table sets on its host to \`'light'\` or \`'dark'\`. The table also puts the name of the skin on its host as a class, so the CSS of your skin applies under that class.
@@ -1617,6 +1626,8 @@ ${setupNgBs.text}
 
 ${setupNgNv.text}
 
+${skinsSection}
+
 #### How do I pass cols, rows and conf?
 
 \`‹table-bro-ng›\` takes them as inputs, here from signals of the component ([Angular, Accepting data with input properties](https://angular.dev/guide/components/inputs)). A new value of \`rows\` replaces the rows of the table, and \`conf.skin\` names the registered skin. \`src/app/orders.component.ts\`:
@@ -1740,6 +1751,8 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it
 
    {{src/orders.ts}}
 
+${skinsSection}
+
 #### How do I pass cols, rows and conf?
 
 The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call. Preact adds a listener for an event prop it does not know by the exact name after \`on\`, \`bro-action\` for \`onbro-action\` ([Preact, Web Components](https://preactjs.com/guide/v10/web-components/)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
@@ -1856,6 +1869,8 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
    {{src/orders.ts}}
+
+${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
@@ -1983,6 +1998,8 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
    {{src/orders.ts}}
+
+${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
@@ -2118,6 +2135,8 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders 
 
    {{src/orders.ts}}
 
+${skinsSection}
+
 #### How do I pass cols, rows and conf?
 
 The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`bind:this\` gives the element ([Svelte, bind:this](https://svelte.dev/docs/svelte/bind)), \`onMount\` makes the call ([Svelte, Lifecycle hooks](https://svelte.dev/docs/svelte/lifecycle-hooks)). An attribute that starts with \`on\` adds a listener of the event of its name, \`bro-action\` for \`onbro-action\` ([Svelte, Events](https://svelte.dev/docs/svelte/basic-markup)); the sample logs the name of each action. \`src/OrdersTable.svelte\`:
@@ -2217,6 +2236,8 @@ Without it, Vue resolves \`‹table-bro›\` as a component of the app and warns
 {{vite.config.ts}}
 
 \`mergeConfig\` adds \`sample-page.config.ts\` of the sample, the source maps and the readable code of its working page; a project of its own exports \`defineConfig()\` with the plugins alone.
+
+${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
