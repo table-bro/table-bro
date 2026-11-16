@@ -4,13 +4,13 @@ Pixel-perfect Material data tables for Angular, and more.\
 A Web Components table engine on top of existing UI components.
 
 Table, Bro is the Custom Element `<table-bro>`, a data table built for the look of a design system and the speed of a
-native page. Rows of a fixed height render without measurement, pages turn with a kinetic scroll, row details open as
-animated islands with Material 3 corners, and search, sort and filters run on the client or go to your server as one
-query. The core has no runtime dependencies and works with any framework or none; Angular gets its own wrapper. The look
-and the controls of the table come from a skin: a thin layer that puts the components of a UI library into the toolbar,
-the paginator, the cells and the filter drawer. Three skins ship with the table, Angular Material, Bootstrap 5 and plain
-HTML, and a skin for your own design system is written the same way, so the table uses your components and follows the
-theme of your application instead of bringing its own.
+native page. Rows have a fixed height, pages turn with a kinetic scroll, row details open as animated islands with
+Material 3 corners, and search, sort and filters run on the client or go to your server as one query. The core has no
+runtime dependencies and works with any framework or none; Angular gets its own wrapper. The look and the controls of
+the table come from a skin: a thin layer that puts the components of a UI library into the toolbar, the paginator, the
+cells and the filter drawer. Three skins ship with the table, Angular Material, Bootstrap 5 and plain HTML, and a skin
+for your own design system is written the same way, so the table uses your components and follows the theme of your
+application instead of bringing its own.
 
 [Demo](https://table-bro.com) · [Docs](https://table-bro.com/docs) · [Examples](https://table-bro.com/examples) ·
 [Architecture](ARCHITECTURE.md) · [Interactive diagram](https://table-bro.com/architecture) ·
@@ -20,8 +20,11 @@ theme of your application instead of bringing its own.
 
 ### Basics
 
-- **Fixed row height.** Every body row has one height, so the table never measures rows and never reflows on data: a
-  page of 1000 rows renders as fast as a page of 10.
+- **Fixed row height.** Every body row of the table has one fixed height: a design decision that the whole table is
+  built on. The geometry of the body is arithmetic, so the page scroll, the opening of the details and the motion of the
+  rows compute every position without measuring a row, and in Chromium the page scroll keeps 60 frames per second at
+  any number of rows. A text longer than its cell truncates with a tooltip, larger content opens in the row details, and
+  the CSS variable `--bro-row-height` sets the height itself.
 - **Stable column widths.** Set a width per column, or let the table measure the content once and keep that width: the
   columns never shift while the pages scroll, whatever the next page holds.
 - **Truncated text with hover tooltips.** Cell content stays on one line; what does not fit becomes an ellipsis with the
