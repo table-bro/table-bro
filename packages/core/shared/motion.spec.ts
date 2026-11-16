@@ -560,6 +560,34 @@ describe('BroMotion.pause', () => {
     expect(drawn.scroll).toEqual(drawn.height);
     expect(drawn.scroll[2]).toBeCloseTo(1 - Math.exp(-200 / 350), 10);
   });
+
+  it('starts a run of the pause one step before its first step, whatever the frame period of the display', () => {
+    const runs: number[][] = [];
+
+    for (const period of [1000 / 60, 1000 / 120]) {
+      const {clock, motion} = setup();
+      const drawn: number[] = [];
+
+      // A first run gives the frame period of the display
+      motion.animate('warm', {duration: 100, timing: x => x, draw: () => undefined});
+
+      for (let i = 1; i <= 15; i++) {
+        clock.frame(i * period);
+      }
+
+      motion.pause();
+      motion.animate('k', {duration: 1000, timing: x => x, draw: progress => drawn.push(progress)});
+      motion.step(16);
+      motion.step(16);
+      runs.push(drawn);
+    }
+
+    for (const drawn of runs) {
+      expect(drawn.length).toBe(2);
+      expect(drawn[0]).toBeCloseTo(0.016, 10);
+      expect(drawn[1]).toBeCloseTo(0.032, 10);
+    }
+  });
 });
 
 describe('BroMotion frame times', () => {

@@ -130,7 +130,7 @@ export class BroMotion {
 
     // A frame requested before pause() draws nothing
     if (this.pausedAt === null) {
-      this.draw(this.frameTime(time) - this.lag);
+      this.draw(this.frameTime(time) - this.lag, this.framePeriod || defaultFramePeriod);
       this.schedule();
 
       // The next run starts a new loop: the time between the two does not count as an interval
@@ -248,12 +248,14 @@ export class BroMotion {
 
   /**
    * Pauses, moves the time of the animations by the given ms and draws one frame: a look at the animations frame by frame.
+   * A run that has drawn no frame yet starts one step before the step that draws it first, so the frames of the steps
+   * do not depend on the frame period of the display.
    * @param ms - how far the time of the animations moves
    */
   step(ms: number = 16): void {
     this.pause();
     this.lag -= ms;
-    this.draw(this.now());
+    this.draw(this.now(), ms);
   }
 
   /** The running tracks in the order they started. */
@@ -363,10 +365,11 @@ export class BroMotion {
    * first of them.
    * @param track - the track to draw
    * @param time - the time of the animations of the frame
+   * @param period - the period of the frames that draw the track: of the display in the loop, the ms of step()
    */
-  private startOf(track: BroTrack, time: number): number {
+  private startOf(track: BroTrack, time: number, period: number): number {
     if (track.start === null) {
-      const start = time - (this.framePeriod || defaultFramePeriod);
+      const start = time - period;
 
       track.start = track.group ? (track.group.start ??= start) : start;
     }
@@ -386,8 +389,12 @@ export class BroMotion {
     }
   }
 
-  /** Draws the running tracks at the given time of the animations. */
-  private draw(time: number): void {
+  /**
+   * Draws the running tracks at the given time of the animations.
+   * @param time - the time of the animations of the frame
+   * @param period - the period of the frames: of the display in the loop, the ms of step()
+   */
+  private draw(time: number, period: number): void {
     this.frames++;
 
     for (const track of this.running.slice()) {
@@ -409,7 +416,7 @@ export class BroMotion {
       let progress: number;
 
       try {
-        progress = track.progress(time - this.startOf(track, time));
+        progress = track.progress(time - this.startOf(track, time, period));
         track.drawn = progress;
         track.params.draw(progress);
       } catch (error) {
