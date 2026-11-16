@@ -4,7 +4,7 @@ Pixel-perfect Material (M3) data tables as Web Components: the core of [Table, B
 for any framework or none.
 
 The table is the Custom Element `<table-bro>` with pages, sort, search, row details, a filter drawer and a server mode.
-A skin gives it the look and the controls of a UI library:
+A skin gives it the look and the controls of a UI library. The packages of Table, Bro:
 
 | Package | What it gives |
 | --- | --- |
@@ -13,6 +13,7 @@ A skin gives it the look and the controls of a UI library:
 | `@table-bro/bootstrap` | The Bootstrap skin `bs` |
 | `@table-bro/native` | The native skin `nv`: plain HTML elements, no UI library |
 | `@table-bro/angular` | `<table-bro-ng>`, the Angular wrapper of the table |
+| `@table-bro/mcp` | The MCP server: the reference, the spec check and the code generator of a table for AI coding agents |
 
 ## With an AI coding agent
 
