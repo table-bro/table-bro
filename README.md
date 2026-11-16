@@ -91,7 +91,8 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
 - **Angular.** `@table-bro/angular` gives the component `<table-bro-ng>` with the signal inputs `cols`, `rows` and
   `conf` and the outputs `action` and `query`, in the three skins.
 - **Preact, React, Solid, Svelte and Vue.** Each framework has a Vite project in
-  [`samples/frameworks`](samples/frameworks) with its working page on the site and StackBlitz, and its page of the Docs:
+  [`samples/frameworks`](samples/frameworks) with its working page on the site and StackBlitz in the Bootstrap skin,
+  and its page of the Docs:
   [Preact](https://table-bro.com/docs/frameworks/preact), [React](https://table-bro.com/docs/frameworks/react),
   [Solid](https://table-bro.com/docs/frameworks/solid), [Svelte](https://table-bro.com/docs/frameworks/svelte),
   [Vue](https://table-bro.com/docs/frameworks/vue).
@@ -136,6 +137,30 @@ All packages share one version. Angular packages support Angular `>=20 <23`.
 The table is set up through the core, the same way for every skin: the config, the columns, the server mode, the
 themes, the styling, the CSS variables `--bro-*` and loading without a bundler. The README of
 [`@table-bro/core`](packages/core) describes them.
+
+## Skins
+
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. Three skins ship today:
+Angular Material for Angular apps, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin
+to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the
+component library of your framework, is built the same way.
+
+### Create your own skin
+
+A skin is a config that `registerSkin(name, config)` of `@table-bro/core` registers once, before the tables, and
+`conf.skin` of a table names. The config, `BroSkinConfig`, holds the classes of the parts of the table in `css`; the
+Custom Elements of its controls in `components`, each by its `selector`: the toolbar, the sort header, the paginator,
+the progress bar, the buttons and the dropdowns; and the attribute of the color mode of your UI library in
+`themeAttribute`, as `data-bs-theme` of Bootstrap, which the table sets on its host to `'light'` or `'dark'`. The table
+also puts the name of the skin on its host as a class, so the CSS of your skin applies under that class.
+
+Native is the skin to start from: its config `nativeSkinConfig` of `@table-bro/native` and its sources in
+[`packages/skins/native`](packages/skins/native) show the parts of a skin. Give the parts the classes of your design
+system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the
+components of Angular Material, then register the config under a name of its own:
+`registerSkin('brand', brandSkinConfig)` and `conf: {skin: 'brand'}`. To change a part of a shipped skin for one table,
+`config.components` and `config.css` of the table are enough: they change any value or function of the config of the
+skin.
 
 ## Getting started
 

@@ -96,6 +96,13 @@ or functions, at any depth, for that table. The sizes and timings are CSS variab
 
 The skin has a light and a dark theme, as the README of `@table-bro/core` describes.
 
+## Your own skin
+
+Native is the reference skin of Table, Bro, next to `@table-bro/angular-material` and `@table-bro/bootstrap`: a skin of
+your design system, or of the component library of your framework, starts from its config `nativeSkinConfig` and its
+sources in [`packages/skins/native`](https://github.com/table-bro/table-bro/tree/main/packages/skins/native). See
+[Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+
 ## License
 
 MIT

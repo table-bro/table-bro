@@ -306,10 +306,11 @@ load({page: 1, pageSize});
 
 ## Skins
 
-`config.skin` is `'nv'`, `'bs'` or `'mat'`. Each skin package registers its skin and exports its config:
-`nativeSkinConfig`, `bootstrapSkinConfig` and `matSkinConfig`. `config.components` and `config.css` of a table change
+`config.skin` is `'mat'`, `'bs'` or `'nv'`. Each skin package registers its skin and exports its config:
+`matSkinConfig`, `bootstrapSkinConfig` and `nativeSkinConfig`. `config.components` and `config.css` of a table change
 any value or function of the config of its skin, at any depth. `registerSkin(name, config)` registers a skin of
-your own.
+your own: [Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the
+repository describes its config.
 
 The skin `mat` and `@table-bro/angular-material` are built for Angular Material 20, 21 and 22. The skin can work with
 another version of Angular Material too, but that takes a build from the sources and a check of the result: the SCSS

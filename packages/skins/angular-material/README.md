@@ -174,6 +174,12 @@ The elements of the cells are optional: `withTags()` adds `bro-mat-tags`, `withS
 functions, at any depth, for that table. The sizes and timings are CSS variables of the table, as
 `--bro-row-height`: see the README of `@table-bro/core`.
 
+## Your own skin
+
+This skin is one of the three skins of Table, Bro, with `@table-bro/bootstrap` and `@table-bro/native`. A skin of your
+design system, or of the component library of your framework, is built the same way: see
+[Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+
 ## Versions of Angular Material
 
 The skin and this package are built for Angular Material 20, 21 and 22. The skin can work with another version of
