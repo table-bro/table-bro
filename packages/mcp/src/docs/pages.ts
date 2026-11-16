@@ -13,7 +13,7 @@ export interface BroDocFile {
 
 /**
  * A page of Docs: the one source of the page of Docs on table-bro.com and of its topic of get_docs. The text is
- * Markdown of a few forms: paragraphs, headings ###, #### and #####, ordered lists whose items continue with blocks
+ * Markdown of a few forms: paragraphs, headings ### to ######, ordered lists whose items continue with blocks
  * indented by three spaces, tables | a | b | with the line | --- | --- | after the head, `code`, **strong**, _emphasis_ and
  * [links](url); the _emphasis_ at the end of a heading is its note, as #### Loading _with Lottie_. A line {{file}} shows a
  * file of code, and a line <!-- name --> starts the part of the page that the site shows at that name, next to its tables.
@@ -138,6 +138,23 @@ export const conf: BroConfig = {
 const skinsSection = `#### Which skins can I use?
 
 Table, Bro ships three skins, Angular Material, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+
+/** The setup of the MCP server for Claude Code, which the installation of every page of Frameworks starts with. */
+const mcpInstall: BroDocFile = {file: 'mcp.sh', language: 'bash', code: `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@${tableBroVersion}
+`};
+
+/**
+ * The installation with the MCP server, the first one on every page of Frameworks, as in the README of the repository.
+ * @param framework - the framework of the page, whose components render the table for Vanilla JS; none for Angular,
+ * which the server generates
+ */
+const mcpSection = (framework?: string): string => `##### With the MCP server
+
+The quickest start is the MCP server of Table, Bro: add it to your AI coding agent and describe the table you need. The agent installs the packages, generates the table, its setup and its cells, and checks the result.${framework ? ` In a ${framework} app the server generates the table for Vanilla JS: a module with a function that renders \`‹table-bro›\` into an element, which a component gives it.` : ''} For Claude Code, in the root of the project:
+
+{{mcp.sh}}
+
+[MCP server](https://table-bro.com/docs/ai/mcp-server) gives the setup for Codex, Cursor, VS Code and Claude Desktop.`;
 
 /** The pages of Docs, in the order of reading. Island Details have their own pages on the site, apart from this package. */
 export const docPages: BroDocPage[] = [
@@ -1612,17 +1629,21 @@ Table, Bro has its own package for Angular, \`@table-bro/angular\`: the componen
 <!-- setup -->
 #### How do I install Table, Bro in Angular?
 
+${mcpSection()}
+
+##### Manual setup
+
 The steps of each skin; the component of the table is the same in all three.
 
-##### Angular Material
+###### Angular Material
 
 ${setupMat.text}
 
-##### Vanilla Bootstrap
+###### Vanilla Bootstrap
 
 ${setupNgBs.text}
 
-##### Vanilla HTML
+###### Vanilla HTML
 
 ${setupNgNv.text}
 
@@ -1656,6 +1677,7 @@ Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
+      mcpInstall,
       ...setupMat.files,
       ...setupNgBs.files,
       ...setupNgNv.files,
@@ -1733,6 +1755,10 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it
 <!-- setup -->
 #### How do I install Table, Bro in Preact?
 
+${mcpSection('Preact')}
+
+##### Manual setup
+
 1. **Install the packages**
 
    The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
@@ -1795,6 +1821,7 @@ No: \`‹table-bro›\` is an element of the DOM, the same in Preact and in Reac
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
+      mcpInstall,
       frameworkInstall,
       frameworkSkin,
       frameworkOrders,
@@ -1851,6 +1878,10 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders 
 
 <!-- setup -->
 #### How do I install Table, Bro in React?
+
+${mcpSection('React')}
+
+##### Manual setup
 
 1. **Install the packages**
 
@@ -1914,6 +1945,7 @@ The table renders in the browser: \`configure()\` runs in an effect, so a client
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
+      mcpInstall,
       frameworkInstall,
       frameworkSkin,
       frameworkOrders,
@@ -1981,6 +2013,10 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it 
 <!-- setup -->
 #### How do I install Table, Bro in Solid?
 
+${mcpSection('Solid')}
+
+##### Manual setup
+
 1. **Install the packages**
 
    The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
@@ -2047,6 +2083,7 @@ The element needs the browser: \`onMount\` runs only there, so the server render
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
+      mcpInstall,
       frameworkInstall,
       frameworkSkin,
       frameworkOrders,
@@ -2117,6 +2154,10 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders 
 <!-- setup -->
 #### How do I install Table, Bro in Svelte?
 
+${mcpSection('Svelte')}
+
+##### Manual setup
+
 1. **Install the packages**
 
    The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
@@ -2171,6 +2212,7 @@ The element needs the browser: \`onMount\` runs only there, so the server render
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
+      mcpInstall,
       frameworkInstall,
       frameworkSkin,
       frameworkOrders,
@@ -2210,6 +2252,10 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it 
 
 <!-- setup -->
 #### How do I install Table, Bro in Vue?
+
+${mcpSection('Vue')}
+
+##### Manual setup
 
 1. **Install the packages**
 
@@ -2273,6 +2319,7 @@ The element needs the browser: render the component on the client, as \`‹Clien
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
     files: [
+      mcpInstall,
       frameworkInstall,
       frameworkSkin,
       frameworkOrders,
