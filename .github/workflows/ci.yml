@@ -1,9 +1,12 @@
-# The checks of every push and pull request. A failed step fails the run, and a branch protection rule that requires
-# the jobs of this workflow blocks the merge of a pull request with a failed run.
+# The checks of every push of a branch and every pull request. A failed step fails the run, and a branch protection
+# rule that requires the jobs of this workflow blocks the merge of a pull request with a failed run.
 name: CI
 
 on:
+  # The pushes of branches only: the commit of a tag has its checks from the push of its branch, and a run of a tag
+  # does not cancel the run of the branch
   push:
+    branches: ['**']
   pull_request:
 
 # A new push to a branch cancels the run of its previous push
