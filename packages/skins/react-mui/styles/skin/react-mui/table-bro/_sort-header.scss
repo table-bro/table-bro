@@ -1,0 +1,22 @@
+@use "../../shared/mixins/shared" as *;
+@use "../../shared/mixins/sort-header" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} {
+    // The sort label shrinks with its column, and its title ends with an ellipsis
+    bro-mui-sort-header .MuiTableSortLabel-root {
+      max-width: 100%;
+    }
+
+    .bro-mui-sort-header-content {
+      @include sort-header-content();
+
+      @include table-width-transition();
+    }
+
+    // The arrow of a number column comes before its title
+    .bro-mui-sort-header_before {
+      flex-direction: row-reverse;
+    }
+  }
+}

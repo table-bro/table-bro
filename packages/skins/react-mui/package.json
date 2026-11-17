@@ -1,0 +1,89 @@
+{
+  "name": "@table-bro/react-mui",
+  "version": "1.2.1",
+  "description": "Pixel-perfect Material data tables for React and MUI, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "react",
+    "preact",
+    "mui",
+    "material-ui",
+    "material",
+    "material-design",
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "mcp",
+    "ai-coding-agents",
+    "vibe-coding",
+    "claude-code",
+    "cursor",
+    "codex",
+    "github-copilot",
+    "windsurf",
+    "gemini-cli",
+    "grok",
+    "cline",
+    "zed",
+    "jetbrains-ai",
+    "mui-table"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/react-mui"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.react-mui.esm.js",
+  "module": "dist/table-bro.react-mui.esm.js",
+  "types": "dist/table-bro.react-mui.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.react-mui.d.ts",
+      "import": "./dist/table-bro.react-mui.esm.js",
+      "default": "./dist/table-bro.react-mui.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.react-mui.ts",
+    "./dist/table-bro.react-mui.esm.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.react-mui",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.react-mui",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "@mui/material": "^9.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@table-bro/core": "^1.2.0"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.5.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsdown": "^0.23.0"
+  }
+}

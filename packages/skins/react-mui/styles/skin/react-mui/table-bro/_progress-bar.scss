@@ -1,0 +1,12 @@
+@use "../variables" as *;
+@use "../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar($mui-progress-bar-selector);
+  @include table-aux-progress-bar($mui-progress-bar-selector);
+
+  // The linear progress of MUI fills the height of the bar of the table
+  #{$mui-progress-bar-selector} .MuiLinearProgress-root {
+    height: 100%;
+  }
+}

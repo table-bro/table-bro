@@ -14,6 +14,7 @@ const update = process.argv.includes('--update');
 
 const packages = [
   {dir: path.join(root, 'packages/core'), name: 'table-bro'},
+  {dir: path.join(root, 'packages/skins/react-mui'), name: 'table-bro.react-mui'},
   {dir: path.join(root, 'packages/skins/bootstrap'), name: 'table-bro.bootstrap'},
   {dir: path.join(root, 'packages/skins/native'), name: 'table-bro.native'}
 ];

@@ -1,0 +1,77 @@
+// The MUI skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.react-mui.api
+@forward "./table-bro.react-mui.api";
+@use "./skin/react-mui/variables" as *;
+@use "sass:meta";
+
+/* Mixins */
+@use "./skin/shared/mixins/custom-properties" as *;
+@use "./skin/shared/mixins/shared" as *;
+
+@use "./skin/shared/table-bro/details" as shared-details;
+@use "./skin/shared/table-bro/filter-drawer" as shared-filter-drawer;
+@use "./skin/shared/table-bro/shadows" as shared-shadows;
+@use "./skin/shared/table-bro/state" as shared-state;
+@use "./skin/shared/table-bro/table" as shared-table;
+@use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
+@use "./skin/react-mui/table-bro/elements" as mui-elements;
+@use "./skin/react-mui/table-bro/filter-drawer" as mui-filter-drawer;
+@use "./skin/react-mui/table-bro/paginator" as mui-paginator;
+@use "./skin/react-mui/table-bro/progress-bar" as mui-progress-bar;
+@use "./skin/react-mui/table-bro/sort-header" as mui-sort-header;
+@use "./skin/react-mui/table-bro/switch" as mui-switch;
+@use "./skin/react-mui/table-bro/table" as mui-table;
+@use "./skin/react-mui/table-bro/tags" as mui-tags;
+@use "./skin/react-mui/table-bro/toolbar" as mui-toolbar;
+@use "./skin/react-mui/table-bro/toolbar-search" as mui-toolbar-search;
+
+
+/* Shared */
+#{$bro-skin} {
+  @include shared-details.styles;
+  @include shared-filter-drawer.styles;
+  @include shared-shadows.styles;
+  @include shared-state.styles;
+  @include shared-table.styles;
+  @include shared-text-ellipsis.styles;
+
+  // The tags of the skin in a cell
+  @include bro-cell-items('bro-mui-tags .bro-mui-tags-chips', '.MuiChip-root', '.MuiChip-label');
+}
+
+
+/* MUI components */
+#{$bro-skin} {
+  @include mui-elements.styles;
+}
+
+
+/* Table-bro extensions */
+#{$bro-skin} {
+  @include mui-filter-drawer.styles;
+  @include mui-paginator.styles;
+  @include mui-progress-bar.styles;
+  @include mui-sort-header.styles;
+  @include mui-switch.styles;
+  @include mui-table.styles;
+  @include mui-tags.styles;
+  @include mui-toolbar.styles;
+  @include mui-toolbar-search.styles;
+}
+@include meta.load-css("./skin/react-mui/themes");
+
+
+#{$bro-skin} {
+  @include bro-table-shadow-container();
+}
+
+
+/* The sizes and timings for the table script; :where() lets a plain table-bro selector override them */
+:where(#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}
+
+/* A prerendered table (data-bro-prerender of prerenderTableBro) takes them in the critical CSS of its page too, as
+   Beasties writes it: it drops a selector of :where() alone, which nothing is left of without the pseudo-class */
+table-bro:where([data-bro-prerender]#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}

@@ -1,0 +1,14 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The ellipsis after the chips that show takes the color of their text, in the light and the dark scheme
+  bro-mui-tags .bro-mui-tags-chips > .bro-cell-items-ellipsis {
+    margin-left: 4px;
+
+    color: $mui-text-secondary-color;
+  }
+
+  bro-mui-tags .MuiChip-root + .MuiChip-root {
+    margin-left: 8px;
+  }
+}

@@ -282,5 +282,14 @@ export default {
       unspecified: 'bottomAlphabetical',
       emptyLineBeforeUnspecified: 'always'
     }]
-  }
+  },
+  overrides: [{
+    // The skin mui writes the classes and reads the CSS variables of MUI by their names, as .MuiChip-root and
+    // --mui-palette-TableCell-border
+    files: ['packages/skins/react-mui/styles/**/*.scss'],
+    rules: {
+      'custom-property-pattern': '^(mui-[A-Za-z0-9-]+|[a-z][a-z0-9]*(-[a-z0-9]+)*)$',
+      'selector-class-pattern': `^Mui[A-Za-z]+-[a-zA-Z]+$|${BEM_KEBAB_CASE}`
+    }
+  }]
 };

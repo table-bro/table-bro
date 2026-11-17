@@ -1,0 +1,33 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_toolbar($mui-toolbar-selector);
+
+  // The toolbar of MUI takes the height of the toolbar of the table at every width of the page
+  #{$bro-table-toolbar_container} #{$mui-toolbar-selector},
+  .bro-filter-drawer-header #{$mui-toolbar-selector} {
+    height: $bro-toolbar-height;
+
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+  }
+
+  // The title of the toolbar has the title text of the theme, as the top app bar of Material
+  bro-mui-toolbar-main .bro-toolbar-title,
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    font: var(--mui-font-h6);
+  }
+
+  // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content
+  // Security Policy blocks
+  bro-mui-toolbar-main .bro-toolbar-placeholder {
+    visibility: hidden;
+  }
+
+  bro-mui-toolbar-main .bro-toolbar-space,
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    flex: 1 1 auto;
+  }
+}
