@@ -1,0 +1,19 @@
+@use "variables" as *;
+@use "../shared/mixins/skin-colors" as *;
+
+// The skin takes the theme of the application, as every component of MUI does: the components of MUI in the table
+// read its CSS variables themselves, and the parts of the table read the variables of the table of MUI. A dark scheme
+// of the theme changes the variables; a table with a theme of its own selects the scheme by its attribute
+// data-mui-color-scheme, as the theme selects it on the page
+#{$bro-skin} {
+  color: $mui-text-color;
+
+  @include bro-table-theme(
+      '.bro-mui-table',
+      $mui-toolbar-selector,
+      $mui-bg,
+      $mui-border-color,
+      $mui-text-color,
+      $mui-text-secondary-color
+  );
+}

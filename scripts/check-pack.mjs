@@ -14,6 +14,7 @@ export const root = fileURLToPath(new URL('../', import.meta.url));
 /** The packages of the repository and the folders npm packs them from: the Angular packages from their ng-packagr builds. */
 export const packages = [
   {name: '@table-bro/core', dir: 'packages/core'},
+  {name: '@table-bro/react-mui', dir: 'packages/skins/react-mui'},
   {name: '@table-bro/bootstrap', dir: 'packages/skins/bootstrap'},
   {name: '@table-bro/native', dir: 'packages/skins/native'},
   {name: '@table-bro/angular', dir: 'dist/table-bro.angular'},

@@ -2,6 +2,7 @@ import {describe, expect, it} from 'vitest';
 
 import bootstrapPackage from '../skins/bootstrap/package.json';
 import nativePackage    from '../skins/native/package.json';
+import muiPackage       from '../skins/react-mui/package.json';
 import corePackage      from './package.json';
 
 /** The build configs of the core and the vanilla skins, as text. */
@@ -24,9 +25,9 @@ function inFolder(files: Record<string, string>, folder: string): Record<string,
 /** The sources of the core, the skins and the Angular wrapper, as text, without their specs and builds. */
 const librarySources = import.meta.glob<string>(['./**/*.ts', '../skins/**/*.ts', '../angular/src/**/*.ts', '!**/*.spec.ts', '!**/*.d.ts', '!**/dist/**', '!**/node_modules/**'], {query: '?raw', import: 'default', eager: true});
 
-const packages = [corePackage, bootstrapPackage, nativePackage];
+const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage];
 
-describe('the packages of the core and the vanilla skins', () => {
+describe('the packages of the core and the skins', () => {
   it('give import and require one ES module, so a project gets one copy of the core', () => {
     for (const {name, exports} of packages) {
       const file = name.replace('@table-bro/core', 'table-bro').replace('@table-bro/', 'table-bro.');
@@ -60,6 +61,9 @@ describe('the packages of the core and the vanilla skins', () => {
     for (const [manifest, name] of <const>[[bootstrapPackage, 'bootstrap'], [nativePackage, 'native']]) {
       expect(manifest.sideEffects).toEqual(['./js/index.ts', `./js/table-bro.${name}.ts`, `./dist/table-bro.${name}.esm.js`, `./dist/table-bro.${name}.umd.js`, './dist/*.css']);
     }
+
+    // The skin mui is built for bundlers only, without a UMD bundle
+    expect(muiPackage.sideEffects).toEqual(['./js/index.ts', './js/table-bro.react-mui.ts', './dist/table-bro.react-mui.esm.js', './dist/*.css']);
   });
 
   it('define no tag with the prefix bro-cell-: the library leaves it to the elements of the application', () => {
@@ -77,7 +81,9 @@ describe('the packages of the core and the vanilla skins', () => {
   });
 
   it('give each UMD bundle its own global name', () => {
-    const names = Object.values(buildConfigs).map(config => config.match(/globalName:\s*'([^']+)'/)?.[1]);
+    // The skin mui is built for bundlers only: it has no UMD bundle and no global name
+    const umdConfigs = Object.entries(buildConfigs).filter(([file]) => file !== '../skins/react-mui/tsdown.config.ts');
+    const names = umdConfigs.map(([, config]) => config.match(/globalName:\s*'([^']+)'/)?.[1]);
 
     expect(names.sort()).toEqual(['TableBro', 'TableBroBootstrap', 'TableBroNative']);
   });

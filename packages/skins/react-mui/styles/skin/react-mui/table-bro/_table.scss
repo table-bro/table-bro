@@ -1,0 +1,44 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The host is an inline block, whose baseline is its last line of text in the flow: the texts of the toolbar and the
+  // paginator of MUI lie in flex boxes, so the baseline is the bottom of the table, and the line around it adds the
+  // descent of its font below the table. In the filter drawer of the core the card would be longer than the table by it
+  @at-root table-bro#{&} {
+    vertical-align: top;
+  }
+
+  table.bro-mui-table {
+    border-spacing: 0;
+  }
+
+  tr.bro-mui-header-row {
+    height: var(--bro-header-height);
+  }
+
+  tr.bro-mui-row {
+    height: var(--bro-row-height);
+  }
+
+  // The text of the theme, as in the table of MUI: the body text in the cells, the title text in the header below
+  th.bro-mui-header-cell,
+  td.bro-mui-cell {
+    border-color: $mui-border-color;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    font: var(--mui-font-body2);
+
+    color: $mui-text-color;
+  }
+
+  th.bro-mui-header-cell {
+    font: var(--mui-font-subtitle2);
+
+    text-align: left;
+
+    [dir='rtl'] & {
+      text-align: right;
+    }
+  }
+}

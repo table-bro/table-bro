@@ -1,0 +1,31 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_paginator($mui-paginator-selector);
+
+  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
+  // table: Island Details rounds the corners of this element. The pagination of MUI in it fills it
+  #{$bro-paginator-container} #{$mui-paginator-selector} {
+    display: block;
+
+    height: $bro-paginator-height;
+
+    background-color: $mui-bg;
+    color: $mui-text-color;
+
+    .MuiTablePagination-root,
+    .MuiTablePagination-toolbar {
+      height: 100%;
+    }
+
+    // The labels of the pagination of MUI are paragraphs, which it centers by the default margins of the browser: the
+    // CSS of a page, as the reboot of Bootstrap, changes them. The toolbar centers the labels with the select and the
+    // buttons
+    .MuiTablePagination-selectLabel,
+    .MuiTablePagination-displayedRows {
+      margin: 0;
+    }
+  }
+}
