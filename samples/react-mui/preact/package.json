@@ -1,0 +1,24 @@
+{
+  "name": "table-bro-sample-react-mui-preact",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.5.0",
+    "@table-bro/core": "^1.2.1",
+    "@table-bro/react-mui": "^1.2.1",
+    "preact": "^11.0.1"
+  },
+  "devDependencies": {
+    "@jridgewell/remapping": "^2.3.5",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

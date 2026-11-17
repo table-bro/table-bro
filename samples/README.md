@@ -4,6 +4,8 @@ Pages with a table of Table, Bro, one per skin, each set up as its page of Docs,
 of the frameworks of Docs, Frameworks:
 
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
+- `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
+  `preact/compat`, in `react-mui/preact`, built by Vite;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
