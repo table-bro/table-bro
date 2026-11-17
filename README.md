@@ -163,6 +163,10 @@ components of Angular Material, then register the config under a name of its own
 `config.components` and `config.css` of the table are enough: they change any value or function of the config of the
 skin.
 
+An AI coding agent builds a skin of the components of your library with the skill
+[`create-skin`](.agents/skills/create-skin/SKILL.md) of the repository: the package, the elements and their contract
+with the table, the theme, the styles, a sample and the checks. The skin `mui` on MUI is its reference.
+
 ## Getting started
 
 ### With the MCP server
