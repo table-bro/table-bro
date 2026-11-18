@@ -9,9 +9,9 @@ of their own) and its CSS. The table itself is `<table-bro>` of `@table-bro/core
 
 ## With an AI coding agent
 
-Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent reads the
-reference of the table and the setup of this skin from it. The code generator and the spec check of the MCP server make
-tables of the skins `mat`, `bs` and `nv` for now: the agent writes a table of the skin `mui` by this README.
+Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the
+packages, generates the table, its setup and its cells from one request, and checks the result. The table is a module
+that renders `<table-bro>` into a container, which a component of React or Preact gives it from an effect.
 
 ```sh
 claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.1

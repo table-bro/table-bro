@@ -345,8 +345,8 @@ function elementComponent(element: string, skin: BroSpecSkin, name: string | und
     case 'tags':
       return {selector: `bro-${skin}-tags`};
     case 'switch':
-      // The switch of the bs and nv skins takes its value from the attribute checked
-      return {selector: (skin === 'mat') ? 'bro-mat-slide-toggle' : 'bro-switch', attrs: {checked: raw(`(_col, row) => row.${name}`)}};
+      // The switch of the bs and nv skins takes its value from the attribute checked; the ones of mat and mui from the row
+      return {selector: {mat: 'bro-mat-slide-toggle', mui: 'bro-mui-switch', bs: 'bro-switch', nv: 'bro-switch'}[skin], attrs: {checked: raw(`(_col, row) => row.${name}`)}};
     default:
       // The table opens the row details on the action bro-details-toggle of the button
       return {selector: 'bro-details-button', attrs: {title: 'Details', name: raw('events.detailsToggleEvent')}, event: 'action'};

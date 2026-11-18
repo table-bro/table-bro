@@ -2,7 +2,7 @@ import ts                     from 'typescript';
 import {describe, expect, it} from 'vitest';
 
 import {builtinSpecs}                          from '../spec/builtin-specs.js';
-import type {BroTableSpec}                     from '../spec/spec.js';
+import type {BroSpecSkin, BroTableSpec}        from '../spec/spec.js';
 import {literal, raw}                          from './code.js';
 import {type BroSpecFillings, templateClasses} from './fillings.js';
 import {generateCode}                          from './generate-code.js';
@@ -79,6 +79,12 @@ describe('generateCode', () => {
   it('keeps the mat skin for Angular', () => {
     expect(generateCode(orders.spec, {target: 'vanilla', skin: 'mat'}).report.errors).toEqual([
       {path: '', message: 'the mat skin is for Angular', fix: 'use the target angular, or the skin bs or nv'}
+    ]);
+  });
+
+  it('keeps the mui skin for React and Preact', () => {
+    expect(generateCode(orders.spec, {target: 'angular', skin: 'mui'}).report.errors).toEqual([
+      {path: '', message: 'the mui skin is for React and Preact', fix: 'use the target vanilla in a project of React or Preact, or the skin mat, bs or nv'}
     ]);
   });
 
@@ -298,7 +304,7 @@ describe('generateCode', () => {
   });
 
   it('registers the skin with the optional elements that the table uses, by its spec', () => {
-    const setup = (spec: BroTableSpec, target: 'angular' | 'vanilla', skin: 'mat' | 'bs' | 'nv') => generateCode(spec, {target, skin}).setup.map(step => step.code ?? '').join('\n');
+    const setup = (spec: BroTableSpec, target: 'angular' | 'vanilla', skin: BroSpecSkin) => generateCode(spec, {target, skin}).setup.map(step => step.code ?? '').join('\n');
     const plain = <BroTableSpec>{...structuredClone(orders.spec), cols: orders.spec.cols.filter(col => !col.component), toolbar: undefined};
 
     // The orders have tags, a switch and a menu of the toolbar, which is an element of its own only in the skin mat
@@ -310,6 +316,11 @@ describe('generateCode', () => {
 
     expect(setup(plain, 'angular', 'mat')).toContain('provideTableBroMatSkin()');
     expect(setup(plain, 'vanilla', 'nv')).toContain("import '@table-bro/native';");
+
+    // The skin mui takes the MUI theme of the application, and React renders the table outside its effects
+    expect(setup(orders.spec, 'vanilla', 'mui')).toContain("import {setMuiTheme, withSwitch, withTags} from '@table-bro/react-mui';");
+    expect(setup(orders.spec, 'vanilla', 'mui')).toContain('setMuiTheme(theme);\nwithTags();\nwithSwitch();');
+    expect(setup(orders.spec, 'vanilla', 'mui')).toContain('queueMicrotask(() => renderOrderTable(container));');
   });
 
   it('writes a function of the skin config with its body', () => {

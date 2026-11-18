@@ -37,7 +37,7 @@ export interface BroSpecLimits {
 }
 
 export interface BroValidateOptions {
-  /** The skin of the project; without it the spec is checked for the three skins. */
+  /** The skin of the project; without it the spec is checked for all the skins. */
   skin?: BroSpecSkin;
   /** A host that renders the table of the spec, as a preview, requires its rows. */
   rowsRequired?: boolean;
@@ -727,8 +727,8 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
   checkKeys(value, ['buttons', 'menu'], 'toolbar', issues);
 
   const actions = new Set<string>();
-  // The mat skin is checked when the project has it, and on the site, which has all skins
-  const iconRequired = !options.skin || options.skin === 'mat';
+  // The skins of Material icons, mat and mui, are checked when the project has one of them, and on the site, which has all skins
+  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui';
 
   const checkButton = (button: unknown, path: string, icon: boolean) => {
     if (!isObject(button)) {
@@ -760,7 +760,7 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
     if (button['icon'] !== undefined && (typeof button['icon'] !== 'string' || !iconName.test(button['icon']))) {
       issues.error(`${path}.icon`, 'expected the name of a Material icon', 'as download');
     } else if (icon && button['icon'] === undefined) {
-      issues.error(`${path}.icon`, 'a button of the toolbar of the mat skin is an icon with a tooltip', 'give the name of a Material icon, as download');
+      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat and mui is an icon with a tooltip', 'give the name of a Material icon, as download');
     }
   };
 
@@ -830,17 +830,17 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
   }
 
   if (!isObject(value)) {
-    issues.error('skinConfig', 'expected an object with the skins mat, bs or nv');
+    issues.error('skinConfig', 'expected an object with the skins mat, mui, bs or nv');
 
     return;
   }
 
-  checkKeys(value, ['mat', 'bs', 'nv'], 'skinConfig', issues);
+  checkKeys(value, ['mat', 'mui', 'bs', 'nv'], 'skinConfig', issues);
 
   for (const [skin, config] of Object.entries(value)) {
     const path = `skinConfig.${skin}`;
 
-    if (!['mat', 'bs', 'nv'].includes(skin)) {
+    if (!['mat', 'mui', 'bs', 'nv'].includes(skin)) {
       continue;
     }
 
@@ -862,11 +862,12 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
       }
     }
 
-    // The elements of the mat skin are Angular components with their own templates: they read no classes of the config
-    if (skin === 'mat' && isObject(config['components'])) {
+    // The elements of the skins mat and mui are components of a framework with their own templates: they read no classes
+    // of the config
+    if ((skin === 'mat' || skin === 'mui') && isObject(config['components'])) {
       for (const [name, component] of Object.entries(config['components'])) {
         if (isObject(component) && component['css'] !== undefined) {
-          issues.error(`${path}.components.${name}.css`, 'the elements of the mat skin are Angular components and read no classes of the config', 'remove css: the classes of the config are for the skins bs and nv');
+          issues.error(`${path}.components.${name}.css`, `the elements of the ${skin} skin are ${(skin === 'mat') ? 'Angular' : 'React'} components and read no classes of the config`, 'remove css: the classes of the config are for the skins bs and nv');
         }
       }
     }
