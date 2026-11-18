@@ -15,8 +15,8 @@ import type {BroTableSpec}                                                      
 import {type BroSpecLimits, rowDetailsByDefault, validateSpec}                           from '../spec/validate-spec.js';
 import {tableBroVersion}                                                                 from '../version.js';
 
-const skin = z.enum(['mat', 'bs', 'nv']).describe('The skin, the UI library the table works on top of: mat (Angular Material), bs (Bootstrap 5) or nv (native HTML, no library)');
-const target = z.enum(['angular', 'vanilla']).describe('The target: angular for an Angular project, through the wrapper <table-bro-ng>; vanilla for a page without a framework, the Custom Element <table-bro> itself');
+const skin = z.enum(['mat', 'mui', 'bs', 'nv']).describe('The skin, the UI library the table works on top of: mat (Angular Material), mui (MUI for React and Preact, with the target vanilla), bs (Bootstrap 5) or nv (native HTML, no library)');
+const target = z.enum(['angular', 'vanilla']).describe('The target: angular for an Angular project, through the wrapper <table-bro-ng>; vanilla for a page without a framework or a project of React or Preact, the Custom Element <table-bro> itself');
 
 /**
  * A value that the tool checks itself, shown to the agent with its JSON Schema: the check of the tool names every
@@ -38,7 +38,7 @@ const profile = {
   tableBro: z.object({version: z.string().nullable(), packages: z.record(z.string(), z.string()), extensions: z.array(z.string())}),
   framework: z.object({name: z.enum(['angular', 'none']), version: z.string().nullable()}),
   ui: z.object({material: z.string().nullable(), bootstrap: z.string().nullable()}),
-  skins: z.object({registered: z.array(z.enum(['mat', 'bs', 'nv'])), where: z.array(z.string())}),
+  skins: z.object({registered: z.array(z.enum(['mat', 'mui', 'bs', 'nv'])), where: z.array(z.string())}),
   styles: z.array(z.string()),
   customElements: z.array(z.object({tag: z.string(), file: z.string()})),
   tables: z.array(z.string()),
@@ -157,7 +157,7 @@ export function createServer(root: string, extensions: BroMcpExtension[] = []): 
     description: 'Checks a table spec, a BroTableSpec (get_docs, topic spec), and reports every error and warning with its path, what is wrong and the fix. '
       + 'Use it while you draft a spec. generate_code runs the same check first and returns the same report for a spec with errors. '
       + 'Example: {"spec": {"specVersion": 1, "rowType": "Product", "fields": [{"name": "title", "type": "string"}], "cols": [{"title": "Product", "name": "title"}]}, "skin": "mat"}',
-    inputSchema: {spec: shown(specSchema), skin: skin.optional().describe('The skin of the project: mat, bs or nv. Without it the spec is checked against all three')},
+    inputSchema: {spec: shown(specSchema), skin: skin.optional().describe('The skin of the project: mat, mui, bs or nv. Without it the spec is checked against all of them')},
     outputSchema: report,
     annotations: readOnly
   }, ({spec, skin}) => {

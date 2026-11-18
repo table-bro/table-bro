@@ -104,7 +104,7 @@ export class BroFiltersCode {
       mat: '<button matButton type="button" (click)="form.reset()">\n    <mat-icon>filter_list_off</mat-icon>\n    Clear\n  </button>',
       bs: '<button type="button" class="nav-link px-0" (click)="form.reset()">Clear</button>',
       nv: '<a href="" class="bro-nav-link" (click)="$event.preventDefault(); form.reset()">Clear</a>'
-    }[skin];
+    }[<'mat' | 'bs' | 'nv'>skin];
 
     const template = `<form [formGroup]="form">\n${indentBlock(markup, '  ')}\n\n  ${clear}\n</form>`;
 
@@ -148,10 +148,16 @@ export class BroFiltersCode {
 
   /** The form of the filters in Vanilla JS: the content of the Filter Drawer with slot="filters". */
   vanillaForm(skin: BroSpecSkin): string {
-    // The native fields have no classes of a library: the form brings their rules
-    const style = (skin === 'nv') ? `<style>\n${indentBlock(styles.nv.replace(/\.app-native-field/g, `.${this.names.filtersSelector} .app-native-field`), '  ')}\n</style>\n\n` : '';
+    // The native fields have no classes of a library: the form brings their rules, in the skins mui and nv; the page of
+    // mui replaces them with the fields of MUI when it wants
+    const native = (skin === 'mui' || skin === 'nv');
+    const style = native ? `<style>\n${indentBlock(styles.nv.replace(/\.app-native-field/g, `.${this.names.filtersSelector} .app-native-field`), '  ')}\n</style>\n\n` : '';
     const markup = style + this.filters.map(filter => this.vanillaField(filter, skin)).join('\n\n');
-    const clear = (skin === 'bs') ? '<button type="button" class="nav-link px-0 app-filters-clear">Clear</button>' : '<a href="" class="bro-nav-link app-filters-clear">Clear</a>';
+    const clear = {
+      mui: '<button type="button" class="app-filters-clear">Clear</button>',
+      bs: '<button type="button" class="nav-link px-0 app-filters-clear">Clear</button>',
+      nv: '<a href="" class="bro-nav-link app-filters-clear">Clear</a>'
+    }[<'mui' | 'bs' | 'nv'>skin];
     const read = this.keys().map(({key, type}) => {
       if (type === 'number') {
         return `    ${objectKey(key)}: data.get('${key}') ? Number(data.get('${key}')) : undefined`;
@@ -247,7 +253,7 @@ export class BroFiltersCode {
     return this.htmlField(filter, skin, false);
   }
 
-  /** A field of the bs or the nv skin: Angular binds it with formControlName, Vanilla JS reads it by its name. */
+  /** A field of the skins mui, bs and nv: Angular binds it with formControlName, Vanilla JS reads it by its name. */
   private htmlField(filter: BroSpecFilter, skin: BroSpecSkin, angular: boolean): string {
     const escape = angular ? escapeTemplate : escapeHtml;
     const bootstrap = (skin === 'bs');
@@ -286,6 +292,8 @@ function matField(label: string, control: string): string {
 const styles: Record<BroSpecSkin, string> = {
   // The fields have no fill and stand 16 px apart, as the filters of table-bro.com
   mat: ':host {\n  --mat-form-field-filled-container-color: transparent;\n}\n\n.app-filter {\n  display: block;\n  width: 100%;\n  margin-bottom: 16px;\n}\n\n.app-filter-range {\n  display: flex;\n  gap: 8px;\n}',
+  // The page of the skin mui takes the native fields of nv
+  mui: '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}',
   bs: ':host {\n  display: block;\n}',
   nv: '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}'
 };

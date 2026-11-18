@@ -24,11 +24,19 @@ const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page
 /** The files of the pages of Frameworks from their sample projects: the TypeScript of the repository has no frameworks to compile them with. */
 const frameworkFiles = docFiles.filter(docFile => docFile.page.startsWith('frameworks/') && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
 
+/** The pages of Frameworks whose framework has a skin of its own: they show the sample of that skin. */
+const skinSamples: Record<string, string> = {
+  'frameworks/angular': 'samples/angular-material',
+  'frameworks/react': 'samples/react-mui/react',
+  'frameworks/preact': 'samples/react-mui/preact'
+};
+
 /**
- * The sample project of a page of Frameworks: samples/frameworks/<name>, or the sample of Angular Material for Angular.
+ * The sample project of a page of Frameworks: the sample of the skin of its framework, as React MUI for React and
+ * Preact, or samples/frameworks/<name> with the Bootstrap skin.
  * @param page - the path of the page
  */
-const sampleOf = (page: string): string => (page === 'frameworks/angular') ? 'samples/angular-material' : `samples/${page}`;
+const sampleOf = (page: string): string => skinSamples[page] ?? `samples/${page}`;
 
 /** The place of a file of code among the files of the compiler: its page is its folder, so a file imports another one of its page. */
 const docFilePath = (page: string, file: string): string => path.join(root, 'docs-files', page, file);
