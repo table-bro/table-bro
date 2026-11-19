@@ -200,3 +200,7 @@ The root of the repository builds the package into `dist/table-bro.angular-mater
 ## License
 
 MIT
+
+Angular and Angular Material are trademarks of their owner. Table, Bro is not affiliated with Angular Material or
+endorsed by it: this package uses the public components and the theme of Angular Material, which the application
+installs.

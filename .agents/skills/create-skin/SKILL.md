@@ -39,7 +39,7 @@ its tags and its exports: `mui`, with `bro-mui-*` and `setMuiTheme()`. The skin 
 | `js/bro-*.<library>.ts`, `js/toolbar/` | One element per component |
 | `js/table-bro.<library>.spec.ts` | Unit specs in Chromium (Vitest takes `packages/skins/*/js/**/*.spec.ts`) |
 | `styles/table-bro.<library>.scss`, `_table-bro.<library>.api.scss`, `skin/<library>/` | The CSS entry, its SCSS API, the variables, the themes and one partial per part |
-| `README.md` | In the format of the README of mat: AI agent, Install, Set up, Use, Theme, Elements for cells, Settings, Build, License. The License of a skin of a library of another owner ends with the line of its trademark, as the one of `mui`: the library is a trademark of its owner, Table, Bro is not affiliated with it or endorsed by it |
+| `README.md` | In the format of the README of mat: AI agent, Install, Set up, Use, Theme, Elements for cells, Settings, Build, License. The License of a skin of a library of another owner ends with the line of its trademark, as the ones of `mat`, `bs` and `mui`: the library is a trademark of its owner, Table, Bro is not affiliated with it or endorsed by it, and the package uses its public components, which the application installs |
 | `table-bro.<library>.api.md` | `npm run check:api -- --update` writes it |
 | `LICENSE` | MIT, as the other skins |
 
