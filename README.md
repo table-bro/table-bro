@@ -171,7 +171,7 @@ agent installs the packages, generates the table, its setup and its cells, and c
 the root of the project:
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.1
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2
 ```
 
 The README of [`@table-bro/mcp`](packages/mcp) gives the setup for Codex, Cursor, VS Code and Claude Desktop, and the

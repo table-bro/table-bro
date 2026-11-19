@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.2
+
+A fix of the Angular packages of 1.2.1 on npm.
+
+### Fixed
+
+- `@table-bro/angular` 1.2.1 and `@table-bro/angular-material` 1.2.1 on npm hold the sources of the packages instead
+  of their builds, so an application cannot import them. 1.2.2 publishes the builds; the code of the packages is the
+  same as in 1.2.1.
+
 ## 1.2.1
 
 Fixes of the page scroll, the refresh and the focus of the body.
