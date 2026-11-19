@@ -88,6 +88,12 @@ describe('generateCode', () => {
     ]);
   });
 
+  it('keeps the vuetify skin for Vue', () => {
+    expect(generateCode(orders.spec, {target: 'angular', skin: 'vuetify'}).report.errors).toEqual([
+      {path: '', message: 'the vuetify skin is for Vue', fix: 'use the target vanilla in a project of Vue, or the skin mat, bs or nv'}
+    ]);
+  });
+
   it('writes the files of an Angular table by the recipe', () => {
     const {files, todo} = generateCode(orders.spec, {target: 'angular', skin: 'mat', fillings: orders.fillings});
 
@@ -346,6 +352,11 @@ describe('generateCode', () => {
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain("import {setMuiTheme, withSwitch, withTags} from '@table-bro/react-mui';");
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('setMuiTheme(theme);\nwithTags();\nwithSwitch();');
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('queueMicrotask(() => renderOrderTable(container));');
+
+    // The skin vuetify takes the Vuetify of the application, and Vue renders the table when its component is mounted
+    expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain("import {setVuetify, withSwitch, withTags} from '@table-bro/vue-vuetify';");
+    expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain('setVuetify(vuetify);\nwithTags();\nwithSwitch();');
+    expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain('onMounted(() => renderOrderTable(container.value!));');
   });
 
   it('writes a function of the skin config with its body', () => {

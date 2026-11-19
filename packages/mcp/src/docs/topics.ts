@@ -14,7 +14,7 @@ export interface BroDocTopic {
   text: () => string;
 }
 
-const pairs: [BroTarget, BroSpecSkin][] = [['angular', 'mat'], ['angular', 'bs'], ['angular', 'nv'], ['vanilla', 'mui'], ['vanilla', 'bs'], ['vanilla', 'nv']];
+const pairs: [BroTarget, BroSpecSkin][] = [['angular', 'mat'], ['angular', 'bs'], ['angular', 'nv'], ['vanilla', 'mui'], ['vanilla', 'vuetify'], ['vanilla', 'bs'], ['vanilla', 'nv']];
 
 /**
  * The topics of the reference. The texts that the package knows as data, the setup, the spec, the CSS variables,
@@ -27,7 +27,7 @@ export const topics: BroDocTopic[] = [
     summary: 'The facts a model cannot guess: the element, configure, skins, cells, the one event, the server mode',
     text: () => `
 - Table, Bro is a Web Components table engine on top of existing UI components: the table is the Custom Element \`<table-bro>\`, and a skin gives it the controls and the look of a UI library. Its columns, rows and config come once, in \`configure({cols, rows, conf})\`. New columns or a new config make a new table; rows change with \`replaceRows\` and \`appendRows\`, the loading and the failure with \`setState\`.
-- A skin is required: \`config.skin\` is \`mat\` (Angular Material: pixel-perfect Material data tables for Angular), \`mui\` (MUI for React and Preact, with the target vanilla), \`bs\` (Bootstrap 5) or \`nv\` (native HTML, no library). The import of a vanilla skin package registers it, \`provideTableBroMatSkin()\` registers the skin mat; \`configure\` throws without a registered skin. The table needs the CSS of the core and of the skin.
+- A skin is required: \`config.skin\` is \`mat\` (Angular Material: pixel-perfect Material data tables for Angular), \`mui\` (MUI for React and Preact, with the target vanilla), \`vuetify\` (Vuetify for Vue, with the target vanilla), \`bs\` (Bootstrap 5) or \`nv\` (native HTML, no library). The import of a vanilla skin package registers it, \`provideTableBroMatSkin()\` registers the skin mat; \`configure\` throws without a registered skin. The table needs the CSS of the core and of the skin.
 - The content of a custom cell is a Custom Element: the column names its tag in \`component.selector\`. The table creates it for every row and sets the properties \`col\` and \`row\`, the objects of the application.
 - The tags of the ready elements depend on the skin: the tags are \`bro-mat-tags\`, \`bro-bs-tags\` or \`bro-nv-tags\`.
 - Every action comes in one event \`bro-action\` with \`detail = {action, selector, data}\`. A custom cell sends its actions through the event named in \`component.event\`, and the table gives the page \`data = {col, row}\`.
@@ -108,7 +108,7 @@ ${JSON.stringify(builtinSpecs[0].spec, null, 2)}
     name: 'setup',
     title: 'The setup of a project',
     summary: 'The packages, the CSS and the registration of the skin, once for all tables of a project',
-    text: () => pairs.map(([target, skin]) => `**${(target === 'angular') ? 'Angular' : ((skin === 'mui') ? 'React or Preact' : 'Vanilla JS')}, skin ${skin}**\n\n${setupText(setupSteps(target, skin))}`).join('\n\n')
+    text: () => pairs.map(([target, skin]) => `**${(target === 'angular') ? 'Angular' : ({mui: 'React or Preact', vuetify: 'Vue'}[<string>skin] ?? 'Vanilla JS')}, skin ${skin}**\n\n${setupText(setupSteps(target, skin))}`).join('\n\n')
   },
   {
     name: 'columns',
@@ -149,7 +149,7 @@ The tags and the switch are optional elements of the skins, as the menu of the t
     text: () => `
 | Field | Meaning |
 | --- | --- |
-| \`skin\` | Required: \`mat\`, \`mui\`, \`bs\` or \`nv\`, registered by the package of the skin |
+| \`skin\` | Required: \`mat\`, \`mui\`, \`vuetify\`, \`bs\` or \`nv\`, registered by the package of the skin |
 | \`toolbar\` | \`false\` renders the table without its toolbar, as a table in the row details of another table |
 | \`header\` | \`false\` hides the header of the table, as a table in the row details of another table with the same columns |
 | \`toolbarTitle\` | The title of the toolbar |
