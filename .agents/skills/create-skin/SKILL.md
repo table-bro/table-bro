@@ -79,12 +79,41 @@ The state icons go through `fontIcon` with `state.fontIcon: true`, as in mat.
   container, and the table and the element hold other nodes in the element.
 - A move in the DOM disconnects and connects in one task: keep the tree, and drop it only when the element stays out of
   the DOM after a microtask.
-- An element of a prerender (`isPrerendered(this)`) keeps its markup. A skin without `defineElements` in its config
-  leaves its elements empty in a prerender; say so in the README.
+- An element of a prerender (`isPrerendered(this)`) keeps its markup until the table renders its own elements in its
+  place. The server render of the elements is in the section The server render below.
 - Move the nodes of the table into a toolbar after the render, never inside a ref or a lifecycle hook of the
   framework: a node may be an element of the skin, whose own render would run inside the commit of another one.
 - Extend `BroHTMLElement` of the core, so the module loads without a DOM, and define the elements only when
   `customElements` exists.
+
+## The server render
+
+`prerenderTableBro()` of the core renders a table in its loading state into a server DOM, and defines the elements of
+the skin there by `defineElements(registry)` of the registered config. A skin of a framework renders them with the
+server render of its framework, in a server entry of its own, `@table-bro/<library>/server`, as
+`js/table-bro.react-mui.server.ts`:
+
+- The entry gives the base element the render of a tree to markup (`setServerRender()`), registers the config again
+  with `defineElements`, which defines every element, the optional ones too, and re-exports the entry of the browser.
+  The bundle of the browser never imports it, so it carries no server render of the framework.
+- In a server DOM, a window other than the global one, an element renders its markup into its container by that
+  render, without a root of the framework; without the server entry it stays empty and names the entry in the console
+  once.
+- The styles of the library go into the markup: MUI renders by `renderToString` of `react-dom/server` inside a
+  `CacheProvider` with a new cache of Emotion for each render, since a shared cache leaves out the styles that an earlier
+  render, of another request or of the element before its inputs, has carried.
+- The elements extend the `HTMLElement` of the server DOM: the page of the server gives it to the global scope before
+  the import of the skin, `globalThis.HTMLElement ??= window.HTMLElement`, and imports the skin and the core after it.
+- The two entries share one chunk with a fixed name (`chunkFileNames` of tsdown), which `sideEffects` of `package.json`
+  names, and `packages.spec.ts` checks; the types of each entry are built on their own, so the report of `check:api`
+  reads the whole API.
+- The framework of the server render gets a sample, `samples/<library>/<server framework>`, as `samples/react-mui/next`
+  with Next.js, and its section on the page Prerendering with the files of the sample, which `pages.spec.ts` compares
+  (`nextFiles`), and an e2e spec of the sample, as `e2e/samples-react-mui.spec.ts`: the prerendered markup without
+  scripts, and the table of the browser at the same height.
+- The server render of Vue, `renderToString` of `@vue/server-renderer`, is asynchronous, while `prerenderTableBro()`
+  renders the elements synchronously: a skin of Vue and its section of Nuxt need a decision of the owner on an
+  asynchronous prerender before they start.
 
 ## The theme
 
