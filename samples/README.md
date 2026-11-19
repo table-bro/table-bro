@@ -14,9 +14,9 @@ of the frameworks of Docs, Frameworks:
 A page installs the packages as its users do: `npm install`, then `npm run build` or `npm start` (`npm run dev` for Vite).
 
 `npm run build:samples` at the root of the repository builds every page from the packages of the repository: after
-`npm run build`, it packs them as npm publishes them, serves the tarballs from a local npm registry (Verdaccio), installs
-each page from it and builds it into `dist/samples/<name>`, under the base path `/samples/<name>/` of table-bro.com; the
-projects of `frameworks` go to `dist/samples/frameworks/<framework>`.
+`npm run build`, it publishes them to a local npm registry (Verdaccio) by `npm run publish:packages`, as a release
+publishes them to npm, installs each page from it and builds it into `dist/samples/<name>`, under the base path
+`/samples/<name>/` of table-bro.com; the projects of `frameworks` go to `dist/samples/frameworks/<framework>`.
 
 ## Source maps and the readable code of a page
 

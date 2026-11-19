@@ -1,17 +1,18 @@
 // The build of the pages of samples/: each is a project of one skin, or of one framework in samples/frameworks, set up
-// as its page of Docs says, which installs the tarballs of the packages, as npm publishes them, from a local npm
-// registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. A page without a build,
-// a folder with index.html and no package.json, as no-build, takes the packages from a CDN and is copied as it is, with
-// the base path of the page in its index.html. The other packages come
-// from npmjs through the registry. Run after `npm run build`, with the names of the samples as arguments or without them
-// for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default)
-// and SAMPLES_BASE the base path of the pages (/samples/ by default).
+// as its page of Docs says, which installs the packages from a local npm registry (Verdaccio) and builds into
+// dist/samples/<name> under the base path of the pages. The registry has the packages as `npm run publish:packages`
+// publishes them for a release, and the other packages from npmjs. A page without a build, a folder with index.html and
+// no package.json, as no-build, takes the packages from a CDN and is copied as it is, with the base path of the page in
+// its index.html. Run after `npm run build`, with the names of the samples as arguments or without them for all,
+// frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default) and
+// SAMPLES_BASE the base path of the pages (/samples/ by default).
 import {execFileSync, spawn} from 'node:child_process';
 import fs                    from 'node:fs';
 import os                    from 'node:os';
 import path                  from 'node:path';
 
-import {packAll, root} from './check-pack.mjs';
+import {root}       from './check-pack.mjs';
+import {publishAll} from './publish.mjs';
 
 /** The version of Verdaccio: an exact one, as the other tools of the repository. */
 const verdaccio = 'verdaccio@6.10.4';
@@ -28,13 +29,12 @@ function run(dir, command, args) {
 }
 
 /**
- * Starts a local npm registry with the tarballs of the packages of the repository: it gives @table-bro/* only from
- * them and every other package from npmjs.
- * @param tarballs - the paths of the tarballs by the names of the packages
+ * Starts a local npm registry with the packages of the repository, published by `npm run publish:packages` as the
+ * release publishes them: it gives @table-bro/* only from them and every other package from npmjs.
  * @param port - the port of the registry on localhost
  * @returns the address of the registry, the .npmrc that publishes to it and the function that stops it
  */
-export async function startRegistry(tarballs, port) {
+export async function startRegistry(port) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'table-bro-registry-'));
   const url = `http://localhost:${port}/`;
 
@@ -74,9 +74,8 @@ export async function startRegistry(tarballs, port) {
 
     fs.writeFileSync(npmrc, `registry=${url}\n//localhost:${port}/:_authToken=${token}\n`);
 
-    for (const tarball of Object.values(tarballs)) {
-      run(dir, 'npm', ['publish', tarball, '--userconfig', npmrc, '--registry', url, '--ignore-scripts']);
-    }
+    // The build is done: the scripts of the packages would build them again
+    publishAll(['--userconfig', npmrc, '--registry', url, '--ignore-scripts']);
 
     return {url, close};
   } catch (error) {
@@ -157,8 +156,7 @@ function buildSample(name, registry, base) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const names = process.argv.slice(2).length ? process.argv.slice(2) : fs.readdirSync(path.join(root, 'samples'), {withFileTypes: true}).filter(entry => entry.isDirectory()).map(entry => entry.name);
-  const tarballs = packAll(fs.mkdtempSync(path.join(os.tmpdir(), 'table-bro-pack-')));
-  const registry = await startRegistry(tarballs, Number(process.env.REGISTRY_PORT ?? 4873));
+  const registry = await startRegistry(Number(process.env.REGISTRY_PORT ?? 4873));
 
   try {
     for (const name of sampleProjects(names)) {

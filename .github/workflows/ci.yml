@@ -121,7 +121,7 @@ jobs:
       - run: npm ci
       - name: Build
         run: npm run build
-      - name: Pages from the tarballs of the packages
+      - name: Pages from the packages, published as the release publishes them
         run: npm run build:samples
       - name: Browser
         run: npx playwright install --with-deps chromium
