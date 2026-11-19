@@ -2811,36 +2811,36 @@ The texts of the parts that the core renders come first, flat and named as the o
 
 | Field | Default | Skins | Since |
 | --- | --- | --- | --- |
-| \`rowCounterTitle\` | No | mat, bs, nv | 1.2.0 |
-| \`rowCounterLabel\` | Row number | mat, bs, nv | 1.2.0 |
-| \`rowDetailsLoadingMessage\` | Loading details | mat, bs, nv | 1.2.0 |
-| \`filterDrawer.title\` | Filters | mat, bs, nv | 1.2.0 |
-| \`filterDrawer.close\` | Close | mat, bs, nv | 1.2.0 |
-| \`paginator.itemsPerPageLabel\` | Items per page: | bs, nv | 1.2.0 |
-| \`paginator.nextPageLabel\` | Next page | bs, nv | 1.2.0 |
-| \`paginator.previousPageLabel\` | Previous page | bs, nv | 1.2.0 |
-| \`paginator.firstPageLabel\` | First page | bs, nv | 1.2.0 |
-| \`paginator.lastPageLabel\` | Last page | bs, nv | 1.2.0 |
-| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | bs, nv | 1.2.0 |
-| \`paginator.label\` | Pagination | mat, bs, nv | 1.2.0 |
+| \`rowCounterTitle\` | No | mat, mui, bs, nv | 1.2.0 |
+| \`rowCounterLabel\` | Row number | mat, mui, bs, nv | 1.2.0 |
+| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, bs, nv | 1.2.0 |
+| \`filterDrawer.title\` | Filters | mat, mui, bs, nv | 1.2.0 |
+| \`filterDrawer.close\` | Close | mat, mui, bs, nv | 1.2.0 |
+| \`paginator.itemsPerPageLabel\` | Items per page: | mui, bs, nv | 1.2.0 |
+| \`paginator.nextPageLabel\` | Next page | mui, bs, nv | 1.2.0 |
+| \`paginator.previousPageLabel\` | Previous page | mui, bs, nv | 1.2.0 |
+| \`paginator.firstPageLabel\` | First page | mui, bs, nv | 1.2.0 |
+| \`paginator.lastPageLabel\` | Last page | mui, bs, nv | 1.2.0 |
+| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, bs, nv | 1.2.0 |
+| \`paginator.label\` | Pagination | mat, mui, bs, nv | 1.2.0 |
 | \`paginator.navigationLabel\` | Table page navigation | bs, nv | 1.2.0 |
 | \`paginator.firstText\` | First | bs, nv | 1.2.0 |
 | \`paginator.previousText\` | Previous | bs, nv | 1.2.0 |
 | \`paginator.nextText\` | Next | bs, nv | 1.2.0 |
 | \`paginator.lastText\` | Last | bs, nv | 1.2.0 |
-| \`progressBar.label\` | Loading progress | bs, nv | 1.2.0 |
-| \`state.loading\` | Loading | mat, bs, nv | 1.2.0 |
-| \`state['no-data']\` | No data | mat, bs, nv | 1.2.0 |
-| \`state['not-found']\` | No records found | mat, bs, nv | 1.2.0 |
-| \`state.fail\` | Failed | mat, bs, nv | 1.2.0 |
-| \`toolbarMain.search\` | Search | mat, bs, nv | 1.2.0 |
+| \`progressBar.label\` | Loading progress | mui, bs, nv | 1.2.0 |
+| \`state.loading\` | Loading | mat, mui, bs, nv | 1.2.0 |
+| \`state['no-data']\` | No data | mat, mui, bs, nv | 1.2.0 |
+| \`state['not-found']\` | No records found | mat, mui, bs, nv | 1.2.0 |
+| \`state.fail\` | Failed | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarMain.search\` | Search | mat, mui, bs, nv | 1.2.0 |
 | \`toolbarMain.searchRole(title)\` | for Orders, by the title of the toolbar; for rows without a title | bs, nv | 1.2.0 |
 | \`toolbarMain.buttonRole\` | button | bs, nv | 1.2.0 |
 | \`toolbarMain.menuRole\` | menu | bs | 1.2.0 |
 | \`toolbarMain.menuItemRole\` | menu item | bs | 1.2.0 |
-| \`toolbarSearch.field\` | Search in table | mat, bs, nv | 1.2.0 |
-| \`toolbarSearch.back\` | Back | mat, bs, nv | 1.2.0 |
-| \`toolbarSearch.clear\` | Clear | mat, bs, nv | 1.2.0 |
+| \`toolbarSearch.field\` | Search in table | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarSearch.back\` | Back | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarSearch.clear\` | Clear | mat, mui, bs, nv | 1.2.0 |
 
 The flat fields of 1.1.0, as \`texts.itemsPerPage\` for \`texts.paginator.itemsPerPageLabel\` and \`texts.rowCounter\` for \`texts.rowCounterTitle\`, still work and are deprecated: the editor marks them, and 2.0 removes them. A field in a group and a text of the core win over their flat field.
 
