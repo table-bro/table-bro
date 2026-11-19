@@ -109,6 +109,7 @@ export function inspectProject(root: string): BroProjectProfile {
     for (const [skin, pattern] of <[BroSpecSkin, RegExp][]>[
       ['mat', /provideTableBroMatSkin\(|registerSkin\(\s*['"]mat['"]/],
       ['mui', /from\s+['"]@table-bro\/react-mui['"]|import\s+['"]@table-bro\/react-mui['"]|registerSkin\(\s*['"]mui['"]/],
+      ['m3-svelte', /from\s+['"]@table-bro\/svelte-m3['"]|import\s+['"]@table-bro\/svelte-m3['"]|registerSkin\(\s*['"]m3-svelte['"]/],
       ['bs', /from\s+['"]@table-bro\/bootstrap['"]|import\s+['"]@table-bro\/bootstrap['"]|registerSkin\(\s*['"]bs['"]/],
       ['nv', /from\s+['"]@table-bro\/native['"]|import\s+['"]@table-bro\/native['"]|registerSkin\(\s*['"]nv['"]/]
     ]) {
@@ -218,7 +219,7 @@ function problems(profile: BroProjectProfile, selectors: {tag: string; file: str
     list.push({code: 'elements-package-missing', message: 'the mat skin and the cells of Angular need @angular/elements', fix: 'npm install @angular/elements'});
   }
 
-  for (const [skin, name] of <[BroSpecSkin, string][]>[['mat', '@table-bro/angular-material'], ['mui', '@table-bro/react-mui'], ['bs', '@table-bro/bootstrap'], ['nv', '@table-bro/native']]) {
+  for (const [skin, name] of <[BroSpecSkin, string][]>[['mat', '@table-bro/angular-material'], ['mui', '@table-bro/react-mui'], ['m3-svelte', '@table-bro/svelte-m3'], ['bs', '@table-bro/bootstrap'], ['nv', '@table-bro/native']]) {
     if (packages[name] && !profile.skins.registered.includes(skin)) {
       list.push({code: 'skin-not-registered', message: `the registration of the skin ${skin} is not found`, fix: 'see get_docs with the topic setup'});
     }
