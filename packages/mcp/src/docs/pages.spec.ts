@@ -46,12 +46,13 @@ const frameworkFiles = docFiles.filter(docFile => (docFile.page.startsWith('fram
 const skinSamples: Record<string, string> = {
   'frameworks/angular': 'samples/angular-material',
   'frameworks/react': 'samples/react-mui/react',
-  'frameworks/preact': 'samples/react-mui/preact'
+  'frameworks/preact': 'samples/react-mui/preact',
+  'frameworks/solid': 'samples/solid-suid/solid'
 };
 
 /**
  * The sample project of a page of Frameworks: the sample of the skin of its framework, as React MUI for React and
- * Preact, or samples/frameworks/<name> with the Bootstrap skin.
+ * Preact and Solid SUID for Solid, or samples/frameworks/<name> with the Bootstrap skin.
  * @param page - the path of the page
  * @param file - the file of the page, for the sections of Prerendering
  */

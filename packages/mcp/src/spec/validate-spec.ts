@@ -727,8 +727,9 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
   checkKeys(value, ['buttons', 'menu'], 'toolbar', issues);
 
   const actions = new Set<string>();
-  // The skins of Material icons, mat and mui, are checked when the project has one of them, and on the site, which has all skins
-  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui';
+  // The skins of Material icons, mat, mui and suid, are checked when the project has one of them, and on the site, which
+  // has all skins
+  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui' || options.skin === 'suid';
 
   const checkButton = (button: unknown, path: string, icon: boolean) => {
     if (!isObject(button)) {
@@ -760,7 +761,7 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
     if (button['icon'] !== undefined && (typeof button['icon'] !== 'string' || !iconName.test(button['icon']))) {
       issues.error(`${path}.icon`, 'expected the name of a Material icon', 'as download');
     } else if (icon && button['icon'] === undefined) {
-      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat and mui is an icon with a tooltip', 'give the name of a Material icon, as download');
+      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat, mui and suid is an icon with a tooltip', 'give the name of a Material icon, as download');
     }
   };
 
@@ -830,17 +831,17 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
   }
 
   if (!isObject(value)) {
-    issues.error('skinConfig', 'expected an object with the skins mat, mui, bs or nv');
+    issues.error('skinConfig', 'expected an object with the skins mat, mui, suid, bs or nv');
 
     return;
   }
 
-  checkKeys(value, ['mat', 'mui', 'bs', 'nv'], 'skinConfig', issues);
+  checkKeys(value, ['mat', 'mui', 'suid', 'bs', 'nv'], 'skinConfig', issues);
 
   for (const [skin, config] of Object.entries(value)) {
     const path = `skinConfig.${skin}`;
 
-    if (!['mat', 'mui', 'bs', 'nv'].includes(skin)) {
+    if (!['mat', 'mui', 'suid', 'bs', 'nv'].includes(skin)) {
       continue;
     }
 

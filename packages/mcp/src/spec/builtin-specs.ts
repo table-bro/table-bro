@@ -84,6 +84,9 @@ export const builtinSpecs: BroBuiltinSpec[] = [
           },
           mui: {
             render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--mui-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
+          },
+          suid: {
+            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--suid-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
           }
         },
         status: {
@@ -102,6 +105,9 @@ export const builtinSpecs: BroBuiltinSpec[] = [
           },
           mui: {
             render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--mui-palette-success-main)' : 'var(--mui-palette-action-selected)';\nchip.style.color = paid ? 'var(--mui-palette-success-contrastText)' : 'var(--mui-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
+          },
+          suid: {
+            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--suid-palette-success-main)' : 'var(--suid-palette-action-selected)';\nchip.style.color = paid ? 'var(--suid-palette-success-contrast-text)' : 'var(--suid-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
           }
         },
         actions: {
@@ -120,6 +126,9 @@ export const builtinSpecs: BroBuiltinSpec[] = [
           },
           mui: {
             render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--mui-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
+          },
+          suid: {
+            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--suid-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
           }
         },
         details: {
@@ -139,6 +148,9 @@ export const builtinSpecs: BroBuiltinSpec[] = [
           },
           mui: {
             render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--mui-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
+          },
+          suid: {
+            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--suid-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
           }
         }
       },

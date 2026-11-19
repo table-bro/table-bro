@@ -64,6 +64,11 @@ export function scaffoldComponent(request: BroScaffoldRequest): BroScaffold {
     report.errors.push({path: '', message: 'the mui skin is for React and Preact', fix: 'use the target vanilla in a project of React or Preact, or the skin mat, bs or nv'});
   }
 
+  if (target === 'angular' && skin === 'suid') {
+    report.valid = false;
+    report.errors.push({path: '', message: 'the suid skin is for Solid', fix: 'use the target vanilla in a project of Solid, or the skin mat, bs or nv'});
+  }
+
   if (kind === 'filters' && !request.filters?.length) {
     report.valid = false;
     report.errors.push({path: 'filters', message: 'the filters of the drawer need at least one filter', fix: 'give the filters as the filters of a spec, get_docs topic filters'});
