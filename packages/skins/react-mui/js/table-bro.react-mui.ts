@@ -13,8 +13,8 @@ import {BroMuiToolbarMainComponent}                           from './toolbar/br
 import {BroMuiToolbarComponent}                               from './toolbar/bro-toolbar.react-mui';
 
 // The elements render React roots, so they are defined only in the browser: imported without a DOM, as in the server
-// render, the skin only registers its config, and a prerender leaves its elements empty. The optional elements, tags
-// and switch, come with withTags() and withSwitch()
+// render, the skin only registers its config, and a prerender renders its elements with the server entry of the skin
+// (table-bro.react-mui.server.ts). The optional elements, tags and switch, come with withTags() and withSwitch()
 defineElement('bro-mui-button', BroMuiButtonComponent);
 defineElement('bro-mui-paginator', BroMuiPaginatorComponent);
 defineElement('bro-mui-progress-bar', BroMuiProgressBarComponent);

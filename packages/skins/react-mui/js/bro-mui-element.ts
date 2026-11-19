@@ -13,6 +13,13 @@ let muiTheme: Theme | undefined;
 let deferredReported: boolean = false;
 /** The console named once the missing theme: without it the CSS of the skin finds no CSS variables of MUI. */
 let themeReported: boolean = false;
+/**
+ * The render of a React tree to markup, as renderToString of react-dom/server, which the server entry of the skin
+ * gives: the elements of a prerender in a server DOM render their markup by it (prerenderTableBro).
+ */
+let serverRender: ((tree: ReactNode, element: HTMLElement) => string) | undefined;
+/** The console named once a prerender of the skin without its server entry. */
+let serverReported: boolean = false;
 
 /**
  * Gives the elements of the skin the MUI theme of the application, before its tables render: the components of MUI in
@@ -23,6 +30,15 @@ let themeReported: boolean = false;
  */
 export function setMuiTheme(theme: Theme): void {
   muiTheme = theme;
+}
+
+/**
+ * Gives the elements the render of a React tree to markup for a server DOM: the server entry of the skin calls it with
+ * renderToString of react-dom/server, which the bundle of the browser does not carry.
+ * @param render - the render of a React tree of an element to markup
+ */
+export function setServerRender(render: (tree: ReactNode, element: HTMLElement) => string): void {
+  serverRender = render;
 }
 
 /**
@@ -81,9 +97,28 @@ export abstract class BroMuiElement extends BroHTMLElement {
       return;
     }
 
+    // A server DOM, as of a prerender on the server, has a window of its own: the element renders its markup there by
+    // the render of the server entry, not by a React root
+    const server = (typeof window === 'undefined') || (this.ownerDocument.defaultView !== window);
+
+    if (server && !serverRender) {
+      if (!serverReported) {
+        serverReported = true;
+        console.error('Table, Bro: the skin mui renders its elements on the server with the import of @table-bro/react-mui/server');
+      }
+
+      return;
+    }
+
     this.container = new BroDom(this.ownerDocument).createElement('div');
     this.container.className = 'bro-mui-root';
     this.prepend(this.container);
+
+    if (server) {
+      this.renderMarkup();
+
+      return;
+    }
 
     this.root = createRoot(this.container);
     this.update();
@@ -113,21 +148,17 @@ export abstract class BroMuiElement extends BroHTMLElement {
     const root = this.root;
 
     if (!root) {
+      // An element of a server DOM renders its markup anew
+      if (this.container && serverRender) {
+        this.renderMarkup();
+      }
+
       return;
     }
 
-    // The theme writes its CSS variables and its color scheme once, in the application: the provider of each element
-    // only gives the theme, without a style sheet, an attribute of the scheme on the page, or a storage of the mode
     const content = this.content();
-    const tree = muiTheme ? createElement(ThemeProvider, providerProps(muiTheme), content) : content;
 
-    if (!muiTheme && !themeReported) {
-      themeReported = true;
-      console.error('Table, Bro: the skin mui has no theme: call setMuiTheme(theme) with the MUI theme of the application, '
-        + 'created with cssVariables, before the tables render');
-    }
-
-    flushSync(() => root.render(tree));
+    flushSync(() => root.render(this.tree(content)));
 
     // React renders a new root at once, except inside its own render and effects, where it renders at their end: the
     // table has measured the element by then. The console names the call to move, once
@@ -136,6 +167,30 @@ export abstract class BroMuiElement extends BroHTMLElement {
       console.error('Table, Bro: React renders the elements of the skin mui after its effect, but the table measures them at once: '
         + 'call configure() and the other methods of the table outside the render and the effects of React, as queueMicrotask(() => table.configure(...)) in an effect');
     }
+  }
+
+  /**
+   * The tree of the element in the theme of the application. The theme writes its CSS variables and its color scheme
+   * once, in the application: the provider of each element only gives the theme, without a style sheet, an attribute of
+   * the scheme on the page, or a storage of the mode.
+   * @param content - the tree of the element
+   */
+  private tree(content: ReactNode): ReactNode {
+    if (!muiTheme && !themeReported) {
+      themeReported = true;
+      console.error('Table, Bro: the skin mui has no theme: call setMuiTheme(theme) with the MUI theme of the application, '
+        + 'created with cssVariables, before the tables render');
+    }
+
+    return muiTheme ? createElement(ThemeProvider, providerProps(muiTheme), content) : content;
+  }
+
+  /**
+   * Renders the markup of the element in a server DOM: the components of MUI with the styles of Emotion, which the
+   * markup carries. The browser keeps it until its table renders its own elements in its place.
+   */
+  private renderMarkup(): void {
+    this.container!.innerHTML = serverRender!(this.tree(this.content()), this);
   }
 
   /** The element left the DOM and its React root is gone. */
