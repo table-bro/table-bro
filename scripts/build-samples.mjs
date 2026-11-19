@@ -2,7 +2,8 @@
 // as its page of Docs says, which installs the tarballs of the packages, as npm publishes them, from a local npm
 // registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. A page without a build,
 // a folder with index.html and no package.json, as no-build, takes the packages from a CDN and is copied as it is, with
-// the base path of the page in its index.html. The other packages come
+// the base path of the page in its index.html. A project of Next.js, as react-mui/next, takes the base path from the
+// variable BASE_PATH of its config and exports its pages into dist. The other packages come
 // from npmjs through the registry. Run after `npm run build`, with the names of the samples as arguments or without them
 // for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default)
 // and SAMPLES_BASE the base path of the pages (/samples/ by default).
@@ -145,11 +146,20 @@ function buildSample(name, registry, base) {
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `table-bro-sample-${name.replace('/', '-')}-`));
   const angular = fs.existsSync(path.join(root, 'samples', name, 'angular.json'));
+  // Next.js takes the base path from its config, which reads BASE_PATH, and exports the pages into dist
+  const next = fs.existsSync(path.join(root, 'samples', name, 'next.config.ts'));
 
-  fs.cpSync(path.join(root, 'samples', name), dir, {recursive: true, filter: file => !/[\\/](node_modules|dist)$/.test(file)});
+  fs.cpSync(path.join(root, 'samples', name), dir, {recursive: true, filter: file => !/[\\/](node_modules|dist|\.next)$/.test(file)});
   fs.writeFileSync(path.join(dir, '.npmrc'), `registry=${registry}\n`);
   run(dir, 'npm', ['install', '--no-audit', '--no-fund']);
-  run(dir, 'npm', ['run', 'build', '--', angular ? `--base-href=${base}${name}/` : `--base=${base}${name}/`]);
+
+  if (next) {
+    console.log(`$ BASE_PATH=${base}${name} npm run build`);
+    execFileSync('npm', ['run', 'build'], {cwd: dir, stdio: 'inherit', env: {...process.env, 'BASE_PATH': `${base}${name}`}});
+  } else {
+    run(dir, 'npm', ['run', 'build', '--', angular ? `--base-href=${base}${name}/` : `--base=${base}${name}/`]);
+  }
+
   fs.rmSync(dest, {recursive: true, force: true});
   fs.cpSync(path.join(dir, 'dist'), dest, {recursive: true});
   fs.rmSync(dir, {recursive: true, force: true});
