@@ -9,6 +9,8 @@ of the frameworks of Docs, Frameworks:
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;
+- `solid-suid`: Solid and SUID with `@table-bro/solid-suid`, in `solid-suid/solid`, built by Vite with the plugin of
+  Solid, which compiles the components of SUID; the theme of the page follows the color scheme of the system;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
