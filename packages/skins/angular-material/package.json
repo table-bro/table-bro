@@ -38,6 +38,9 @@
     "url": "https://github.com/table-bro/table-bro/issues"
   },
   "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "node -e \"console.error('npm publishes this package from dist/table-bro.angular-material, the build of ng-packagr: npm run publish:packages'); process.exit(1)\""
+  },
   "exports": {
     "./dist/*.css": "./dist/*.css",
     "./styles/*": "./styles/*"

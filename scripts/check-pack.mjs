@@ -1,7 +1,8 @@
 // The check of the packages as npm publishes them: each package is packed from its build, publint checks the fields of
 // its manifest against the files of the tarball, and @arethetypeswrong/cli checks that its types resolve under every
-// module resolution of TypeScript that the package supports. Run after `npm run build`; `npm run check:install` installs
-// the same tarballs into clean projects.
+// module resolution of TypeScript that the package supports. Each workspace either is published from its own folder or
+// refuses `npm publish` of its sources. Run after `npm run build`; `npm run check:install` installs the same tarballs
+// into clean projects.
 import {execFileSync}  from 'node:child_process';
 import fs              from 'node:fs';
 import os              from 'node:os';
@@ -64,10 +65,52 @@ function hasCustomElements(tarball) {
   return Boolean(customElements) && files.split('\n').includes(`package/${customElements}`);
 }
 
+/**
+ * Checks that a workspace of the repository is published only from the folder of its package: npm publishes a workspace
+ * from its own folder, so a package that npm publishes from its build in dist/ refuses `npm publish` of its sources. Its
+ * prepublishOnly fails before npm asks the registry, also in a dry run.
+ * @param workspace - the folder of the workspace
+ * @returns whether the workspace is published from its own folder or refuses its publication
+ */
+function isPublishedFromItsFolder(workspace) {
+  const {name} = JSON.parse(fs.readFileSync(path.join(root, workspace, 'package.json'), 'utf8'));
+  const dir = packages.find(entry => entry.name === name)?.dir;
+
+  if (!dir) {
+    console.error(`${name} of ${workspace} is not among the packages that npm publishes`);
+
+    return false;
+  }
+
+  if (dir === workspace) {
+    return true;
+  }
+
+  try {
+    execFileSync('npm', ['publish', '-w', workspace, '--dry-run'], {cwd: root, encoding: 'utf8', stdio: 'pipe'});
+  } catch (error) {
+    if (`${error.stdout}${error.stderr}`.includes(`npm publishes this package from ${dir}`)) {
+      return true;
+    }
+  }
+
+  console.error(`npm publish -w ${workspace} does not refuse to publish the sources of ${name}, which npm publishes from ${dir}`);
+
+  return false;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const dest = fs.mkdtempSync(path.join(os.tmpdir(), 'table-bro-pack-'));
   const tarballs = packAll(dest);
+  const {workspaces} = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
   let failed = false;
+
+  for (const workspace of workspaces) {
+    const ok = isPublishedFromItsFolder(workspace);
+
+    console.log(`${ok ? 'ok    ' : 'FAILED'} npm publish -w ${workspace}`);
+    failed ||= !ok;
+  }
 
   for (const {name, dir} of packages) {
     // The packages are ES modules: a require() of them is not supported, so the types of CommonJS do not count
