@@ -1,0 +1,41 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The host is an inline block, whose baseline is its last line of text in the flow: the texts of the toolbar and the
+  // paginator of Vuetify lie in flex boxes, so the baseline is the bottom of the table, and the line around it adds the
+  // descent of its font below the table. In the filter drawer of the core the card would be longer than the table by it
+  @at-root table-bro#{&} {
+    vertical-align: top;
+  }
+
+  table.bro-vuetify-table {
+    border-spacing: 0;
+  }
+
+  tr.bro-vuetify-header-row {
+    height: var(--bro-header-height);
+  }
+
+  tr.bro-vuetify-row {
+    height: var(--bro-row-height);
+  }
+
+  // The text of the theme, as in the data table of Vuetify: the classes of its typography give the body medium text to
+  // the cells and the title small text to the header (config.css of the skin)
+  th.bro-vuetify-header-cell,
+  td.bro-vuetify-cell {
+    border-color: $vuetify-border-color;
+    border-bottom-width: thin;
+    border-bottom-style: solid;
+
+    color: $vuetify-text-color;
+  }
+
+  th.bro-vuetify-header-cell {
+    text-align: left;
+
+    [dir='rtl'] & {
+      text-align: right;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@use "../../shared/mixins/shared" as *;
+@use "../../shared/mixins/sort-header" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} {
+    // The title and the arrow of a header of the data table of Vuetify: the header shrinks with its column, and its
+    // title ends with an ellipsis. It lies at the top of its line: the baseline of an inline flex box is the one of its
+    // first item, which is the arrow in a number column
+    .bro-vuetify-sort-header {
+      display: inline-flex;
+
+      max-width: 100%;
+      padding: 0;
+
+      gap: 4px;
+
+      align-items: center;
+
+      border: 0;
+
+      font: inherit;
+      letter-spacing: inherit;
+
+      vertical-align: top;
+
+      background: none;
+      color: inherit;
+
+      cursor: pointer;
+    }
+
+    .bro-vuetify-sort-header-content {
+      @include sort-header-content();
+
+      @include table-width-transition();
+    }
+
+    // The arrow shows on hover and focus, and stays with the sort, as in the data table of Vuetify. It keeps within the
+    // line of the title, as the arrow of the sort label of MUI
+    .bro-vuetify-sort-header-icon {
+      height: auto;
+
+      font-size: 18px;
+
+      opacity: 0;
+
+      transition: opacity .2s, transform .2s;
+    }
+
+    .bro-vuetify-sort-header:hover .bro-vuetify-sort-header-icon,
+    .bro-vuetify-sort-header:focus-visible .bro-vuetify-sort-header-icon {
+      opacity: .5;
+    }
+
+    .bro-vuetify-sort-header_sorted .bro-vuetify-sort-header-icon {
+      opacity: 1;
+    }
+
+    .bro-vuetify-sort-header_desc .bro-vuetify-sort-header-icon {
+      transform: rotate(180deg);
+    }
+
+    // The arrow of a number column comes before its title
+    .bro-vuetify-sort-header_before {
+      flex-direction: row-reverse;
+    }
+  }
+}

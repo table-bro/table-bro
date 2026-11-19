@@ -1,0 +1,83 @@
+{
+  "name": "@table-bro/vue-vuetify",
+  "version": "1.2.1",
+  "description": "Pixel-perfect Material data tables for Vue and Vuetify, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "vue",
+    "vue3",
+    "vuetify",
+    "material",
+    "material-design",
+    "material-3",
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "mcp",
+    "ai-coding-agents",
+    "vibe-coding",
+    "claude-code",
+    "cursor",
+    "codex",
+    "github-copilot",
+    "windsurf",
+    "gemini-cli",
+    "grok",
+    "cline",
+    "zed",
+    "jetbrains-ai",
+    "vuetify-table"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/vue-vuetify"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.vue-vuetify.esm.js",
+  "module": "dist/table-bro.vue-vuetify.esm.js",
+  "types": "dist/table-bro.vue-vuetify.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.vue-vuetify.d.ts",
+      "import": "./dist/table-bro.vue-vuetify.esm.js",
+      "default": "./dist/table-bro.vue-vuetify.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.vue-vuetify.ts",
+    "./dist/table-bro.vue-vuetify.esm.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.vue-vuetify",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.vue-vuetify",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0",
+    "vuetify": "^4.0.0",
+    "@table-bro/core": "^1.2.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.23.0",
+    "vue": "^3.5.45",
+    "vuetify": "^4.3.4"
+  }
+}
