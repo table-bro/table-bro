@@ -1,13 +1,17 @@
 import {fileURLToPath} from 'node:url';
 
+import {svelte}                    from '@sveltejs/vite-plugin-svelte';
 import {playwright}                from '@vitest/browser-playwright';
 import ts                          from 'typescript';
+import {functionsMixins}           from 'vite-plugin-functions-mixins';
 import {defineConfig, type Plugin} from 'vitest/config';
 
 // The unit specs of the library. They run in Chromium, not in a DOM emulation: the code under test reads
 // computed styles and registered custom properties, which only a browser engine gives.
 export default defineConfig({
-  plugins: [angularJit()],
+  // The skin m3-svelte renders the components of M3 Svelte, which it publishes as their sources: Svelte compiles them, with the
+  // mixins and the functions of their CSS
+  plugins: [angularJit(), svelte(), functionsMixins({deps: ['m3-svelte']})],
   // The skins and the Angular packages import the core and the wrapper by their names: the specs take their sources
   resolve: {
     alias: {

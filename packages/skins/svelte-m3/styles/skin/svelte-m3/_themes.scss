@@ -1,0 +1,32 @@
+@use "variables" as *;
+@use "../shared/mixins/skin-colors" as *;
+
+// The skin takes the theme of the application, as every component of M3 Svelte does: the components in the table read
+// the CSS variables of the theme themselves, and the parts of the table read the same variables in the roles of a table
+// of Material 3
+#{$bro-skin} {
+  color: $m3-svelte-text-color;
+
+  @include bro-table-theme(
+      '.bro-m3-svelte-table',
+      $m3-svelte-toolbar-selector,
+      $m3-svelte-bg,
+      $m3-svelte-border-color,
+      $m3-svelte-text-color,
+      $m3-svelte-text-secondary-color
+  );
+}
+
+// The dark theme is the dark scheme of the theme of the application: its colors, written with light-dark(), give the
+// dark ones under color-scheme: dark. The class is on the table host or on an ancestor of it
+.bro-dark-theme {
+  #{$bro-skin},
+  &#{$bro-skin} {
+    color-scheme: dark;
+  }
+}
+
+// A table with its own light theme, the class bro-light-theme, takes the light scheme in a dark page too
+#{$bro-skin}.bro-light-theme {
+  color-scheme: light;
+}

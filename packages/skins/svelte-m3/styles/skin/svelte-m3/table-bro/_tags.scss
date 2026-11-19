@@ -1,0 +1,14 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The ellipsis after the chips that show takes the color of their text, in the light and the dark scheme
+  bro-m3-svelte-tags .bro-m3-svelte-tags-chips > .bro-cell-items-ellipsis {
+    margin-left: 4px;
+
+    color: $m3-svelte-text-secondary-color;
+  }
+
+  bro-m3-svelte-tags .bro-m3-svelte-tags-chips > .m3-container + .m3-container {
+    margin-left: 8px;
+  }
+}

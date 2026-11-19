@@ -1,0 +1,23 @@
+@use "../variables" as *;
+@use "../type" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  // The field takes the width between the buttons and has the title text of the top app bar
+  #{$m3-svelte-toolbar-selector} #{$bro-toolbar_content-search} {
+    flex: 1 1 auto;
+
+    input {
+      width: 100%;
+
+      // The field is the content of the toolbar: no focus ring of the styles of M3 Svelte around it
+      animation: none;
+
+      @include m3-title-large;
+
+      &::placeholder {
+        color: $m3-svelte-text-secondary-color;
+      }
+    }
+  }
+}

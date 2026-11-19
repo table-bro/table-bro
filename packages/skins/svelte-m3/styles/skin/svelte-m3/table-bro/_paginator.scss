@@ -1,0 +1,75 @@
+@use "../variables" as *;
+@use "../type" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_paginator($m3-svelte-paginator-selector);
+
+  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
+  // table: Island Details rounds the corners of this element. The paginator in it fills it, as the one of the skin mat
+  #{$bro-paginator-container} #{$m3-svelte-paginator-selector} {
+    display: block;
+
+    height: $bro-paginator-height;
+
+    background-color: $m3-svelte-bg;
+    color: $m3-svelte-text-secondary-color;
+
+    .bro-m3-svelte-paginator {
+      display: flex;
+
+      box-sizing: border-box;
+      height: 100%;
+      padding: 0 8px;
+
+      gap: 4px;
+
+      align-items: center;
+      justify-content: flex-end;
+
+      @include m3-body-small;
+    }
+
+    .bro-m3-svelte-paginator-page-size {
+      display: flex;
+
+      margin-right: 16px;
+
+      gap: 8px;
+
+      align-items: center;
+    }
+
+    // The outlined select of M3 Svelte in the height of the select of the paginator of the skin mat, with the label
+    // before it in place of the label of the field
+    .bro-m3-svelte-paginator-page-size {
+      label {
+        display: none;
+      }
+
+      select {
+        height: 40px;
+
+        padding-inline: 12px;
+
+        @include m3-body-small;
+      }
+    }
+
+    .bro-m3-svelte-paginator-range {
+      margin: 0 16px 0 8px;
+    }
+
+    // The buttons of the first and the last page without showFirstLastButtons
+    button[hidden] {
+      display: none;
+    }
+
+    // A disabled icon button of a page has no container, as the icon buttons of Material 3: M3 Svelte gives a disabled
+    // button the container of a filled one
+    button:disabled {
+      background-color: transparent;
+    }
+  }
+}
