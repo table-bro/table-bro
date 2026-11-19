@@ -2736,7 +2736,11 @@ Next.js renders a page on the server, or at the build of a static export: a serv
 
 4. **Critical CSS**
 
-   Angular inlines the critical CSS of a prerendered page with Beasties, which drops the selectors that start with a pseudo-class. The CSS of the core and of the skins keeps the layout of a prerendered table there: the sizes of a skin come also by \`table-bro:where([data-bro-prerender].<skin>)\`, so the prerendered table keeps its size before the stylesheets of the page load.
+   A production build of Angular inlines the critical CSS of a page with Beasties and loads the whole stylesheet after the page shows (\`optimization.styles.inlineCritical\`). The scripts of the page may run before the stylesheet loads: the table then measures its parts without the styles of the components of its skin, and keeps that geometry, with its body collapsed. Turn the inlining off, as the samples of Angular do, so that the stylesheet loads before the page shows. To \`"production"\` of the configurations of the build in \`angular.json\`:
+
+   {{angular-optimization.json}}
+
+   The CSS of the core and of the skins keeps the layout of a prerendered table with the critical CSS too, which drops the selectors that start with a pseudo-class: the sizes of a skin come also by \`table-bro:where([data-bro-prerender].<skin>)\`, so the prerendered table keeps its size before the stylesheets of the page load.
 
 <!-- related -->
 #### Related
@@ -2747,6 +2751,15 @@ Next.js renders a page on the server, or at the build of a static export: a serv
 `},
       {file: 'angular.json', language: 'json', code: `"server": "src/main.server.ts",
 "outputMode": "static"
+`},
+      {file: 'angular-optimization.json', language: 'json', code: `"optimization": {
+  "scripts": true,
+  "styles": {
+    "minify": true,
+    "inlineCritical": false
+  },
+  "fonts": true
+}
 `},
       {file: 'src/main.server.ts', language: 'ts', code: `import {mergeApplicationConfig}                         from '@angular/core';
 import {bootstrapApplication, type BootstrapContext}    from '@angular/platform-browser';
