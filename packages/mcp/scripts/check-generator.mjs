@@ -25,14 +25,13 @@ const eslint = new ESLint({cwd: root});
 const remarks = [];
 let failed = false;
 
-// The built-in specs in every pair, and each Angular one again in the server mode: with the simulated server of the site,
-// and with the rows of an API
-const angularPairs = pairs.filter(([target]) => target === 'angular');
+// The built-in specs in every pair, and again in the server mode: with the simulated server of the site, and with the
+// rows of an API
 const variants = builtinSpecs.flatMap(builtin => [
   ...pairs.map(([target, skin]) => ({name: `${builtin.name}-${target}-${skin}`, spec: builtin.spec, fillings: builtin.fillings, target, skin})),
   ...(builtin.spec.config?.server
     ? []
-    : angularPairs.flatMap(([target, skin]) => [{
+    : pairs.flatMap(([target, skin]) => [{
         name: `${builtin.name}-${target}-${skin}-simulated`, spec: {...builtin.spec, config: {...builtin.spec.config, server: true}}, fillings: builtin.fillings, target, skin, simulateServer: true
       }, {
         name: `${builtin.name}-${target}-${skin}-api`, fillings: builtin.fillings, target, skin,
