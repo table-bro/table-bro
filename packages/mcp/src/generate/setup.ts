@@ -8,6 +8,7 @@ const css: Record<BroSpecSkin | 'core', string> = {
   core: 'node_modules/@table-bro/core/dist/table-bro.min.css',
   mat: 'node_modules/@table-bro/angular-material/dist/table-bro.material.min.css',
   mui: 'node_modules/@table-bro/react-mui/dist/table-bro.react-mui.min.css',
+  suid: 'node_modules/@table-bro/solid-suid/dist/table-bro.solid-suid.min.css',
   bs: 'node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css',
   nv: 'node_modules/@table-bro/native/dist/table-bro.native.min.css'
 };
@@ -22,6 +23,8 @@ const packageRoles: Record<string, string> = {
   '@mui/material': '`@mui/material`: MUI itself, whose components the skin renders',
   '@emotion/react': '`@emotion/react` and `@emotion/styled`: the styles of MUI',
   '@emotion/styled': '',
+  '@table-bro/solid-suid': '`@table-bro/solid-suid`: the skin suid, the table on the components of SUID, the port of MUI to Solid, in the SUID theme of the application',
+  '@suid/material': '`@suid/material`: SUID itself, whose components the skin renders; it supports Solid 1, and the plugin of Solid for Vite compiles its components, published as JSX',
   '@table-bro/bootstrap': '`@table-bro/bootstrap`: the skin bs, the table on the components and the classes of Bootstrap 5: its buttons, dropdowns and tooltips',
   bootstrap: '`bootstrap`: Bootstrap itself, its CSS and the Dropdown and Tooltip that the skin uses',
   '@types/bootstrap': '`@types/bootstrap`: the types of Bootstrap, which the import of Dropdown and Tooltip needs in a strict TypeScript project',
@@ -88,6 +91,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   const packages = ['@table-bro/core', ...(angular ? ['@table-bro/angular'] : []), ...{
     mat: ['@table-bro/angular-material', '@angular/elements'],
     mui: ['@table-bro/react-mui', '@mui/material', '@emotion/react', '@emotion/styled'],
+    suid: ['@table-bro/solid-suid', '@suid/material'],
     bs: ['@table-bro/bootstrap', 'bootstrap', '@types/bootstrap'],
     nv: ['@table-bro/native']
   }[skin], ...extraPackages];
@@ -202,6 +206,35 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     }, {
       title: 'Load the font of the icons',
       text: 'The mui skin shows the ligature icons of Material. In `index.html`:',
+      code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
+      language: 'html'
+    });
+  } else if (skin === 'suid') {
+    steps.push({
+      title: 'Register the skin with the theme of the application',
+      text: `Once, before the tables: the import registers the skin, and \`setSuidTheme()\` gives its elements the SUID theme of the application, which the application renders with \`ThemeProvider\` of SUID. The skin writes the CSS variables of the theme that the table reads, and writes them again when a palette given as a getter changes. ${optional}`,
+      code: [
+        imports({'@suid/material/styles': ['createTheme'], '@table-bro/solid-suid': ['setSuidTheme', ...features]}),
+        '',
+        'export const theme = createTheme();',
+        '',
+        'setSuidTheme(theme);',
+        ...vanillaCalls
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Render the table when the component mounts',
+      text: 'Solid renders the elements of the skin at once, also inside its effects, so a component renders the table in `onMount()`.',
+      code: [
+        'onMount(() => {',
+        '  // The render function of the module of the table, as renderOrderTable()',
+        '  renderOrderTable(container);',
+        '});'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Load the font of the icons',
+      text: 'The suid skin shows the ligature icons of Material. In `index.html`:',
       code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
       language: 'html'
     });

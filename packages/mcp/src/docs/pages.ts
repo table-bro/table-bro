@@ -143,6 +143,10 @@ Table, Bro ships the skins Angular Material, MUI, Bootstrap 5 and Native, and a 
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
  * Frameworks starts with.
  */
+/** The files of the setup of the page of Solid, as the project samples/solid-suid/solid has them. */
+const suidInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/solid-suid @suid/material
+`};
+
 /** The files of the setup of the pages of React and Preact, as the projects of samples/react-mui have them. */
 const muiInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled
 `};
@@ -1174,7 +1178,17 @@ It supports MUI 9 with React 19, and Preact through \`preact/compat\`. The table
 
 {{mui-skin.ts}}
 
-The whole setup is on the pages [React data table](https://table-bro.com/docs/frameworks/react) and [Preact data table](https://table-bro.com/docs/frameworks/preact).`,
+The whole setup is on the pages [React data table](https://table-bro.com/docs/frameworks/react) and [Preact data table](https://table-bro.com/docs/frameworks/preact).
+
+#### Solid SUID
+
+Solid SUID skin of Table, Bro renders the components of [SUID](https://suid.dev), the port of MUI to Solid, in the table: its toolbar, linear progress, chips, switches, menus and the select of the page sizes, with the sizes of the tables of the skin Angular Material. SUID has no table pagination, sort label or tooltip: the skin takes the paginator and the sort header of the vanilla skins in the look of MUI, and renders its tooltips on the Popper of SUID with the behavior of the tooltips of Angular Material.
+
+It supports SUID 0.19 with Solid 1.9. SUID writes no CSS variables, so \`setSuidTheme()\` writes the variables of the theme that the table reads, and writes them again when a palette given as a getter changes, as one that follows the color scheme of the system. A table with a theme of its own takes the variables and the theme of SUID of its scheme by the attribute \`data-suid-theme\`:
+
+{{suid-skin.ts}}
+
+The whole setup is on the page [Solid data table](https://table-bro.com/docs/frameworks/solid).`,
     files: [
       {file: 'mui-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
 import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
@@ -1189,6 +1203,17 @@ export const theme = createTheme({
 });
 
 setMuiTheme(theme);
+`},
+      {file: 'suid-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/solid-suid/dist/table-bro.solid-suid.min.css';
+import {setSuidTheme} from '@table-bro/solid-suid';
+
+import {createTheme} from '@suid/material/styles';
+
+// The theme of the application, which its ThemeProvider renders: the skin writes its CSS variables for the table
+export const theme = createTheme();
+
+setSuidTheme(theme);
 `}
     ]
   },
@@ -2252,7 +2277,7 @@ createRoot(document.getElementById('app')!).render(
     path: 'frameworks/solid',
     name: 'Solid data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, \`on:bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/solid) of the sample project \`samples/frameworks/solid\` of the repository, with Solid 1.9; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/solid) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, \`on:bro-action\` listens to its events, and the \`theme\` attribute sets its theme. The [working page](https://table-bro.com/samples/solid-suid/solid) is the sample project \`samples/solid-suid/solid\` of the repository, with Solid 1.9 and the Solid SUID skin; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/solid-suid/solid) opens it in the browser, and the setup below is its code. The Bootstrap skin of the sample project \`samples/frameworks/solid\` and Native work in Solid the same way, as a skin of your own UI components does.
 
 <!-- setup -->
 #### How do I install Table, Bro in Solid?
@@ -2263,17 +2288,27 @@ ${mcpSection('#####', 'Solid')}
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
+   The table engine \`@table-bro/core\`, the skin \`@table-bro/solid-suid\`, and SUID, which supports Solid 1. The skins \`@table-bro/bootstrap\` and \`@table-bro/native\` work in Solid the same way, as [Getting started](https://table-bro.com/docs/getting-started) shows:
 
    {{install.sh}}
 
-2. **Register the element and the skin**
+2. **Give the skin the theme of the application**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   The SUID theme of the application takes the palette of the color scheme of the system, and follows it when it changes. \`src/theme.ts\`:
+
+   {{src/theme.ts}}
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`suid\`, and \`setSuidTheme()\` gives its elements the theme and writes the CSS variables of the theme that the table reads. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
-3. **Describe the columns, the rows and the config**
+3. **Load the fonts of SUID**
+
+   Roboto and the ligature icons of Material, which the skin shows, come from Google Fonts. \`index.html\`:
+
+   {{index.html}}
+
+4. **Describe the columns, the rows and the config**
 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
@@ -2283,11 +2318,11 @@ ${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
-The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`ref\` gives the element ([Solid, ref](https://docs.solidjs.com/reference/jsx-attributes/ref)), \`onMount\` makes the call. \`on:bro-action\` adds the listener of the event by its exact name ([Solid, on:*](https://docs.solidjs.com/reference/jsx-attributes/on)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`ref\` gives the element ([Solid, ref](https://docs.solidjs.com/reference/jsx-attributes/ref)), \`onMount\` makes the call: Solid renders the elements of the skin at once, also inside its effects, so the table measures them rendered. \`on:bro-action\` adds the listener of the event by its exact name ([Solid, on:*](https://docs.solidjs.com/reference/jsx-attributes/on)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
 
 {{src/OrdersTable.tsx}}
 
-\`vite-plugin-solid\` compiles the JSX of Solid, and \`"jsx": "preserve"\` with \`"jsxImportSource": "solid-js"\` in \`tsconfig.json\` gives its types to TypeScript. \`vite.config.ts\`:
+\`vite-plugin-solid\` compiles the JSX of Solid and the components of SUID, which SUID publishes as JSX, and \`"jsx": "preserve"\` with \`"jsxImportSource": "solid-js"\` in \`tsconfig.json\` gives its types to TypeScript. \`vite.config.ts\`:
 
 {{vite.config.ts}}
 
@@ -2301,7 +2336,7 @@ A declaration adds \`‹table-bro›\` to the JSX of Solid, with the methods of 
 
 #### How do I render it?
 
-\`src/main.tsx\` imports the skin before the tables:
+\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of SUID with \`CssBaseline\`:
 
 {{src/main.tsx}}
 
@@ -2328,9 +2363,98 @@ The element needs the browser: \`onMount\` runs only there, so the server render
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
-      frameworkInstall,
-      frameworkSkin,
-      frameworkOrders,
+      suidInstall,
+      {file: 'src/theme.ts', language: 'ts', code: `import {createPalette, createTheme}           from '@suid/material/styles';
+import {createMemo, createRoot, createSignal} from 'solid-js';
+
+// The theme of the application in the color scheme of the system: its palette follows a change of the scheme, and the
+// components of SUID and the table take it
+const scheme = window.matchMedia('(prefers-color-scheme: dark)');
+const [dark, setDark] = createSignal(scheme.matches);
+
+scheme.addEventListener('change', event => setDark(event.matches));
+
+const palette = createRoot(() => createMemo(() => createPalette({mode: dark() ? 'dark' : 'light'})));
+
+export const theme = createTheme({palette});
+`},
+      {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin suid, and
+// setSuidTheme() gives its elements the theme of the application
+import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/solid-suid/dist/table-bro.solid-suid.min.css';
+import {setSuidTheme} from '@table-bro/solid-suid';
+
+import {theme} from './theme';
+
+import './sample-page.css';
+
+setSuidTheme(theme);
+`},
+      {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + Solid SUID</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`},
+      {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+export interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+export const cols: BroCol<Order>[] = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+// The orders of the demos of Docs on table-bro.com
+export const rows: Order[] = [
+  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
+  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
+  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
+  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
+  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
+  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
+  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
+  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
+  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
+  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
+  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
+  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
+  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
+  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
+  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
+];
+
+export const conf: BroConfig = {
+  skin: 'suid',
+  toolbarTitle: 'Orders'
+};
+`},
       {file: 'vite.config.ts', language: 'ts', code: `import {defineConfig, mergeConfig} from 'vite';
 import solid                       from 'vite-plugin-solid';
 
@@ -2381,11 +2505,19 @@ export function OrdersTable() {
       {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
 import './skin';
 
-import {render} from 'solid-js/web';
+import CssBaseline     from '@suid/material/CssBaseline';
+import {ThemeProvider} from '@suid/material/styles';
+import {render}        from 'solid-js/web';
 
 import {OrdersTable} from './OrdersTable';
+import {theme}       from './theme';
 
-render(() => <OrdersTable />, document.getElementById('app')!);
+render(() => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <OrdersTable />
+  </ThemeProvider>
+), document.getElementById('app')!);
 `}
     ]
   },
@@ -3042,36 +3174,36 @@ The texts of the parts that the core renders come first, flat and named as the o
 
 | Field | Default | Skins | Since |
 | --- | --- | --- | --- |
-| \`rowCounterTitle\` | No | mat, mui, bs, nv | 1.2.0 |
-| \`rowCounterLabel\` | Row number | mat, mui, bs, nv | 1.2.0 |
-| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, bs, nv | 1.2.0 |
-| \`filterDrawer.title\` | Filters | mat, mui, bs, nv | 1.2.0 |
-| \`filterDrawer.close\` | Close | mat, mui, bs, nv | 1.2.0 |
-| \`paginator.itemsPerPageLabel\` | Items per page: | mui, bs, nv | 1.2.0 |
-| \`paginator.nextPageLabel\` | Next page | mui, bs, nv | 1.2.0 |
-| \`paginator.previousPageLabel\` | Previous page | mui, bs, nv | 1.2.0 |
-| \`paginator.firstPageLabel\` | First page | mui, bs, nv | 1.2.0 |
-| \`paginator.lastPageLabel\` | Last page | mui, bs, nv | 1.2.0 |
-| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, bs, nv | 1.2.0 |
-| \`paginator.label\` | Pagination | mat, mui, bs, nv | 1.2.0 |
-| \`paginator.navigationLabel\` | Table page navigation | bs, nv | 1.2.0 |
+| \`rowCounterTitle\` | No | mat, mui, suid, bs, nv | 1.2.0 |
+| \`rowCounterLabel\` | Row number | mat, mui, suid, bs, nv | 1.2.0 |
+| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, suid, bs, nv | 1.2.0 |
+| \`filterDrawer.title\` | Filters | mat, mui, suid, bs, nv | 1.2.0 |
+| \`filterDrawer.close\` | Close | mat, mui, suid, bs, nv | 1.2.0 |
+| \`paginator.itemsPerPageLabel\` | Items per page: | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.nextPageLabel\` | Next page | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.previousPageLabel\` | Previous page | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.firstPageLabel\` | First page | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.lastPageLabel\` | Last page | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, suid, bs, nv | 1.2.0 |
+| \`paginator.label\` | Pagination | mat, mui, suid, bs, nv | 1.2.0 |
+| \`paginator.navigationLabel\` | Table page navigation | suid, bs, nv | 1.2.0 |
 | \`paginator.firstText\` | First | bs, nv | 1.2.0 |
 | \`paginator.previousText\` | Previous | bs, nv | 1.2.0 |
 | \`paginator.nextText\` | Next | bs, nv | 1.2.0 |
 | \`paginator.lastText\` | Last | bs, nv | 1.2.0 |
-| \`progressBar.label\` | Loading progress | mui, bs, nv | 1.2.0 |
-| \`state.loading\` | Loading | mat, mui, bs, nv | 1.2.0 |
-| \`state['no-data']\` | No data | mat, mui, bs, nv | 1.2.0 |
-| \`state['not-found']\` | No records found | mat, mui, bs, nv | 1.2.0 |
-| \`state.fail\` | Failed | mat, mui, bs, nv | 1.2.0 |
-| \`toolbarMain.search\` | Search | mat, mui, bs, nv | 1.2.0 |
+| \`progressBar.label\` | Loading progress | mui, suid, bs, nv | 1.2.0 |
+| \`state.loading\` | Loading | mat, mui, suid, bs, nv | 1.2.0 |
+| \`state['no-data']\` | No data | mat, mui, suid, bs, nv | 1.2.0 |
+| \`state['not-found']\` | No records found | mat, mui, suid, bs, nv | 1.2.0 |
+| \`state.fail\` | Failed | mat, mui, suid, bs, nv | 1.2.0 |
+| \`toolbarMain.search\` | Search | mat, mui, suid, bs, nv | 1.2.0 |
 | \`toolbarMain.searchRole(title)\` | for Orders, by the title of the toolbar; for rows without a title | bs, nv | 1.2.0 |
 | \`toolbarMain.buttonRole\` | button | bs, nv | 1.2.0 |
 | \`toolbarMain.menuRole\` | menu | bs | 1.2.0 |
 | \`toolbarMain.menuItemRole\` | menu item | bs | 1.2.0 |
-| \`toolbarSearch.field\` | Search in table | mat, mui, bs, nv | 1.2.0 |
-| \`toolbarSearch.back\` | Back | mat, mui, bs, nv | 1.2.0 |
-| \`toolbarSearch.clear\` | Clear | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarSearch.field\` | Search in table | mat, mui, suid, bs, nv | 1.2.0 |
+| \`toolbarSearch.back\` | Back | mat, mui, suid, bs, nv | 1.2.0 |
+| \`toolbarSearch.clear\` | Clear | mat, mui, suid, bs, nv | 1.2.0 |
 
 The flat fields of 1.1.0, as \`texts.itemsPerPage\` for \`texts.paginator.itemsPerPageLabel\` and \`texts.rowCounter\` for \`texts.rowCounterTitle\`, still work and are deprecated: the editor marks them, and 2.0 removes them. A field in a group and a text of the core win over their flat field.
 

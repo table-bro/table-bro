@@ -12,7 +12,7 @@ import {rowTypeCode}                                                            
 import {type BroServerSource, serviceCode}                                                       from './service.js';
 
 /**
- * The table for a page without a framework or of React and Preact, in the skins mui, bs and nv: an ES module with a
+ * The table for a page without a framework or of React, Preact and Solid, in the skins mui, suid, bs and nv: an ES module with a
  * function that renders <table-bro> into a container, with its cells, its filter drawer and its CSS variables. The
  * module imports the config of the skin from its package; the setup of the project registers the skin with the optional
  * elements of the table. A server table loads its pages from the API of the project, or from the API of the spec or the

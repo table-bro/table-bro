@@ -88,6 +88,12 @@ describe('generateCode', () => {
     ]);
   });
 
+  it('keeps the suid skin for Solid', () => {
+    expect(generateCode(orders.spec, {target: 'angular', skin: 'suid'}).report.errors).toEqual([
+      {path: '', message: 'the suid skin is for Solid', fix: 'use the target vanilla in a project of Solid, or the skin mat, bs or nv'}
+    ]);
+  });
+
   it('writes the files of an Angular table by the recipe', () => {
     const {files, todo} = generateCode(orders.spec, {target: 'angular', skin: 'mat', fillings: orders.fillings});
 
@@ -346,6 +352,11 @@ describe('generateCode', () => {
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain("import {setMuiTheme, withSwitch, withTags} from '@table-bro/react-mui';");
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('setMuiTheme(theme);\nwithTags();\nwithSwitch();');
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('queueMicrotask(() => renderOrderTable(container));');
+
+    // The skin suid takes the SUID theme of the application, and Solid renders the table in onMount()
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain("import {setSuidTheme, withSwitch, withTags} from '@table-bro/solid-suid';");
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain('setSuidTheme(theme);\nwithTags();\nwithSwitch();');
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain('onMount(() => {');
   });
 
   it('writes a function of the skin config with its body', () => {
