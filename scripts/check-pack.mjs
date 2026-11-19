@@ -15,6 +15,7 @@ export const root = fileURLToPath(new URL('../', import.meta.url));
 export const packages = [
   {name: '@table-bro/core', dir: 'packages/core'},
   {name: '@table-bro/react-mui', dir: 'packages/skins/react-mui'},
+  {name: '@table-bro/solid-suid', dir: 'packages/skins/solid-suid'},
   {name: '@table-bro/bootstrap', dir: 'packages/skins/bootstrap'},
   {name: '@table-bro/native', dir: 'packages/skins/native'},
   {name: '@table-bro/angular', dir: 'dist/table-bro.angular'},
