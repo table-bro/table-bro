@@ -20,6 +20,7 @@
     "check:api": "node scripts/check-api.mjs",
     "check:pack": "node scripts/check-pack.mjs",
     "check:install": "node scripts/check-install.mjs",
+    "publish:packages": "node scripts/publish.mjs",
     "build:samples": "node scripts/build-samples.mjs",
     "docs:api": "typedoc",
     "check:mcp": "npm run check -w @table-bro/mcp",
