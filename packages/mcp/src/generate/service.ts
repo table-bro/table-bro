@@ -13,9 +13,10 @@ export type BroServerSource = 'project' | 'simulated' | 'api-pages' | 'api';
  * The service of a server table, as BroService of @table-bro/angular: loadPage sends the request of a query of the table
  * and gives the rows of its page with the number of all rows; mapServerQuery turns the query into the request of the API,
  * and mapServerResponse the answer of the API into the rows. The page only delivers the rows to the table. The simulated
- * server of the site is a REST API with names of its own, so its service maps as the service of a real API does.
+ * server of the site is a REST API with names of its own, so its service maps as the service of a real API does. In
+ * Vanilla JS the service is a plain class that sends its requests with fetch.
  */
-export function serviceCode(spec: BroTableSpec, source: BroServerSource, filtersCode?: BroFiltersCode): string {
+export function serviceCode(spec: BroTableSpec, source: BroServerSource, filtersCode?: BroFiltersCode, vanilla: boolean = false): string {
   // The spec as the service sees its API: the simulated server has the names and the parameters of a REST API
   const view = (source === 'simulated') ? simulatedSpec(spec, filtersCode) : spec;
   const names = BroNames.of(spec);
@@ -27,6 +28,9 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
   const localFilters = Boolean(filtersCode) && (source === 'simulated' || source === 'api');
   const renamed = renamedSources(view);
   const http = (source !== 'simulated');
+  // The page of rows: the type of @table-bro/angular, and a type of the module in Vanilla JS
+  const page = vanilla ? 'ServerPage' : 'BroServerPage';
+  const get = (url: string, query: string = 'query') => vanilla ? fetchRequest(names, url, query) : request(names, url, query);
 
   // The parts of each source: only the one of the source runs, as only an API has the paths of its answer
   const types: string[] = {
@@ -48,28 +52,28 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
   const loadPage: string[] = (source === 'simulated')
     ? [
         '  /** A page of the query: the request of the simulated server, and its answer as the rows of the table. */',
-        `  loadPage(query: BroQuery<${row}>): Promise<BroServerPage<${row}>> {`,
+        `  loadPage(query: BroQuery<${row}>): Promise<${page}<${row}>> {`,
         `    return simulatedServer(this.mapServerQuery(query)).then((response: ${names.apiPageType}) => this.mapServerResponse(response));`,
         '  }'
       ]
     : (source === 'api')
         ? [
             '  /** A page of the query from all the rows of the API, filtered by the search and the filters and sorted. */',
-            `  loadPage(query: BroQuery<${row}>): Promise<BroServerPage<${row}>> {`,
+            `  loadPage(query: BroQuery<${row}>): Promise<${page}<${row}>> {`,
             `    return this.loadRows().then((rows: ${row}[]) => queryPage(rows, query));`,
             '  }',
             '',
             '  /** All the rows of the API: its answer comes once, and the service turns it into rows. */',
             `  private loadRows(): Promise<${row}[]> {`,
-            `    return this.apiRows ??= ${request(names, quote(spec.api!.url), '')}`,
+            `    return this.apiRows ??= ${get(quote(spec.api!.url), '')}`,
             `      .then((response: ${names.apiPageType}) => this.mapServerResponse(response).rows);`,
             '  }'
           ]
         : [
             `  /** A page of the query: the request of ${(source === 'project') ? 'your API' : 'the API'}, and its answer as the rows of the table. */`,
-            `  loadPage(query: BroQuery<${row}>): Promise<BroServerPage<${row}>> {`,
+            `  loadPage(query: BroQuery<${row}>): Promise<${page}<${row}>> {`,
             ...((source === 'project') ? ['    // TODO: the address of your API'] : []),
-            `    return ${request(names, quote((source === 'project') ? `/api/${names.kebab}s` : spec.api!.url))}`,
+            `    return ${get(quote((source === 'project') ? `/api/${names.kebab}s` : spec.api!.url))}`,
             `      .then((response: ${names.apiPageType}) => this.mapServerResponse(response));`,
             '  }'
           ];
@@ -93,12 +97,12 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
 
   const mapResponse: string[] = (source === 'project')
     ? [
-        `  mapServerResponse(response: ${names.apiPageType}): BroServerPage<${row}> {`,
+        `  mapServerResponse(response: ${names.apiPageType}): ${page}<${row}> {`,
         '    return {rows: response.rows, total: response.total};',
         '  }'
       ]
     : [
-        `  mapServerResponse(response: ${names.apiPageType}): BroServerPage<${row}> {`,
+        `  mapServerResponse(response: ${names.apiPageType}): ${page}<${row}> {`,
         `    const rows: ${row}[] = ${access('response', api!.rows)}.map((item: ${names.apiItemType}) => ({`,
         view.fields.map(field => `      ${objectKey(field.name)}: ${access('item', field.source ?? field.name)}`).join(',\n'),
         '    }));',
@@ -108,9 +112,9 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
       ];
 
   const members: string[] = [
-    ...(http ? ['  private http = inject(HttpClient);'] : []),
+    ...((http && !vanilla) ? ['  private http = inject(HttpClient);'] : []),
     ...((source === 'api') ? ['  /** All the rows of the API, loaded once: the service answers the queries of the table from them. */', `  private apiRows?: Promise<${row}[]>;`] : []),
-    ...(http ? [''] : []),
+    ...((http && !vanilla) || source === 'api' ? [''] : []),
     ...loadPage,
     '',
     ...mapQuery,
@@ -121,20 +125,30 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
   // The simulated server and an API without pages answer the queries from all the rows, after the service
   const local: string[] = [
     ...(localFilters ? ['', `/** The filters of the drawer on ${(source === 'api') ? 'the rows of the API' : 'the records of the simulated server'}. */`, `const filterRows = ${filtersCode!.transformCode()};`] : []),
-    ...((source === 'api') ? ['', queryPageCode(spec, localFilters ? `filterRows(rows, (query.filter ?? {}) as ${names.filtersType})` : 'rows')] : []),
+    ...((source === 'api') ? ['', queryPageCode(spec, localFilters ? `filterRows(rows, (query.filter ?? {}) as ${names.filtersType})` : 'rows', page)] : []),
     ...((source === 'simulated') ? ['', ...simulatedServerCode(spec, view, names, localFilters)] : [])
   ];
 
   return [
     imports({
-      '@angular/common/http': http ? ['HttpClient'] : [],
-      '@angular/core': ['Injectable', ...(http ? ['inject'] : [])],
-      rxjs: http ? ['firstValueFrom'] : [],
+      '@angular/common/http': (http && !vanilla) ? ['HttpClient'] : [],
+      '@angular/core': vanilla ? [] : ['Injectable', ...(http ? ['inject'] : [])],
+      rxjs: (http && !vanilla) ? ['firstValueFrom'] : [],
       '@table-bro/core': ['type BroQuery', ...(localFilters ? ['matchesFilterCondition'] : [])],
-      '@table-bro/angular': ['type BroServerPage', 'type BroService'],
+      '@table-bro/angular': vanilla ? [] : ['type BroServerPage', 'type BroService'],
       [`./${names.kebab}`]: [`type ${row}`, ...((filters || localFilters) ? [`type ${names.filtersType}`] : [])]
     }),
     '',
+    ...(vanilla
+      ? [
+          '/** A page of the rows of the table with the number of all rows, as the table takes them. */',
+          'export interface ServerPage<T> {',
+          '  rows: T[];',
+          '  total: number;',
+          '}',
+          ''
+        ]
+      : []),
     ...types,
     '',
     ...((pages && renamed.length)
@@ -148,10 +162,11 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
     ` * The service of the table: it sends the request of a query of the table to ${(source === 'simulated') ? 'the simulated server' : (source === 'project') ? 'your API' : 'the API'}, and turns its answer`,
     ' * into the rows of a page with the number of all rows. The page delivers them to the table.',
     ' */',
-    '@Injectable({providedIn: \'root\'})',
-    `export class ${names.serviceClass} implements BroService<${row}, ${names.apiQueryType}, ${names.apiPageType}> {`,
+    ...(vanilla ? [] : ['@Injectable({providedIn: \'root\'})']),
+    `export class ${names.serviceClass}${vanilla ? '' : ` implements BroService<${row}, ${names.apiQueryType}, ${names.apiPageType}>`} {`,
     ...members,
     '}',
+    ...((http && vanilla) ? ['', ...fetchCode()] : []),
     ...local,
     ''
   ].join('\n');
@@ -165,6 +180,29 @@ export function serviceCode(spec: BroTableSpec, source: BroServerSource, filters
  */
 function request(names: BroNames, url: string, query: string = 'query'): string {
   return `firstValueFrom(this.http.get<${names.apiPageType}>(${url}, {params: this.mapServerQuery(${query})}))`;
+}
+
+/** The request of a query to an API by fetch, in Vanilla JS: its parameters come from mapServerQuery. */
+function fetchRequest(names: BroNames, url: string, query: string = 'query'): string {
+  return `getJson<${names.apiPageType}>(${url}, this.mapServerQuery(${query}))`;
+}
+
+/** The GET request of Vanilla JS: the query parameters go into the address, and an error status fails the load. */
+function fetchCode(): string[] {
+  return [
+    '/** The answer of a GET request with the query parameters; an error status fails the load. */',
+    'function getJson<T>(url: string, params: Record<string, string | number | boolean>): Promise<T> {',
+    '  const query: string = new URLSearchParams(Object.entries(params).map(([key, value]) => [key, String(value)])).toString();',
+    '',
+    '  return fetch(query ? `${url}${url.includes(\'?\') ? \'&\' : \'?\'}${query}` : url).then((response: Response) => {',
+    '    if (!response.ok) {',
+    '      throw new Error(`${response.status} ${response.statusText}`);',
+    '    }',
+    '',
+    '    return response.json() as Promise<T>;',
+    '  });',
+    '}'
+  ];
 }
 
 /**
@@ -233,12 +271,12 @@ function simulatedServerCode(spec: BroTableSpec, view: BroTableSpec, names: BroN
 }
 
 /** The page of a query from all the rows of a server: filtered by the search and the filters, sorted, and cut to the page. */
-function queryPageCode(spec: BroTableSpec, filtered: string): string {
+function queryPageCode(spec: BroTableSpec, filtered: string, page: string): string {
   const row = spec.rowType;
 
   return [
     '/** The page of a query from all the rows: filtered by the search and the filters, sorted, and cut to the page. */',
-    `function queryPage(rows: ${row}[], query: BroQuery<${row}>): BroServerPage<${row}> {`,
+    `function queryPage(rows: ${row}[], query: BroQuery<${row}>): ${page}<${row}> {`,
     '  const search: string = (query.filter?.search ?? \'\').toLowerCase();',
     `  const [key] = (query.sort?.order ?? []) as (keyof ${row})[];`,
     '  const direction: number = (key && query.sort?.keys[key]?.direction === \'desc\') ? -1 : 1;',

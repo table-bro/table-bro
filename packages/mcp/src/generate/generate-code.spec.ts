@@ -255,6 +255,31 @@ describe('generateCode', () => {
     expect(todo).toContain('order-table/order.service.ts: replace the simulated server of loadPage with a request to your API, and map its parameters and its answer');
   });
 
+  it('writes the simulated server and the API of a vanilla table into its service, without Angular', () => {
+    const spec = <BroTableSpec>{...orders.spec, config: {...orders.spec.config, server: true, rowDetailsServer: true}};
+    const {files, todo} = generateCode(spec, {target: 'vanilla', skin: 'mui', fillings: orders.fillings, simulateServer: true});
+    const page = file(files, 'order-table/order-table.ts');
+    const service = file(files, 'order-table/order.service.ts');
+
+    expect(page).toContain("import {OrderService, type ServerPage} from './order.service';");
+    expect(page).toContain('  const service: OrderService = new OrderService();');
+    expect(page).toContain('    service.loadPage(query).then(({rows, total}: ServerPage<Order>) => {');
+    expect(page).not.toContain('function loadPage');
+    expect(service).toContain('export class OrderService {');
+    expect(service).toContain('const serverRows: Order[] = [');
+    expect(service).not.toMatch(/@angular|HttpClient|Injectable/);
+    expect(todo).toContain('order-table/order.service.ts: replace the simulated server of loadPage with a request to your API, and map its parameters and its answer');
+    // The row details of the simulated server load in a second
+    expect(file(files, 'order-table/order-details-cell.ts')).toContain("    if (this.getAttribute('server') === 'true') {\n      setTimeout(() => this.reportLoaded(1), 1000);");
+
+    const api = <BroTableSpec>{...spec, fields: spec.fields.map(field => ({...field, source: field.name})), api: {url: 'https://dummyjson.com/carts', rows: 'carts'}};
+    const apiService = file(generateCode(api, {target: 'vanilla', skin: 'bs', fillings: orders.fillings}).files, 'order-table/order.service.ts');
+
+    // fetch sends the request of Vanilla JS
+    expect(apiService).toContain("    return this.apiRows ??= getJson<OrderApiPage>('https://dummyjson.com/carts', this.mapServerQuery())");
+    expect(apiService).toContain('function getJson<T>(url: string, params: Record<string, string | number | boolean>): Promise<T> {');
+  });
+
   it('writes the loading of an API: its answer once, and the queries of the table from its rows', () => {
     const spec = <BroTableSpec>{
       ...orders.spec,

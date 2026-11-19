@@ -45,7 +45,7 @@ export function cellCode(spec: BroTableSpec, cell: BroSpecCell, target: BroTarge
     filled: angular ? Boolean(filling?.template) : Boolean(filling?.render)
   };
 
-  code.content = angular ? angularCell(spec, code, filling, simulated) : vanillaCell(spec, code, filling);
+  code.content = angular ? angularCell(spec, code, filling, simulated) : vanillaCell(spec, code, filling, simulated);
 
   return code;
 }
@@ -138,7 +138,7 @@ function angularCell(spec: BroTableSpec, code: BroCellCode, filling: BroCellFill
   ].join('\n');
 }
 
-function vanillaCell(spec: BroTableSpec, code: BroCellCode, filling: BroCellFilling | undefined): string {
+function vanillaCell(spec: BroTableSpec, code: BroCellCode, filling: BroCellFilling | undefined, simulated: boolean): string {
   const {cell} = code;
   const details = (cell.kind === 'details');
   const server = details && Boolean(spec.config?.rowDetailsServer);
@@ -160,6 +160,15 @@ function vanillaCell(spec: BroTableSpec, code: BroCellCode, filling: BroCellFill
     '    this.built = true;',
     '',
     '    this.render();',
+    ...((server && simulated)
+      ? [
+          '',
+          '    // The simulated server gives the details in a second: your request for them takes its place',
+          '    if (this.getAttribute(\'server\') === \'true\') {',
+          '      setTimeout(() => this.reportLoaded(1), 1000);',
+          '    }'
+        ]
+      : []),
     '  }',
     '',
     '  private render(): void {',

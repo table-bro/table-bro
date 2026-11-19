@@ -15,7 +15,7 @@ export interface BroGenerateOptions {
   extensions?: BroMcpExtension[];
   /** The suffix of the tags of the cells: tables generated into one page define their own Custom Elements. */
   tagSuffix?: string;
-  /** Angular in the server mode: the page answers the queries of the table from the rows of the spec, as a server would. */
+  /** The server mode: the page answers the queries of the table from the rows of the spec, as a server would. */
   simulateServer?: boolean;
   /** The sizes of a spec that the host takes. */
   limits?: BroSpecLimits;
@@ -81,7 +81,7 @@ export function generateCode(spec: BroTableSpec, options: BroGenerateOptions): B
 
   const fillings = options.fillings ?? {};
   const extensions = options.extensions ?? [];
-  const table: BroTableFiles = (target === 'angular') ? angularTable(spec, skin, fillings, options.tagSuffix, extensions, options.simulateServer) : vanillaTable(spec, skin, fillings, options.tagSuffix, extensions);
+  const table: BroTableFiles = (target === 'angular') ? angularTable(spec, skin, fillings, options.tagSuffix, extensions, options.simulateServer) : vanillaTable(spec, skin, fillings, options.tagSuffix, extensions, options.simulateServer);
 
   // The cells of an Angular project are Angular components in every skin: they become Custom Elements with @angular/elements
   const elements = (target === 'angular' && skin !== 'mat' && Boolean(spec.cells?.length)) ? ['@angular/elements'] : [];
