@@ -75,8 +75,9 @@ The subject starts with the part it changes: `Table, Bro:` for the core, the ski
 ## Branches and releases
 
 `main` is the only long-lived branch. A pull request comes from a short branch off `main`, named by its kind:
-`fix/…`, `feat/…` or `docs/…`. It is merged by rebase or squash, so `main` keeps a linear history without merge
-commits; bring a branch up to date by rebasing it on `main`, not by merging `main` into it.
+`feature/…`, `fix/…` or `docs/…`. CI runs on pull requests: a push of a branch without one runs no checks. A pull
+request is merged by rebase or squash, so `main` keeps a linear history without merge commits; bring a branch up to
+date by rebasing it on `main`, not by merging `main` into it.
 
 A release is a tag `vX.Y.Z` on `main` and a GitHub Release with the notes of its version from
 [CHANGELOG.md](CHANGELOG.md). A branch `release/x.y.x` appears only when a fix has to reach an older minor version.
