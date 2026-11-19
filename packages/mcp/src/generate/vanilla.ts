@@ -9,13 +9,16 @@ import type {BroSpecFillings}                                                   
 import {BroFiltersCode}                                                                          from './filters.js';
 import {BroNames}                                                                                from './names.js';
 import {rowTypeCode}                                                                             from './rows.js';
+import {type BroServerSource, serviceCode}                                                       from './service.js';
 
 /**
- * The table for a page without a framework, in the skins bs and nv: an ES module with a function that renders
- * <table-bro> into a container, with its cells, its filter drawer and its CSS variables. The module imports the config
- * of the skin from its package; the setup of the project registers the skin with the optional elements of the table.
+ * The table for a page without a framework or of React and Preact, in the skins mui, bs and nv: an ES module with a
+ * function that renders <table-bro> into a container, with its cells, its filter drawer and its CSS variables. The
+ * module imports the config of the skin from its package; the setup of the project registers the skin with the optional
+ * elements of the table. A server table loads its pages from the API of the project, or from the API of the spec or the
+ * simulated server of the site through the service of the table.
  */
-export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroSpecFillings, tagSuffix: string = '', extensions: BroMcpExtension[] = []): BroTableFiles {
+export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroSpecFillings, tagSuffix: string = '', extensions: BroMcpExtension[] = [], simulateServer: boolean = false): BroTableFiles {
   const names = BroNames.of(spec, tagSuffix);
   const folder = names.folder;
   const config = spec.config ?? {};
@@ -23,7 +26,13 @@ export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: Br
   const filters = new BroFiltersCode(spec, fillings);
   const hasFilters = filters.filters.length > 0;
   const specRows = Boolean(spec.rows?.length) && !server;
-  const cells = (spec.cells ?? []).map(cell => cellCode(spec, cell, 'vanilla', fillings.cells?.[cell.name]?.[skin], tagSuffix));
+  // The page and the server row details load from the simulated server, or from the API of the spec, as in Angular
+  const simulated = server && (simulateServer || Boolean(spec.api));
+  const source: BroServerSource | undefined = !server ? undefined : spec.api ? (spec.api.paging ? 'api-pages' : 'api') : simulated ? 'simulated' : 'project';
+  // The service of the table sends the requests of the API of the spec or of the simulated server; the API of the
+  // project is a request in the module of the table
+  const service = Boolean(source) && (source !== 'project');
+  const cells = (spec.cells ?? []).map(cell => cellCode(spec, cell, 'vanilla', fillings.cells?.[cell.name]?.[skin], tagSuffix, simulated));
   const conf = configCode(spec, skin, fillings, '', tagSuffix, extensions);
 
   const files: BroGeneratedFile[] = [];
@@ -86,12 +95,13 @@ export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: Br
       '  /** The last query: an answer to an older one comes late and is left out. */',
       `  let lastQuery: BroQuery<${spec.rowType}> | undefined;`,
       '',
+      ...(service ? [`  const service: ${names.serviceClass} = new ${names.serviceClass}();`, ''] : []),
       `  const onQueryTable = (query: BroQuery<${spec.rowType}>): void => {`,
       '    const queryKey: string = JSON.stringify([query.filter, query.sort]);',
       '',
       '    lastQuery = query;',
       '',
-      `    loadPage(query).then(({rows, total}: ${names.apiPageType}) => {`,
+      `    ${service ? 'service.' : ''}loadPage(query).then(({rows, total}: ${service ? `ServerPage<${spec.rowType}>` : names.apiPageType}) => {`,
       '      if (query !== lastQuery) {',
       '        return;',
       '      }',
@@ -188,7 +198,8 @@ export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: Br
   const localModules: Record<string, string[]> = {
     [`./${names.kebab}`]: [`type ${spec.rowType}`, ...(hasFilters ? [`type ${names.filtersType}`] : [])],
     ...Object.fromEntries(cells.map(cell => [`./${cell.file}`, [cell.className]])),
-    ...(hasFilters ? {[`./${names.filtersFile}`]: [`render${names.filtersClass}`]} : {})
+    ...(hasFilters ? {[`./${names.filtersFile}`]: [`render${names.filtersClass}`]} : {}),
+    ...(service ? {[`./${names.serviceFile}`]: [names.serviceClass, 'type ServerPage']} : {})
   };
 
   const module = [
@@ -204,7 +215,7 @@ export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: Br
     `export function render${spec.rowType}Table(container: HTMLElement): TableBroHTMLElement {`,
     ...body,
     '}',
-    ...(server
+    ...((source === 'project')
       ? [
           '',
           '/** An answer of your API: the rows of a page and the number of all rows. Replace it with the answer of your API. */',
@@ -254,8 +265,18 @@ export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: Br
     files.push({path: `${folder}/${names.filtersFile}.ts`, content: filters.vanillaForm(skin), description: 'the filters of the drawer: their form, which gives the table its filter.'});
   }
 
-  if (server) {
+  if (source === 'project') {
     todo.push(`${folder}/${names.kebab}-table.ts: the address of your API in loadPage, and the map of the query of the table to its parameters and of its answer to the rows with their total`);
+  } else if (source === 'simulated') {
+    todo.push(`${folder}/${names.serviceFile}.ts: replace the simulated server of loadPage with a request to your API, and map its parameters and its answer`);
+  }
+
+  if (service) {
+    files.splice(2, 0, {
+      path: `${folder}/${names.serviceFile}.ts`,
+      content: serviceCode(spec, source!, hasFilters ? filters : undefined, true),
+      description: 'the service of the table: it sends the request of a query of the table to the API, and turns its answer into the rows of a page.'
+    });
   }
 
   if (!specRows && !server) {
