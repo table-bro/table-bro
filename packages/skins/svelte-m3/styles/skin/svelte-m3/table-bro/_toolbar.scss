@@ -1,0 +1,72 @@
+@use "../variables" as *;
+@use "../type" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_toolbar($m3-svelte-toolbar-selector);
+
+  // The small top app bar of Material 3, with its icon buttons, takes the height of the toolbar of the table
+  #{$bro-table-toolbar_container} #{$m3-svelte-toolbar-selector},
+  .bro-filter-drawer-header #{$m3-svelte-toolbar-selector} {
+    display: flex;
+
+    box-sizing: border-box;
+    height: $bro-toolbar-height;
+    padding: 0 4px;
+
+    gap: 4px;
+
+    align-items: center;
+
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    color: $m3-svelte-text-color;
+  }
+
+  // The title of the toolbar has the title text of the top app bar of Material 3: after the place of the navigation icon
+  // in the table, 16px from the edge in the filter drawer
+  bro-m3-svelte-toolbar-main .bro-toolbar-title,
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    margin-left: 4px;
+
+    @include m3-title-large;
+  }
+
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    margin-left: 12px;
+  }
+
+  // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content
+  // Security Policy blocks
+  bro-m3-svelte-toolbar-main .bro-toolbar-placeholder {
+    visibility: hidden;
+  }
+
+  bro-m3-svelte-toolbar-main .bro-toolbar-space,
+  .bro-filter-drawer-header .bro-filter-drawer-title {
+    flex: 1 1 auto;
+  }
+
+  // The menu of the toolbar is a popover of the top layer under its button: the menu of M3 Svelte is its content, with
+  // its items in a node of its own
+  bro-m3-svelte-toolbar-main .bro-m3-svelte-toolbar-menu {
+    position: fixed;
+
+    overflow: visible;
+
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    inset: auto;
+  }
+
+  bro-m3-svelte-toolbar-main .bro-m3-svelte-toolbar-menu-items {
+    display: contents;
+  }
+}

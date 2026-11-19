@@ -1,0 +1,5 @@
+// The SCSS API of the M3 skin without its CSS: the variables of the skin and the mixins of table-bro.api. A
+// stylesheet that needs only them, such as the styles of a component, uses this module instead of table-bro.svelte-m3,
+// whose @use prints the CSS of the skin. It takes the same configuration: @use "table-bro.svelte-m3.api" with (...).
+@forward "./skin/svelte-m3/variables";
+@forward "./table-bro.api";

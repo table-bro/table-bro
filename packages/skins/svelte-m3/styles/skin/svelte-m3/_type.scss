@@ -1,0 +1,24 @@
+// The type scale of Material 3 in the font of the theme of M3 Svelte: the values of its mixins --m3-*, which the
+// application compiles into the styles of its components only, so the CSS of the skin writes them itself
+@mixin m3-type($size, $line-height, $weight: 400) {
+  font-weight: $weight;
+  font-size: $size;
+  line-height: $line-height;
+  font-family: var(--m3-font);
+}
+
+@mixin m3-title-large {
+  @include m3-type(1.375rem, 1.273);
+}
+
+@mixin m3-title-small {
+  @include m3-type(.875rem, 1.429, 500);
+}
+
+@mixin m3-body-medium {
+  @include m3-type(.875rem, 1.429);
+}
+
+@mixin m3-body-small {
+  @include m3-type(.75rem, 1.333);
+}

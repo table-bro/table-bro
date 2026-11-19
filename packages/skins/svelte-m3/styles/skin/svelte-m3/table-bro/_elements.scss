@@ -1,0 +1,29 @@
+@mixin styles {
+  // The node of an element lays out nothing of its own: the components of M3 Svelte in it are the content of the element
+  .bro-m3-svelte-root {
+    display: contents;
+  }
+
+  // The shadow of the table and of its regions: the elevation 5 of the theme
+  .bro-m3-svelte-elevation-5 {
+    box-shadow: var(--m3-elevation-5);
+  }
+
+  // The icons of the table are the font of Material Symbols in the size of the icons of M3 Svelte
+  .bro-m3-svelte-icon {
+    width: 24px;
+    height: 24px;
+
+    font-size: 24px;
+  }
+
+  // The icon and the title of a text button, and of an item of a menu, are the flex items of the component
+  .bro-m3-svelte-button-label,
+  .bro-m3-svelte-menu-item-label {
+    display: contents;
+  }
+
+  .bro-m3-svelte-menu-item-label .bro-m3-svelte-icon {
+    color: var(--m3c-on-surface-variant);
+  }
+}

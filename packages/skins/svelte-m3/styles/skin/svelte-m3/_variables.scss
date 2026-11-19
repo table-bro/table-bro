@@ -1,0 +1,81 @@
+$m3-svelte-paginator-selector: 'bro-m3-svelte-paginator' !default;
+$m3-svelte-progress-bar-selector: 'bro-m3-svelte-progress-bar' !default;
+$m3-svelte-toolbar-selector: '.bro-m3-svelte-toolbar' !default;
+
+// The sizes of the tables of the skin mat: M3 Svelte has no table, so the skin takes them as the defaults of its $bro-*
+// variables, which an application configures as in the other skins
+$m3-svelte-table-header-height: 56px;
+$m3-svelte-table-row-height: 52px;
+$m3-svelte-row-horizontal-padding: 16px;
+
+$m3-svelte-elevation-5-shadow-size: 26px; // the offset, the blur and the spread of the elevation 5 of Material 3
+$m3-svelte-table-shadow-size: $m3-svelte-elevation-5-shadow-size;
+
+$m3-svelte-toolbar-height: 64px; // the small top app bar of Material 3
+$m3-svelte-paginator-height: 56px;
+
+$m3-svelte-corner-radius: 12px; // the medium shape of Material 3, as the tables of the skin mat
+$m3-svelte-filter-drawer-corner-radius: 16px; // the large shape of Material 3, as the filter drawer of the skin mat
+
+// The colors of the parts of the table: the CSS variables of the theme of M3 Svelte, which the application writes,
+// in the roles of a table of Material 3
+$m3-svelte-bg: var(--m3c-surface) !default;
+$m3-svelte-border-color: var(--m3c-outline-variant) !default;
+$m3-svelte-text-color: var(--m3c-on-surface) !default;
+$m3-svelte-text-secondary-color: var(--m3c-on-surface-variant) !default;
+
+
+// The values of the M3 skin for the variables every skin has (skin/shared/_variables.scss)
+@forward "../shared/variables" with (
+  $bro-skin: '.m3-svelte',
+
+  $bro-table-width: 100% !default, // or px-value, or 100%;
+
+  $bro-table-header-height: $m3-svelte-table-header-height !default,
+  $bro-table-row-height: $m3-svelte-table-row-height !default,
+  $bro-row-horizontal-padding: $m3-svelte-row-horizontal-padding !default,
+
+  $bro-table-shadow-size: $m3-svelte-table-shadow-size !default,
+
+  $bro-toolbar-height: $m3-svelte-toolbar-height !default,
+  $bro-paginator-height: $m3-svelte-paginator-height !default,
+  $bro-table-min-width: 541px !default,
+
+  $bro-corner-radius: $m3-svelte-corner-radius !default,
+
+  $bro-filter-drawer-width: 320px !default,
+  $bro-filter-drawer-corner-radius: $m3-svelte-filter-drawer-corner-radius !default,
+
+  $bro-scrim-color: rgba(#000, .32) !default, // as the scrim of the skin nv
+
+
+  $bro-global-progress: 3px !default, // as the progress of the skin mat
+  $bro-details-progress: 2px !default,
+
+
+  // Layers
+  $bro-table-container-z-index: 2 !default,
+  $bro-shadow-z-index: -1 !default,
+
+
+  // Read by the table script (skin/shared/mixins/_custom-properties.scss)
+  $bro-refresh-overlay-opacity: .5 !default,
+  $bro-refresh-overlay-opacity-dark: .5 !default,
+  $bro-column-width-duration: 500ms !default, // read by the CSS alone
+  $bro-details-duration: 350ms !default,
+  $bro-details-easing: cubic-bezier(.37, 0, .63, 1) !default, // the curve of easeInOutSine
+  $bro-filter-drawer-duration: 400ms !default,
+  $bro-kinetic-time-constant: 280ms !default, // the time constant of the exponential decay, not its duration
+  $bro-state-icon-duration: 500ms !default,
+  $bro-state-message-duration: 750ms !default,
+
+
+  // State
+  $bro-state-icon-size: 40px !default,
+  $bro-state-icon-margin-right: 16px !default,
+  $bro-state-message-font-size: 28px !default,
+
+
+  // Table cells
+  $bro-cell-number-width: 45.5px !default
+);
