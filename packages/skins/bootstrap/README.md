@@ -118,3 +118,6 @@ way: see [Create your own skin](https://github.com/table-bro/table-bro#create-yo
 ## License
 
 MIT
+
+Bootstrap is a trademark of its owner. Table, Bro is not affiliated with Bootstrap or endorsed by it: this package
+uses the public classes and components of Bootstrap, which the application installs.
