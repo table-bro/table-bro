@@ -137,12 +137,85 @@ export const conf: BroConfig = {
  */
 const skinsSection = `#### Which skins can I use?
 
-Table, Bro ships three skins, Angular Material, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+Table, Bro ships the skins Angular Material, MUI, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
 
 /**
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
  * Frameworks starts with.
  */
+/** The files of the setup of the pages of React and Preact, as the projects of samples/react-mui have them. */
+const muiInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled
+`};
+const muiTheme: BroDocFile = {file: 'src/theme.ts', language: 'ts', code: `import {createTheme} from '@mui/material/styles';
+
+// The theme of the application: its CSS variables give the colors to the table, and the attribute of its color
+// schemes lets a table with a theme of its own take the light or the dark one
+export const theme = createTheme({
+  cssVariables: {colorSchemeSelector: 'data-mui-color-scheme'},
+  colorSchemes: {light: true, dark: true}
+});
+`};
+const muiSkin: BroDocFile = {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin mui, and
+// setMuiTheme() gives its elements the theme of the application
+import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
+import {setMuiTheme} from '@table-bro/react-mui';
+
+import {theme} from './theme';
+
+import './sample-page.css';
+
+setMuiTheme(theme);
+`};
+const muiOrders: BroDocFile = {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+export interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+export const cols: BroCol<Order>[] = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+// The orders of the demos of Docs on table-bro.com
+export const rows: Order[] = [
+  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
+  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
+  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
+  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
+  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
+  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
+  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
+  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
+  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
+  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
+  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
+  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
+  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
+  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
+  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
+];
+
+export const conf: BroConfig = {
+  skin: 'mui',
+  toolbarTitle: 'Orders'
+};
+`};
+
 const mcpInstall: BroDocFile = {file: 'mcp.sh', language: 'bash', code: `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@${tableBroVersion}
 `};
 
@@ -182,11 +255,12 @@ ${mcpSection('###')}
 
 ### Skins
 
-Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. Three skins ship today: Angular Material for Angular apps, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
 
 | Skin | Package | Framework | UI components |
 | --- | --- | --- | --- |
 | Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
+| MUI, \`mui\` | \`@table-bro/react-mui\` | React 19, Preact | MUI 9 |
 | Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
 | Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
 
@@ -225,7 +299,9 @@ ${setupNv.text}
 
 A skin is a config that \`registerSkin(name, config)\` of \`@table-bro/core\` registers once, before the tables, and \`conf.skin\` of a table names. The config, \`BroSkinConfig\`, holds the classes of the parts of the table in \`css\`; the Custom Elements of its controls in \`components\`, each by its \`selector\`: the toolbar, the sort header, the paginator, the progress bar, the buttons and the dropdowns; and the attribute of the color mode of your UI library in \`themeAttribute\`, as \`data-bs-theme\` of Bootstrap, which the table sets on its host to \`'light'\` or \`'dark'\`. The table also puts the name of the skin on its host as a class, so the CSS of your skin applies under that class.
 
-Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-bro/native\` and its sources in [packages/skins/native](https://github.com/table-bro/table-bro/tree/main/packages/skins/native) show the parts of a skin. Give the parts the classes of your design system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the components of Angular Material, then register the config under a name of its own: \`registerSkin('brand', brandSkinConfig)\` and \`conf: {skin: 'brand'}\`. To change a part of a shipped skin for one table, \`config.components\` and \`config.css\` of the table are enough: they change any value or function of the config of the skin.`,
+Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-bro/native\` and its sources in [packages/skins/native](https://github.com/table-bro/table-bro/tree/main/packages/skins/native) show the parts of a skin. Give the parts the classes of your design system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the components of Angular Material, then register the config under a name of its own: \`registerSkin('brand', brandSkinConfig)\` and \`conf: {skin: 'brand'}\`. To change a part of a shipped skin for one table, \`config.components\` and \`config.css\` of the table are enough: they change any value or function of the config of the skin.
+
+An AI coding agent builds a skin of the components of your library with the skill [create-skin](https://github.com/table-bro/table-bro/tree/main/.agents/skills/create-skin) of the repository: the package, the elements and their contract with the table, the theme, the styles, a sample and the checks. The skin \`mui\` on MUI is its reference.`,
     files: [
       mcpInstall,
       {file: 'index.html', language: 'html', code: `<!doctype html>
@@ -1082,10 +1158,39 @@ const config: BroConfig = {
     path: 'design/material-design',
     name: 'Material design',
     text: `<!-- table-material-design -->
-Angular Material skin of Table, Bro supports 100% of Google Material Design [data tables](https://m2.material.io/components/data-tables#specs) specs and integrates all the Angular Material components it depends on.
+Table, Bro implements the Google Material Design [data tables](https://m2.material.io/components/data-tables#specs) specs in its Material skins, one for each framework: a skin renders the components of the Material library of its framework in the table and takes the theme of your application.
 
-It supports Material 3 (M3) and Angular Material 22: the skin takes the theme of your application, as the components of Angular Material do, and a table in the dark theme takes the dark scheme of the theme.`,
-    files: []
+#### Angular Material
+
+Angular Material skin of Table, Bro supports 100% of Google Material Design data tables specs and integrates all the Angular Material components it depends on.
+
+It supports Material 3 (M3) and Angular Material 22: the skin takes the theme of your application, as the components of Angular Material do, and a table in the dark theme takes the dark scheme of the theme.
+
+#### React MUI
+
+React MUI skin of Table, Bro renders the components of [MUI](https://mui.com/material-ui/) in the table: its toolbar, sort labels, table pagination, linear progress, chips, switches, tooltips and menus, with the sizes of the tables of the skin Angular Material.
+
+It supports MUI 9 with React 19, and Preact through \`preact/compat\`. The table takes the colors of the MUI theme of your application from its CSS variables, so the theme turns on \`cssVariables\`, and a table with a theme of its own takes the light or the dark scheme of the theme by the attribute \`data-mui-color-scheme\`:
+
+{{mui-skin.ts}}
+
+The whole setup is on the pages [React data table](https://table-bro.com/docs/frameworks/react) and [Preact data table](https://table-bro.com/docs/frameworks/preact).`,
+    files: [
+      {file: 'mui-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
+import {setMuiTheme} from '@table-bro/react-mui';
+
+import {createTheme} from '@mui/material/styles';
+
+// The theme of the application, which its ThemeProvider renders: the table reads its CSS variables
+export const theme = createTheme({
+  cssVariables: {colorSchemeSelector: 'data-mui-color-scheme'},
+  colorSchemes: {light: true, dark: true}
+});
+
+setMuiTheme(theme);
+`}
+    ]
   },
   {
     path: 'design/bootstrap-design',
@@ -1758,7 +1863,7 @@ export class OrdersComponent {
     path: 'frameworks/preact',
     name: 'Preact data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, the prop \`onbro-action\` listens to its events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/preact) of the sample project \`samples/frameworks/preact\` of the repository, with Preact 11; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/preact) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it in JSX as it is. A ref gives the element its columns, rows and config by \`configure()\`, the prop \`onbro-action\` listens to its events, and the \`theme\` prop sets its theme. The [working page](https://table-bro.com/samples/react-mui/preact) is the sample project \`samples/react-mui/preact\` of the repository, with Preact 11 and the React MUI skin through \`preact/compat\`; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/react-mui/preact) opens it in the browser, and the setup below is its code. The Bootstrap skin of the sample project \`samples/frameworks/preact\` and Native work in Preact the same way, as a skin of your own UI components does.
 
 <!-- setup -->
 #### How do I install Table, Bro in Preact?
@@ -1769,17 +1874,37 @@ ${mcpSection('#####', 'Preact')}
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
+   The table engine \`@table-bro/core\`, the skin \`@table-bro/react-mui\`, MUI with Emotion, its styles, and Preact. MUI and the skin are components of React, which Preact runs through \`preact/compat\`. The skins \`@table-bro/bootstrap\` and \`@table-bro/native\` work in Preact without it, as [Getting started](https://table-bro.com/docs/getting-started) shows:
 
    {{install.sh}}
 
-2. **Register the element and the skin**
+2. **Run React through preact/compat**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   The aliases of Vite give MUI and the skin \`preact/compat\` in place of React. \`vite.config.ts\`, where \`samplePage\` is the config of the working page; a project of its own exports \`defineConfig()\` with the aliases alone:
+
+   {{vite.config.ts}}
+
+   \`paths\` of \`tsconfig.json\` give their types the ones of \`preact/compat\`, and \`"jsxImportSource": "preact"\` the JSX runtime of Preact:
+
+   {{tsconfig.json}}
+
+3. **Give the skin the theme of the application**
+
+   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. \`src/theme.ts\`:
+
+   {{src/theme.ts}}
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`mui\`, and \`setMuiTheme()\` gives its elements the theme. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
-3. **Describe the columns, the rows and the config**
+4. **Load the fonts of MUI**
+
+   Roboto and the ligature icons of Material, which the skin shows, come from Google Fonts. \`index.html\`:
+
+   {{index.html}}
+
+5. **Describe the columns, the rows and the config**
 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
@@ -1789,11 +1914,10 @@ ${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
-The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call. Preact adds a listener for an event prop it does not know by the exact name after \`on\`, \`bro-action\` for \`onbro-action\` ([Preact, Web Components](https://preactjs.com/guide/v10/web-components/)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call; Preact renders the elements of the skin at once. Preact adds a listener for an event prop it does not know by the exact name after \`on\`, \`bro-action\` for \`onbro-action\` ([Preact, Web Components](https://preactjs.com/guide/v10/web-components/)); the sample logs the name of each action. \`src/OrdersTable.tsx\`:
 
 {{src/OrdersTable.tsx}}
 
-\`"jsxImportSource": "preact"\` in \`tsconfig.json\` of the sample gives the JSX runtime of Preact to TypeScript and to Vite, without a plugin.
 
 #### How does TypeScript know the element?
 
@@ -1803,13 +1927,13 @@ A declaration adds \`‹table-bro›\` to the JSX of Preact, with the methods of
 
 #### How do I render it?
 
-\`src/main.tsx\` imports the skin before the tables:
+\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`:
 
 {{src/main.tsx}}
 
 #### How do I switch the theme?
 
-The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself, and the attribute \`data-mui-color-scheme\` of the MUI theme. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
 
 #### Questions
 
@@ -1823,16 +1947,83 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 ##### Does preact/compat change it?
 
-No: \`‹table-bro›\` is an element of the DOM, the same in Preact and in React through \`preact/compat\`.
+\`‹table-bro›\` is an element of the DOM, the same in Preact and in React. \`preact/compat\` runs MUI and the skin, which are components of React.
 
 #### Related
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
-      frameworkInstall,
-      frameworkSkin,
-      frameworkOrders,
+      {...muiInstall, code: muiInstall.code.replace('\n', ' preact\n')},
+      {file: 'vite.config.ts', language: 'ts', code: `import {samplePage} from './sample-page.config.ts';
+
+// MUI and the skin import React: preact/compat takes its place
+export default {
+  ...samplePage,
+  resolve: {
+    alias: {
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat',
+      'react/jsx-runtime': 'preact/jsx-runtime',
+      react: 'preact/compat'
+    }
+  }
+};
+`},
+      {file: 'tsconfig.json', language: 'json', code: `{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "esnext",
+    "lib": ["ES2023", "DOM"],
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    /* The types of MUI and of the skin take the ones of React from preact/compat */
+    "paths": {
+      "react": ["./node_modules/preact/compat"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "react-dom": ["./node_modules/preact/compat"],
+      "react-dom/client": ["./node_modules/preact/compat/client"]
+    },
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
+`},
+      muiTheme,
+      muiSkin,
+      {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + Preact MUI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`},
+      muiOrders,
       {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of Preact, with its attribute theme and its event bro-action
 import type {HTMLAttributes} from 'preact';
 
@@ -1870,11 +2061,20 @@ export function OrdersTable() {
       {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
 import './skin';
 
-import {render} from 'preact';
+import CssBaseline     from '@mui/material/CssBaseline';
+import {ThemeProvider} from '@mui/material/styles';
+import {render}        from 'preact';
 
 import {OrdersTable} from './OrdersTable';
+import {theme}       from './theme';
 
-render(<OrdersTable />, document.getElementById('app')!);
+render(
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <OrdersTable />
+  </ThemeProvider>,
+  document.getElementById('app')!
+);
 `}
     ]
   },
@@ -1882,7 +2082,7 @@ render(<OrdersTable />, document.getElementById('app')!);
     path: 'frameworks/react',
     name: 'React data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders it in JSX as it is, without a wrapper package. A ref gives the element its columns, rows and config by \`configure()\`, an effect adds the listener of its \`bro-action\` events, and the \`theme\` prop sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/react) of the sample project \`samples/frameworks/react\` of the repository, with React 19.3; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/react) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders it in JSX as it is, without a wrapper package. A ref gives the element its columns, rows and config by \`configure()\`, an effect adds the listener of its \`bro-action\` events, and the \`theme\` prop sets its theme. The [working page](https://table-bro.com/samples/react-mui/react) is the sample project \`samples/react-mui/react\` of the repository, with React 19.3 and the React MUI skin; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/react-mui/react) opens it in the browser, and the setup below is its code. The Bootstrap skin of the sample project \`samples/frameworks/react\` and Native work in React the same way, as a skin of your own UI components does.
 
 <!-- setup -->
 #### How do I install Table, Bro in React?
@@ -1893,17 +2093,27 @@ ${mcpSection('#####', 'React')}
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
+   The table engine \`@table-bro/core\`, the skin \`@table-bro/react-mui\`, and MUI with Emotion, its styles. The skins \`@table-bro/bootstrap\` and \`@table-bro/native\` work in React the same way, as [Getting started](https://table-bro.com/docs/getting-started) shows:
 
    {{install.sh}}
 
-2. **Register the element and the skin**
+2. **Give the skin the theme of the application**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. \`src/theme.ts\`:
+
+   {{src/theme.ts}}
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`mui\`, and \`setMuiTheme()\` gives its elements the theme. The CSS of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
-3. **Describe the columns, the rows and the config**
+3. **Load the fonts of MUI**
+
+   Roboto and the ligature icons of Material, which the skin shows, come from Google Fonts. \`index.html\`:
+
+   {{index.html}}
+
+4. **Describe the columns, the rows and the config**
 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
@@ -1913,7 +2123,7 @@ ${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
-The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call after the first render. The same effect adds the listener of \`bro-action\` and removes it at the end; the sample logs the name of each action. \`src/OrdersTable.tsx\`:
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is in the document: a ref gives the element, \`useEffect\` makes the call after the first render, through \`queueMicrotask()\`: the elements of the skin render by \`flushSync\` of React, which waits for the end of the effects, and the table measures them right after it renders them. The same effect adds the listener of \`bro-action\` and removes it at the end; the sample logs the name of each action. \`src/OrdersTable.tsx\`:
 
 {{src/OrdersTable.tsx}}
 
@@ -1927,13 +2137,13 @@ JSX of React knows the HTML elements only; a declaration adds \`‹table-bro›\
 
 #### How do I render it?
 
-\`src/main.tsx\` imports the skin before the tables:
+\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`:
 
 {{src/main.tsx}}
 
 #### How do I switch the theme?
 
-The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself, and the attribute \`data-mui-color-scheme\` of the MUI theme. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
 
 #### Questions
 
@@ -1954,9 +2164,27 @@ The table renders in the browser: \`configure()\` runs in an effect, so a client
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
-      frameworkInstall,
-      frameworkSkin,
-      frameworkOrders,
+      muiInstall,
+      muiTheme,
+      muiSkin,
+      {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + React MUI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+`},
+      muiOrders,
       {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of React, with its attribute theme
 import type {DetailedHTMLProps, HTMLAttributes} from 'react';
 
@@ -1983,7 +2211,9 @@ export function OrdersTable() {
     const element = table.current!;
     const onAction = (event: CustomEvent<BroActionDetail>) => console.log(event.detail.action);
 
-    element.configure({cols, rows, conf});
+    // The elements of the skin render by flushSync of React, which waits for the end of the effects: the table
+    // renders after them, and measures its elements rendered
+    queueMicrotask(() => element.configure({cols, rows, conf}));
     element.addEventListener('bro-action', onAction);
 
     return () => element.removeEventListener('bro-action', onAction);
@@ -1999,14 +2229,20 @@ export function OrdersTable() {
       {file: 'src/main.tsx', language: 'tsx', code: `// The skin is registered before the tables
 import './skin';
 
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import CssBaseline     from '@mui/material/CssBaseline';
+import {ThemeProvider} from '@mui/material/styles';
+import {StrictMode}    from 'react';
+import {createRoot}    from 'react-dom/client';
 
 import {OrdersTable} from './OrdersTable';
+import {theme}       from './theme';
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <OrdersTable />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <OrdersTable />
+    </ThemeProvider>
   </StrictMode>
 );
 `}
@@ -2575,36 +2811,36 @@ The texts of the parts that the core renders come first, flat and named as the o
 
 | Field | Default | Skins | Since |
 | --- | --- | --- | --- |
-| \`rowCounterTitle\` | No | mat, bs, nv | 1.2.0 |
-| \`rowCounterLabel\` | Row number | mat, bs, nv | 1.2.0 |
-| \`rowDetailsLoadingMessage\` | Loading details | mat, bs, nv | 1.2.0 |
-| \`filterDrawer.title\` | Filters | mat, bs, nv | 1.2.0 |
-| \`filterDrawer.close\` | Close | mat, bs, nv | 1.2.0 |
-| \`paginator.itemsPerPageLabel\` | Items per page: | bs, nv | 1.2.0 |
-| \`paginator.nextPageLabel\` | Next page | bs, nv | 1.2.0 |
-| \`paginator.previousPageLabel\` | Previous page | bs, nv | 1.2.0 |
-| \`paginator.firstPageLabel\` | First page | bs, nv | 1.2.0 |
-| \`paginator.lastPageLabel\` | Last page | bs, nv | 1.2.0 |
-| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | bs, nv | 1.2.0 |
-| \`paginator.label\` | Pagination | mat, bs, nv | 1.2.0 |
+| \`rowCounterTitle\` | No | mat, mui, bs, nv | 1.2.0 |
+| \`rowCounterLabel\` | Row number | mat, mui, bs, nv | 1.2.0 |
+| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, bs, nv | 1.2.0 |
+| \`filterDrawer.title\` | Filters | mat, mui, bs, nv | 1.2.0 |
+| \`filterDrawer.close\` | Close | mat, mui, bs, nv | 1.2.0 |
+| \`paginator.itemsPerPageLabel\` | Items per page: | mui, bs, nv | 1.2.0 |
+| \`paginator.nextPageLabel\` | Next page | mui, bs, nv | 1.2.0 |
+| \`paginator.previousPageLabel\` | Previous page | mui, bs, nv | 1.2.0 |
+| \`paginator.firstPageLabel\` | First page | mui, bs, nv | 1.2.0 |
+| \`paginator.lastPageLabel\` | Last page | mui, bs, nv | 1.2.0 |
+| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, bs, nv | 1.2.0 |
+| \`paginator.label\` | Pagination | mat, mui, bs, nv | 1.2.0 |
 | \`paginator.navigationLabel\` | Table page navigation | bs, nv | 1.2.0 |
 | \`paginator.firstText\` | First | bs, nv | 1.2.0 |
 | \`paginator.previousText\` | Previous | bs, nv | 1.2.0 |
 | \`paginator.nextText\` | Next | bs, nv | 1.2.0 |
 | \`paginator.lastText\` | Last | bs, nv | 1.2.0 |
-| \`progressBar.label\` | Loading progress | bs, nv | 1.2.0 |
-| \`state.loading\` | Loading | mat, bs, nv | 1.2.0 |
-| \`state['no-data']\` | No data | mat, bs, nv | 1.2.0 |
-| \`state['not-found']\` | No records found | mat, bs, nv | 1.2.0 |
-| \`state.fail\` | Failed | mat, bs, nv | 1.2.0 |
-| \`toolbarMain.search\` | Search | mat, bs, nv | 1.2.0 |
+| \`progressBar.label\` | Loading progress | mui, bs, nv | 1.2.0 |
+| \`state.loading\` | Loading | mat, mui, bs, nv | 1.2.0 |
+| \`state['no-data']\` | No data | mat, mui, bs, nv | 1.2.0 |
+| \`state['not-found']\` | No records found | mat, mui, bs, nv | 1.2.0 |
+| \`state.fail\` | Failed | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarMain.search\` | Search | mat, mui, bs, nv | 1.2.0 |
 | \`toolbarMain.searchRole(title)\` | for Orders, by the title of the toolbar; for rows without a title | bs, nv | 1.2.0 |
 | \`toolbarMain.buttonRole\` | button | bs, nv | 1.2.0 |
 | \`toolbarMain.menuRole\` | menu | bs | 1.2.0 |
 | \`toolbarMain.menuItemRole\` | menu item | bs | 1.2.0 |
-| \`toolbarSearch.field\` | Search in table | mat, bs, nv | 1.2.0 |
-| \`toolbarSearch.back\` | Back | mat, bs, nv | 1.2.0 |
-| \`toolbarSearch.clear\` | Clear | mat, bs, nv | 1.2.0 |
+| \`toolbarSearch.field\` | Search in table | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarSearch.back\` | Back | mat, mui, bs, nv | 1.2.0 |
+| \`toolbarSearch.clear\` | Clear | mat, mui, bs, nv | 1.2.0 |
 
 The flat fields of 1.1.0, as \`texts.itemsPerPage\` for \`texts.paginator.itemsPerPageLabel\` and \`texts.rowCounter\` for \`texts.rowCounterTitle\`, still work and are deprecated: the editor marks them, and 2.0 removes them. A field in a group and a text of the core win over their flat field.
 

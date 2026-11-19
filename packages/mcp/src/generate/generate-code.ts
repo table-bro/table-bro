@@ -44,6 +44,11 @@ export function generateCode(spec: BroTableSpec, options: BroGenerateOptions): B
     report.errors.push({path: '', message: 'the mat skin is for Angular', fix: 'use the target angular, or the skin bs or nv'});
   }
 
+  if (target === 'angular' && skin === 'mui') {
+    report.valid = false;
+    report.errors.push({path: '', message: 'the mui skin is for React and Preact', fix: 'use the target vanilla in a project of React or Preact, or the skin mat, bs or nv'});
+  }
+
   // Fillings of another form would fail the generator: they are errors of the fillings, with their paths
   const fillingIssues = fillingsErrors(options.fillings);
 

@@ -345,6 +345,14 @@ describe('validateSpec', () => {
     expect(issueAt(validateSpec(spec).errors, 'skinConfig.mat.components.paginator.css')?.message).toBe('the elements of the mat skin are Angular components and read no classes of the config');
   });
 
+  it('rejects the classes of the elements of the mui skin', () => {
+    const spec = orders();
+
+    spec.skinConfig = {mui: {components: {paginator: {css: {ul: {className: 'pages'}}}}}};
+
+    expect(issueAt(validateSpec(spec).errors, 'skinConfig.mui.components.paginator.css')?.message).toBe('the elements of the mui skin are React components and read no classes of the config');
+  });
+
   it('checks the rows by the fields', () => {
     const spec = orders();
 
