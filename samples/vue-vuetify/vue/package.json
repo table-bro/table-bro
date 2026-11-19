@@ -1,0 +1,23 @@
+{
+  "name": "table-bro-sample-vue-vuetify-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@table-bro/core": "^1.2.1",
+    "@table-bro/vue-vuetify": "^1.2.1",
+    "vue": "^3.5.45",
+    "vuetify": "^4.3.4"
+  },
+  "devDependencies": {
+    "@jridgewell/remapping": "^2.3.5",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}
