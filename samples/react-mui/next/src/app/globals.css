@@ -1,0 +1,3 @@
+/* The CSS of the core and of the skin */
+@import '@table-bro/core/dist/table-bro.min.css';
+@import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';

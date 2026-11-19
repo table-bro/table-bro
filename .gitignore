@@ -16,6 +16,9 @@ packages/mcp/.check/
 
 # Dependencies and caches
 node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
 .angular/
 .vite/
 test-results/

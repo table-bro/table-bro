@@ -5,7 +5,8 @@ of the frameworks of Docs, Frameworks:
 
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
-  `preact/compat`, in `react-mui/preact`, built by Vite;
+  `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
+  of MUI at the build of its static export, with the server entry of the skin;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
