@@ -1,0 +1,86 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+// The paginator of the vanilla skins in the look of the table pagination of MUI, which SUID does not port: the body text
+// of the theme, the select of SUID for the page sizes, and the links of the pages as its icon buttons
+@mixin styles {
+  @include skin_paginator($suid-paginator-selector);
+
+  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
+  // table: Island Details rounds the corners of this element
+  #{$bro-paginator-container} #{$suid-paginator-selector} {
+    display: block;
+
+    height: $bro-paginator-height;
+
+    font: var(--suid-font-body2);
+
+    background-color: $suid-bg;
+    color: $suid-text-color;
+  }
+
+  // The select takes the text of the labels, as in the table pagination of MUI
+  #{$suid-paginator-selector} .MuiInputBase-root {
+    font: inherit;
+  }
+
+  .bro-suid-pagination {
+    display: flex;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+  }
+
+  // A link of a page is an icon button of SUID: its text gives way to the icon of the table pagination of MUI, and its
+  // aria-label names it
+  .bro-suid-page-link {
+    display: flex;
+
+    width: 40px;
+    height: 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 0;
+    text-decoration: none;
+
+    color: var(--suid-palette-action-active);
+
+    &::before {
+      font-size: 24px;
+    }
+
+    &:hover {
+      background-color: $suid-action-hover-color;
+    }
+  }
+
+  .bro-paginator-navigation-first::before {
+    content: "first_page";
+  }
+
+  .bro-paginator-navigation-previous::before {
+    content: "chevron_left";
+  }
+
+  .bro-paginator-navigation-next::before {
+    content: "chevron_right";
+  }
+
+  .bro-paginator-navigation-last::before {
+    content: "last_page";
+  }
+
+  // The paginator gives the class disabled to the item of a page that does not exist
+  .bro-suid-page-item.disabled .bro-suid-page-link {
+    color: $suid-action-disabled-color;
+
+    pointer-events: none;
+  }
+}

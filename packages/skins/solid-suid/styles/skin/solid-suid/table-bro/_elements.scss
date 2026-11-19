@@ -1,0 +1,14 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The Solid root of an element lays out nothing of its own: the components of SUID in it are the content of the
+  // element
+  .bro-suid-root {
+    display: contents;
+  }
+
+  // The shadow of the table and of its regions: the elevation 16 of the theme
+  .bro-suid-elevation-16 {
+    box-shadow: var(--suid-shadows-16);
+  }
+}

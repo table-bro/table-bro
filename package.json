@@ -9,12 +9,13 @@
     "packages/skins/native",
     "packages/skins/angular-material",
     "packages/skins/react-mui",
+    "packages/skins/solid-suid",
     "packages/angular",
     "packages/mcp"
   ],
   "scripts": {
     "prepare": "git config core.hooksPath scripts/git-hooks",
-    "build": "npm run build -w @table-bro/core && npm run build -w @table-bro/react-mui -w @table-bro/bootstrap -w @table-bro/native && npm run build:angular && npm run build -w @table-bro/mcp",
+    "build": "npm run build -w @table-bro/core && npm run build -w @table-bro/react-mui -w @table-bro/solid-suid -w @table-bro/bootstrap -w @table-bro/native && npm run build:angular && npm run build -w @table-bro/mcp",
     "build:angular": "ng-packagr -p packages/angular/ng-package.json -c packages/angular/tsconfig.lib.prod.json && npm run build:material",
     "build:material": "node scripts/build-css.mjs packages/skins/angular-material table-bro.material && ng-packagr -p packages/skins/angular-material/ng-package.json -c packages/skins/angular-material/tsconfig.lib.prod.json",
     "check:arch": "node scripts/check-arch.mjs",
@@ -29,7 +30,7 @@
     "format": "eslint --fix packages stand e2e scripts samples eslint-rules \"*.{js,mjs,ts}\"",
     "lint:styles": "stylelint \"{packages,stand}/**/*.scss\"",
     "lint:styles:fix": "stylelint \"{packages,stand}/**/*.scss\" --fix",
-    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/skins/react-mui --noEmit && tsc -p packages/skins/bootstrap --noEmit && tsc -p packages/skins/native --noEmit && tsc -p packages/angular/tsconfig.lib.json --noEmit && tsc -p packages/skins/angular-material/tsconfig.lib.json --noEmit && tsc -p packages/mcp --noEmit && tsc -p tsconfig.json --noEmit && tsc -p stand --noEmit && tsc -p e2e --noEmit",
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p packages/skins/react-mui --noEmit && tsc -p packages/skins/solid-suid --noEmit && tsc -p packages/skins/bootstrap --noEmit && tsc -p packages/skins/native --noEmit && tsc -p packages/angular/tsconfig.lib.json --noEmit && tsc -p packages/skins/angular-material/tsconfig.lib.json --noEmit && tsc -p packages/mcp --noEmit && tsc -p tsconfig.json --noEmit && tsc -p stand --noEmit && tsc -p e2e --noEmit",
     "test": "npm run check:arch && npm run check:api && vitest run",
     "test:coverage": "vitest run --coverage.enabled --coverage.provider=v8 --coverage.include=packages/core/**/*.ts --coverage.include=packages/skins/*/js/**/*.ts --coverage.include=packages/angular/src/**/*.ts --coverage.include=packages/skins/angular-material/src/**/*.ts --coverage.exclude=**/*.spec.ts --coverage.exclude=**/dist/** --coverage.exclude=**/node_modules/** --coverage.reporter=text-summary --coverage.reporter=html --coverage.reportsDirectory=coverage",
     "test:mcp": "npm test -w @table-bro/mcp",
@@ -78,6 +79,7 @@
     "typedoc-plugin-markdown": "4.13.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.1",
+    "vite-plugin-solid": "^2.11.17",
     "vitest": "^5.0.3",
     "zod": "^3.25.76",
     "zone.js": "^0.15.1"

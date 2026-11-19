@@ -5,7 +5,7 @@
 // copies are not sources: the build writes them, and git ignores them. A skin gets THIRD_PARTY_NOTICES.md of the root
 // as well: its CSS and its bundle carry code of Angular Material and Bootstrap, and minified CSS keeps no comments.
 // Usage: node build-css.mjs <package folder> <entry>, with --dev for readable CSS with the development names of the
-// selector maps
+// selector maps, and --vanilla for a skin that takes elements of the vanilla skins, as solid-suid
 import fs   from 'node:fs';
 import path from 'node:path';
 import url  from 'node:url';
@@ -44,7 +44,8 @@ if (styles !== core) {
   fs.copyFileSync(path.join(core, '_table-bro.api.scss'), path.join(styles, '_table-bro.api.scss'));
   fs.copyFileSync(path.join(root, 'THIRD_PARTY_NOTICES.md'), path.join(pkg, 'THIRD_PARTY_NOTICES.md'));
 
-  if (fs.existsSync(path.join(styles, 'skin/vanilla-js'))) {
+  // A skin of a framework with elements of the vanilla skins, as solid-suid, asks for their styles by --vanilla
+  if (fs.existsSync(path.join(styles, 'skin/vanilla-js')) || process.argv.includes('--vanilla')) {
     copy(path.join(shared, 'vanilla-js/shared'), path.join(styles, 'skin/vanilla-js/shared'));
   }
 }

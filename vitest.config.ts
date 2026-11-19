@@ -2,12 +2,14 @@ import {fileURLToPath} from 'node:url';
 
 import {playwright}                from '@vitest/browser-playwright';
 import ts                          from 'typescript';
+import solid                       from 'vite-plugin-solid';
 import {defineConfig, type Plugin} from 'vitest/config';
 
 // The unit specs of the library. They run in Chromium, not in a DOM emulation: the code under test reads
 // computed styles and registered custom properties, which only a browser engine gives.
 export default defineConfig({
-  plugins: [angularJit()],
+  // SUID publishes its components as JSX, which the plugin of Solid compiles for the specs of the skin suid
+  plugins: [angularJit(), solid({include: /\/node_modules\/@suid\/.*\.jsx$/})],
   // The skins and the Angular packages import the core and the wrapper by their names: the specs take their sources
   resolve: {
     alias: {
@@ -27,6 +29,8 @@ export default defineConfig({
   test: {
     include: ['packages/core/**/*.spec.ts', 'packages/skins/*/js/**/*.spec.ts', 'packages/angular/src/**/*.spec.ts', 'packages/skins/angular-material/src/**/*.spec.ts'],
     exclude: ['**/node_modules/**', '**/dist/**'],
+    // The browser mode runs the specs: the plugin of Solid sets jsdom for a config without an environment of its own
+    environment: 'node',
     browser: {
       enabled: true,
       provider: playwright(),

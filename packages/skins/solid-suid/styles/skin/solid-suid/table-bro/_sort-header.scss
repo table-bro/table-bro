@@ -1,0 +1,9 @@
+@use "../variables" as *;
+
+// The sort header of the vanilla skins in the look of the sort label of MUI, which SUID does not port: the arrow has
+// the secondary text of the theme
+@mixin styles {
+  #{$suid-sort-header-selector} .bro-sort-header-arrow {
+    color: $suid-text-secondary-color;
+  }
+}

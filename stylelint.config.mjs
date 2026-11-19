@@ -291,5 +291,11 @@ export default {
       'custom-property-pattern': '^(mui-[A-Za-z0-9-]+|[a-z][a-z0-9]*(-[a-z0-9]+)*)$',
       'selector-class-pattern': `^Mui[A-Za-z]+-[a-zA-Z]+$|${BEM_KEBAB_CASE}`
     }
+  }, {
+    // The skin suid writes the classes of SUID by their names, the ones of MUI, as .MuiChip-root
+    files: ['packages/skins/solid-suid/styles/**/*.scss'],
+    rules: {
+      'selector-class-pattern': `^Mui[A-Za-z]+-[a-zA-Z]+$|${BEM_KEBAB_CASE}`
+    }
   }]
 };
