@@ -3,6 +3,7 @@ import {describe, expect, it} from 'vitest';
 import bootstrapPackage from '../skins/bootstrap/package.json';
 import nativePackage    from '../skins/native/package.json';
 import muiPackage       from '../skins/react-mui/package.json';
+import vuetifyPackage   from '../skins/vue-vuetify/package.json';
 import corePackage      from './package.json';
 
 /** The build configs of the core and the vanilla skins, as text. */
@@ -25,7 +26,7 @@ function inFolder(files: Record<string, string>, folder: string): Record<string,
 /** The sources of the core, the skins and the Angular wrapper, as text, without their specs and builds. */
 const librarySources = import.meta.glob<string>(['./**/*.ts', '../skins/**/*.ts', '../angular/src/**/*.ts', '!**/*.spec.ts', '!**/*.d.ts', '!**/dist/**', '!**/node_modules/**'], {query: '?raw', import: 'default', eager: true});
 
-const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage];
+const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage, vuetifyPackage];
 
 describe('the packages of the core and the skins', () => {
   it('give import and require one ES module, so a project gets one copy of the core', () => {
@@ -68,6 +69,9 @@ describe('the packages of the core and the skins', () => {
       './js/index.ts', './js/table-bro.react-mui.ts', './js/table-bro.react-mui.server.ts',
       './dist/table-bro.react-mui.esm.js', './dist/table-bro.react-mui.server.esm.js', './dist/table-bro.react-mui.shared.esm.js', './dist/*.css'
     ]);
+
+    // The skin vuetify is built for bundlers only, without a UMD bundle
+    expect(vuetifyPackage.sideEffects).toEqual(['./js/index.ts', './js/table-bro.vue-vuetify.ts', './dist/table-bro.vue-vuetify.esm.js', './dist/*.css']);
   });
 
   it('define no tag with the prefix bro-cell-: the library leaves it to the elements of the application', () => {
@@ -85,8 +89,9 @@ describe('the packages of the core and the skins', () => {
   });
 
   it('give each UMD bundle its own global name', () => {
-    // The skin mui is built for bundlers only: it has no UMD bundle and no global name
-    const umdConfigs = Object.entries(buildConfigs).filter(([file]) => file !== '../skins/react-mui/tsdown.config.ts');
+    // The skins mui and vuetify are built for bundlers only: they have no UMD bundle and no global name
+    const bundlerOnly = ['../skins/react-mui/tsdown.config.ts', '../skins/vue-vuetify/tsdown.config.ts'];
+    const umdConfigs = Object.entries(buildConfigs).filter(([file]) => !bundlerOnly.includes(file));
     const names = umdConfigs.map(([, config]) => config.match(/globalName:\s*'([^']+)'/)?.[1]);
 
     expect(names.sort()).toEqual(['TableBro', 'TableBroBootstrap', 'TableBroNative']);

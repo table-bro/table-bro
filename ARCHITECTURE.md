@@ -17,6 +17,7 @@ server is a package of its own:
 | The core | `@table-bro/core`, `packages/core` | The element `<table-bro>`, the state of each table, its geometry, its DOM, its motion, its prerender and its public types. No runtime dependencies |
 | The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
 | The MUI skin | `@table-bro/react-mui`, `packages/skins/react-mui` | The same for MUI in React and Preact: Custom Elements that render the components of MUI in React roots of their own, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the MUI theme |
+| The Vuetify skin | `@table-bro/vue-vuetify`, `packages/skins/vue-vuetify` | The same for Vuetify in Vue: Custom Elements that render the components of Vuetify in Vue roots of their own, in the context of an app of the skin that installs the Vuetify of the application, and CSS that reads the CSS variables of its themes |
 | The vanilla skins | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
 | The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, its prerender during Angular server-side rendering, and the contracts of a page and of its service |
 | The MCP server | `@table-bro/mcp`, `packages/mcp` | The reference, the spec check and the code generator of a table for AI coding agents. It reads, never writes |
@@ -141,11 +142,12 @@ defines the update and its frame.
 
 Rule 4 and the rules below hold by review; `check:arch` does not check them:
 
-- **4.** Mutable state at the level of a module that changes what a table does exists in five places only: the registry
-  of the skins, the MUI theme that `setMuiTheme()` gives the skin `mui`, the classes of Bootstrap that `useBootstrap()`
-  gives the skin `bs`, the extension module that `useIslandDetails()` connects, and the texts of the optional elements
-  of a skin, which `withTags()` and `setTagsTexts()` of `mui`, `bs` and `nv` set, with the set of their elements in the
-  DOM that takes a new text. Apart from them modules keep caches only: weak maps by element, class or table, one shared
+- **4.** Mutable state at the level of a module that changes what a table does exists in six places only: the registry
+  of the skins, the MUI theme that `setMuiTheme()` gives the skin `mui`, the Vuetify that `setVuetify()` gives the skin
+  `vuetify` with the stylesheet of its themes, the classes of Bootstrap that `useBootstrap()` gives the skin `bs`, the
+  extension module that `useIslandDetails()` connects, and the texts of the optional elements of a skin, which
+  `withTags()` and `setTagsTexts()` of `mui`, `vuetify`, `bs` and `nv` set, with the set of their elements in the DOM
+  that takes a new text. Apart from them modules keep caches only: weak maps by element, class or table, one shared
   `ResizeObserver` of the items of cells, and a canvas and a range for measurements.
 - Only the controller writes `ctx.state`.
 - A new class takes `ctx` as its first parameter and takes no objects of the table as separate parameters.

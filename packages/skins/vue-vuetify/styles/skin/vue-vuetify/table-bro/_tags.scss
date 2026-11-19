@@ -1,0 +1,21 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The ellipsis after the chips that show takes the color of their text, in the light and the dark theme
+  bro-vuetify-tags .bro-vuetify-tags-chips > .bro-cell-items-ellipsis {
+    margin-left: 4px;
+
+    color: $vuetify-text-secondary-color;
+  }
+
+  bro-vuetify-tags .v-chip + .v-chip {
+    margin-left: 8px;
+  }
+
+  // The text of a chip in one line, which ends with an ellipsis in a narrow cell (bro-cell-items)
+  bro-vuetify-tags .bro-vuetify-tags-label {
+    display: block;
+
+    white-space: nowrap;
+  }
+}
