@@ -147,9 +147,27 @@ the README of `@table-bro/core`.
 
 ## Server render
 
-The elements of the skin render with React in the browser. Imported without a DOM, as in a server render, the package
-only registers the config of the skin, and a prerender of a table (`prerenderTableBro()`) leaves the elements of the skin
-empty until the table renders in the browser.
+The elements of the skin render with React in the browser. A prerender of a table on the server, `prerenderTableBro()`
+of `@table-bro/core` in a server DOM such as linkedom, renders them too with the server entry of the package,
+`@table-bro/react-mui/server`: the toolbar, the sort labels, the progress bar and the paginator of MUI in the loading
+state of the table, with the styles of Emotion in their markup. The server DOM gives its `HTMLElement` to the global
+scope before the import of the entry, since the elements extend it:
+
+```ts
+import {parseHTML} from 'linkedom';
+
+const {document, window} = parseHTML('<!doctype html><html><body></body></html>');
+
+globalThis.HTMLElement ??= window.HTMLElement;
+
+const {prerenderTableBro} = await import('@table-bro/core');
+const {setMuiTheme}       = await import('@table-bro/react-mui/server');
+```
+
+The bundle of the browser does not carry the server entry, which renders by `react-dom/server`. Without it the
+package registers only the config of the skin on the server, and a prerender leaves the elements of the skin empty.
+The browser keeps the prerendered elements until `configure()` renders the table in their place. The setup with
+Next.js is on the page [Prerendering](https://table-bro.com/docs/ssr/prerendering).
 
 ## Build
 
