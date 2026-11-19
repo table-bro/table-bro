@@ -4,6 +4,8 @@ Pages with a table of Table, Bro, one per skin, each set up as its page of Docs,
 of the frameworks of Docs, Frameworks:
 
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
+- `angular-ssr`: the same page with the server render of Angular, which prerenders the table at the build in its
+  loading state, and the hydration of the page in the browser;
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;

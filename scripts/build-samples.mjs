@@ -3,7 +3,8 @@
 // registry (Verdaccio) and builds into dist/samples/<name> under the base path of the pages. A page without a build,
 // a folder with index.html and no package.json, as no-build, takes the packages from a CDN and is copied as it is, with
 // the base path of the page in its index.html. A project of Next.js, as react-mui/next, takes the base path from the
-// variable BASE_PATH of its config and exports its pages into dist. The other packages come
+// variable BASE_PATH of its config and exports its pages into dist; a project of the server render of Angular, as
+// angular-ssr, prerenders its pages at the build, and only the files of the browser go to the site. The other packages come
 // from npmjs through the registry. Run after `npm run build`, with the names of the samples as arguments or without them
 // for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets the port of the registry (4873 by default)
 // and SAMPLES_BASE the base path of the pages (/samples/ by default).
@@ -161,7 +162,9 @@ function buildSample(name, registry, base) {
   }
 
   fs.rmSync(dest, {recursive: true, force: true});
-  fs.cpSync(path.join(dir, 'dist'), dest, {recursive: true});
+  // The server render of Angular, as of angular-ssr, prerenders the pages at the build: the site takes the pages and
+  // the files of the browser, not the bundle of the server
+  fs.cpSync(path.join(dir, 'dist'), dest, {recursive: true, filter: file => file !== path.join(dir, 'dist', 'server')});
   fs.rmSync(dir, {recursive: true, force: true});
 }
 
