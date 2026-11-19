@@ -21,14 +21,22 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The files of the pages of Frameworks from their sample projects: the TypeScript of the repository has no frameworks to compile them with. */
-const frameworkFiles = docFiles.filter(docFile => docFile.page.startsWith('frameworks/') && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
+/** The files of the section Next.js of Prerendering: the ones of the sample project samples/react-mui/next. */
+const nextFiles = ['next.config.ts', 'src/prerender-table.ts', 'src/app/page.tsx', 'src/OrdersTable.tsx', 'src/app/layout.tsx', 'src/app/Providers.tsx', 'src/app/globals.css'];
+
+/**
+ * The files of the pages of Frameworks and of the section Next.js of Prerendering, from their sample projects: the
+ * TypeScript of the repository has no frameworks to compile them with.
+ */
+const frameworkFiles = docFiles.filter(docFile => (docFile.page.startsWith('frameworks/') || (docFile.page === 'ssr/prerendering' && nextFiles.includes(docFile.file)))
+  && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
 
 /** The pages of Frameworks whose framework has a skin of its own: they show the sample of that skin. */
 const skinSamples: Record<string, string> = {
   'frameworks/angular': 'samples/angular-material',
   'frameworks/react': 'samples/react-mui/react',
-  'frameworks/preact': 'samples/react-mui/preact'
+  'frameworks/preact': 'samples/react-mui/preact',
+  'ssr/prerendering': 'samples/react-mui/next'
 };
 
 /**
