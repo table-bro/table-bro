@@ -13,7 +13,7 @@ const root = fileURLToPath(new URL('../../../', import.meta.url));
 const work = path.join(root, 'packages/mcp/.check');
 const code = path.join(work, 'code');
 
-const pairs = [['angular', 'mat'], ['angular', 'bs'], ['angular', 'nv'], ['vanilla', 'mui'], ['vanilla', 'bs'], ['vanilla', 'nv']];
+const pairs = [['angular', 'mat'], ['angular', 'bs'], ['angular', 'nv'], ['vanilla', 'mui'], ['vanilla', 'm3-svelte'], ['vanilla', 'bs'], ['vanilla', 'nv']];
 
 fs.rmSync(work, {recursive: true, force: true});
 
@@ -125,6 +125,7 @@ for (const target of ['angular', 'vanilla']) {
         '@table-bro/bootstrap': [path.join(root, 'packages/skins/bootstrap/js/table-bro.bootstrap.ts')],
         '@table-bro/native': [path.join(root, 'packages/skins/native/js/table-bro.native.ts')],
         '@table-bro/react-mui': [path.join(root, 'packages/skins/react-mui/js/table-bro.react-mui.ts')],
+        '@table-bro/svelte-m3': [path.join(root, 'packages/skins/svelte-m3/js/table-bro.svelte-m3.ts')],
         '@table-bro/angular': [path.join(root, 'packages/angular/src/public-api.ts')],
         '@table-bro/angular-material': [path.join(root, 'packages/skins/angular-material/src/public-api.ts')]
       },

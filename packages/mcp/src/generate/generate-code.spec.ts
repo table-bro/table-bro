@@ -88,6 +88,12 @@ describe('generateCode', () => {
     ]);
   });
 
+  it('keeps the m3-svelte skin for Svelte', () => {
+    expect(generateCode(orders.spec, {target: 'angular', skin: 'm3-svelte'}).report.errors).toEqual([
+      {path: '', message: 'the m3-svelte skin is for Svelte', fix: 'use the target vanilla in a project of Svelte, or the skin mat, bs or nv'}
+    ]);
+  });
+
   it('writes the files of an Angular table by the recipe', () => {
     const {files, todo} = generateCode(orders.spec, {target: 'angular', skin: 'mat', fillings: orders.fillings});
 
@@ -346,6 +352,11 @@ describe('generateCode', () => {
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain("import {setMuiTheme, withSwitch, withTags} from '@table-bro/react-mui';");
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('setMuiTheme(theme);\nwithTags();\nwithSwitch();');
     expect(setup(orders.spec, 'vanilla', 'mui')).toContain('queueMicrotask(() => renderOrderTable(container));');
+
+    // The skin m3-svelte takes the M3 Svelte theme of the application from its CSS, and Svelte renders the table in onMount
+    expect(setup(orders.spec, 'vanilla', 'm3-svelte')).toContain("import {withSwitch, withTags} from '@table-bro/svelte-m3';\n\nwithTags();\nwithSwitch();");
+    expect(setup(orders.spec, 'vanilla', 'm3-svelte')).toContain("functionsMixins({deps: ['m3-svelte']})");
+    expect(setup(orders.spec, 'vanilla', 'm3-svelte')).toContain('onMount(() => renderOrderTable(container));');
   });
 
   it('writes a function of the skin config with its body', () => {

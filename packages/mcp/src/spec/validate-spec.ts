@@ -727,8 +727,9 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
   checkKeys(value, ['buttons', 'menu'], 'toolbar', issues);
 
   const actions = new Set<string>();
-  // The skins of Material icons, mat and mui, are checked when the project has one of them, and on the site, which has all skins
-  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui';
+  // The skins of Material icons, mat, mui and m3-svelte, are checked when the project has one of them, and on the site, which has
+  // all skins
+  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui' || options.skin === 'm3-svelte';
 
   const checkButton = (button: unknown, path: string, icon: boolean) => {
     if (!isObject(button)) {
@@ -760,7 +761,7 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
     if (button['icon'] !== undefined && (typeof button['icon'] !== 'string' || !iconName.test(button['icon']))) {
       issues.error(`${path}.icon`, 'expected the name of a Material icon', 'as download');
     } else if (icon && button['icon'] === undefined) {
-      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat and mui is an icon with a tooltip', 'give the name of a Material icon, as download');
+      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat, mui and m3-svelte is an icon with a tooltip', 'give the name of a Material icon, as download');
     }
   };
 
@@ -830,17 +831,17 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
   }
 
   if (!isObject(value)) {
-    issues.error('skinConfig', 'expected an object with the skins mat, mui, bs or nv');
+    issues.error('skinConfig', 'expected an object with the skins mat, mui, m3-svelte, bs or nv');
 
     return;
   }
 
-  checkKeys(value, ['mat', 'mui', 'bs', 'nv'], 'skinConfig', issues);
+  checkKeys(value, ['mat', 'mui', 'm3-svelte', 'bs', 'nv'], 'skinConfig', issues);
 
   for (const [skin, config] of Object.entries(value)) {
     const path = `skinConfig.${skin}`;
 
-    if (!['mat', 'mui', 'bs', 'nv'].includes(skin)) {
+    if (!['mat', 'mui', 'm3-svelte', 'bs', 'nv'].includes(skin)) {
       continue;
     }
 
@@ -862,12 +863,12 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
       }
     }
 
-    // The elements of the skins mat and mui are components of a framework with their own templates: they read no classes
-    // of the config
-    if ((skin === 'mat' || skin === 'mui') && isObject(config['components'])) {
+    // The elements of the skins mat, mui and m3-svelte are components of a framework with their own templates: they read no
+    // classes of the config
+    if ((skin === 'mat' || skin === 'mui' || skin === 'm3-svelte') && isObject(config['components'])) {
       for (const [name, component] of Object.entries(config['components'])) {
         if (isObject(component) && component['css'] !== undefined) {
-          issues.error(`${path}.components.${name}.css`, `the elements of the ${skin} skin are ${(skin === 'mat') ? 'Angular' : 'React'} components and read no classes of the config`, 'remove css: the classes of the config are for the skins bs and nv');
+          issues.error(`${path}.components.${name}.css`, `the elements of the ${skin} skin are ${{mat: 'Angular', mui: 'React', 'm3-svelte': 'Svelte'}[skin]} components and read no classes of the config`, 'remove css: the classes of the config are for the skins bs and nv');
         }
       }
     }

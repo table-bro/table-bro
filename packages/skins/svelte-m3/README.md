@@ -7,6 +7,21 @@ sizes of the tables of the skin Angular Material. The skin is `m3-svelte`.
 The package holds the config of the skin, its elements (Custom Elements that mount the components of M3 Svelte) and its
 CSS. The table itself is `<table-bro>` of `@table-bro/core`, in the markup of a component of the application.
 
+## With an AI coding agent
+
+Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the
+packages, generates the table, its setup and its cells from one request, and checks the result. The table is a module
+that renders `<table-bro>` into a container, which a component of Svelte gives it in `onMount()`.
+
+```sh
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.1
+```
+
+The setup for Cursor, Codex and VS Code is in the README of
+[`@table-bro/mcp`](https://github.com/table-bro/table-bro/tree/main/packages/mcp) and on [MCP
+server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
+[Docs](https://table-bro.com/docs).
+
 ## Install
 
 In a project of Svelte 5 with M3 Svelte 7 and Vite:
