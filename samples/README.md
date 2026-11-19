@@ -9,6 +9,8 @@ of the frameworks of Docs, Frameworks:
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;
+- `svelte-m3`: Svelte and M3 Svelte with `@table-bro/svelte-m3`, in `svelte-m3/svelte`, built by Vite with the plugins
+  of Svelte and of the CSS of M3 Svelte, in the default theme of M3 Svelte;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
