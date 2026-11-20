@@ -8,8 +8,9 @@ $vuetify-table-header-height: 56px;
 $vuetify-table-row-height: 52px;
 $vuetify-row-horizontal-padding: 16px; // the padding of the cells of the table of Vuetify
 
-$vuetify-elevation-5-shadow-size: 26px; // the offset, the blur and the spread of the elevation 5 of Vuetify
-$vuetify-table-shadow-size: $vuetify-elevation-5-shadow-size;
+// The room of the shadow of the table, the offset, the blur and the spread of the elevation z16 of Angular Material,
+// which the skin draws as the skin mat
+$vuetify-table-shadow-size: 42px;
 
 $vuetify-toolbar-height: 64px;
 $vuetify-paginator-height: 56px;

@@ -12,12 +12,15 @@
     border-spacing: 0;
   }
 
-  // The shadows of the parts of the table, of the class elevation-5 of the config: the elevation 5 of Vuetify with its
-  // offsets, blurs and opacities, without the spread of its ambient shadow. The table puts a shadow under each part and
-  // each row, and the spread of 6px of two neighbors overlapped at their common edge, which darkened the side shadow of
-  // the table into a spot at every row
+  // The shadows of the parts of the table, of the class elevation-5 of the config: the elevation z16 of Angular Material
+  // in the shadow color of the theme of Vuetify, as the shadow of the skin mat. The table puts a shadow under each part
+  // and each row: the negative spread of the key shadow and the wide blurs keep the side shadow even along the rows,
+  // where the spread of 6px of the elevation 5 of Vuetify darkened it into a spot at every row
   .elevation-5 {
-    box-shadow: 0 4px 4px 0 rgba(var(--v-shadow-color), .3), 0 8px 12px 0 rgba(var(--v-shadow-color), .15);
+    box-shadow:
+      0 8px 10px -5px rgba(var(--v-shadow-color), .2),
+      0 16px 24px 2px rgba(var(--v-shadow-color), .14),
+      0 6px 30px 5px rgba(var(--v-shadow-color), .12);
   }
 
   tr.bro-vuetify-header-row {
