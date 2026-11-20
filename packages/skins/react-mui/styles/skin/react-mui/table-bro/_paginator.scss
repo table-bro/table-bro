@@ -31,6 +31,12 @@
       letter-spacing: .0333em;
     }
 
+    // The buttons have the color of the icons of the theme, as the buttons of the paginator of mat: on-surface-variant.
+    // The pagination of MUI gives them the color of its text
+    .MuiTablePagination-actions .MuiIconButton-root:not(:disabled) {
+      color: var(--mui-palette-action-active);
+    }
+
     // The labels of the pagination of MUI are paragraphs, which it centers by the default margins of the browser: the
     // CSS of a page, as the reboot of Bootstrap, changes them. The toolbar centers the labels with the select and the
     // buttons
