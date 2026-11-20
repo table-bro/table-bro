@@ -21,7 +21,7 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The files of the sections of Prerendering from their sample projects: Angular SSR and Next.js. */
+/** The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js and Nuxt. */
 const prerenderSamples: Record<string, string> = {
   'src/main.server.ts': 'samples/angular-ssr',
   'src/app/app.config.ts': 'samples/angular-ssr',
@@ -32,7 +32,13 @@ const prerenderSamples: Record<string, string> = {
   'src/OrdersTable.tsx': 'samples/react-mui/next',
   'src/app/layout.tsx': 'samples/react-mui/next',
   'src/app/Providers.tsx': 'samples/react-mui/next',
-  'src/app/globals.css': 'samples/react-mui/next'
+  'src/app/globals.css': 'samples/react-mui/next',
+  'nuxt.config.ts': 'samples/vue-vuetify/nuxt',
+  'app/plugins/vuetify.ts': 'samples/vue-vuetify/nuxt',
+  'app/plugins/table-bro.client.ts': 'samples/vue-vuetify/nuxt',
+  'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
+  'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
+  'app/app.vue': 'samples/vue-vuetify/nuxt'
 };
 
 /**
