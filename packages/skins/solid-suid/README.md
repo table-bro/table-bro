@@ -132,10 +132,11 @@ of the palette of the application, as `primary`, its typography and its shapes, 
 
 SUID has no table pagination, no sort label and no tooltip. The skin takes the paginator and the sort header of the
 vanilla skins, styled as the table pagination and the sort label of MUI in the theme of SUID, with the select of SUID
-for the page sizes. Its tooltips render on the Popper of SUID in the look of the tooltip of MUI, with the behavior and
-the positions of the tooltips of the skin mat: right of the sort headers, above the values of the cells, the buttons of
-the toolbar and the buttons of the paginator. They show on the hover, the focus of the keyboard and a long press of a
-touch, and hide when the pointer leaves, the focus goes, or Escape is pressed.
+for the page sizes and the arrow in the text color of the header, as in mat. Its tooltips render on the Popper of SUID
+in the look of the tooltip of MUI with the inverse colors of the tooltips of mat, the text color of the theme as the
+background, and with the behavior and the positions of the tooltips of the skin mat: right of the sort headers, above
+the values of the cells, the buttons of the toolbar and the buttons of the paginator. They show on the hover, the focus
+of the keyboard and a long press of a touch, and hide when the pointer leaves, the focus goes, or Escape is pressed.
 
 ## Tooltip
 
