@@ -11,4 +11,14 @@
   bro-m3-svelte-tags .bro-m3-svelte-tags-chips > .m3-container + .m3-container {
     margin-left: 8px;
   }
+
+  // A chip of a cell is no control: no state layer and no pointer on hover, as the chips of the skin mat. M3 Svelte
+  // gives its chips both
+  bro-m3-svelte-tags .bro-m3-svelte-tags-chips > .m3-container {
+    cursor: default;
+
+    &::after {
+      display: none;
+    }
+  }
 }
