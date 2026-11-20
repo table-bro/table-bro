@@ -21,7 +21,7 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The files of the sections of Prerendering from their sample projects: Angular SSR and Next.js. */
+/** The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js and SolidStart. */
 const prerenderSamples: Record<string, string> = {
   'src/main.server.ts': 'samples/angular-ssr',
   'src/app/app.config.ts': 'samples/angular-ssr',
@@ -32,7 +32,15 @@ const prerenderSamples: Record<string, string> = {
   'src/OrdersTable.tsx': 'samples/react-mui/next',
   'src/app/layout.tsx': 'samples/react-mui/next',
   'src/app/Providers.tsx': 'samples/react-mui/next',
-  'src/app/globals.css': 'samples/react-mui/next'
+  'src/app/globals.css': 'samples/react-mui/next',
+  'vite.config.ts': 'samples/solid-suid/start',
+  'src/server-dom.ts': 'samples/solid-suid/start',
+  'src/prerender-orders.ts': 'samples/solid-suid/start',
+  'src/entry-server.tsx': 'samples/solid-suid/start',
+  'src/locals.d.ts': 'samples/solid-suid/start',
+  'src/PrerenderedOrdersTable.tsx': 'samples/solid-suid/start',
+  'src/app.tsx': 'samples/solid-suid/start',
+  'src/theme.ts': 'samples/solid-suid/start'
 };
 
 /**
