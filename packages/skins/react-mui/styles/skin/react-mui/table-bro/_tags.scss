@@ -9,10 +9,15 @@
   }
 
   // The chips have the label large text of Material 3, as the chips of mat: the button text of the theme, 14px in the
-  // medium weight, on the line of 20px of the body text
+  // medium weight, on the line of 20px of the body text. The text has the secondary text color and the outline the corner
+  // of 8px, as the chips of mat: on-surface-variant and the corner of the chips of Material 3
   bro-mui-tags .MuiChip-root {
+    border-radius: 8px;
+
     font: var(--mui-font-button);
     line-height: 1.43;
+
+    color: $mui-text-secondary-color;
   }
 
   bro-mui-tags .MuiChip-root + .MuiChip-root {
