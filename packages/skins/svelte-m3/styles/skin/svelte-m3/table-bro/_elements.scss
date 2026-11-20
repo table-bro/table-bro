@@ -4,13 +4,15 @@
     display: contents;
   }
 
-  // The shadow of the table and of its regions: the elevation 5 of the theme without the spread of its ambient shadow.
-  // The table draws its shadow by regions, one for each row: a spread grows every region over its neighbors, and the
-  // overlaps darken the edges of the table at each row
+  // The shadow of the table and of its regions: the elevation z16 of Angular Material in the shadow color of the theme,
+  // as the shadow of the skin mat. The table draws its shadow by regions, one for each row: the negative spread of the
+  // key shadow and the wide blurs keep the edges of the table even along the rows, where the spread of 6px of the
+  // elevation 5 of Material 3 darkened them at each row
   .bro-m3-svelte-elevation-5 {
     box-shadow:
-      0 4px 4px 0 color-mix(in sRGB, var(--m3c-shadow) 30%, transparent),
-      0 8px 12px 0 color-mix(in sRGB, var(--m3c-shadow) 15%, transparent);
+      0 8px 10px -5px color-mix(in sRGB, var(--m3c-shadow) 20%, transparent),
+      0 16px 24px 2px color-mix(in sRGB, var(--m3c-shadow) 14%, transparent),
+      0 6px 30px 5px color-mix(in sRGB, var(--m3c-shadow) 12%, transparent);
   }
 
   // The icons of the table are the font of Material Symbols in the size of the icons of M3 Svelte

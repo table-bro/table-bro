@@ -8,10 +8,9 @@ $m3-svelte-table-header-height: 56px;
 $m3-svelte-table-row-height: 52px;
 $m3-svelte-row-horizontal-padding: 16px;
 
-// The offset, the blur and the spread of the elevation 5 of Material 3: the shadow of the skin draws it without the
-// spread, so it keeps within this room
-$m3-svelte-elevation-5-shadow-size: 26px;
-$m3-svelte-table-shadow-size: $m3-svelte-elevation-5-shadow-size;
+// The room of the shadow of the table, the offset, the blur and the spread of the elevation z16 of Angular Material,
+// which the skin draws as the skin mat
+$m3-svelte-table-shadow-size: 42px;
 
 $m3-svelte-toolbar-height: 64px; // the small top app bar of Material 3
 $m3-svelte-paginator-height: 56px;
