@@ -8,6 +8,14 @@
     color: $vuetify-text-secondary-color;
   }
 
+  // The chips have the label large text of Vuetify, as the chips of mat: the chip of Vuetify takes its size but the
+  // regular weight, and the cell gives it the line and the letter spacing of the body text
+  bro-vuetify-tags .v-chip {
+    font-weight: 500;
+    line-height: 1.4286;
+    letter-spacing: .0071em;
+  }
+
   bro-vuetify-tags .v-chip + .v-chip {
     margin-left: 8px;
   }
