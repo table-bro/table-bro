@@ -34,8 +34,14 @@
     @include m3-title-large;
   }
 
+  // The header of the filter drawer keeps its title and its close button 16px from the edges of the card, as the
+  // header of the skin mat
+  .bro-filter-drawer-header #{$m3-svelte-toolbar-selector} {
+    padding: 0 16px;
+  }
+
   .bro-filter-drawer-header .bro-filter-drawer-title {
-    margin-left: 12px;
+    margin-left: 0;
   }
 
   // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content

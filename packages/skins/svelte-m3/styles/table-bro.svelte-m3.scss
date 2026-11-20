@@ -14,7 +14,6 @@
 @use "./skin/shared/table-bro/table" as shared-table;
 @use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
 @use "./skin/svelte-m3/table-bro/elements" as m3-elements;
-@use "./skin/svelte-m3/table-bro/filter-drawer" as m3-filter-drawer;
 @use "./skin/svelte-m3/table-bro/paginator" as m3-paginator;
 @use "./skin/svelte-m3/table-bro/progress-bar" as m3-progress-bar;
 @use "./skin/svelte-m3/table-bro/sort-header" as m3-sort-header;
@@ -48,7 +47,6 @@
 
 /* Table-bro extensions */
 #{$bro-skin} {
-  @include m3-filter-drawer.styles;
   @include m3-paginator.styles;
   @include m3-progress-bar.styles;
   @include m3-sort-header.styles;
