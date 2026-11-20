@@ -34,8 +34,11 @@
     line-height: 1.75rem;
   }
 
-  bro-vuetify-toolbar-main .bro-toolbar-title {
-    margin-left: 16px;
+  // The toolbar of the table keeps the icons of its buttons 24px from its edges, as the toolbar of mat and the header of
+  // the filter drawer: the icon button of Vuetify is 48px wide, 8px wider than the one of mat. The title and the field
+  // follow the place of the navigation icon, as in mat
+  #{$bro-table-toolbar_container} #{$vuetify-toolbar-selector} .v-toolbar__content {
+    padding: 0 12px;
   }
 
   // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content
