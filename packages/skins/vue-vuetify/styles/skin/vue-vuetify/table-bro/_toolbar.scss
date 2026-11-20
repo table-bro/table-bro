@@ -20,6 +20,12 @@
       height: 100%;
       padding: 0 4px;
     }
+
+    // The icons of the buttons have the medium emphasis of the text of Vuetify, the role of the icons of the toolbar of
+    // mat, on-surface-variant
+    .v-btn--icon {
+      color: $vuetify-text-secondary-color;
+    }
   }
 
   // The title of the toolbar has the title large text of Vuetify, as the top app bar of Material

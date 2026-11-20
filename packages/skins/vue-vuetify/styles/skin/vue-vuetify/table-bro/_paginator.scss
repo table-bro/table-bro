@@ -46,5 +46,10 @@
     .bro-vuetify-paginator-actions {
       display: flex;
     }
+
+    // The icons of the buttons of the pages have the medium emphasis of the text of Vuetify, as the icons of the toolbar
+    .bro-vuetify-paginator-actions .v-btn {
+      color: $vuetify-text-secondary-color;
+    }
   }
 }
