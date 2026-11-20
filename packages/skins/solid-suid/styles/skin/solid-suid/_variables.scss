@@ -8,7 +8,7 @@ $suid-tooltip-z-index: 1500 !default; // zIndex.tooltip of the theme of MUI
 // variables, which an application configures as in the other skins
 $suid-table-header-height: 56px;
 $suid-table-row-height: 52px;
-$suid-row-horizontal-padding: 16px; // the padding of the cells of the table of MUI, which SUID ports
+$suid-row-horizontal-padding: 24px; // the padding of the cells of the tables of mat, which the cells of SUID take
 
 $suid-elevation-16-shadow-size: 42px;
 $suid-table-shadow-size: $suid-elevation-16-shadow-size;
