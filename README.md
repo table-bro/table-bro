@@ -8,9 +8,9 @@ native page. Rows have a fixed height, pages turn with a kinetic scroll, row det
 Material 3 corners, and search, sort and filters run on the client or go to your server as one query. The core has no
 runtime dependencies and works with any framework or none; Angular gets its own wrapper. The look and the controls of
 the table come from a skin: a thin layer that puts the components of a UI library into the toolbar, the paginator, the
-cells and the filter drawer. The skins Angular Material, MUI, Vuetify, M3 Svelte, Bootstrap 5 and plain HTML ship with
-the table, and a skin for your own design system is written the same way, so the table uses your components and follows
-the theme of your application instead of bringing its own.
+cells and the filter drawer. The skins Angular Material, MUI, Vuetify, SUID, M3 Svelte, Bootstrap 5 and plain HTML ship
+with the table, and a skin for your own design system is written the same way, so the table uses your components and
+follows the theme of your application instead of bringing its own.
 
 [Demo](https://table-bro.com) · [Docs](https://table-bro.com/docs) · [Examples](https://table-bro.com/examples) ·
 [Architecture](ARCHITECTURE.md) · [Interactive diagram](https://table-bro.com/architecture) ·
@@ -145,9 +145,10 @@ themes, the styling, the CSS variables `--bro-*` and loading without a bundler. 
 ## Skins
 
 Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today:
-Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, M3 Svelte for Svelte, Bootstrap 5 for any
-framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with
-any UI components: a skin of your design system, or of the component library of your framework, is built the same way.
+Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, SUID for Solid, M3 Svelte for Svelte,
+Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is
+any framework with any UI components: a skin of your design system, or of the component library of your framework, is
+built the same way.
 
 ### Create your own skin
 
