@@ -11,7 +11,13 @@ import Toolbar                                        from '@mui/material/Toolba
 import Tooltip                                        from '@mui/material/Tooltip';
 import {createElement as h, type ReactNode, useState} from 'react';
 
-import {BroMuiElement} from '../bro-mui-element';
+import {BroMuiElement, tooltipSlotProps} from '../bro-mui-element';
+
+/**
+ * The text of the items of the menu: the label large text of Material 3, as the menu of mat, by the subtitle2 text of the
+ * theme, 14px in the medium weight, on a line of 20px. The items of MUI have the body1 text of 16px.
+ */
+const menuItemText = {variant: 'subtitle2', sx: {lineHeight: '1.25rem'}} as const;
 
 /**
  * The menu of the toolbar: an icon button with the title of the menu as its name, and the items of the menu of MUI
@@ -31,10 +37,10 @@ function BroMuiToolbarMenu({dropdown, onAction}: {dropdown: BroDropdown; onActio
           setAnchor(null);
           onAction(option.value ?? '');
         }
-      }, option.iconHTML ? h(ListItemIcon, null, h(Icon, null, option.iconHTML)) : null, h(ListItemText, null, option.title)));
+      }, option.iconHTML ? h(ListItemIcon, null, h(Icon, null, option.iconHTML)) : null, h(ListItemText, {slotProps: {primary: menuItemText}}, option.title)));
 
   return [
-    h(Tooltip, {key: 'button', title: dropdown.buttonTooltip ?? '', placement: 'top',
+    h(Tooltip, {key: 'button', title: dropdown.buttonTooltip ?? '', placement: 'top', slotProps: tooltipSlotProps,
       children: h(IconButton, {'aria-label': dropdown.buttonTitle, 'aria-haspopup': 'menu', onClick: event => setAnchor(event.currentTarget)}, h(Icon, null, 'more_vert'))}),
     h(Menu, {key: 'menu', anchorEl: anchor, open: !!anchor, onClose: () => setAnchor(null)}, items)
   ];
@@ -58,6 +64,7 @@ export class BroMuiToolbarMainComponent extends BroMuiElement implements BroConf
       key: i,
       title: button.buttonTooltip ?? '',
       placement: 'top',
+      slotProps: tooltipSlotProps,
       children: h(IconButton, {'aria-label': button.buttonTitle, onClick: () => send(button.eventType)}, h(Icon, null, button.iconHTML))
     }));
 

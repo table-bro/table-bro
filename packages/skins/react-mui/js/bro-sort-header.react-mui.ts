@@ -4,7 +4,7 @@ import TableSortLabel       from '@mui/material/TableSortLabel';
 import Tooltip              from '@mui/material/Tooltip';
 import {createElement as h} from 'react';
 
-import {BroMuiElement} from './bro-mui-element';
+import {BroMuiElement, tooltipSlotProps} from './bro-mui-element';
 
 /** The direction of the sort of a header: none, or the one of its arrow. */
 type BroMuiSortDirection = '' | 'asc' | 'desc';
@@ -75,7 +75,7 @@ export class BroMuiSortHeaderComponent extends BroMuiElement implements BroSortH
       onClick: () => this.onSort()
     }, h('span', {className: 'bro-mui-sort-header-content'}, this.headerTitle));
 
-    return h(Tooltip, {title: this.tooltip, placement: 'right', children: label});
+    return h(Tooltip, {title: this.tooltip, placement: 'right', slotProps: tooltipSlotProps, children: label});
   }
 
   private onSort(): void {
