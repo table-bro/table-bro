@@ -154,10 +154,29 @@ see the README of `@table-bro/core`.
 
 ## Server render
 
-The elements of the skin render with Vue in the browser. A prerender of a table on the server, `prerenderTableBro()` of
-`@table-bro/core`, renders the table of the skin with its elements empty, and the console names it once: the server
-render of Vue is asynchronous, while the prerender renders the elements at once. The browser renders the table in its
-place at `configure()`.
+The elements of the skin render with Vue in the browser. A prerender of a table on the server, `prerenderTableBro()`
+of `@table-bro/core` in a server DOM such as linkedom, renders them too with the server entry of the package,
+`@table-bro/vue-vuetify/server`: the toolbar, the sort headers, the progress bar and the paginator of Vuetify in the
+loading state of the table. The prerender renders the elements at once, so the entry renders each of them by the
+synchronous part of the server render of Vue, `ssrRenderVNode`, which `renderToString` runs inside its promise: the
+components of the skin have no asynchronous setup. The server DOM gives its `HTMLElement` to the global scope before
+the import of the entry, since the elements extend it, and `setVuetify()` gives the Vuetify of the render of the server:
+
+```ts
+import {parseHTML} from 'linkedom';
+
+const {document, window} = parseHTML('<!doctype html><html><body></body></html>');
+
+globalThis.HTMLElement ??= window.HTMLElement;
+
+const {prerenderTableBro} = await import('@table-bro/core');
+const {setVuetify}        = await import('@table-bro/vue-vuetify/server');
+```
+
+The bundle of the browser does not carry the server entry. Without it the package registers only the config of the
+skin on the server, and a prerender leaves the elements of the skin empty, which the console names once. The browser
+keeps the prerendered elements until `configure()` renders the table in their place. The setup with Nuxt is on the page
+[Prerendering](https://table-bro.com/docs/ssr/prerendering).
 
 ## Build
 

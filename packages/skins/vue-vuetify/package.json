@@ -50,13 +50,21 @@
       "import": "./dist/table-bro.vue-vuetify.esm.js",
       "default": "./dist/table-bro.vue-vuetify.esm.js"
     },
+    "./server": {
+      "types": "./dist/table-bro.vue-vuetify.server.d.ts",
+      "import": "./dist/table-bro.vue-vuetify.server.esm.js",
+      "default": "./dist/table-bro.vue-vuetify.server.esm.js"
+    },
     "./dist/*.css": "./dist/*.css",
     "./styles/*": "./styles/*"
   },
   "sideEffects": [
     "./js/index.ts",
     "./js/table-bro.vue-vuetify.ts",
+    "./js/table-bro.vue-vuetify.server.ts",
     "./dist/table-bro.vue-vuetify.esm.js",
+    "./dist/table-bro.vue-vuetify.server.esm.js",
+    "./dist/table-bro.vue-vuetify.shared.esm.js",
     "./dist/*.css"
   ],
   "files": [

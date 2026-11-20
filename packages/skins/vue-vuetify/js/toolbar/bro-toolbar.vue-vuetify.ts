@@ -37,8 +37,11 @@ export class BroVuetifyToolbarComponent extends BroVuetifyElement implements Bro
     this.toolbarContent()?.append(...this.nodes);
   }
 
-  /** The content of the rendered toolbar of Vuetify, the flex line of its items. */
+  /**
+   * The content of the rendered toolbar of Vuetify, the flex line of its items: the first one in the root, before the
+   * nodes of the table in it.
+   */
   private toolbarContent(): HTMLElement | null {
-    return this.querySelector(':scope > .bro-vuetify-root > .v-toolbar > .v-toolbar__content');
+    return this.rootNode?.querySelector<HTMLElement>('.v-toolbar__content') ?? null;
   }
 }

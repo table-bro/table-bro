@@ -69,7 +69,7 @@ export class BroVuetifyTagsComponent extends BroVuetifyElement implements BroCel
 
   /**
    * Renders the chips, then fits them into the line of the cell: the chips that do not fit give way to an ellipsis,
-   * from the first render on.
+   * from the first render on. The markup of a server DOM is not fitted, as a prerender measures nothing.
    */
   protected override update(): void {
     super.update();
@@ -79,7 +79,7 @@ export class BroVuetifyTagsComponent extends BroVuetifyElement implements BroCel
     this.fitting?.abort();
     this.fitting = null;
 
-    if (line) {
+    if (line && !this.server) {
       this.fitting = new AbortController();
       fitCellItems(line, this.fitting.signal);
     }

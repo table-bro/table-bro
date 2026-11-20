@@ -29,7 +29,12 @@ let themeSheet: CSSStyleSheet | null = null;
 let stopThemes: WatchStopHandle | null = null;
 /** The console named once the missing Vuetify: without it the components of Vuetify render nothing. */
 let vuetifyReported: boolean = false;
-/** The console named once an element in a server DOM, which the skin does not render. */
+/**
+ * The render of a Vue tree to markup, which the server entry of the skin gives: the elements of a prerender in a server
+ * DOM render their markup by it (prerenderTableBro).
+ */
+let serverRender: ((root: VNode) => string) | undefined;
+/** The console named once a prerender of the skin without its server entry. */
 let serverReported: boolean = false;
 
 /**
@@ -82,6 +87,15 @@ export function setVuetify(vuetify: BroVuetifyInstance, options: BroVuetifyOptio
 }
 
 /**
+ * Gives the elements the render of a Vue tree to markup for a server DOM: the server entry of the skin calls it with the
+ * server render of Vue, which the bundle of the browser does not carry.
+ * @param render - the render of the root of an element to markup
+ */
+export function setServerRender(render: (root: VNode) => string): void {
+  serverRender = render;
+}
+
+/**
  * Defines an element of the skin unless it is defined: without a DOM, as in the server render, it does nothing.
  * @param name - the tag of the element
  * @param element - the class of the element
@@ -131,6 +145,9 @@ export function icon(name: string, className?: string): VNode {
  * renders into, and the table or the element may hold other nodes in the element.
  */
 export abstract class BroVuetifyElement extends BroHTMLElement {
+  /** The element renders its markup in a server DOM, without a Vue root: it measures and observes nothing there. */
+  protected server: boolean = false;
+
   /** The node of the Vue root. */
   private container: HTMLElement | null = null;
   /** A move in the DOM, as a sort of the rows: a connection follows the disconnection in the same task. */
@@ -151,11 +168,14 @@ export abstract class BroVuetifyElement extends BroHTMLElement {
       return;
     }
 
-    // A server DOM, as of a prerender on the server, has a window of its own: the skin renders no markup there
-    if ((typeof window === 'undefined') || (this.ownerDocument.defaultView !== window)) {
+    // A server DOM, as of a prerender on the server, has a window of its own: the element renders its markup there by
+    // the render of the server entry, not by a Vue root
+    this.server = (typeof window === 'undefined') || (this.ownerDocument.defaultView !== window);
+
+    if (this.server && !serverRender) {
       if (!serverReported) {
         serverReported = true;
-        console.error('Table, Bro: the skin vuetify renders its elements in the browser only, not in a prerender on the server');
+        console.error('Table, Bro: the skin vuetify renders its elements on the server with the import of @table-bro/vue-vuetify/server');
       }
 
       return;
@@ -178,7 +198,11 @@ export abstract class BroVuetifyElement extends BroHTMLElement {
     queueMicrotask(() => {
       if (this.moving) {
         this.moving = false;
-        render(null, this.container!);
+
+        if (!this.server) {
+          render(null, this.container!);
+        }
+
         this.container!.remove();
         this.container = null;
         this.unmounted();
@@ -207,7 +231,19 @@ export abstract class BroVuetifyElement extends BroHTMLElement {
     const root = h(BroVuetifyRoot, {tree: () => this.content()});
 
     root.appContext = skinApp._context;
-    render(root, this.container);
+
+    // An element of a server DOM renders its markup anew; the browser keeps it until its table renders its own
+    // elements in its place
+    if (this.server) {
+      this.container.innerHTML = serverRender!(root);
+    } else {
+      render(root, this.container);
+    }
+  }
+
+  /** The node of the root of the element, while it is rendered. */
+  protected get rootNode(): HTMLElement | null {
+    return this.container;
   }
 
   /** The element left the DOM and its Vue root is gone. */
