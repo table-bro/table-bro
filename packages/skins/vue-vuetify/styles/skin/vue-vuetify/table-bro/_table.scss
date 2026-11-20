@@ -8,6 +8,15 @@
     vertical-align: top;
   }
 
+  // A table in the application of Vuetify (VApp) is a stacking context of its own, so the shadows of its parts, which
+  // lie below its other layers, lie above the background of the theme that the application paints on a block of the
+  // page: it covered the shadows of the toolbar and the paginator. A table in a filter drawer container takes the
+  // stacking context of the container, as the card of the drawer lies between the layers of the table
+  @at-root .v-application table-bro-filter-drawer-container#{&},
+    .v-application :not(table-bro-filter-drawer-container) > table-bro#{&} {
+    isolation: isolate;
+  }
+
   table.bro-vuetify-table {
     border-spacing: 0;
   }
