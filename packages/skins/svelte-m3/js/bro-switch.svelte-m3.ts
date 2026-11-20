@@ -38,9 +38,11 @@ export class BroM3SvelteSwitchComponent extends BroM3SvelteElement implements Br
     const name = this.col?.name;
     const action = this.getAttribute('name');
 
-    // The switch turns at once, as the slide toggle of the skin mat: the application changes the row by the action
+    // The switch turns at once, as the slide toggle of the skin mat: the application changes the row by the action. Its
+    // handle has no icon, as the slide toggle with hideIcon of the skin mat
     return {
       checked: !!(name && this.row?.[name]),
+      icons: 'none',
       'aria-label': this.col?.title,
       onchange: () => {
         if (action) {
