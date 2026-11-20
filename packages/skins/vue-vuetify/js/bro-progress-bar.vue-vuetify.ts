@@ -20,9 +20,11 @@ export class BroVuetifyProgressBarComponent extends BroVuetifyElement implements
   protected content() {
     const determinate = (this.getAttribute('mode') === 'determinate');
 
-    // The bar fills the height that the table gives it, in the primary color of the theme
+    // The bar fills the height that the table gives it, in the primary color of the theme on the light surface of the
+    // theme, the surface variant of Material, as the bar of mat: Vuetify draws the track in the color of the bar
     return h(VProgressLinear, {
       'aria-label': this.config?.texts.loadingProgress,
+      bgColor: 'surface-light',
       color: 'primary',
       height: '100%',
       indeterminate: !determinate,
