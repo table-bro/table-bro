@@ -3,11 +3,12 @@
 // dist/samples/<name> under the base path of the pages. The registry has the packages as `npm run publish:packages`
 // publishes them for a release, and the other packages from npmjs. A page without a build, a folder with index.html and
 // no package.json, as no-build, takes the packages from a CDN and is copied as it is, with the base path of the page in
-// its index.html. A project of Next.js, as react-mui/next, takes the base path from the variable BASE_PATH of its
-// config and exports its pages into dist; a project of the server render of Angular, as angular-ssr, prerenders its
-// pages at the build, and only the files of the browser go to the site. Run after `npm run build`, with the names of
-// the samples as arguments or without them for all, frameworks for the projects of all frameworks; REGISTRY_PORT sets
-// the port of the registry (4873 by default) and SAMPLES_BASE the base path of the pages (/samples/ by default).
+// its index.html. A project of Next.js, as react-mui/next, or of SvelteKit, as svelte-m3/sveltekit, takes the base path
+// from the variable BASE_PATH of its config and exports its pages into dist; a project of the server render of Angular,
+// as angular-ssr, prerenders its pages at the build, and only the files of the browser go to the site. Run after `npm
+// run build`, with the names of the samples as arguments or without them for all, frameworks for the projects of all
+// frameworks; REGISTRY_PORT sets the port of the registry (4873 by default) and SAMPLES_BASE the base path of the pages
+// (/samples/ by default).
 import {execFileSync, spawn} from 'node:child_process';
 import fs                    from 'node:fs';
 import os                    from 'node:os';
@@ -146,10 +147,11 @@ function buildSample(name, registry, base) {
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `table-bro-sample-${name.replace('/', '-')}-`));
   const angular = fs.existsSync(path.join(root, 'samples', name, 'angular.json'));
-  // Next.js takes the base path from its config, which reads BASE_PATH, and exports the pages into dist
-  const next = fs.existsSync(path.join(root, 'samples', name, 'next.config.ts'));
+  // Next.js and SvelteKit take the base path from their configs, which read BASE_PATH, and export the pages into dist
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'samples', name, 'package.json'), 'utf8'));
+  const next = ['next', '@sveltejs/kit'].some(framework => framework in {...manifest.dependencies, ...manifest.devDependencies});
 
-  fs.cpSync(path.join(root, 'samples', name), dir, {recursive: true, filter: file => !/[\\/](node_modules|dist|\.next)$/.test(file)});
+  fs.cpSync(path.join(root, 'samples', name), dir, {recursive: true, filter: file => !/[\\/](node_modules|dist|\.next|\.svelte-kit)$/.test(file)});
   fs.writeFileSync(path.join(dir, '.npmrc'), `registry=${registry}\n`);
   run(dir, 'npm', ['install', '--no-audit', '--no-fund']);
 
