@@ -3,6 +3,8 @@ export type BroM3SvelteTooltipPosition = 'above' | 'right';
 
 /** The space between a tooltip and its target, as the tooltip of Angular Material keeps it. */
 const tooltipGap: number = 8;
+/** The height of a tooltip of one line: a higher one is multiline, as Angular Material tells its tooltips apart. */
+const singleLineHeight: number = 24;
 /** The space that a tooltip keeps from the edges of the viewport. */
 const viewportMargin: number = 8;
 /** A touch shows the tooltip after a long press, as the one of Angular Material. */
@@ -108,6 +110,7 @@ export function attachM3SvelteTooltip(target: HTMLElement, text: string | (() =>
     });
     host.append(tooltip);
     tooltip.showPopover();
+    tooltip.classList.toggle('bro-m3-svelte-tooltip_multiline', tooltip.offsetHeight > singleLineHeight);
     place(tooltip, target, position);
     target.setAttribute('aria-describedby', id);
     document.addEventListener('keydown', onKeydown, true);
