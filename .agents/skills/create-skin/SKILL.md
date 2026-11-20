@@ -114,6 +114,14 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
 - The server render of Vue, `renderToString` of `@vue/server-renderer`, is asynchronous, while `prerenderTableBro()`
   renders the elements synchronously: a skin of Vue and its section of Nuxt need a decision of the owner on an
   asynchronous prerender before they start.
+- The server render of Solid, `renderToString` of the server build of `solid-js/web`, is synchronous, as in
+  `js/table-bro.solid-suid.server.ts`. The server bundle of the application compiles the JSX of the library for the
+  server and carries the library, the skin and the core (`ssr.noExternal` of Vite); the core loads after a module of its
+  own gives the `HTMLElement` of the server DOM to the global scope. The render of an element saves and restores
+  `sharedConfig.context` of the render around it, turns hydration off on its own context, and gives the library ids that
+  go on from render to render when it names its styles by them, as SUID does; the styles of `useAssets` go into the
+  markup without their ids. A component of the library that fails in the server render gets a server form of its own,
+  as the native select of SUID. The sample is `samples/solid-suid/start` with SolidStart.
 
 ## The theme
 
@@ -132,6 +140,10 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
   themes of the application, so the setter of the theme of the skin writes one stylesheet of its own: for each theme of
   the application the rule `table-bro[<themeAttribute>="<name>"]` with its `--v-theme-*` variables, from the themes of
   the instance of Vuetify, again when they change.
+- A library without color schemes, as SUID, gets the theme of the other scheme from the main colors of the palette of the
+  application, its typography and its shapes: the setter writes the variables of each scheme for the rule
+  `table-bro[<themeAttribute>="<scheme>"]`, and an element gives its components the theme of the scheme of its table,
+  which one observer of the attribute on the host of the table follows (`js/bro-suid-element.ts`).
 - A library may give its colors as channels, as `--v-theme-primary: 98,0,238` of Vuetify: the CSS reads them as
   `rgb(var(--v-theme-primary))`, and the alpha of a state as `rgb(var(--v-theme-on-surface) / var(--v-hover-opacity))`.
 
