@@ -2594,7 +2594,7 @@ ${mcpSection('#####', 'Svelte')}
 
 3. **Give the skin the theme of the application**
 
-   The table and the components of M3 Svelte read the colors of the M3 Svelte theme of the application, its CSS variables \`--m3c-*\`. The theme imports the styles of M3 Svelte and has the function \`--m3-density\` and the colors of the light and the dark scheme, as the theme page of M3 Svelte writes them; the sample takes its default theme. \`src/theme.css\`:
+   The table and the components of M3 Svelte read the colors of the M3 Svelte theme of the application, its CSS variables \`--m3c-*\`. The theme imports the styles of M3 Svelte and has the function \`--m3-density\` and the colors of the light and the dark scheme, as the theme page of M3 Svelte writes them; the sample takes the colors of the sample of Angular Material, the azure palette of Angular Material in the roles of M3 Svelte, with its font Roboto in a light page, so that both tables look the same. \`src/theme.css\`:
 
    {{src/theme.css}}
 
@@ -2670,9 +2670,13 @@ export default mergeConfig(samplePage, defineConfig({
 }));
 `},
       {file: 'src/theme.css', language: 'css', code: `/*
- * The theme of M3 Svelte of the application, as the theme page of M3 Svelte writes it: its styles, the density of its
- * components and the colors of its default theme, light and dark by light-dark(). The components of M3 Svelte and the
- * skin m3-svelte read them.
+ * The theme of M3 Svelte of the application in the colors, the type and the color scheme of the sample
+ * samples/angular-material, so that the table looks as the table of that sample: the styles of M3 Svelte, the density
+ * of its components, the color roles of the theme of Angular Material with the azure palette and the blue tertiary
+ * palette, light and dark by light-dark(), in a light page, and the font Roboto. The roles of M3 Svelte that Material 3
+ * has not, the dim, the subtle and the on-on-primary colors, are the ones that genCSS() of m3-svelte/etc/colors writes
+ * for the Vibrant scheme of the azure primary color #005cbb. The components of M3 Svelte and the skin m3-svelte read
+ * them.
  */
 @import "m3-svelte/etc/styles.css";
 @import "m3-svelte/etc/recommended-styles.css";
@@ -2682,54 +2686,74 @@ export default mergeConfig(samplePage, defineConfig({
 }
 
 :root {
-  @apply --m3-body-large;
-  color-scheme: light dark;
+  @apply --m3-body-medium;
+  color-scheme: light;
   background-color: var(--m3c-surface);
   color: var(--m3c-on-surface);
 }
 
 @layer tokens {
   :root {
-    --m3c-surface: light-dark(#fdf7fe, #0f0d12);
-    --m3c-surface-container-lowest: light-dark(#ffffff, #000000);
-    --m3c-surface-container-low: light-dark(#f8f1fa, #141218);
-    --m3c-surface-container: light-dark(#f2ecf5, #1b181f);
-    --m3c-surface-container-high: light-dark(#ece6f0, #211e26);
-    --m3c-surface-container-highest: light-dark(#e7e0ec, #27242d);
-    --m3c-on-surface: light-dark(#34313a, #eae3ef);
-    --m3c-on-surface-variant: light-dark(#615d67, #afa9b4);
-    --m3c-outline: light-dark(#7e7983, #78737e);
-    --m3c-outline-variant: light-dark(#b6b0bb, #4a4650);
-    --m3c-inverse-surface: light-dark(#0f0d12, #fdf7fe);
-    --m3c-inverse-on-surface: light-dark(#a09ba1, #575459);
-    --m3c-primary: light-dark(#655789, #cec0ec);
-    --m3c-on-primary: light-dark(#fdf7ff, #453a5f);
-    --m3c-primary-container: light-dark(#d2c0f9, #574c72);
-    --m3c-on-primary-container: light-dark(#483a6a, #eadeff);
-    --m3c-inverse-primary: light-dark(#d2c0f9, #64597f);
-    --m3c-secondary: light-dark(#635c71, #ccc2db);
-    --m3c-on-secondary: light-dark(#fdf7ff, #433d51);
-    --m3c-secondary-container: light-dark(#e8def8, #3e384c);
-    --m3c-on-secondary-container: light-dark(#554e63, #c4bbd4);
-    --m3c-tertiary: light-dark(#7c5270, #ffcfee);
-    --m3c-on-tertiary: light-dark(#fff7f9, #69415f);
-    --m3c-tertiary-container: #f4bfe2;
-    --m3c-on-tertiary-container: #603955;
-    --m3c-error: light-dark(#a8364b, #f97386);
-    --m3c-on-error: light-dark(#fff7f7, #490013);
-    --m3c-error-container: light-dark(#f97386, #871c34);
-    --m3c-on-error-container: light-dark(#6e0523, #ff97a3);
+    --m3-font: Roboto, sans-serif;
+
+    --m3c-surface: light-dark(#faf9fd, #121316);
+    --m3c-surface-dim: light-dark(#dbd9dd, #121316);
+    --m3c-surface-bright: light-dark(#faf9fd, #38393c);
+    --m3c-surface-container-lowest: light-dark(#ffffff, #0d0e11);
+    --m3c-surface-container-low: light-dark(#f4f3f6, #1a1b1f);
+    --m3c-surface-container: light-dark(#efedf0, #1f2022);
+    --m3c-surface-container-high: light-dark(#e9e7eb, #292a2c);
+    --m3c-surface-container-highest: light-dark(#e3e2e6, #343537);
+    --m3c-on-surface: light-dark(#1a1b1f, #e3e2e6);
+    --m3c-on-surface-variant: light-dark(#44474e, #e0e2ec);
+    --m3c-outline: light-dark(#74777f, #8e9099);
+    --m3c-outline-variant: light-dark(#c4c6d0, #44474e);
+    --m3c-inverse-surface: light-dark(#2f3033, #e3e2e6);
+    --m3c-inverse-on-surface: light-dark(#f2f0f4, #2f3033);
+    --m3c-primary: light-dark(#005cbb, #abc7ff);
+    --m3c-primary-dim: light-dark(#0050a5, #4490ff);
+    --m3c-on-primary: light-dark(#ffffff, #002f65);
+    --m3c-primary-container: light-dark(#d7e3ff, #00458f);
+    --m3c-on-primary-container: light-dark(#00458f, #d7e3ff);
+    --m3c-primary-fixed: #d7e3ff;
+    --m3c-primary-fixed-dim: #abc7ff;
+    --m3c-on-primary-fixed: #001b3f;
+    --m3c-on-primary-fixed-variant: #00458f;
+    --m3c-inverse-primary: light-dark(#abc7ff, #005cbb);
+    --m3c-secondary: light-dark(#565e71, #bec6dc);
+    --m3c-secondary-dim: light-dark(#4c5071, #d4d7ff);
+    --m3c-on-secondary: light-dark(#ffffff, #283041);
+    --m3c-secondary-container: light-dark(#dae2f9, #3e4759);
+    --m3c-on-secondary-container: light-dark(#3e4759, #dae2f9);
+    --m3c-secondary-fixed: #dae2f9;
+    --m3c-secondary-fixed-dim: #bec6dc;
+    --m3c-on-secondary-fixed: #131c2b;
+    --m3c-on-secondary-fixed-variant: #3e4759;
+    --m3c-tertiary: light-dark(#343dff, #bec2ff);
+    --m3c-tertiary-dim: light-dark(#544c7d, #cdc2fb);
+    --m3c-on-tertiary: light-dark(#ffffff, #0001ac);
+    --m3c-tertiary-container: light-dark(#e0e0ff, #0000ef);
+    --m3c-on-tertiary-container: light-dark(#0000ef, #e0e0ff);
+    --m3c-tertiary-fixed: #e0e0ff;
+    --m3c-tertiary-fixed-dim: #bec2ff;
+    --m3c-on-tertiary-fixed: #00006e;
+    --m3c-on-tertiary-fixed-variant: #0000ef;
+    --m3c-error: light-dark(#ba1a1a, #ffb4ab);
+    --m3c-error-dim: light-dark(#a80710, #ff554a);
+    --m3c-on-error: light-dark(#ffffff, #690005);
+    --m3c-error-container: light-dark(#ffdad6, #93000a);
+    --m3c-on-error-container: light-dark(#93000a, #ffdad6);
     --m3c-shadow: #000000;
     --m3c-scrim: #000000;
-    --m3c-on-on-primary: light-dark(#655788, #cebfec);
-    --m3c-primary-container-subtle: light-dark(#e2d3ff, #302649);
-    --m3c-on-primary-container-subtle: light-dark(#534575, #b2a4cf);
-    --m3c-secondary-container-subtle: light-dark(#e0d6ef, #2f293c);
-    --m3c-on-secondary-container-subtle: light-dark(#50495e, #b0a7bf);
-    --m3c-tertiary-container-subtle: light-dark(#ffcbed, #43203b);
-    --m3c-on-tertiary-container-subtle: light-dark(#67405d, #ce9cbe);
-    --m3c-error-container-subtle: light-dark(#ffced2, #5f001c);
-    --m3c-on-error-container-subtle: light-dark(#8f2339, #ff8796);
+    --m3c-on-on-primary: light-dark(#0060c2, #85b1ff);
+    --m3c-primary-container-subtle: light-dark(#cadaff, #003876);
+    --m3c-on-primary-container-subtle: light-dark(#004b9a, #9abdff);
+    --m3c-secondary-container-subtle: light-dark(#d4d7ff, #323756);
+    --m3c-on-secondary-container-subtle: light-dark(#464b6b, #b6bae0);
+    --m3c-tertiary-container-subtle: light-dark(#ddd5ff, #3a3261);
+    --m3c-on-tertiary-container-subtle: light-dark(#4e4676, #bfb5ed);
+    --m3c-error-container-subtle: light-dark(#ffcfc9, #790006);
+    --m3c-on-error-container-subtle: light-dark(#9e000b, #ffa49a);
   }
 }
 `},
