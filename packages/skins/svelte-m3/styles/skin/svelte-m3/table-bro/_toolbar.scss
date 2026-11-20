@@ -6,16 +6,16 @@
 @mixin styles {
   @include skin_toolbar($m3-svelte-toolbar-selector);
 
-  // The small top app bar of Material 3, with its icon buttons, takes the height of the toolbar of the table
+  // The small top app bar of Material 3, with its icon buttons, takes the height of the toolbar of the table. It keeps
+  // its buttons, its title and its field 16px from its edges and next to each other, as the toolbar of mat and the header
+  // of its filter drawer
   #{$bro-table-toolbar_container} #{$m3-svelte-toolbar-selector},
   .bro-filter-drawer-header #{$m3-svelte-toolbar-selector} {
     display: flex;
 
     box-sizing: border-box;
     height: $bro-toolbar-height;
-    padding: 0 4px;
-
-    gap: 4px;
+    padding: 0 16px;
 
     align-items: center;
 
@@ -29,19 +29,7 @@
   // in the table, 16px from the edge in the filter drawer
   bro-m3-svelte-toolbar-main .bro-toolbar-title,
   .bro-filter-drawer-header .bro-filter-drawer-title {
-    margin-left: 4px;
-
     @include m3-title-large;
-  }
-
-  // The header of the filter drawer keeps its title and its close button 16px from the edges of the card, as the
-  // header of the skin mat
-  .bro-filter-drawer-header #{$m3-svelte-toolbar-selector} {
-    padding: 0 16px;
-  }
-
-  .bro-filter-drawer-header .bro-filter-drawer-title {
-    margin-left: 0;
   }
 
   // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content
