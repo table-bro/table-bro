@@ -8,5 +8,31 @@
     display: inline-flex;
 
     vertical-align: middle;
+
+    // The states of the slide toggle of the skin mat, in the roles of the theme of M3 Svelte: a state layer of 40px,
+    // not 48px, the state layer of 12% on focus and press, not the focus ring around the track, and the handle of an
+    // unchecked switch in focus in the color of its hover. M3 Svelte draws its focus ring by an animation
+    .hover {
+      width: 40px;
+      height: 40px;
+    }
+
+    input:focus-visible {
+      animation: none;
+    }
+
+    .m3-container > input:enabled:focus-visible:not(:checked) + .handle {
+      background-color: var(--m3c-on-surface-variant);
+    }
+
+    .m3-container > input:enabled:focus-visible:not(:checked) ~ .hover,
+    .m3-container:active > input:enabled:not(:checked) ~ .hover {
+      background-color: color-mix(in sRGB, var(--m3c-on-surface) 12%, transparent);
+    }
+
+    .m3-container > input:enabled:focus-visible:checked ~ .hover,
+    .m3-container:active > input:enabled:checked ~ .hover {
+      background-color: color-mix(in sRGB, var(--m3c-primary) 12%, transparent);
+    }
   }
 }
