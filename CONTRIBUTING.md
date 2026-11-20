@@ -11,9 +11,9 @@ a version.
 | `packages/core` | `@table-bro/core`: the element `<table-bro>`, its controller, models and views, the CSS of the core |
 | `packages/skins/angular-material` | `@table-bro/angular-material`, the skin `mat` and its Angular components |
 | `packages/skins/react-mui` | `@table-bro/react-mui`, the skin `mui` and its React elements |
-| `packages/skins/vue-vuetify` | `@table-bro/vue-vuetify`, the skin `vuetify` and its Vue elements |
 | `packages/skins/solid-suid` | `@table-bro/solid-suid`, the skin `suid` and its Solid elements |
 | `packages/skins/svelte-m3` | `@table-bro/svelte-m3`, the skin `m3-svelte` and its Svelte elements |
+| `packages/skins/vue-vuetify` | `@table-bro/vue-vuetify`, the skin `vuetify` and its Vue elements |
 | `packages/skins/bootstrap` | `@table-bro/bootstrap`, the skin `bs` |
 | `packages/skins/native` | `@table-bro/native`, the skin `nv` |
 | `packages/skins/shared` | The elements and styles that the vanilla skins share; each skin bundles them |
