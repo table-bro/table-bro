@@ -3,7 +3,7 @@ import {type BroCellElement, broCellSelectors, type BroCol, BroHTML} from '@tabl
 import Tooltip              from '@mui/material/Tooltip';
 import {createElement as h} from 'react';
 
-import {BroMuiElement} from './bro-mui-element';
+import {BroMuiElement, tooltipSlotProps} from './bro-mui-element';
 
 /**
  * A value wider than its column, with the whole value in a tooltip: the element bro-mui-text-ellipsis of
@@ -22,6 +22,6 @@ export class BroMuiTextEllipsisComponent extends BroMuiElement implements BroCel
     const className = containerClass ? `${broCellSelectors.ellipsisContainer} ${containerClass}` : broCellSelectors.ellipsisContainer;
     const container = h('span', {className}, text);
 
-    return h(Tooltip, {title: this.col?.html ? BroHTML.text(value) : value, placement: 'top', children: container});
+    return h(Tooltip, {title: this.col?.html ? BroHTML.text(value) : value, placement: 'top', slotProps: tooltipSlotProps, children: container});
   }
 }

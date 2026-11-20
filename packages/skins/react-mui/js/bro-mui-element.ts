@@ -1,9 +1,9 @@
 import {BroDom, BroHTMLElement, isPrerendered} from '@table-bro/core';
 
-import {type Theme, ThemeProvider}     from '@mui/material/styles';
-import {createElement, type ReactNode} from 'react';
-import {flushSync}                     from 'react-dom';
-import {createRoot, type Root}         from 'react-dom/client';
+import {type Theme, ThemeProvider}                         from '@mui/material/styles';
+import {createElement, type CSSProperties, type ReactNode} from 'react';
+import {flushSync}                                         from 'react-dom';
+import {createRoot, type Root}                             from 'react-dom/client';
 
 /** The theme of the application, which setMuiTheme() gives the elements of the skin. */
 let muiTheme: Theme | undefined;
@@ -20,6 +20,12 @@ let themeReported: boolean = false;
 let serverRender: ((tree: ReactNode, element: HTMLElement) => string) | undefined;
 /** The console named once a prerender of the skin without its server entry. */
 let serverReported: boolean = false;
+
+/**
+ * The tooltips of the skin have the body small text of Material 3, as the tooltips of mat: the caption text of the theme
+ * on a line of 16px. The tooltip of MUI has a text of 11px in the medium weight of its own.
+ */
+export const tooltipSlotProps = {tooltip: {sx: (theme: Theme): CSSProperties => ({...theme.typography.caption, lineHeight: '1rem'})}};
 
 /**
  * Gives the elements of the skin the MUI theme of the application, before its tables render: the components of MUI in
