@@ -20,6 +20,17 @@
       height: 100%;
     }
 
+    // The texts of the pagination have the body small text of Material 3, as the paginator of mat: the caption text of
+    // the theme, 12px with the letter spacing of the caption of MUI, on a line of 16px. The labels take the body text of
+    // the theme by their own class, and the select inherits the text of the pagination
+    .MuiTablePagination-root,
+    .MuiTablePagination-selectLabel,
+    .MuiTablePagination-displayedRows {
+      font: var(--mui-font-caption);
+      line-height: 1rem;
+      letter-spacing: .0333em;
+    }
+
     // The labels of the pagination of MUI are paragraphs, which it centers by the default margins of the browser: the
     // CSS of a page, as the reboot of Bootstrap, changes them. The toolbar centers the labels with the select and the
     // buttons

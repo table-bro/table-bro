@@ -32,8 +32,10 @@
     color: $mui-text-color;
   }
 
+  // The header has the line of the body text, 20px, the line of the title small text of Material 3 in the header of mat
   th.bro-mui-header-cell {
     font: var(--mui-font-subtitle2);
+    line-height: 1.43;
 
     text-align: left;
 

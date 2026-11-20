@@ -14,10 +14,14 @@
     border-bottom-style: solid;
   }
 
-  // The title of the toolbar has the title text of the theme, as the top app bar of Material
+  // The title of the toolbar has the title large text of Material 3, as the top app bar of Material and the title of
+  // mat: 22px on a line of 28px in the regular weight, in the font of the h6 text of the theme
   bro-mui-toolbar-main .bro-toolbar-title,
   .bro-filter-drawer-header .bro-filter-drawer-title {
     font: var(--mui-font-h6);
+    font-weight: 400;
+    font-size: 1.375rem;
+    line-height: 1.75rem;
   }
 
   // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content
