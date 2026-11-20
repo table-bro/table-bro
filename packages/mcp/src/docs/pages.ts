@@ -123,7 +123,7 @@ export const conf: BroConfig = {
  */
 const skinsSection = `#### Which skins can I use?
 
-Table, Bro ships the skins Angular Material, MUI, Vuetify, M3 Svelte, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+Table, Bro ships the skins Angular Material, MUI, Vuetify, SUID, M3 Svelte, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
 
 /**
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
@@ -245,13 +245,14 @@ ${mcpSection('###')}
 
 ### Skins
 
-Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, M3 Svelte for Svelte, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, SUID for Solid, M3 Svelte for Svelte, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
 
 | Skin | Package | Framework | UI components |
 | --- | --- | --- | --- |
 | Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
 | MUI, \`mui\` | \`@table-bro/react-mui\` | React 19, Preact | MUI 9 |
 | Vuetify, \`vuetify\` | \`@table-bro/vue-vuetify\` | Vue 3.5 | Vuetify 4 |
+| SUID, \`suid\` | \`@table-bro/solid-suid\` | Solid 1.9 | SUID 0.19 |
 | M3 Svelte, \`m3-svelte\` | \`@table-bro/svelte-m3\` | Svelte 5 | M3 Svelte 7 |
 | Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
 | Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
@@ -3335,7 +3336,7 @@ SvelteKit renders a page on the server, or at its build: the load of the page on
 
 3. **The elements of the skin**
 
-   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`vuetify\` and \`suid\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
+   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`vuetify\`, \`suid\` and \`m3-svelte\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
 
 4. **Critical CSS**
 
