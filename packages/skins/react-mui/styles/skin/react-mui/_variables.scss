@@ -6,7 +6,7 @@ $mui-toolbar-selector: '.MuiToolbar-root' !default;
 // variables, which an application configures as in the other skins
 $mui-table-header-height: 56px;
 $mui-table-row-height: 52px;
-$mui-row-horizontal-padding: 16px; // the padding of the cells of the table of MUI
+$mui-row-horizontal-padding: 24px; // the padding of the cells of the tables of mat, which the cells of MUI take
 
 $mui-elevation-16-shadow-size: 42px;
 $mui-table-shadow-size: $mui-elevation-16-shadow-size;
