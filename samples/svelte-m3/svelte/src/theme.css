@@ -21,8 +21,14 @@
   color: var(--m3c-on-surface);
 }
 
+/*
+ * The tables of the skin, the elements with the class m3-svelte, take the colors of their own color scheme, as the light
+ * page has a table in the dark scheme of the system: the build lowers light-dark() into variables of the color scheme of
+ * each element, which a color role reads where it is declared
+ */
 @layer tokens {
-  :root {
+  :root,
+  .m3-svelte {
     --m3-font: Roboto, sans-serif;
 
     --m3c-surface: light-dark(#faf9fd, #121316);
