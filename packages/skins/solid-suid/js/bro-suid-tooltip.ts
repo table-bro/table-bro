@@ -21,17 +21,18 @@ const touchHideDelay: number = 1500;
 /** The number of the next tooltip, for the id that aria-describedby of its element names. */
 let nextTooltip: number = 0;
 
-/** The tooltip of SUID, which SUID 0.19 does not port: the look of the tooltip of MUI in the theme of the application. */
+/**
+ * The tooltip of SUID, which SUID 0.19 does not port: the look of the tooltip of MUI in the theme of the application,
+ * with the body small text of Material 3 of the tooltips of mat, the caption text of the theme on a line of 16px.
+ */
 const TooltipPopup = styled('div')(({theme}) => ({
   maxWidth: 300,
   padding: '4px 8px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.grey[700], 0.92),
   color: theme.palette.common.white,
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.pxToRem(11),
-  fontWeight: theme.typography.fontWeightMedium,
-  lineHeight: `${Math.round(16 / 11 * 1e5) / 1e5}em`,
+  ...theme.typography.caption,
+  lineHeight: '1rem',
   overflowWrap: 'break-word'
 }));
 

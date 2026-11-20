@@ -22,6 +22,12 @@ function tooltipRef(message: string | undefined): (button: HTMLElement) => void 
 }
 
 /**
+ * The text of the items of the menu: the label large text of Material 3, as the menu of mat, by the subtitle2 text of the
+ * theme, 14px in the medium weight, on a line of 20px. The items of SUID have the body1 text of 16px.
+ */
+const menuItemText = {variant: 'subtitle2', sx: {lineHeight: '1.25rem'}} as const;
+
+/**
  * The menu of the toolbar: an icon button with the title of the menu as its name, and the items of the menu of SUID
  * that send their values, and the tooltip of the button above it.
  * @param dropdown - the menu of the config, a button of toolbarMain.buttons with the mode navbar-dropdown
@@ -39,7 +45,7 @@ function toolbarMenu(dropdown: BroDropdown, onAction: (action: string) => void) 
         },
         children: [
           option.iconHTML ? suid(ListItemIcon, {children: suid(Icon, {children: option.iconHTML})}) : null,
-          suid(ListItemText, {children: option.title})
+          suid(ListItemText, {primaryTypographyProps: menuItemText, children: option.title})
         ]
       }));
 
