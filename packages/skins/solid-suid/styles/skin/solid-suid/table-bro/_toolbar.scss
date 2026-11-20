@@ -14,6 +14,13 @@
     border-bottom-style: solid;
   }
 
+  // The toolbar of the table keeps its buttons and its field 16px from its edges, as the toolbar of mat: the gutters of
+  // the toolbar of SUID are 24px on a wide page
+  #{$bro-table-toolbar_container} #{$suid-toolbar-selector} {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
   // The title of the toolbar has the title large text of Material 3, as the top app bar of Material and the title of
   // mat: 22px on a line of 28px in the regular weight, in the font of the h6 text of the theme
   bro-suid-toolbar-main .bro-toolbar-title,
