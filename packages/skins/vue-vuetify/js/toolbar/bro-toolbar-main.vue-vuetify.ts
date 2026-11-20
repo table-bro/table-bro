@@ -20,7 +20,7 @@ type BroActivatorProps = {props: Record<string, unknown>};
  * @param tooltip - the text of the tooltip; none without it
  */
 function toolbarButton(ligature: string, props: Record<string, unknown>, tooltip?: string): VNode {
-  return h(VTooltip, {text: tooltip, disabled: !tooltip, location: 'top'}, {
+  return h(VTooltip, {text: tooltip, disabled: !tooltip, location: 'top', contentClass: 'bro-vuetify-tooltip'}, {
     activator: ({props: activator}: BroActivatorProps) => h(VBtn, mergeProps(activator, props, {icon: true, variant: 'text'}), () => icon(ligature))
   });
 }
@@ -68,7 +68,7 @@ export class BroVuetifyToolbarMainComponent extends BroVuetifyElement implements
 
     return h(VMenu, {location: 'bottom end'}, {
       activator: ({props}: BroActivatorProps) => toolbarButton('more_vert', mergeProps(props, {'aria-label': dropdown.buttonTitle}), dropdown.buttonTooltip),
-      default: () => h(VList, null, () => items)
+      default: () => h(VList, {class: 'bro-vuetify-menu'}, () => items)
     });
   }
 }

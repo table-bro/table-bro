@@ -6,4 +6,12 @@
   .bro-vuetify-root {
     display: contents;
   }
+
+  // The tooltips of the skin have the body small text of Vuetify, as the tooltips of mat: the tooltip of Vuetify has the
+  // text of 14px of its own. A tooltip lies in the overlay container of Vuetify in the body of the page
+  @at-root .bro-vuetify-tooltip {
+    font-size: .75rem;
+    line-height: 1.3333;
+    letter-spacing: .0333em;
+  }
 }

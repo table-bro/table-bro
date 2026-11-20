@@ -44,6 +44,15 @@
     visibility: hidden;
   }
 
+  // The items of the menu of the toolbar have the label large text of Vuetify, as the menu of mat: the items of Vuetify
+  // have the body large text of 16px. The menu lies in the overlay container of Vuetify in the body of the page
+  @at-root .bro-vuetify-menu .v-list-item-title {
+    font-weight: 500;
+    font-size: .875rem;
+    line-height: 1.4286;
+    letter-spacing: .0071em;
+  }
+
   bro-vuetify-toolbar-main .bro-toolbar-space,
   .bro-filter-drawer-header .bro-filter-drawer-title {
     flex: 1 1 auto;

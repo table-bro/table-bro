@@ -78,7 +78,7 @@ export class BroVuetifySortHeaderComponent extends BroVuetifyElement implements 
     }
 
     // The arrow points up for the ascending sort and turns down for the descending one, as in the data table of Vuetify
-    return h(VTooltip, {text: this.tooltip, disabled: !this.tooltip, location: 'right'}, {
+    return h(VTooltip, {text: this.tooltip, disabled: !this.tooltip, location: 'right', contentClass: 'bro-vuetify-tooltip'}, {
       activator: ({props}: {props: Record<string, unknown>}) => h('button', mergeProps(props, {class: classes.join(' '), type: 'button', onClick: () => this.onSort()}), [
         h('span', {class: 'bro-vuetify-sort-header-content'}, this.headerTitle),
         icon('arrow_upward', 'bro-vuetify-sort-header-icon')
