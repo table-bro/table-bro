@@ -7,6 +7,12 @@
     display: contents;
   }
 
+  // The text button of the skin, as the Details button, has the full corner of the text buttons of Material 3, as the
+  // buttons of mat
+  bro-mui-button .MuiButton-root {
+    border-radius: 9999px;
+  }
+
   // The shadow of the table and of its regions: the elevation 16 of the theme
   .bro-mui-elevation-16 {
     box-shadow: var(--mui-shadows-16);
