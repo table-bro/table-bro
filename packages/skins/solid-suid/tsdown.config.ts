@@ -1,8 +1,13 @@
 import {defineConfig} from 'tsdown';
 
 const common = {
-  // The entry of the browser, and the one of the server, which renders the elements of a prerender to markup
-  entry: {'table-bro.solid-suid': 'js/table-bro.solid-suid.ts', 'table-bro.solid-suid.server': 'js/table-bro.solid-suid.server.ts'},
+  // The entry of the browser, the one of the server, which renders the elements of a prerender to markup, and the
+  // config of the skin alone, without Solid and SUID
+  entry: {
+    'table-bro.solid-suid': 'js/table-bro.solid-suid.ts',
+    'table-bro.solid-suid.server': 'js/table-bro.solid-suid.server.ts',
+    'table-bro.solid-suid.config': 'js/table-bro.solid-suid.config.ts'
+  },
   platform: 'browser',
   target: 'es2022',
   outDir: 'dist',

@@ -174,7 +174,9 @@ The elements of the cells are optional: `withTags()` adds `bro-suid-tags`, `with
 
 ## Settings
 
-`suidSkinConfig` is the config of the skin. `config.components` and `config.css` of a table change any of its values or
+`suidSkinConfig` is the config of the skin; `@table-bro/solid-suid/config` gives it alone, without Solid and SUID, as
+for a prerender that takes the config of the skin. The import of the package registers it with the tooltips of the sort
+headers and of the values of the cells. `config.components` and `config.css` of a table change any of its values or
 functions, at any depth, for that table. The sizes and timings are CSS variables of the table, as `--bro-row-height`: see
 the README of `@table-bro/core`.
 

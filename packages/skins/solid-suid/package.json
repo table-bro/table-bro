@@ -55,6 +55,11 @@
       "import": "./dist/table-bro.solid-suid.server.esm.js",
       "default": "./dist/table-bro.solid-suid.server.esm.js"
     },
+    "./config": {
+      "types": "./dist/table-bro.solid-suid.config.d.ts",
+      "import": "./dist/table-bro.solid-suid.config.esm.js",
+      "default": "./dist/table-bro.solid-suid.config.esm.js"
+    },
     "./dist/*.css": "./dist/*.css",
     "./styles/*": "./styles/*"
   },
