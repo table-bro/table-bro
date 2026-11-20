@@ -1,0 +1,8 @@
+@use "../variables" as *;
+
+// The filter drawer of the core with the toolbar of the skin in its header: the close button keeps to the right edge
+@mixin styles {
+  .bro-filter-drawer-header .bro-filter-drawer-close {
+    margin-right: -8px;
+  }
+}

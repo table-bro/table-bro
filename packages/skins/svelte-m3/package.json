@@ -1,0 +1,96 @@
+{
+  "name": "@table-bro/svelte-m3",
+  "version": "1.2.1",
+  "description": "Pixel-perfect Material 3 data tables for Svelte and M3 Svelte, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "m3-svelte",
+    "material",
+    "material-3",
+    "material-design",
+    "material-you",
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "mcp",
+    "ai-coding-agents",
+    "vibe-coding",
+    "claude-code",
+    "cursor",
+    "codex",
+    "github-copilot",
+    "windsurf",
+    "gemini-cli",
+    "grok",
+    "cline",
+    "zed",
+    "jetbrains-ai",
+    "svelte-table"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/svelte-m3"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.svelte-m3.esm.js",
+  "module": "dist/table-bro.svelte-m3.esm.js",
+  "types": "dist/table-bro.svelte-m3.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.svelte-m3.d.ts",
+      "svelte": "./dist/table-bro.svelte-m3.esm.js",
+      "import": "./dist/table-bro.svelte-m3.esm.js",
+      "default": "./dist/table-bro.svelte-m3.esm.js"
+    },
+    "./server": {
+      "types": "./dist/table-bro.svelte-m3.server.d.ts",
+      "svelte": "./dist/table-bro.svelte-m3.server.esm.js",
+      "import": "./dist/table-bro.svelte-m3.server.esm.js",
+      "default": "./dist/table-bro.svelte-m3.server.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.svelte-m3.ts",
+    "./js/table-bro.svelte-m3.server.ts",
+    "./dist/table-bro.svelte-m3.esm.js",
+    "./dist/table-bro.svelte-m3.server.esm.js",
+    "./dist/table-bro.svelte-m3.shared.esm.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.svelte-m3",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.svelte-m3",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "m3-svelte": "^7.0.0",
+    "svelte": "^5.0.0",
+    "@table-bro/core": "^1.2.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "m3-svelte": "^7.2.1",
+    "svelte": "^5.58.0",
+    "tsdown": "^0.23.0",
+    "vite-plugin-functions-mixins": "^0.4.1"
+  }
+}

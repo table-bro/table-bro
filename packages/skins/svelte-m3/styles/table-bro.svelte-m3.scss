@@ -1,0 +1,82 @@
+// The M3 skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.svelte-m3.api
+@forward "./table-bro.svelte-m3.api";
+@use "./skin/svelte-m3/variables" as *;
+@use "sass:meta";
+
+/* Mixins */
+@use "./skin/shared/mixins/custom-properties" as *;
+@use "./skin/shared/mixins/shared" as *;
+
+@use "./skin/shared/table-bro/details" as shared-details;
+@use "./skin/shared/table-bro/filter-drawer" as shared-filter-drawer;
+@use "./skin/shared/table-bro/shadows" as shared-shadows;
+@use "./skin/shared/table-bro/state" as shared-state;
+@use "./skin/shared/table-bro/table" as shared-table;
+@use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
+@use "./skin/svelte-m3/table-bro/elements" as m3-elements;
+@use "./skin/svelte-m3/table-bro/filter-drawer" as m3-filter-drawer;
+@use "./skin/svelte-m3/table-bro/paginator" as m3-paginator;
+@use "./skin/svelte-m3/table-bro/progress-bar" as m3-progress-bar;
+@use "./skin/svelte-m3/table-bro/sort-header" as m3-sort-header;
+@use "./skin/svelte-m3/table-bro/switch" as m3-switch;
+@use "./skin/svelte-m3/table-bro/table" as m3-table;
+@use "./skin/svelte-m3/table-bro/tags" as m3-tags;
+@use "./skin/svelte-m3/table-bro/toolbar" as m3-toolbar;
+@use "./skin/svelte-m3/table-bro/toolbar-search" as m3-toolbar-search;
+@use "./skin/svelte-m3/table-bro/tooltip" as m3-tooltip;
+
+
+/* Shared */
+#{$bro-skin} {
+  @include shared-details.styles;
+  @include shared-filter-drawer.styles;
+  @include shared-shadows.styles;
+  @include shared-state.styles;
+  @include shared-table.styles;
+  @include shared-text-ellipsis.styles;
+
+  // The tags of the skin in a cell
+  @include bro-cell-items('bro-m3-svelte-tags .bro-m3-svelte-tags-chips', '.m3-container', '> span');
+}
+
+
+/* M3 Svelte components */
+#{$bro-skin} {
+  @include m3-elements.styles;
+}
+
+
+/* Table-bro extensions */
+#{$bro-skin} {
+  @include m3-filter-drawer.styles;
+  @include m3-paginator.styles;
+  @include m3-progress-bar.styles;
+  @include m3-sort-header.styles;
+  @include m3-switch.styles;
+  @include m3-table.styles;
+  @include m3-tags.styles;
+  @include m3-toolbar.styles;
+  @include m3-toolbar-search.styles;
+}
+@include meta.load-css("./skin/svelte-m3/themes");
+
+
+/* The tooltip of the skin, for the nodes of the application too */
+@include m3-tooltip.styles;
+
+
+#{$bro-skin} {
+  @include bro-table-shadow-container();
+}
+
+
+/* The sizes and timings for the table script; :where() lets a plain table-bro selector override them */
+:where(#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}
+
+/* A prerendered table (data-bro-prerender of prerenderTableBro) takes them in the critical CSS of its page too, as
+   Beasties writes it: it drops a selector of :where() alone, which nothing is left of without the pseudo-class */
+table-bro:where([data-bro-prerender]#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}

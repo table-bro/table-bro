@@ -69,6 +69,11 @@ export function scaffoldComponent(request: BroScaffoldRequest): BroScaffold {
     report.errors.push({path: '', message: 'the vuetify skin is for Vue', fix: 'use the target vanilla in a project of Vue, or the skin mat, bs or nv'});
   }
 
+  if (target === 'angular' && skin === 'm3-svelte') {
+    report.valid = false;
+    report.errors.push({path: '', message: 'the m3-svelte skin is for Svelte', fix: 'use the target vanilla in a project of Svelte, or the skin mat, bs or nv'});
+  }
+
   if (kind === 'filters' && !request.filters?.length) {
     report.valid = false;
     report.errors.push({path: 'filters', message: 'the filters of the drawer need at least one filter', fix: 'give the filters as the filters of a spec, get_docs topic filters'});

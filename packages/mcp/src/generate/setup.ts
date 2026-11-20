@@ -9,6 +9,7 @@ const css: Record<BroSpecSkin | 'core', string> = {
   mat: 'node_modules/@table-bro/angular-material/dist/table-bro.material.min.css',
   mui: 'node_modules/@table-bro/react-mui/dist/table-bro.react-mui.min.css',
   vuetify: 'node_modules/@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css',
+  'm3-svelte': 'node_modules/@table-bro/svelte-m3/dist/table-bro.svelte-m3.min.css',
   bs: 'node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css',
   nv: 'node_modules/@table-bro/native/dist/table-bro.native.min.css'
 };
@@ -25,6 +26,9 @@ const packageRoles: Record<string, string> = {
   '@emotion/styled': '',
   '@table-bro/vue-vuetify': '`@table-bro/vue-vuetify`: the skin vuetify, the table on the components of Vuetify for Vue, in the themes of the Vuetify of the application',
   vuetify: '`vuetify`: Vuetify itself, whose components the skin renders',
+  '@table-bro/svelte-m3': '`@table-bro/svelte-m3`: the skin m3-svelte, the table on the components of M3 Svelte for Svelte, in the Material 3 theme of the application',
+  'm3-svelte': '`m3-svelte`: M3 Svelte itself, whose components the skin mounts',
+  'vite-plugin-functions-mixins': '`vite-plugin-functions-mixins`: the plugin of Vite that compiles the CSS of the components of M3 Svelte',
   '@table-bro/bootstrap': '`@table-bro/bootstrap`: the skin bs, the table on the components and the classes of Bootstrap 5: its buttons, dropdowns and tooltips',
   bootstrap: '`bootstrap`: Bootstrap itself, its CSS and the Dropdown and Tooltip that the skin uses',
   '@types/bootstrap': '`@types/bootstrap`: the types of Bootstrap, which the import of Dropdown and Tooltip needs in a strict TypeScript project',
@@ -92,6 +96,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     mat: ['@table-bro/angular-material', '@angular/elements'],
     mui: ['@table-bro/react-mui', '@mui/material', '@emotion/react', '@emotion/styled'],
     vuetify: ['@table-bro/vue-vuetify', 'vuetify'],
+    'm3-svelte': ['@table-bro/svelte-m3', 'm3-svelte', 'vite-plugin-functions-mixins'],
     bs: ['@table-bro/bootstrap', 'bootstrap', '@types/bootstrap'],
     nv: ['@table-bro/native']
   }[skin], ...extraPackages];
@@ -238,6 +243,44 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
       title: 'Load the font of the icons',
       text: 'The vuetify skin shows the ligature icons of Material, whatever icon set the application gives Vuetify. In `index.html`:',
       code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
+      language: 'html'
+    });
+  } else if (skin === 'm3-svelte') {
+    steps.push({
+      title: 'Compile M3 Svelte',
+      text: 'M3 Svelte publishes its components as their sources: Vite compiles them with the plugin of Svelte, and the CSS of their styles with `vite-plugin-functions-mixins`. The plugin names Vite 7 as its peer dependency and works with Vite 8: a project of Vite 8 adds `"overrides": {"vite-plugin-functions-mixins": {"vite": "$vite"}}` to its `package.json`. In `vite.config.ts`:',
+      code: [
+        imports({'@sveltejs/vite-plugin-svelte': ['svelte'], vite: ['defineConfig'], 'vite-plugin-functions-mixins': ['functionsMixins']}),
+        '',
+        'export default defineConfig({',
+        '  plugins: [svelte(), functionsMixins({deps: [\'m3-svelte\']})]',
+        '});'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Register the skin with the theme of the application',
+      text: `Once, before the tables: the import registers the skin. The table and the components of M3 Svelte read the colors of the M3 Svelte theme of the application, its CSS variables \`--m3c-*\`: the application imports the styles of M3 Svelte and its theme, as the theme page of M3 Svelte writes it, with the function \`--m3-density\` and the colors of the light and the dark scheme. ${optional}`,
+      code: [
+        '// theme.css: @import "m3-svelte/etc/styles.css"; @import "m3-svelte/etc/recommended-styles.css"; and the theme',
+        'import \'./theme.css\';',
+        features.length ? imports({'@table-bro/svelte-m3': features}) : 'import \'@table-bro/svelte-m3\';',
+        ...(features.length ? ['', ...vanillaCalls] : [])
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Render the table in onMount',
+      text: 'The elements of the skin render at once: `mount()` of Svelte renders a component synchronously, and an element renders a change by `flushSync()`. A component renders the table when its container is in the DOM, in `onMount()`.',
+      code: [
+        'let container: HTMLElement;',
+        '',
+        '// The render function of the module of the table, as renderOrderTable()',
+        'onMount(() => renderOrderTable(container));'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Load the font of the icons',
+      text: 'The m3-svelte skin shows the icons of Material Symbols by their names. In `index.html`:',
+      code: '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">',
       language: 'html'
     });
   } else {

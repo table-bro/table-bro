@@ -21,7 +21,7 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js and Nuxt. */
+/** The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, Nuxt and SvelteKit. */
 const prerenderSamples: Record<string, string> = {
   'src/main.server.ts': 'samples/angular-ssr',
   'src/app/app.config.ts': 'samples/angular-ssr',
@@ -38,7 +38,13 @@ const prerenderSamples: Record<string, string> = {
   'app/plugins/table-bro.client.ts': 'samples/vue-vuetify/nuxt',
   'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
   'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
-  'app/app.vue': 'samples/vue-vuetify/nuxt'
+  'app/app.vue': 'samples/vue-vuetify/nuxt',
+  'vite.config.ts': 'samples/svelte-m3/sveltekit',
+  'src/routes/+layout.ts': 'samples/svelte-m3/sveltekit',
+  'src/hooks.server.ts': 'samples/svelte-m3/sveltekit',
+  'src/lib/server/prerender-table.ts': 'samples/svelte-m3/sveltekit',
+  'src/routes/+page.server.ts': 'samples/svelte-m3/sveltekit',
+  'src/routes/+page.svelte': 'samples/svelte-m3/sveltekit'
 };
 
 /**
@@ -53,7 +59,8 @@ const skinSamples: Record<string, string> = {
   'frameworks/angular': 'samples/angular-material',
   'frameworks/react': 'samples/react-mui/react',
   'frameworks/preact': 'samples/react-mui/preact',
-  'frameworks/vue': 'samples/vue-vuetify/vue'
+  'frameworks/vue': 'samples/vue-vuetify/vue',
+  'frameworks/svelte': 'samples/svelte-m3/svelte'
 };
 
 /**
