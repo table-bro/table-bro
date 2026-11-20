@@ -21,7 +21,10 @@
     border: 0;
     border-radius: var(--m3-shape-extra-small);
 
+    // The popover lies in its host, as a sort header, and would take its white-space: nowrap: the text wraps at the max
+    // width, as in the tooltip of Angular Material
     text-align: center;
+    white-space: normal;
     overflow-wrap: anywhere;
 
     background-color: var(--m3c-inverse-surface);
@@ -30,6 +33,11 @@
     inset: auto;
 
     @include m3-body-small;
+  }
+
+  // A tooltip of more than one line aligns its text to the start, as the multiline tooltip of Angular Material
+  .bro-m3-svelte-tooltip_multiline {
+    text-align: start;
   }
 
   // The duration scale of the table is 0 under prefers-reduced-motion: reduce
