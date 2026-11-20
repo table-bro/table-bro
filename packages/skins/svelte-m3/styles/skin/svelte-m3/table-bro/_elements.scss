@@ -24,6 +24,12 @@
     color: var(--m3c-on-surface-variant);
   }
 
+  // The buttons of the skin keep their shape when pressed, as the buttons of the skin mat: M3 Svelte turns the corners
+  // of a pressed button into the small shape, and its state layer with them
+  :is(bro-m3-svelte-button, bro-m3-svelte-paginator, bro-m3-svelte-toolbar-main) button.m3-container.m3-layer {
+    --pressed-shape: var(--shape);
+  }
+
   // The icon and the title of a text button, and of an item of a menu, are the flex items of the component
   .bro-m3-svelte-button-label,
   .bro-m3-svelte-menu-item-label {
