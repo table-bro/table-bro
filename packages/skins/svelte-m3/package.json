@@ -48,8 +48,15 @@
   "exports": {
     ".": {
       "types": "./dist/table-bro.svelte-m3.d.ts",
+      "svelte": "./dist/table-bro.svelte-m3.esm.js",
       "import": "./dist/table-bro.svelte-m3.esm.js",
       "default": "./dist/table-bro.svelte-m3.esm.js"
+    },
+    "./server": {
+      "types": "./dist/table-bro.svelte-m3.server.d.ts",
+      "svelte": "./dist/table-bro.svelte-m3.server.esm.js",
+      "import": "./dist/table-bro.svelte-m3.server.esm.js",
+      "default": "./dist/table-bro.svelte-m3.server.esm.js"
     },
     "./dist/*.css": "./dist/*.css",
     "./styles/*": "./styles/*"
@@ -57,7 +64,10 @@
   "sideEffects": [
     "./js/index.ts",
     "./js/table-bro.svelte-m3.ts",
+    "./js/table-bro.svelte-m3.server.ts",
     "./dist/table-bro.svelte-m3.esm.js",
+    "./dist/table-bro.svelte-m3.server.esm.js",
+    "./dist/table-bro.svelte-m3.shared.esm.js",
     "./dist/*.css"
   ],
   "files": [

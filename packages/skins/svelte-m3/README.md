@@ -216,9 +216,37 @@ see the README of `@table-bro/core`.
 ## Server render
 
 The elements of the skin mount the components of M3 Svelte in the browser. A prerender of a table on the server,
-`prerenderTableBro()` of `@table-bro/core`, renders the sort headers and the texts of the cells of the skin, and leaves
-the elements of M3 Svelte empty: the browser renders them when `configure()` renders the table in place of the
-prerender.
+`prerenderTableBro()` of `@table-bro/core` in a server DOM such as linkedom, renders them too with the server entry of
+the package, `@table-bro/svelte-m3/server`: the toolbar, the sort headers, the progress bar and the paginator with the
+components of M3 Svelte in the loading state of the table, by `render()` of `svelte/server`, which is synchronous. The
+bundler of the server compiles the components of M3 Svelte for the server, as SvelteKit does; the condition `svelte`
+of the exports of the package lets the plugin of Svelte bundle the skin with them. The server DOM gives its
+`HTMLElement` to the global scope before the server imports the core and the skin, since the elements extend it, as the
+hooks of the server of SvelteKit do:
+
+```ts
+// src/hooks.server.ts
+import {parseHTML} from 'linkedom';
+
+globalThis.HTMLElement ??= parseHTML('<!doctype html><html><body></body></html>').window.HTMLElement;
+```
+
+```ts
+import {prerenderTableBro} from '@table-bro/core';
+import '@table-bro/svelte-m3/server';
+import {parseHTML} from 'linkedom';
+
+const {document} = parseHTML('<!doctype html><html><body></body></html>');
+const table = document.createElement('table-bro');
+
+document.body.append(table);
+prerenderTableBro(table, {cols, conf});
+```
+
+The bundle of the browser does not carry the server entry. Without it the package registers only the config of the
+skin on the server, and a prerender leaves the elements of M3 Svelte empty. The browser keeps the prerendered elements
+until `configure()` renders the table in their place. The setup with SvelteKit is on the page
+[Prerendering](https://table-bro.com/docs/ssr/prerendering).
 
 ## Build
 

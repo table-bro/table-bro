@@ -13,7 +13,8 @@ import {BroM3SvelteToolbarMainComponent}                           from './toolb
 import {BroM3SvelteToolbarComponent}                               from './toolbar/bro-toolbar.svelte-m3';
 
 // The elements are defined only in the browser: imported without a DOM, as in the server render, the skin only
-// registers its config. The optional elements, tags and switch, come with withTags() and withSwitch()
+// registers its config, and a prerender renders its elements with the server entry of the skin
+// (table-bro.svelte-m3.server.ts). The optional elements, tags and switch, come with withTags() and withSwitch()
 defineElement('bro-m3-svelte-button', BroM3SvelteButtonComponent);
 defineElement('bro-m3-svelte-paginator', BroM3SveltePaginatorComponent);
 defineElement('bro-m3-svelte-progress-bar', BroM3SvelteProgressBarComponent);

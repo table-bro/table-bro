@@ -107,7 +107,7 @@ export class BroM3SvelteSortHeaderComponent extends BroHTMLElement implements Br
 
     control.className = (this.arrowPosition === 'before') ? 'bro-m3-svelte-sort-header bro-m3-svelte-sort-header_before' : 'bro-m3-svelte-sort-header';
     control.setAttribute('role', 'button');
-    control.tabIndex = 0;
+    control.setAttribute('tabindex', '0');
     content.className = 'bro-m3-svelte-sort-header-content';
     content.textContent = this.headerTitle;
     control.append(content);

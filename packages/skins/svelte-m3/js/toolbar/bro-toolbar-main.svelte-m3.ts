@@ -98,7 +98,7 @@ export class BroM3SvelteToolbarMainComponent extends BroM3SvelteElement implemen
     const popover = new BroDom(this.ownerDocument).createElement('div');
 
     popover.className = 'bro-m3-svelte-toolbar-menu';
-    popover.popover = 'auto';
+    popover.setAttribute('popover', 'auto');
 
     const button = this.iconButton(toolbar, 'more_vert', {
       'aria-label': dropdown.buttonTitle,
