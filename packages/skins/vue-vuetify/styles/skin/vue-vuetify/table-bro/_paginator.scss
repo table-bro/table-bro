@@ -1,0 +1,50 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+@use "../../shared/mixins/toolbar" as *;
+
+@mixin styles {
+  @include skin_paginator($vuetify-paginator-selector);
+
+  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
+  // table: Island Details rounds the corners of this element. The footer of Vuetify in it fills it, as the footer of
+  // its data table: the select of the page size, the range and the buttons at the end of the line
+  #{$bro-paginator-container} #{$vuetify-paginator-selector} {
+    display: block;
+
+    height: $bro-paginator-height;
+
+    background-color: $vuetify-bg;
+    color: $vuetify-text-color;
+
+    .bro-vuetify-paginator {
+      display: flex;
+
+      box-sizing: border-box;
+      height: 100%;
+      padding: 0 8px;
+
+      gap: 24px;
+
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .bro-vuetify-paginator-page-size {
+      display: flex;
+
+      gap: 8px;
+
+      align-items: center;
+    }
+
+    .bro-vuetify-paginator-select {
+      width: 90px;
+
+      flex: none;
+    }
+
+    .bro-vuetify-paginator-actions {
+      display: flex;
+    }
+  }
+}

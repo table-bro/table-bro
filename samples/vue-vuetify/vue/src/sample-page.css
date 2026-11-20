@@ -1,0 +1,12 @@
+/*
+ * The page around the table, as a demo of Docs on table-bro.com shows it: not a part of the setup of Getting started.
+ * The table takes the width of the content of a page of Docs, up to 1140px with sides of 1.5rem, on the background of
+ * the theme of Vuetify, which its application renders; its shadows and its rounded corners are the ones of the skin.
+ */
+.v-application__wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}

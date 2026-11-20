@@ -1,0 +1,18 @@
+{
+  "name": "table-bro-sample-vue-vuetify-nuxt",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt generate"
+  },
+  "dependencies": {
+    "@table-bro/core": "^1.2.1",
+    "@table-bro/vue-vuetify": "^1.2.1",
+    "linkedom": "^0.18.15",
+    "nuxt": "^4.6.4",
+    "vue": "^3.5.45",
+    "vuetify": "^4.3.4"
+  }
+}
