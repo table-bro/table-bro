@@ -71,13 +71,15 @@ export class BroVuetifyPaginatorComponent extends BroVuetifyElement implements B
     const lastPage = Math.max(Math.ceil(length / pageSize) - 1, 0);
 
     // A button of a page, with the class of the button of the paginator of the vanilla skins: a page, as a demo, finds
-    // the buttons by them
+    // the buttons by them. An empty color, not the default color of the application, as the buttons of the footer of the
+    // data table of Vuetify: the skin gives their icons the color of the icons
     const button = (name: 'first' | 'previous' | 'next' | 'last', ligature: string, page: number, active: boolean) => h(VBtn, {
       class: `bro-paginator-navigation-${name}`,
       'aria-label': texts?.[`${name}Page`],
       disabled: disabled || !active,
       icon: true,
       variant: 'text',
+      color: '',
       density: 'comfortable',
       onClick: () => this.changePage(page, pageSize)
     }, () => icon(ligature));
