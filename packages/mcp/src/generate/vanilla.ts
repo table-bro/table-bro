@@ -12,11 +12,11 @@ import {rowTypeCode}                                                            
 import {type BroServerSource, serviceCode}                                                       from './service.js';
 
 /**
- * The table for a page without a framework or of React, Preact, Vue and Svelte, in the skins mui, vuetify, m3-svelte, bs
- * and nv: an ES module with a function that renders <table-bro> into a container, with its cells, its filter drawer and
- * its CSS variables. The module imports the config of the skin from its package; the setup of the project registers the
- * skin with the optional elements of the table. A server table loads its pages from the API of the project, or from the
- * API of the spec or the simulated server of the site through the service of the table.
+ * The table for a page without a framework or of React, Preact, Vue, Solid and Svelte, in the skins mui, vuetify, suid,
+ * m3-svelte, bs and nv: an ES module with a function that renders <table-bro> into a container, with its cells, its
+ * filter drawer and its CSS variables. The module imports the config of the skin from its package; the setup of the
+ * project registers the skin with the optional elements of the table. A server table loads its pages from the API of the
+ * project, or from the API of the spec or the simulated server of the site through the service of the table.
  */
 export function vanillaTable(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroSpecFillings, tagSuffix: string = '', extensions: BroMcpExtension[] = [], simulateServer: boolean = false): BroTableFiles {
   const names = BroNames.of(spec, tagSuffix);

@@ -1,0 +1,31 @@
+@use "../variables" as *;
+
+// The tooltip of the skin on the Popper of SUID, in the body of the page: the layer of the tooltip of MUI, and the
+// animation of the tooltip of the skin mat when it shows
+@mixin styles {
+  .bro-suid-tooltip-popper {
+    z-index: $suid-tooltip-z-index;
+
+    pointer-events: none;
+  }
+
+  .bro-suid-tooltip {
+    animation: bro-suid-tooltip-show 150ms cubic-bezier(0, 0, .2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  @keyframes bro-suid-tooltip-show {
+    from {
+      opacity: 0;
+      transform: scale(.8);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

@@ -129,6 +129,8 @@ jobs:
         run: npx playwright test e2e/samples-react-mui.spec.ts --project chromium
       - name: Pages of samples/vue-vuetify
         run: npx playwright test e2e/samples-vue-vuetify.spec.ts --project chromium
+      - name: Pages of samples/solid-suid
+        run: npx playwright test e2e/samples-solid-suid.spec.ts --project chromium
       - name: Pages of samples/svelte-m3
         run: npx playwright test e2e/samples-svelte-m3.spec.ts --project chromium
       - name: Pages of samples/angular-ssr

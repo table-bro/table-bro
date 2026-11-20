@@ -12,6 +12,7 @@ A skin gives it the look and the controls of a UI library. The packages of Table
 | `@table-bro/angular-material` | The Angular Material skin `mat` |
 | `@table-bro/react-mui` | The MUI skin `mui` for React and Preact |
 | `@table-bro/vue-vuetify` | The Vuetify skin `vuetify` for Vue |
+| `@table-bro/solid-suid` | The SUID skin `suid` for Solid |
 | `@table-bro/svelte-m3` | The M3 Svelte skin `m3-svelte` for Svelte |
 | `@table-bro/bootstrap` | The Bootstrap skin `bs` |
 | `@table-bro/native` | The native skin `nv`: plain HTML elements, no UI library |

@@ -1,0 +1,12 @@
+@use "../variables" as *;
+@use "../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar($suid-progress-bar-selector);
+  @include table-aux-progress-bar($suid-progress-bar-selector);
+
+  // The linear progress of SUID fills the height of the bar of the table
+  #{$suid-progress-bar-selector} .MuiLinearProgress-root {
+    height: 100%;
+  }
+}

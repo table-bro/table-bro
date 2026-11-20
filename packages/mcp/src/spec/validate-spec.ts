@@ -727,9 +727,9 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
   checkKeys(value, ['buttons', 'menu'], 'toolbar', issues);
 
   const actions = new Set<string>();
-  // The skins of Material icons, mat, mui, vuetify and m3-svelte, are checked when the project has one of them, and on
-  // the site, which has all skins
-  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui' || options.skin === 'vuetify' || options.skin === 'm3-svelte';
+  // The skins of Material icons, mat, mui, vuetify, suid and m3-svelte, are checked when the project has one of them,
+  // and on the site, which has all skins
+  const iconRequired = !options.skin || options.skin === 'mat' || options.skin === 'mui' || options.skin === 'vuetify' || options.skin === 'suid' || options.skin === 'm3-svelte';
 
   const checkButton = (button: unknown, path: string, icon: boolean) => {
     if (!isObject(button)) {
@@ -761,7 +761,7 @@ function checkToolbar(value: unknown, spec: Record<string, unknown>, options: Br
     if (button['icon'] !== undefined && (typeof button['icon'] !== 'string' || !iconName.test(button['icon']))) {
       issues.error(`${path}.icon`, 'expected the name of a Material icon', 'as download');
     } else if (icon && button['icon'] === undefined) {
-      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat, mui, vuetify and m3-svelte is an icon with a tooltip', 'give the name of a Material icon, as download');
+      issues.error(`${path}.icon`, 'a button of the toolbar of the skins mat, mui, vuetify, suid and m3-svelte is an icon with a tooltip', 'give the name of a Material icon, as download');
     }
   };
 
@@ -831,17 +831,17 @@ function checkSkinConfig(value: unknown, options: BroValidateOptions, issues: Br
   }
 
   if (!isObject(value)) {
-    issues.error('skinConfig', 'expected an object with the skins mat, mui, vuetify, m3-svelte, bs or nv');
+    issues.error('skinConfig', 'expected an object with the skins mat, mui, vuetify, suid, m3-svelte, bs or nv');
 
     return;
   }
 
-  checkKeys(value, ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], 'skinConfig', issues);
+  checkKeys(value, ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], 'skinConfig', issues);
 
   for (const [skin, config] of Object.entries(value)) {
     const path = `skinConfig.${skin}`;
 
-    if (!['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'].includes(skin)) {
+    if (!['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'].includes(skin)) {
       continue;
     }
 

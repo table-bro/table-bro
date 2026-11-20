@@ -127,6 +127,7 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
 | [`@table-bro/angular-material`](packages/skins/angular-material) | The skin `mat` on the components of Angular Material, in the theme of the application |
 | [`@table-bro/react-mui`](packages/skins/react-mui) | The skin `mui` on the components of MUI for React and Preact, in the theme of the application |
 | [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | The skin `vuetify` on the components of Vuetify for Vue, in the themes of the application |
+| [`@table-bro/solid-suid`](packages/skins/solid-suid) | The skin `suid` on the components of SUID, the port of MUI to Solid, in the theme of the application |
 | [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | The skin `m3-svelte` on the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
 | [`@table-bro/bootstrap`](packages/skins/bootstrap) | The skin `bs` on the components and the classes of Bootstrap 5 |
 | [`@table-bro/native`](packages/skins/native) | The skin `nv`: plain HTML elements, no UI library |

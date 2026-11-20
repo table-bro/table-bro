@@ -1,0 +1,92 @@
+// The SUID skin: @use prints its CSS. The variables and mixins of the skin without the CSS: table-bro.solid-suid.api
+@forward "./table-bro.solid-suid.api";
+@use "./skin/solid-suid/variables" as *;
+@use "sass:meta";
+
+/* Mixins */
+@use "./skin/shared/mixins/custom-properties" as *;
+@use "./skin/shared/mixins/shared" as *;
+
+@use "./skin/shared/table-bro/details" as shared-details;
+@use "./skin/shared/table-bro/filter-drawer" as shared-filter-drawer;
+@use "./skin/shared/table-bro/shadows" as shared-shadows;
+@use "./skin/shared/table-bro/state" as shared-state;
+@use "./skin/shared/table-bro/table" as shared-table;
+@use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
+@use "./skin/vanilla-js/shared/vendor-extensions/material-based/paginator" as vanilla-paginator-extension;
+@use "./skin/solid-suid/table-bro/elements" as suid-elements;
+@use "./skin/solid-suid/table-bro/filter-drawer" as suid-filter-drawer;
+@use "./skin/solid-suid/table-bro/paginator" as suid-paginator;
+@use "./skin/solid-suid/table-bro/progress-bar" as suid-progress-bar;
+@use "./skin/solid-suid/table-bro/sort-header" as suid-sort-header;
+@use "./skin/solid-suid/table-bro/switch" as suid-switch;
+@use "./skin/solid-suid/table-bro/table" as suid-table;
+@use "./skin/solid-suid/table-bro/tags" as suid-tags;
+@use "./skin/solid-suid/table-bro/toolbar" as suid-toolbar;
+@use "./skin/solid-suid/table-bro/toolbar-search" as suid-toolbar-search;
+@use "./skin/solid-suid/table-bro/tooltip" as suid-tooltip;
+
+
+/* Shared */
+#{$bro-skin} {
+  @include shared-details.styles;
+  @include shared-filter-drawer.styles;
+  @include shared-shadows.styles;
+  @include shared-state.styles;
+  @include shared-table.styles;
+  @include shared-text-ellipsis.styles;
+
+  // The tags of the skin in a cell
+  @include bro-cell-items('bro-suid-tags .bro-suid-tags-chips', '.MuiChip-root', '.MuiChip-label');
+}
+
+
+/* SUID components */
+#{$bro-skin} {
+  @include suid-elements.styles;
+}
+
+
+/* The elements of the vanilla skins for the parts that SUID does not port: the paginator and the sort header */
+@include meta.load-css("./skin/vanilla-js/shared/components/material-based/paginator");
+@include meta.load-css("./skin/vanilla-js/shared/components/material-based/sort-header");
+
+#{$bro-skin} {
+  @include vanilla-paginator-extension.styles;
+}
+
+
+/* Table-bro extensions */
+#{$bro-skin} {
+  @include suid-filter-drawer.styles;
+  @include suid-paginator.styles;
+  @include suid-progress-bar.styles;
+  @include suid-sort-header.styles;
+  @include suid-switch.styles;
+  @include suid-table.styles;
+  @include suid-tags.styles;
+  @include suid-toolbar.styles;
+  @include suid-toolbar-search.styles;
+}
+@include meta.load-css("./skin/solid-suid/themes");
+
+
+/* The tooltips of the skin, in the body of the page */
+@include suid-tooltip.styles;
+
+
+#{$bro-skin} {
+  @include bro-table-shadow-container();
+}
+
+
+/* The sizes and timings for the table script; :where() lets a plain table-bro selector override them */
+:where(#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}
+
+/* A prerendered table (data-bro-prerender of prerenderTableBro) takes them in the critical CSS of its page too, as
+   Beasties writes it: it drops a selector of :where() alone, which nothing is left of without the pseudo-class */
+table-bro:where([data-bro-prerender]#{$bro-skin}) {
+  @include bro-skin-custom-properties();
+}

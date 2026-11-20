@@ -21,7 +21,11 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, Nuxt and SvelteKit. */
+/**
+ * The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, Nuxt, SolidStart and
+ * SvelteKit. A file is unique on its page, so the configs of Vite of SolidStart and SvelteKit name the folder of their
+ * sample: start/vite.config.ts and sveltekit/vite.config.ts.
+ */
 const prerenderSamples: Record<string, string> = {
   'src/main.server.ts': 'samples/angular-ssr',
   'src/app/app.config.ts': 'samples/angular-ssr',
@@ -39,7 +43,15 @@ const prerenderSamples: Record<string, string> = {
   'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
   'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
   'app/app.vue': 'samples/vue-vuetify/nuxt',
-  'vite.config.ts': 'samples/svelte-m3/sveltekit',
+  'start/vite.config.ts': 'samples/solid-suid',
+  'src/server-dom.ts': 'samples/solid-suid/start',
+  'src/prerender-orders.ts': 'samples/solid-suid/start',
+  'src/entry-server.tsx': 'samples/solid-suid/start',
+  'src/locals.d.ts': 'samples/solid-suid/start',
+  'src/PrerenderedOrdersTable.tsx': 'samples/solid-suid/start',
+  'src/app.tsx': 'samples/solid-suid/start',
+  'src/theme.ts': 'samples/solid-suid/start',
+  'sveltekit/vite.config.ts': 'samples/svelte-m3',
   'src/routes/+layout.ts': 'samples/svelte-m3/sveltekit',
   'src/hooks.server.ts': 'samples/svelte-m3/sveltekit',
   'src/lib/server/prerender-table.ts': 'samples/svelte-m3/sveltekit',
@@ -60,12 +72,13 @@ const skinSamples: Record<string, string> = {
   'frameworks/react': 'samples/react-mui/react',
   'frameworks/preact': 'samples/react-mui/preact',
   'frameworks/vue': 'samples/vue-vuetify/vue',
+  'frameworks/solid': 'samples/solid-suid/solid',
   'frameworks/svelte': 'samples/svelte-m3/svelte'
 };
 
 /**
  * The sample project of a page of Frameworks: the sample of the skin of its framework, as React MUI for React and
- * Preact, or samples/frameworks/<name> with the Bootstrap skin.
+ * Preact and Solid SUID for Solid, or samples/frameworks/<name> with the Bootstrap skin.
  * @param page - the path of the page
  * @param file - the file of the page, for the sections of Prerendering
  */

@@ -74,14 +74,14 @@ export interface BroSkinCallback {
 }
 
 export const skinCallbacks: BroSkinCallback[] = [
-  {path: 'components.button.beforeRender', signature: '(element: Element, value: string) => void', skins: ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], description: 'before the details button of the core renders'},
-  {path: 'components.sortHeader.beforeRender', signature: '(element: Element, value: string) => void', skins: ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], description: 'before the header of a column renders'},
+  {path: 'components.button.beforeRender', signature: '(element: Element, value: string) => void', skins: ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], description: 'before the details button of the core renders'},
+  {path: 'components.sortHeader.beforeRender', signature: '(element: Element, value: string) => void', skins: ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], description: 'before the header of a column renders'},
   {path: 'components.sortHeader.afterRender', signature: '(element: Element, value: string) => void | (() => void)', skins: ['bs', 'nv'], description: 'after the header of a column renders, for example to add a tooltip; a returned function cleans up'},
   {path: 'components.textEllipsis.afterRender', signature: '(element: Element, value: string) => void | (() => void)', skins: ['bs', 'nv'], description: 'after a cut value renders, for example to add a tooltip; a returned function cleans up'},
   {path: 'components.toolbarMain.beforeRender', signature: '(searchButton: Element, value: string) => void', skins: ['bs', 'nv'], description: 'before the search button of the toolbar renders; value is its word, texts.toolbarMain.search'},
-  {path: 'components.toolbarSearch.beforeRender', signature: '(backButton: Element, clearButton: Element) => void', skins: ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], description: 'before the buttons of the search line render'},
-  {path: 'components.fontIcon.html', signature: '(iconName: string) => string', skins: ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], description: 'the markup of a state icon with components.state.fontIcon'},
-  {path: 'components.state.lottieHTML', signature: '(iconSrc: string) => string', skins: ['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'], description: 'the markup of a state icon with components.state.lottie'}
+  {path: 'components.toolbarSearch.beforeRender', signature: '(backButton: Element, clearButton: Element) => void', skins: ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], description: 'before the buttons of the search line render'},
+  {path: 'components.fontIcon.html', signature: '(iconName: string) => string', skins: ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], description: 'the markup of a state icon with components.state.fontIcon'},
+  {path: 'components.state.lottieHTML', signature: '(iconSrc: string) => string', skins: ['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'], description: 'the markup of a state icon with components.state.lottie'}
 ];
 
 /** Functions of the config that the config of a table cannot change, with the reason. */
