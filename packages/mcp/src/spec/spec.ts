@@ -50,7 +50,7 @@ export interface BroSpecApi {
   filters?: Record<string, string>;
 }
 
-export type BroSpecSkin = 'mat' | 'mui' | 'vuetify' | 'suid' | 'm3-svelte' | 'bs' | 'nv';
+export type BroSpecSkin = 'mat' | 'mui' | 'suid' | 'm3-svelte' | 'vuetify' | 'bs' | 'nv';
 
 export type BroSpecFieldType = 'string' | 'number' | 'boolean' | 'string[]';
 
