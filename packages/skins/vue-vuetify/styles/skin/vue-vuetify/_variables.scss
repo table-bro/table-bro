@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $vuetify-paginator-selector: 'bro-vuetify-paginator' !default;
 $vuetify-progress-bar-selector: 'bro-vuetify-progress-bar' !default;
 $vuetify-toolbar-selector: '.v-toolbar' !default;
@@ -24,6 +26,12 @@ $vuetify-bg: rgb(var(--v-theme-surface)) !default;
 $vuetify-border-color: rgba(var(--v-border-color), var(--v-border-opacity)) !default;
 $vuetify-text-color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !default;
 $vuetify-text-secondary-color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !default;
+
+// The outline of Material, which Vuetify has no color for: the text of the theme on its surface at the opacity that gives
+// the outline of mat, #7B757F on white and #958E99 on #211F22, as of the chips and the select of the paginator. The
+// outlined fields of Vuetify draw their outline in the color of the text at an opacity of their own, .38
+$vuetify-outline-opacity: .59 !default;
+$vuetify-outline-color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) math.percentage($vuetify-outline-opacity), rgb(var(--v-theme-surface))) !default;
 
 
 // The values of the Vuetify skin for the variables every skin has (skin/shared/_variables.scss)

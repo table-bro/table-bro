@@ -8,9 +8,12 @@
     color: $vuetify-text-secondary-color;
   }
 
-  // The chips have the label large text of Vuetify, as the chips of mat: the chip of Vuetify takes its size but the
-  // regular weight, and the cell gives it the line and the letter spacing of the body text
+  // The chips have the outline of mat, which the outlined chip of Vuetify draws in the color of its text, and the label
+  // large text of Vuetify, as the chips of mat: the chip of Vuetify takes its size but the regular weight, and the cell
+  // gives it the line and the letter spacing of the body text
   bro-vuetify-tags .v-chip {
+    border-color: $vuetify-outline-color;
+
     font-weight: 500;
     line-height: 1.4286;
     letter-spacing: .0071em;
@@ -20,10 +23,13 @@
     margin-left: 8px;
   }
 
-  // The text of a chip in one line, which ends with an ellipsis in a narrow cell (bro-cell-items)
+  // The text of a chip in one line, which ends with an ellipsis in a narrow cell (bro-cell-items). It has the medium
+  // emphasis of the text of Vuetify, the role of the text of the chips of mat, on-surface-variant
   bro-vuetify-tags .bro-vuetify-tags-label {
     display: block;
 
     white-space: nowrap;
+
+    color: $vuetify-text-secondary-color;
   }
 }
