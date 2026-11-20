@@ -12,6 +12,14 @@
     border-spacing: 0;
   }
 
+  // The shadows of the parts of the table, of the class elevation-5 of the config: the elevation 5 of Vuetify with its
+  // offsets, blurs and opacities, without the spread of its ambient shadow. The table puts a shadow under each part and
+  // each row, and the spread of 6px of two neighbors overlapped at their common edge, which darkened the side shadow of
+  // the table into a spot at every row
+  .elevation-5 {
+    box-shadow: 0 4px 4px 0 rgba(var(--v-shadow-color), .3), 0 8px 12px 0 rgba(var(--v-shadow-color), .15);
+  }
+
   tr.bro-vuetify-header-row {
     height: var(--bro-header-height);
   }
