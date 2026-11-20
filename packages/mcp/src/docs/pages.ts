@@ -137,7 +137,7 @@ export const conf: BroConfig = {
  */
 const skinsSection = `#### Which skins can I use?
 
-Table, Bro ships the skins Angular Material, MUI, Vuetify, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+Table, Bro ships the skins Angular Material, MUI, Vuetify, M3 Svelte, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
 
 /**
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
@@ -255,13 +255,14 @@ ${mcpSection('###')}
 
 ### Skins
 
-Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, M3 Svelte for Svelte, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
 
 | Skin | Package | Framework | UI components |
 | --- | --- | --- | --- |
 | Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
 | MUI, \`mui\` | \`@table-bro/react-mui\` | React 19, Preact | MUI 9 |
 | Vuetify, \`vuetify\` | \`@table-bro/vue-vuetify\` | Vue 3.5 | Vuetify 4 |
+| M3 Svelte, \`m3-svelte\` | \`@table-bro/svelte-m3\` | Svelte 5 | M3 Svelte 7 |
 | Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
 | Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
 
@@ -1185,7 +1186,17 @@ It supports Vuetify 4 with Vue 3.5. With the blueprint of Material 3 of Vuetify 
 
 {{vuetify-skin.ts}}
 
-The whole setup is on the page [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+The whole setup is on the page [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
+
+#### Svelte M3
+
+Svelte M3 skin of Table, Bro renders the Material 3 components of [M3 Svelte](https://github.com/KTibow/m3-svelte) in the table: its buttons, menus, outlined select, input chips, switches and linear progress, with the sizes of the tables of the skin Angular Material. M3 Svelte has no component of a table, a top app bar, a sort header or an indeterminate progress bar, and does not export its tooltip: the skin builds them from the tokens of the theme, and its plain tooltip of Material 3 behaves as the tooltip of the skin Angular Material.
+
+It supports M3 Svelte 7 with Svelte 5. The table takes the colors of the M3 Svelte theme of your application from its CSS variables \`--m3c-*\`, which the theme writes with \`light-dark()\`, so a table with a theme of its own takes the light or the dark scheme of the theme by its color scheme. The theme comes from the theme page of M3 Svelte:
+
+{{m3-theme.css}}
+
+The whole setup is on the page [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
     files: [
       {file: 'mui-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
 import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
@@ -1213,6 +1224,28 @@ import {md3}           from 'vuetify/blueprints';
 export const vuetify = createVuetify({blueprint: md3});
 
 setVuetify(vuetify);
+`},
+      {file: 'm3-theme.css', language: 'css', code: `/* The styles of M3 Svelte and the theme of the application, as the theme page of M3 Svelte writes it: the table reads
+   the same CSS variables as the components of M3 Svelte */
+@import "m3-svelte/etc/styles.css";
+@import "m3-svelte/etc/recommended-styles.css";
+
+@function --m3-density(--size) {
+  result: var(--size);
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+@layer tokens {
+  :root {
+    --m3c-surface: light-dark(#fdf7fe, #0f0d12);
+    --m3c-on-surface: light-dark(#34313a, #eae3ef);
+    --m3c-primary: light-dark(#655789, #cec0ec);
+    /* ... the other colors of the theme */
+  }
+}
 `}
     ]
   },
@@ -2417,7 +2450,7 @@ render(() => <OrdersTable />, document.getElementById('app')!);
     path: 'frameworks/svelte',
     name: 'Svelte data table',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders it in markup as it is. \`bind:this\` gives the element its columns, rows and config by \`configure()\`, the attribute \`onbro-action\` listens to its events, and the \`theme\` attribute sets its theme. The page below is the [working page](https://table-bro.com/samples/frameworks/svelte) of the sample project \`samples/frameworks/svelte\` of the repository, with Svelte 5.57; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/frameworks/svelte) opens it in the browser. The working page and StackBlitz use the Bootstrap skin. Swap it for Native, or build a skin of your own UI components.
+Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders it in markup as it is. \`bind:this\` gives the element its columns, rows and config by \`configure()\`, the attribute \`onbro-action\` listens to its events, and the \`theme\` attribute sets its theme. The [working page](https://table-bro.com/samples/svelte-m3/svelte) is the sample project \`samples/svelte-m3/svelte\` of the repository, with Svelte 5.58 and the Svelte M3 skin on the components of [M3 Svelte](https://github.com/KTibow/m3-svelte), Material 3 for Svelte; [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/svelte-m3/svelte) opens it in the browser, and the setup below is its code. The Bootstrap skin of the sample project \`samples/frameworks/svelte\` and Native work in Svelte the same way, as a skin of your own UI components does.
 
 <!-- setup -->
 #### How do I install Table, Bro in Svelte?
@@ -2428,17 +2461,35 @@ ${mcpSection('#####', 'Svelte')}
 
 1. **Install the packages**
 
-   The table engine \`@table-bro/core\` and a skin. \`@table-bro/angular-material\` needs Angular; of the other two, the working page uses \`@table-bro/bootstrap\` with \`bootstrap\` and its types \`@types/bootstrap\`, and \`@table-bro/native\` of plain HTML elements works the same way:
+   The table engine \`@table-bro/core\`, the skin \`@table-bro/svelte-m3\`, M3 Svelte, and the plugin of Vite that compiles the CSS of its components. The skins \`@table-bro/bootstrap\` and \`@table-bro/native\` work in Svelte the same way, as [Getting started](https://table-bro.com/docs/getting-started) shows:
 
    {{install.sh}}
 
-2. **Register the element and the skin**
+2. **Compile M3 Svelte**
 
-   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`bs\`, and \`useBootstrap()\` gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap. The CSS of Bootstrap, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) and the other bundlers take. \`src/skin.ts\`:
+   M3 Svelte publishes its components as their sources: Vite compiles them with the plugin of Svelte, and the CSS of their styles with \`vite-plugin-functions-mixins\`. \`vite.config.ts\`, where \`samplePage\` is the config of the working page; a project of its own exports \`defineConfig()\` with the plugins:
+
+   {{vite.config.ts}}
+
+   The plugin names Vite 7 as its peer dependency and works with Vite 8: the \`package.json\` of the sample lets npm install it by \`"overrides": {"vite-plugin-functions-mixins": {"vite": "$vite"}}\`.
+
+3. **Give the skin the theme of the application**
+
+   The table and the components of M3 Svelte read the colors of the M3 Svelte theme of the application, its CSS variables \`--m3c-*\`. The theme imports the styles of M3 Svelte and has the function \`--m3-density\` and the colors of the light and the dark scheme, as the theme page of M3 Svelte writes them; the sample takes its default theme. \`src/theme.css\`:
+
+   {{src/theme.css}}
+
+   Once, before the tables: the import of the skin defines \`‹table-bro›\` and registers the skin \`m3-svelte\`. The CSS of the theme, of the core and of the skin come as imports, which [Vite](https://vite.dev/guide/features) takes. \`src/skin.ts\`:
 
    {{src/skin.ts}}
 
-3. **Describe the columns, the rows and the config**
+4. **Load the fonts**
+
+   Roboto and the icons of Material Symbols, which the skin shows by their names, come from Google Fonts. \`index.html\`:
+
+   {{index.html}}
+
+5. **Describe the columns, the rows and the config**
 
    \`conf.skin\` names the registered skin. \`src/orders.ts\`:
 
@@ -2448,19 +2499,19 @@ ${skinsSection}
 
 #### How do I pass cols, rows and conf?
 
-The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`bind:this\` gives the element ([Svelte, bind:this](https://svelte.dev/docs/svelte/bind)), \`onMount\` makes the call ([Svelte, Lifecycle hooks](https://svelte.dev/docs/svelte/lifecycle-hooks)). An attribute that starts with \`on\` adds a listener of the event of its name, \`bro-action\` for \`onbro-action\` ([Svelte, Events](https://svelte.dev/docs/svelte/basic-markup)); the sample logs the name of each action. \`src/OrdersTable.svelte\`:
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`, once the element is mounted: \`bind:this\` gives the element ([Svelte, bind:this](https://svelte.dev/docs/svelte/bind)), \`onMount\` makes the call ([Svelte, Lifecycle hooks](https://svelte.dev/docs/svelte/lifecycle-hooks)). The elements of the skin render at once there: \`mount()\` of Svelte renders a component synchronously, and an element renders a change by \`flushSync()\`, since the table measures them right after it renders them. An attribute that starts with \`on\` adds a listener of the event of its name, \`bro-action\` for \`onbro-action\` ([Svelte, Events](https://svelte.dev/docs/svelte/basic-markup)); the sample logs the name of each action. \`src/OrdersTable.svelte\`:
 
 {{src/OrdersTable.svelte}}
 
 #### How do I render it?
 
-\`src/main.ts\` imports the skin before the tables. A project of \`npm create vite@latest\` with the Svelte template needs no other setup for \`‹table-bro›\`:
+\`src/main.ts\` imports the skin before the tables:
 
 {{src/main.ts}}
 
 #### How do I switch the theme?
 
-The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`. The sample sets \`'auto'\`, as a table without the attribute does; a variable of the state bound to it switches the theme, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself, which gives it the dark or the light scheme of the colors of the M3 Svelte theme. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
 
 #### Questions
 
@@ -2474,16 +2525,169 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 ##### Does it work with SvelteKit?
 
-The element needs the browser: \`onMount\` runs only there, so the server render of SvelteKit leaves the element empty and the browser fills it.
+Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, and the server render of SvelteKit prerenders it in its loading state in the markup of M3 Svelte, with the server entry of the skin: the section SvelteKit of [Prerendering](https://table-bro.com/docs/ssr/prerendering).
 
 #### Related
 
 [Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
-      frameworkInstall,
-      frameworkSkin,
-      frameworkOrders,
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte
+npm install -D vite-plugin-functions-mixins
+`},
+      {file: 'vite.config.ts', language: 'ts', code: `import {svelte}                    from '@sveltejs/vite-plugin-svelte';
+import {defineConfig, mergeConfig} from 'vite';
+import {functionsMixins}           from 'vite-plugin-functions-mixins';
+
+import {samplePage} from './sample-page.config.ts';
+
+// M3 Svelte publishes its components as their sources: Svelte compiles them, and the plugin of M3 Svelte the mixins and
+// the functions of their CSS
+export default mergeConfig(samplePage, defineConfig({
+  plugins: [
+    svelte(),
+    functionsMixins({deps: ['m3-svelte']})
+  ]
+}));
+`},
+      {file: 'src/theme.css', language: 'css', code: `/*
+ * The theme of M3 Svelte of the application, as the theme page of M3 Svelte writes it: its styles, the density of its
+ * components and the colors of its default theme, light and dark by light-dark(). The components of M3 Svelte and the
+ * skin m3-svelte read them.
+ */
+@import "m3-svelte/etc/styles.css";
+@import "m3-svelte/etc/recommended-styles.css";
+
+@function --m3-density(--size) {
+  result: var(--size);
+}
+
+:root {
+  @apply --m3-body-large;
+  color-scheme: light dark;
+  background-color: var(--m3c-surface);
+  color: var(--m3c-on-surface);
+}
+
+@layer tokens {
+  :root {
+    --m3c-surface: light-dark(#fdf7fe, #0f0d12);
+    --m3c-surface-container-lowest: light-dark(#ffffff, #000000);
+    --m3c-surface-container-low: light-dark(#f8f1fa, #141218);
+    --m3c-surface-container: light-dark(#f2ecf5, #1b181f);
+    --m3c-surface-container-high: light-dark(#ece6f0, #211e26);
+    --m3c-surface-container-highest: light-dark(#e7e0ec, #27242d);
+    --m3c-on-surface: light-dark(#34313a, #eae3ef);
+    --m3c-on-surface-variant: light-dark(#615d67, #afa9b4);
+    --m3c-outline: light-dark(#7e7983, #78737e);
+    --m3c-outline-variant: light-dark(#b6b0bb, #4a4650);
+    --m3c-inverse-surface: light-dark(#0f0d12, #fdf7fe);
+    --m3c-inverse-on-surface: light-dark(#a09ba1, #575459);
+    --m3c-primary: light-dark(#655789, #cec0ec);
+    --m3c-on-primary: light-dark(#fdf7ff, #453a5f);
+    --m3c-primary-container: light-dark(#d2c0f9, #574c72);
+    --m3c-on-primary-container: light-dark(#483a6a, #eadeff);
+    --m3c-inverse-primary: light-dark(#d2c0f9, #64597f);
+    --m3c-secondary: light-dark(#635c71, #ccc2db);
+    --m3c-on-secondary: light-dark(#fdf7ff, #433d51);
+    --m3c-secondary-container: light-dark(#e8def8, #3e384c);
+    --m3c-on-secondary-container: light-dark(#554e63, #c4bbd4);
+    --m3c-tertiary: light-dark(#7c5270, #ffcfee);
+    --m3c-on-tertiary: light-dark(#fff7f9, #69415f);
+    --m3c-tertiary-container: #f4bfe2;
+    --m3c-on-tertiary-container: #603955;
+    --m3c-error: light-dark(#a8364b, #f97386);
+    --m3c-on-error: light-dark(#fff7f7, #490013);
+    --m3c-error-container: light-dark(#f97386, #871c34);
+    --m3c-on-error-container: light-dark(#6e0523, #ff97a3);
+    --m3c-shadow: #000000;
+    --m3c-scrim: #000000;
+    --m3c-on-on-primary: light-dark(#655788, #cebfec);
+    --m3c-primary-container-subtle: light-dark(#e2d3ff, #302649);
+    --m3c-on-primary-container-subtle: light-dark(#534575, #b2a4cf);
+    --m3c-secondary-container-subtle: light-dark(#e0d6ef, #2f293c);
+    --m3c-on-secondary-container-subtle: light-dark(#50495e, #b0a7bf);
+    --m3c-tertiary-container-subtle: light-dark(#ffcbed, #43203b);
+    --m3c-on-tertiary-container-subtle: light-dark(#67405d, #ce9cbe);
+    --m3c-error-container-subtle: light-dark(#ffced2, #5f001c);
+    --m3c-on-error-container-subtle: light-dark(#8f2339, #ff8796);
+  }
+}
+`},
+      {file: 'src/skin.ts', language: 'ts', code: `// The theme of M3 Svelte, the CSS of the core and of the skin, then the skin: its import defines <table-bro> and
+// registers the skin m3-svelte, whose elements render the components of M3 Svelte in the theme of the application
+import './theme.css';
+import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/svelte-m3/dist/table-bro.svelte-m3.min.css';
+import '@table-bro/svelte-m3';
+
+import './sample-page.css';
+`},
+      {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + Svelte M3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+`},
+      {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+export interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+export const cols: BroCol<Order>[] = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+// The orders of the demos of Docs on table-bro.com
+export const rows: Order[] = [
+  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
+  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
+  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
+  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
+  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
+  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
+  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
+  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
+  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
+  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
+  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
+  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
+  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
+  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
+  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
+];
+
+export const conf: BroConfig = {
+  skin: 'm3-svelte',
+  toolbarTitle: 'Orders'
+};
+`},
       {file: 'src/OrdersTable.svelte', language: 'svelte', code: `<script lang="ts">
   import {onMount} from 'svelte';
 
@@ -2901,6 +3105,51 @@ Nuxt renders a page on the server, or at the build of a static site: a component
    {{app/app.vue}}
 
 \`app/orders.ts\` is \`src/orders.ts\` of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
+
+<!-- sveltekit -->
+#### SvelteKit
+
+SvelteKit renders a page on the server, or at its build: the load of the page on the server prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and the page renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in \`onMount()\`. The skin \`m3-svelte\` renders the components of M3 Svelte there with its server entry, \`@table-bro/svelte-m3/server\`, by \`render()\` of \`svelte/server\`. The steps are the ones of the sample project \`samples/svelte-m3/sveltekit\` of the repository, static pages of SvelteKit 3: its [working page](https://table-bro.com/samples/svelte-m3/sveltekit/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/svelte-m3/sveltekit) opens it in the browser.
+
+1. **Install the packages**
+
+   The table and the skin, M3 Svelte and the plugin of its CSS, the server DOM, and SvelteKit with its adapter of static pages:
+
+   {{sveltekit-install.sh}}
+
+2. **Compile M3 Svelte and prerender the pages**
+
+   SvelteKit compiles the components of M3 Svelte for the browser and for the server, and the plugin of M3 Svelte the CSS of their styles; the condition \`svelte\` of the exports of the skin lets SvelteKit bundle the skin with them on the server. The plugin names Vite 7 as its peer dependency and works with Vite 8, by \`"overrides": {"vite-plugin-functions-mixins": {"vite": "$vite"}}\` in \`package.json\`. The sample writes static pages into \`dist\` under the base path of its working page. \`vite.config.ts\`:
+
+   {{vite.config.ts}}
+
+   \`src/routes/+layout.ts\` prerenders the pages at the build:
+
+   {{src/routes/+layout.ts}}
+
+3. **Give the server DOM to the elements**
+
+   The elements of the skin extend the \`HTMLElement\` of the server DOM: the hooks of the server make it global, before the server imports the core and the skin with the modules of the pages. \`src/hooks.server.ts\`:
+
+   {{src/hooks.server.ts}}
+
+4. **Prerender the table**
+
+   The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. The folder \`server\` of \`#lib\` keeps it out of the bundle of the browser. \`src/lib/server/prerender-table.ts\`:
+
+   {{src/lib/server/prerender-table.ts}}
+
+   The load of the page on the server gives the prerendered table to the page. \`src/routes/+page.server.ts\`:
+
+   {{src/routes/+page.server.ts}}
+
+5. **Render the table in the page**
+
+   The page renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of Svelte keeps, and \`configure()\` renders the table with its rows in its place. \`src/routes/+page.svelte\`:
+
+   {{src/routes/+page.svelte}}
+
+\`src/lib/skin.ts\`, \`src/lib/theme.css\` and \`src/lib/orders.ts\` are the ones of \`src/skin.ts\`, \`src/theme.css\` and \`src/orders.ts\` of [Svelte data table](https://table-bro.com/docs/frameworks/svelte).
 
 <!-- limits -->
 #### Limits
@@ -3343,6 +3592,95 @@ export function Providers({children}: {children: ReactNode}) {
       {file: 'src/app/globals.css', language: 'css', code: `/* The CSS of the core and of the skin */
 @import '@table-bro/core/dist/table-bro.min.css';
 @import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
+`},
+      {file: 'sveltekit-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte linkedom
+npm install -D @sveltejs/kit @sveltejs/adapter-static vite-plugin-functions-mixins
+`},
+      {file: 'vite.config.ts', language: 'ts', code: `import adapter           from '@sveltejs/adapter-static';
+import {sveltekit}       from '@sveltejs/kit/vite';
+import {defineConfig}    from 'vite';
+import {functionsMixins} from 'vite-plugin-functions-mixins';
+
+// M3 Svelte publishes its components as their sources: SvelteKit compiles them for the browser and for the server, and
+// the plugin of M3 Svelte the mixins and the functions of their CSS. The pages are prerendered at the build into dist,
+// under the base path of the variable BASE_PATH, as the working page of table-bro.com has it; a project of its own
+// leaves it out
+export default defineConfig({
+  plugins: [
+    sveltekit({
+      adapter: adapter({pages: 'dist', assets: 'dist'}),
+      paths: {base: process.env.BASE_PATH ?? ''}
+    }),
+    functionsMixins({deps: ['m3-svelte']})
+  ]
+});
+`},
+      {file: 'src/routes/+layout.ts', language: 'ts', code: `// The page is prerendered at the build, with the table in its loading state
+export const prerender = true;
+`},
+      {file: 'src/hooks.server.ts', language: 'ts', code: `import {parseHTML} from 'linkedom';
+
+// The elements of the skin extend the HTMLElement of the server DOM of the prerender, linkedom: it is global before the
+// server imports the core and the skin, which SvelteKit does after the hooks, with the modules of the pages
+globalThis.HTMLElement ??= parseHTML('<!doctype html><html><body></body></html>').window.HTMLElement;
+`},
+      {file: 'src/lib/server/prerender-table.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
+import '@table-bro/svelte-m3/server';
+
+import {parseHTML} from 'linkedom';
+
+import {cols, conf} from '../orders';
+
+/** The prerendered table: the attributes of the element <table-bro> and its markup. */
+export interface PrerenderedTable {
+  attributes: Record<string, string>;
+  html: string;
+}
+
+/**
+ * Renders the table of the orders in its loading state on the server, in the markup of the components of M3 Svelte: the
+ * page shows it before any script runs, and configure() renders the table with its rows in its place in the browser.
+ */
+export function prerenderOrders(): PrerenderedTable {
+  const {document} = parseHTML('<!doctype html><html><body></body></html>');
+  const table = document.createElement('table-bro');
+
+  table.id = 'orders';
+  document.body.append(table);
+  prerenderTableBro(table, {cols, conf});
+
+  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
+}
+`},
+      {file: 'src/routes/+page.server.ts', language: 'ts', code: `import type {PageServerLoad} from './$types';
+import {prerenderOrders}     from '#lib/server/prerender-table';
+
+export const load: PageServerLoad = () => ({prerendered: prerenderOrders()});
+`},
+      {file: 'src/routes/+page.svelte', language: 'svelte', code: `<script lang="ts">
+  // The skin is registered before the tables
+  import '#lib/skin';
+
+  import {onMount} from 'svelte';
+
+  import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+  import {cols, conf, rows} from '#lib/orders';
+
+  import type {PageProps} from './$types';
+
+  // The page of the server has the table prerendered, and configure() renders it with its rows in the browser, in its
+  // place
+  let {data}: PageProps = $props();
+  let table: TableBroHTMLElement;
+
+  onMount(() => table.configure({cols, rows, conf}));
+</script>
+
+<div class="bro-table-shadow-container">
+  <table-bro {...data.prerendered.attributes} bind:this={table} theme="auto"
+             onbro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}>{@html data.prerendered.html}</table-bro>
+</div>
 `}
     ]
   },
@@ -3362,36 +3700,36 @@ The texts of the parts that the core renders come first, flat and named as the o
 
 | Field | Default | Skins | Since |
 | --- | --- | --- | --- |
-| \`rowCounterTitle\` | No | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`rowCounterLabel\` | Row number | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`filterDrawer.title\` | Filters | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`filterDrawer.close\` | Close | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.itemsPerPageLabel\` | Items per page: | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.nextPageLabel\` | Next page | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.previousPageLabel\` | Previous page | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.firstPageLabel\` | First page | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.lastPageLabel\` | Last page | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, vuetify, bs, nv | 1.2.0 |
-| \`paginator.label\` | Pagination | mat, mui, vuetify, bs, nv | 1.2.0 |
+| \`rowCounterTitle\` | No | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`rowCounterLabel\` | Row number | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`filterDrawer.title\` | Filters | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`filterDrawer.close\` | Close | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.itemsPerPageLabel\` | Items per page: | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.nextPageLabel\` | Next page | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.previousPageLabel\` | Previous page | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.firstPageLabel\` | First page | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.lastPageLabel\` | Last page | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`paginator.label\` | Pagination | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
 | \`paginator.navigationLabel\` | Table page navigation | bs, nv | 1.2.0 |
 | \`paginator.firstText\` | First | bs, nv | 1.2.0 |
 | \`paginator.previousText\` | Previous | bs, nv | 1.2.0 |
 | \`paginator.nextText\` | Next | bs, nv | 1.2.0 |
 | \`paginator.lastText\` | Last | bs, nv | 1.2.0 |
-| \`progressBar.label\` | Loading progress | mui, vuetify, bs, nv | 1.2.0 |
-| \`state.loading\` | Loading | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`state['no-data']\` | No data | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`state['not-found']\` | No records found | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`state.fail\` | Failed | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`toolbarMain.search\` | Search | mat, mui, vuetify, bs, nv | 1.2.0 |
+| \`progressBar.label\` | Loading progress | mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`state.loading\` | Loading | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`state['no-data']\` | No data | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`state['not-found']\` | No records found | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`state.fail\` | Failed | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`toolbarMain.search\` | Search | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
 | \`toolbarMain.searchRole(title)\` | for Orders, by the title of the toolbar; for rows without a title | bs, nv | 1.2.0 |
 | \`toolbarMain.buttonRole\` | button | bs, nv | 1.2.0 |
 | \`toolbarMain.menuRole\` | menu | bs | 1.2.0 |
 | \`toolbarMain.menuItemRole\` | menu item | bs | 1.2.0 |
-| \`toolbarSearch.field\` | Search in table | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`toolbarSearch.back\` | Back | mat, mui, vuetify, bs, nv | 1.2.0 |
-| \`toolbarSearch.clear\` | Clear | mat, mui, vuetify, bs, nv | 1.2.0 |
+| \`toolbarSearch.field\` | Search in table | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`toolbarSearch.back\` | Back | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
+| \`toolbarSearch.clear\` | Clear | mat, mui, vuetify, m3-svelte, bs, nv | 1.2.0 |
 
 The flat fields of 1.1.0, as \`texts.itemsPerPage\` for \`texts.paginator.itemsPerPageLabel\` and \`texts.rowCounter\` for \`texts.rowCounterTitle\`, still work and are deprecated: the editor marks them, and 2.0 removes them. A field in a group and a text of the core win over their flat field.
 

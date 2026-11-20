@@ -1,0 +1,61 @@
+@use "../variables" as *;
+@use "../../shared/mixins/progress-bar" as *;
+
+@mixin styles {
+  @include table-header-progress-bar($m3-svelte-progress-bar-selector);
+  @include table-aux-progress-bar($m3-svelte-progress-bar-selector);
+
+  // The indeterminate linear progress of Material 3 in the colors of the linear progress of M3 Svelte: two indicators
+  // that cross the track one after the other
+  #{$m3-svelte-progress-bar-selector} .bro-m3-svelte-progress-indeterminate {
+    position: relative;
+
+    overflow: hidden;
+
+    height: 100%;
+
+    background-color: var(--m3c-secondary-container);
+  }
+
+  #{$m3-svelte-progress-bar-selector} .bro-m3-svelte-progress-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    border-radius: var(--m3-shape-full);
+
+    background-color: var(--m3c-primary);
+
+    animation: bro-m3-svelte-progress-primary 2.1s cubic-bezier(.65, .815, .735, .395) infinite;
+
+    & + .bro-m3-svelte-progress-indicator {
+      animation: bro-m3-svelte-progress-secondary 2.1s cubic-bezier(.165, .84, .44, 1) 1.15s infinite;
+    }
+  }
+
+  @keyframes bro-m3-svelte-progress-primary {
+    0% {
+      right: 100%;
+      left: -35%;
+    }
+
+    60%,
+    100% {
+      right: -90%;
+      left: 100%;
+    }
+  }
+
+  @keyframes bro-m3-svelte-progress-secondary {
+    0% {
+      right: 100%;
+      left: -200%;
+    }
+
+    60%,
+    100% {
+      right: -8%;
+      left: 107%;
+    }
+  }
+}

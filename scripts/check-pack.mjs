@@ -16,6 +16,7 @@ export const packages = [
   {name: '@table-bro/core', dir: 'packages/core'},
   {name: '@table-bro/react-mui', dir: 'packages/skins/react-mui'},
   {name: '@table-bro/vue-vuetify', dir: 'packages/skins/vue-vuetify'},
+  {name: '@table-bro/svelte-m3', dir: 'packages/skins/svelte-m3'},
   {name: '@table-bro/bootstrap', dir: 'packages/skins/bootstrap'},
   {name: '@table-bro/native', dir: 'packages/skins/native'},
   {name: '@table-bro/angular', dir: 'dist/table-bro.angular'},

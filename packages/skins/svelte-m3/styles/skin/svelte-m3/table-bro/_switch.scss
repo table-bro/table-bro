@@ -1,0 +1,12 @@
+@use "../../shared/mixins/slide-toggle" as *;
+
+@mixin styles {
+  @include slide-toggle('bro-m3-svelte-switch.bro-cell_component');
+
+  // The label of the switch of M3 Svelte takes the clicks on its track
+  bro-m3-svelte-switch .bro-m3-svelte-switch {
+    display: inline-flex;
+
+    vertical-align: middle;
+  }
+}

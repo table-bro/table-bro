@@ -54,6 +54,11 @@ export function generateCode(spec: BroTableSpec, options: BroGenerateOptions): B
     report.errors.push({path: '', message: 'the vuetify skin is for Vue', fix: 'use the target vanilla in a project of Vue, or the skin mat, bs or nv'});
   }
 
+  if (target === 'angular' && skin === 'm3-svelte') {
+    report.valid = false;
+    report.errors.push({path: '', message: 'the m3-svelte skin is for Svelte', fix: 'use the target vanilla in a project of Svelte, or the skin mat, bs or nv'});
+  }
+
   // Fillings of another form would fail the generator: they are errors of the fillings, with their paths
   const fillingIssues = fillingsErrors(options.fillings);
 

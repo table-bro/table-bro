@@ -16,6 +16,7 @@ const packages = [
   {dir: path.join(root, 'packages/core'), name: 'table-bro'},
   {dir: path.join(root, 'packages/skins/react-mui'), name: 'table-bro.react-mui'},
   {dir: path.join(root, 'packages/skins/vue-vuetify'), name: 'table-bro.vue-vuetify'},
+  {dir: path.join(root, 'packages/skins/svelte-m3'), name: 'table-bro.svelte-m3'},
   {dir: path.join(root, 'packages/skins/bootstrap'), name: 'table-bro.bootstrap'},
   {dir: path.join(root, 'packages/skins/native'), name: 'table-bro.native'}
 ];

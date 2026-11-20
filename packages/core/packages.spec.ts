@@ -3,6 +3,7 @@ import {describe, expect, it} from 'vitest';
 import bootstrapPackage from '../skins/bootstrap/package.json';
 import nativePackage    from '../skins/native/package.json';
 import muiPackage       from '../skins/react-mui/package.json';
+import m3Package        from '../skins/svelte-m3/package.json';
 import vuetifyPackage   from '../skins/vue-vuetify/package.json';
 import corePackage      from './package.json';
 
@@ -26,14 +27,17 @@ function inFolder(files: Record<string, string>, folder: string): Record<string,
 /** The sources of the core, the skins and the Angular wrapper, as text, without their specs and builds. */
 const librarySources = import.meta.glob<string>(['./**/*.ts', '../skins/**/*.ts', '../angular/src/**/*.ts', '!**/*.spec.ts', '!**/*.d.ts', '!**/dist/**', '!**/node_modules/**'], {query: '?raw', import: 'default', eager: true});
 
-const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage, vuetifyPackage];
+const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage, vuetifyPackage, m3Package];
 
 describe('the packages of the core and the skins', () => {
   it('give import and require one ES module, so a project gets one copy of the core', () => {
     for (const {name, exports} of packages) {
       const file = name.replace('@table-bro/core', 'table-bro').replace('@table-bro/', 'table-bro.');
+      // The condition svelte of the skin m3-svelte marks it as a library of Svelte: the bundler of a server render then
+      // bundles it and compiles the components of M3 Svelte that it imports, the same module
+      const svelte = (name === '@table-bro/svelte-m3') ? {svelte: `./dist/${file}.esm.js`} : {};
 
-      expect(exports['.'], name).toEqual({types: `./dist/${file}.d.ts`, import: `./dist/${file}.esm.js`, default: `./dist/${file}.esm.js`});
+      expect(exports['.'], name).toEqual({types: `./dist/${file}.d.ts`, ...svelte, import: `./dist/${file}.esm.js`, default: `./dist/${file}.esm.js`});
     }
   });
 
@@ -76,6 +80,13 @@ describe('the packages of the core and the skins', () => {
       './js/index.ts', './js/table-bro.vue-vuetify.ts', './js/table-bro.vue-vuetify.server.ts',
       './dist/table-bro.vue-vuetify.esm.js', './dist/table-bro.vue-vuetify.server.esm.js', './dist/table-bro.vue-vuetify.shared.esm.js', './dist/*.css'
     ]);
+
+    // The skin m3-svelte is built for bundlers only, without a UMD bundle; its entries of the browser and of the server
+    // share the chunk that registers it
+    expect(m3Package.sideEffects).toEqual([
+      './js/index.ts', './js/table-bro.svelte-m3.ts', './js/table-bro.svelte-m3.server.ts',
+      './dist/table-bro.svelte-m3.esm.js', './dist/table-bro.svelte-m3.server.esm.js', './dist/table-bro.svelte-m3.shared.esm.js', './dist/*.css'
+    ]);
   });
 
   it('define no tag with the prefix bro-cell-: the library leaves it to the elements of the application', () => {
@@ -93,8 +104,8 @@ describe('the packages of the core and the skins', () => {
   });
 
   it('give each UMD bundle its own global name', () => {
-    // The skins mui and vuetify are built for bundlers only: they have no UMD bundle and no global name
-    const bundlerOnly = ['../skins/react-mui/tsdown.config.ts', '../skins/vue-vuetify/tsdown.config.ts'];
+    // The skins mui, vuetify and m3-svelte are built for bundlers only: they have no UMD bundle and no global name
+    const bundlerOnly = ['../skins/react-mui/tsdown.config.ts', '../skins/vue-vuetify/tsdown.config.ts', '../skins/svelte-m3/tsdown.config.ts'];
     const umdConfigs = Object.entries(buildConfigs).filter(([file]) => !bundlerOnly.includes(file));
     const names = umdConfigs.map(([, config]) => config.match(/globalName:\s*'([^']+)'/)?.[1]);
 

@@ -1,0 +1,45 @@
+@use "../variables" as *;
+@use "../type" as *;
+
+@mixin styles {
+  // The host is an inline block, whose baseline is its last line of text in the flow: the texts of the toolbar and the
+  // paginator lie in flex boxes, so the baseline is the bottom of the table, and the line around it adds the descent of
+  // its font below the table. In the filter drawer of the core the card would be longer than the table by it
+  @at-root table-bro#{&} {
+    vertical-align: top;
+  }
+
+  table.bro-m3-svelte-table {
+    border-spacing: 0;
+  }
+
+  tr.bro-m3-svelte-header-row {
+    height: var(--bro-header-height);
+  }
+
+  tr.bro-m3-svelte-row {
+    height: var(--bro-row-height);
+  }
+
+  // The type of a table of Material 3, as in the skin mat: the body text in the cells, the title text in the header
+  th.bro-m3-svelte-header-cell,
+  td.bro-m3-svelte-cell {
+    border-color: $m3-svelte-border-color;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    color: $m3-svelte-text-color;
+
+    @include m3-body-medium;
+  }
+
+  th.bro-m3-svelte-header-cell {
+    @include m3-title-small;
+
+    text-align: left;
+
+    [dir='rtl'] & {
+      text-align: right;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@use "../../shared/mixins/shared" as *;
+@use "../../shared/mixins/sort-header" as *;
+
+@mixin styles {
+  @at-root table-bro#{&} {
+    // The title shrinks with its column and ends with an ellipsis; the arrow of the sort shows on hover and focus, and
+    // stays while the column is sorted, as the sort header of the skin mat
+    .bro-m3-svelte-sort-header {
+      display: flex;
+
+      max-width: 100%;
+
+      gap: 4px;
+
+      align-items: center;
+
+      cursor: pointer;
+
+      &:focus-visible {
+        border-radius: var(--m3-shape-extra-small);
+        outline: 2px solid var(--m3c-secondary);
+      }
+    }
+
+    .bro-m3-svelte-sort-header-content {
+      @include sort-header-content();
+
+      @include table-width-transition();
+    }
+
+    .bro-m3-svelte-sort-header-arrow {
+      width: 18px;
+      height: 18px;
+
+      flex: none;
+
+      font-size: 18px;
+
+      color: var(--m3c-on-surface-variant);
+
+      opacity: 0;
+      transform: rotate(180deg);
+
+      transition: opacity 150ms, transform 150ms;
+    }
+
+    .bro-m3-svelte-sort-header:hover .bro-m3-svelte-sort-header-arrow,
+    .bro-m3-svelte-sort-header:focus-visible .bro-m3-svelte-sort-header-arrow {
+      opacity: .54;
+    }
+
+    .bro-m3-svelte-sort-header_sorted .bro-m3-svelte-sort-header-arrow,
+    .bro-m3-svelte-sort-header_sorted:hover .bro-m3-svelte-sort-header-arrow {
+      color: var(--m3c-on-surface);
+
+      opacity: 1;
+    }
+
+    .bro-m3-svelte-sort-header_ascending .bro-m3-svelte-sort-header-arrow {
+      transform: none;
+    }
+
+    // The arrow of a number column comes before its title
+    .bro-m3-svelte-sort-header_before {
+      flex-direction: row-reverse;
+    }
+  }
+}
