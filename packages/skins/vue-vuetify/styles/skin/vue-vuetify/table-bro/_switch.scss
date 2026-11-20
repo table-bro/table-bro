@@ -1,5 +1,32 @@
+@use "../variables" as *;
 @use "../../shared/mixins/slide-toggle" as *;
 
 @mixin styles {
   @include slide-toggle('bro-vuetify-switch.bro-cell_component');
+
+  // The colors of the switch of mat in the roles of the theme of Vuetify. The track is opaque, the primary color with
+  // the handle in on-primary when the switch is on; the inset switch of Vuetify fades the track to .6 and gives the
+  // handle the bright surface
+  bro-vuetify-switch {
+    .v-switch__track {
+      opacity: 1;
+    }
+
+    .v-selection-control--dirty .v-switch__thumb {
+      background-color: rgb(var(--v-theme-on-primary));
+    }
+
+    // A switch that is off has the light surface of Vuetify, the surface variant of Material, in the outline of mat,
+    // and its handle in the outline: the track of Vuetify takes the surface variant of Vuetify, the inverse surface of
+    // Material
+    .v-selection-control:not(.v-selection-control--dirty) .v-switch__track {
+      border: 2px solid $vuetify-outline-color;
+
+      background-color: rgb(var(--v-theme-surface-light));
+    }
+
+    .v-selection-control:not(.v-selection-control--dirty) .v-switch__thumb {
+      background-color: $vuetify-outline-color;
+    }
+  }
 }
