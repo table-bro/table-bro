@@ -1,0 +1,20 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  // The field takes the width between the buttons and has the title text of the toolbar, of the theme of the
+  // application
+  #{$vuetify-toolbar-selector} #{$bro-toolbar_content-search} {
+    flex: 1 1 auto;
+
+    input {
+      width: 100%;
+
+      font-size: 1.375rem; // the title large of Vuetify, as the title of the toolbar
+
+      &::placeholder {
+        color: $vuetify-text-secondary-color;
+      }
+    }
+  }
+}

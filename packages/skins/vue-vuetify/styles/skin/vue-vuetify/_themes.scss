@@ -1,0 +1,19 @@
+@use "variables" as *;
+@use "../shared/mixins/skin-colors" as *;
+
+// The skin takes the theme of the application, as every component of Vuetify does: the components of Vuetify in the
+// table read the CSS variables of its class of the theme, and the parts of the table read the variables of the theme of
+// the page. A table with a theme of its own takes the variables of that theme by its attribute data-vuetify-theme, from
+// the stylesheet that setVuetify() writes
+#{$bro-skin} {
+  color: $vuetify-text-color;
+
+  @include bro-table-theme(
+      '.bro-vuetify-table',
+      $vuetify-toolbar-selector,
+      $vuetify-bg,
+      $vuetify-border-color,
+      $vuetify-text-color,
+      $vuetify-text-secondary-color
+  );
+}

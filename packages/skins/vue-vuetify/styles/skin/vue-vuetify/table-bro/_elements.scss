@@ -1,0 +1,9 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The Vue root of an element lays out nothing of its own: the components of Vuetify in it are the content of the
+  // element
+  .bro-vuetify-root {
+    display: contents;
+  }
+}

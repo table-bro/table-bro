@@ -9,6 +9,9 @@ of the frameworks of Docs, Frameworks:
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;
+- `vue-vuetify`: Vue and Vuetify with the blueprint of Material 3 and `@table-bro/vue-vuetify`, in `vue-vuetify/vue`,
+  built by Vite; in `vue-vuetify/nuxt` Nuxt prerenders the table in the markup of Vuetify at the build of its static
+  site, with the server entry of the skin;
 - `bootstrap`: Vanilla JS with Bootstrap and `@table-bro/bootstrap`, built by Vite;
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
