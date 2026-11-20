@@ -1,5 +1,5 @@
 import Popper                   from '@suid/material/Popper';
-import {alpha, styled}          from '@suid/material/styles';
+import {styled}                 from '@suid/material/styles';
 import {createSignal, type JSX} from 'solid-js';
 import {render}                 from 'solid-js/web';
 
@@ -23,14 +23,16 @@ let nextTooltip: number = 0;
 
 /**
  * The tooltip of SUID, which SUID 0.19 does not port: the look of the tooltip of MUI in the theme of the application,
- * with the body small text of Material 3 of the tooltips of mat, the caption text of the theme on a line of 16px.
+ * with the body small text of Material 3 of the tooltips of mat, the caption text of the theme on a line of 16px. Its
+ * colors are the inverse surface of the tooltips of mat: the text color of the theme as the background and the
+ * background of the paper as the text, in the light and the dark scheme.
  */
 const TooltipPopup = styled('div')(({theme}) => ({
   maxWidth: 300,
   padding: '4px 8px',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.grey[700], 0.92),
-  color: theme.palette.common.white,
+  backgroundColor: theme.palette.text.primary,
+  color: theme.palette.background.paper,
   ...theme.typography.caption,
   lineHeight: '1rem',
   overflowWrap: 'break-word'
