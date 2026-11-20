@@ -21,7 +21,7 @@ export class BroVuetifyTextEllipsisComponent extends BroVuetifyElement implement
       : h('span', {class: broCellSelectors.ellipsis}, value);
     const className = containerClass ? `${broCellSelectors.ellipsisContainer} ${containerClass}` : broCellSelectors.ellipsisContainer;
 
-    return h(VTooltip, {text: this.col?.html ? BroHTML.text(value) : value, location: 'top'}, {
+    return h(VTooltip, {text: this.col?.html ? BroHTML.text(value) : value, location: 'top', contentClass: 'bro-vuetify-tooltip'}, {
       activator: ({props}: {props: Record<string, unknown>}) => h('span', mergeProps(props, {class: className}), [text])
     });
   }
