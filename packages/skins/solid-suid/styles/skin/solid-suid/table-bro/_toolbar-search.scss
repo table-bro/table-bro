@@ -10,7 +10,11 @@
     input {
       width: 100%;
 
+      // The title large text of Material 3, as the title of the toolbar and the field of mat
       font: var(--suid-font-h6);
+      font-weight: 400;
+      font-size: 1.375rem;
+      line-height: 1.75rem;
 
       &::placeholder {
         color: $suid-text-secondary-color;
