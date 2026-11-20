@@ -1,6 +1,6 @@
 import {BroDom, BroHTMLElement, isPrerendered} from '@table-bro/core';
 
-import {alpha, createPalette, createTheme, darken, lighten, type Theme, ThemeProvider}                      from '@suid/material/styles';
+import {createPalette, createTheme, type Theme, ThemeProvider}                                              from '@suid/material/styles';
 import {type Accessor, createComponent, createMemo, createRenderEffect, createRoot, createSignal, type JSX} from 'solid-js';
 import {Dynamic, render}                                                                                    from 'solid-js/web';
 
@@ -102,7 +102,8 @@ function hostScheme(node: Element): Accessor<string | null> {
 /**
  * The CSS variables of a theme of SUID, which the CSS of the skin reads for the parts of the table, as the rows and the
  * header, and the cells of the application: SUID, a port of MUI 5, writes no CSS variables of its own. The names follow
- * the CSS variables of MUI in kebab case, and the border of the cells is the one of the table cell of MUI.
+ * the CSS variables of MUI in kebab case. The border of the cells is the divider of the theme, as the outline of the rows
+ * of the tables of mat.
  * @param theme - the theme of the scheme
  */
 function schemeVariables(theme: Theme): string {
@@ -113,18 +114,16 @@ function schemeVariables(theme: Theme): string {
     return `${style.fontWeight} ${style.fontSize}/${style.lineHeight} ${style.fontFamily}`;
   };
 
-  const cellBorder = (palette.mode === 'light') ? lighten(alpha(palette.divider, 1), 0.88) : darken(alpha(palette.divider, 1), 0.68);
-
   return `
     --suid-palette-action-active: ${palette.action.active};
     --suid-palette-action-disabled: ${palette.action.disabled};
     --suid-palette-action-hover: ${palette.action.hover};
     --suid-palette-action-selected: ${palette.action.selected};
     --suid-palette-background-paper: ${palette.background.paper};
+    --suid-palette-divider: ${palette.divider};
     --suid-palette-primary-main: ${palette.primary.main};
     --suid-palette-success-contrast-text: ${palette.success.contrastText};
     --suid-palette-success-main: ${palette.success.main};
-    --suid-palette-table-cell-border: ${cellBorder};
     --suid-palette-text-primary: ${palette.text.primary};
     --suid-palette-text-secondary: ${palette.text.secondary};
     --suid-font-body2: ${font('body2')};

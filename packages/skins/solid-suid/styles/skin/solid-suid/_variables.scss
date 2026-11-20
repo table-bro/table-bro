@@ -20,9 +20,9 @@ $suid-corner-radius: 12px; // as the tables of the skin mat
 $suid-filter-drawer-corner-radius: 16px; // as the filter drawer of the skin mat
 
 // The colors of the parts of the table: the CSS variables that setSuidTheme() writes from the theme of the application,
-// with the names of the CSS variables of MUI, and the border of the cells of the table of MUI
+// with the names of the CSS variables of MUI; the borders are the divider, as the outline of the rows of mat
 $suid-bg: var(--suid-palette-background-paper) !default;
-$suid-border-color: var(--suid-palette-table-cell-border) !default;
+$suid-border-color: var(--suid-palette-divider) !default;
 $suid-text-color: var(--suid-palette-text-primary) !default;
 $suid-text-secondary-color: var(--suid-palette-text-secondary) !default;
 $suid-action-hover-color: var(--suid-palette-action-hover) !default;
