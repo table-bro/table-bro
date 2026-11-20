@@ -57,6 +57,12 @@
       letter-spacing: inherit;
     }
 
+    // The outline of the select is the outline of mat at rest; on hover and focus it keeps the opacities of Vuetify,
+    // the text and the primary color of the field, as the select of the paginator of mat
+    .bro-vuetify-paginator-select .v-field:not(:hover, .v-field--focused) .v-field__outline {
+      --v-field-border-opacity: #{$vuetify-outline-opacity};
+    }
+
     .bro-vuetify-paginator-actions {
       display: flex;
     }
