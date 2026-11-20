@@ -10,7 +10,9 @@
     input {
       width: 100%;
 
-      font-size: 1.375rem; // the title large of Vuetify, as the title of the toolbar
+      // The title large text of Vuetify, as the title of the toolbar and the field of mat
+      font-size: 1.375rem;
+      line-height: 1.75rem;
 
       &::placeholder {
         color: $vuetify-text-secondary-color;
