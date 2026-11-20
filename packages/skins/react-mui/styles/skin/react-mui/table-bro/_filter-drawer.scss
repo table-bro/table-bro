@@ -1,8 +1,10 @@
 @use "../variables" as *;
 
-// The filter drawer of the core with the toolbar of MUI in its header: the close button keeps to the right edge
+// The filter drawer of the core with the toolbar of MUI in its header: the header keeps its title and its close button
+// 16px from its sides, as the header of the drawer of mat. The gutters of the toolbar of MUI are 24px on a wide page
 @mixin styles {
-  .bro-filter-drawer-header .bro-filter-drawer-close {
-    margin-right: -12px;
+  .bro-filter-drawer-header .MuiToolbar-root {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }
