@@ -13,8 +13,18 @@ import {suidSkinConfig} from './table-bro.solid-suid.config';
 const [suidTheme, setTheme] = createSignal<Theme>();
 /** The console named once the missing theme: without it the CSS of the skin finds no CSS variables of the theme. */
 let themeReported: boolean = false;
-/** The console named once an element of the skin in a server DOM, which it does not render. */
+/**
+ * The render of a Solid tree to markup, as renderToString of the server build of solid-js/web, which the server entry
+ * of the skin gives: the elements of a prerender in a server DOM render their markup by it (prerenderTableBro).
+ */
+let serverRender: ((tree: () => JSX.Element) => string) | undefined;
+/** The console named once a prerender of the skin without its server entry. */
 let serverReported: boolean = false;
+/**
+ * The element of each server DOM whose markup carries the CSS variables of the theme: the parts of a prerendered table
+ * read them before the browser runs setSuidTheme().
+ */
+const themedElements = new WeakMap<Document, BroSuidElement>();
 /** The stylesheet of the CSS variables of the theme, which the document adopts with the first theme. */
 let themeSheet: CSSStyleSheet | undefined;
 
@@ -162,6 +172,15 @@ export function setSuidTheme(theme: Theme): void {
 }
 
 /**
+ * Gives the elements the render of a Solid tree to markup for a server DOM: the server entry of the skin calls it with
+ * renderToString of solid-js/web, which a server bundle resolves to the server build of Solid.
+ * @param render - the render of the tree of an element to markup
+ */
+export function setServerRender(render: (tree: () => JSX.Element) => string): void {
+  serverRender = render;
+}
+
+/**
  * Defines an element of the skin unless it is defined: without a DOM, as in the server render, it does nothing.
  * @param name - the tag of the element
  * @param element - the class of the element
@@ -245,11 +264,14 @@ export abstract class BroSuidElement extends BroHTMLElement {
       return;
     }
 
-    // A server DOM, as of a prerender on the server, has a window of its own: the skin has no server render
-    if ((typeof window === 'undefined') || (this.ownerDocument.defaultView !== window)) {
+    // A server DOM, as of a prerender on the server, has a window of its own: the element renders its markup there by
+    // the render of the server entry, not by a Solid root
+    const server = (typeof window === 'undefined') || (this.ownerDocument.defaultView !== window);
+
+    if (server && !serverRender) {
       if (!serverReported) {
         serverReported = true;
-        console.error('Table, Bro: the skin suid renders its elements in the browser only, not in a prerender on the server');
+        console.error('Table, Bro: the skin suid renders its elements on the server with the import of @table-bro/solid-suid/server');
       }
 
       return;
@@ -258,6 +280,12 @@ export abstract class BroSuidElement extends BroHTMLElement {
     this.container = new BroDom(this.ownerDocument).createElement('div');
     this.container.className = 'bro-suid-root';
     this.prepend(this.container);
+
+    if (server) {
+      this.renderMarkup();
+
+      return;
+    }
 
     this.dispose = render(() => this.tree(), this.container);
     this.rendered();
@@ -302,6 +330,15 @@ export abstract class BroSuidElement extends BroHTMLElement {
    * own updates and effects at their end.
    */
   protected update(): void {
+    // An element of a server DOM renders its markup anew
+    if (!this.dispose) {
+      if (this.container && serverRender) {
+        this.renderMarkup();
+      }
+
+      return;
+    }
+
     this.version[1]();
   }
 
@@ -310,7 +347,26 @@ export abstract class BroSuidElement extends BroHTMLElement {
     return themed(() => this.content(), this);
   }
 
-  /** The root of the element rendered: an element that works on its nodes overrides it. */
+  /**
+   * Renders the markup of the element in a server DOM: the components of SUID with their styles, and in the first
+   * element of the document the CSS variables of the theme. The browser keeps it until its table renders its own
+   * elements in its place.
+   */
+  private renderMarkup(): void {
+    const theme = suidTheme();
+    const document = this.ownerDocument;
+
+    if (theme && !themedElements.has(document)) {
+      themedElements.set(document, this);
+    }
+
+    const variables = (theme && themedElements.get(document) === this) ? `<style>${themeVariables(theme)}</style>` : '';
+
+    this.container!.innerHTML = variables + serverRender!(() => this.tree());
+    this.rendered();
+  }
+
+  /** The root of the element rendered, or its markup in a server DOM: an element that works on its nodes overrides it. */
   protected rendered(): void {
     // An element that works on the nodes of its tree overrides it
   }

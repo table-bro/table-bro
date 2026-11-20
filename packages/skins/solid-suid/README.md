@@ -181,7 +181,28 @@ the README of `@table-bro/core`.
 ## Server render
 
 The elements of the skin render with Solid in the browser. A prerender of a table on the server, `prerenderTableBro()`
-of `@table-bro/core`, leaves them empty, and the console names it once; the browser renders the table in its place.
+of `@table-bro/core` in a server DOM such as linkedom, renders them too with the server entry of the package,
+`@table-bro/solid-suid/server`: the toolbar, the progress bar and the paginator in the loading state of the table, by
+`renderToString` of Solid, with the styles of SUID and the CSS variables of the theme in their markup. The server DOM
+gives its `HTMLElement` to the global scope before the core and the skin load, since the elements extend it:
+
+```ts
+import {parseHTML} from 'linkedom';
+
+const {document, window} = parseHTML('<!doctype html><html><body></body></html>');
+
+globalThis.HTMLElement ??= window.HTMLElement;
+
+const {prerenderTableBro} = await import('@table-bro/core');
+const {setSuidTheme}      = await import('@table-bro/solid-suid/server');
+```
+
+The server bundle of the application compiles SUID for the server and carries the skin and the core, as the plugin of
+Solid with SSR does when they are not external (`ssr.noExternal` of Vite). The select of the page sizes renders as the
+native select of SUID on the server: the select of the menu of SUID 0.19 fails in the server render of Solid. The bundle
+of the browser does not carry the server entry. Without it a prerender leaves the elements of the skin empty, and the
+console names the entry once. The browser keeps the prerendered elements until `configure()` renders the table in
+their place. The setup with SolidStart is on the page [Prerendering](https://table-bro.com/docs/ssr/prerendering).
 
 ## Build
 
