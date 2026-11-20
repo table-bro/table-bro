@@ -70,8 +70,12 @@ describe('the packages of the core and the skins', () => {
       './dist/table-bro.react-mui.esm.js', './dist/table-bro.react-mui.server.esm.js', './dist/table-bro.react-mui.shared.esm.js', './dist/*.css'
     ]);
 
-    // The skin suid is built for bundlers only, without a UMD bundle
-    expect(suidPackage.sideEffects).toEqual(['./js/index.ts', './js/table-bro.solid-suid.ts', './dist/table-bro.solid-suid.esm.js', './dist/*.css']);
+    // The skin suid is built for bundlers only, without a UMD bundle; its entries of the browser and of the server share
+    // the chunk that registers it
+    expect(suidPackage.sideEffects).toEqual([
+      './js/index.ts', './js/table-bro.solid-suid.ts', './js/table-bro.solid-suid.server.ts',
+      './dist/table-bro.solid-suid.esm.js', './dist/table-bro.solid-suid.server.esm.js', './dist/table-bro.solid-suid.shared.esm.js', './dist/*.css'
+    ]);
   });
 
   it('define no tag with the prefix bro-cell-: the library leaves it to the elements of the application', () => {

@@ -50,13 +50,21 @@
       "import": "./dist/table-bro.solid-suid.esm.js",
       "default": "./dist/table-bro.solid-suid.esm.js"
     },
+    "./server": {
+      "types": "./dist/table-bro.solid-suid.server.d.ts",
+      "import": "./dist/table-bro.solid-suid.server.esm.js",
+      "default": "./dist/table-bro.solid-suid.server.esm.js"
+    },
     "./dist/*.css": "./dist/*.css",
     "./styles/*": "./styles/*"
   },
   "sideEffects": [
     "./js/index.ts",
     "./js/table-bro.solid-suid.ts",
+    "./js/table-bro.solid-suid.server.ts",
     "./dist/table-bro.solid-suid.esm.js",
+    "./dist/table-bro.solid-suid.server.esm.js",
+    "./dist/table-bro.solid-suid.shared.esm.js",
     "./dist/*.css"
   ],
   "files": [
