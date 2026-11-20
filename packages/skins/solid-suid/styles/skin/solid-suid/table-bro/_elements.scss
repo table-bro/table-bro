@@ -7,6 +7,11 @@
     display: contents;
   }
 
+  // A text button of the skin, as the Details button of a row, has the full rounded corners of the text buttons of mat
+  bro-suid-button .MuiButton-root {
+    border-radius: 9999px;
+  }
+
   // The shadow of the table and of its regions: the elevation 16 of the theme
   .bro-suid-elevation-16 {
     box-shadow: var(--suid-shadows-16);
