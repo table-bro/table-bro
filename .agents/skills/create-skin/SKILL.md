@@ -133,7 +133,8 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
   the application the rule `table-bro[<themeAttribute>="<name>"]` with its `--v-theme-*` variables, from the themes of
   the instance of Vuetify, again when they change.
 - A library may give its colors as channels, as `--v-theme-primary: 98,0,238` of Vuetify: the CSS reads them as
-  `rgb(var(--v-theme-primary))`, and the alpha of a state as `rgb(var(--v-theme-on-surface) / var(--v-hover-opacity))`.
+  `rgb(var(--v-theme-primary))`, and the alpha of a state as `rgba(var(--v-theme-on-surface), var(--v-hover-opacity))`:
+  channels with commas take the alpha after a comma, since `rgb(98,0,238 / 0.04)` is invalid and the browser drops it.
 
 ## Rules of the styles
 
