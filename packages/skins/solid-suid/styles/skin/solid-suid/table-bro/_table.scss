@@ -32,8 +32,10 @@
     color: $suid-text-color;
   }
 
+  // The header has the line of the body text, 20px, the line of the title small text of Material 3 in the header of mat
   th.bro-suid-header-cell {
     font: var(--suid-font-subtitle2);
+    line-height: 1.43;
 
     text-align: left;
 

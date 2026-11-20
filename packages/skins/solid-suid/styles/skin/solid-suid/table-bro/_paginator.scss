@@ -2,19 +2,23 @@
 @use "shared-selector-map" as *;
 @use "../../shared/mixins/toolbar" as *;
 
-// The paginator of the vanilla skins in the look of the table pagination of MUI, which SUID does not port: the body text
-// of the theme, the select of SUID for the page sizes, and the links of the pages as its icon buttons
+// The paginator of the vanilla skins in the look of the table pagination of MUI, which SUID does not port: the caption
+// text of the theme, the select of SUID for the page sizes, and the links of the pages as its icon buttons
 @mixin styles {
   @include skin_paginator($suid-paginator-selector);
 
-  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
-  // table: Island Details rounds the corners of this element
+  // The element of the paginator has the background and the text color of the rows, and the corners and the shadow of
+  // the table: Island Details rounds the corners of this element. Its text is the body small text of Material 3, as the
+  // paginator of mat: the caption text of the theme, 12px with the letter spacing of the caption of MUI, on a line of
+  // 16px
   #{$bro-paginator-container} #{$suid-paginator-selector} {
     display: block;
 
     height: $bro-paginator-height;
 
-    font: var(--suid-font-body2);
+    font: var(--suid-font-caption);
+    line-height: 1rem;
+    letter-spacing: .0333em;
 
     background-color: $suid-bg;
     color: $suid-text-color;

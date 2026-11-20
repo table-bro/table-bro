@@ -8,6 +8,13 @@
     color: $suid-text-secondary-color;
   }
 
+  // The chips have the label large text of Material 3, as the chips of mat: the button text of the theme, 14px in the
+  // medium weight, on the line of 20px of the body text
+  bro-suid-tags .MuiChip-root {
+    font: var(--suid-font-button);
+    line-height: 1.43;
+  }
+
   bro-suid-tags .MuiChip-root + .MuiChip-root {
     margin-left: 8px;
   }

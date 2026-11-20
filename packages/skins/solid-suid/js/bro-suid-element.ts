@@ -107,7 +107,7 @@ function hostScheme(node: Element): Accessor<string | null> {
  */
 function schemeVariables(theme: Theme): string {
   const {palette, shadows, typography} = theme;
-  const font = (variant: 'body2' | 'h6' | 'subtitle2') => {
+  const font = (variant: 'body2' | 'button' | 'caption' | 'h6' | 'subtitle2') => {
     const style = typography[variant];
 
     return `${style.fontWeight} ${style.fontSize}/${style.lineHeight} ${style.fontFamily}`;
@@ -128,6 +128,8 @@ function schemeVariables(theme: Theme): string {
     --suid-palette-text-primary: ${palette.text.primary};
     --suid-palette-text-secondary: ${palette.text.secondary};
     --suid-font-body2: ${font('body2')};
+    --suid-font-button: ${font('button')};
+    --suid-font-caption: ${font('caption')};
     --suid-font-h6: ${font('h6')};
     --suid-font-subtitle2: ${font('subtitle2')};
     --suid-shadows-16: ${shadows[16]};`;
