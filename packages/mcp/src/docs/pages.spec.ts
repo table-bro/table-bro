@@ -22,8 +22,8 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
 /**
- * The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, Nuxt, SolidStart and
- * SvelteKit. A file is unique on its page, so the configs of Vite of SolidStart and SvelteKit name the folder of their
+ * The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, SolidStart, SvelteKit
+ * and Nuxt. A file is unique on its page, so the configs of Vite of SolidStart and SvelteKit name the folder of their
  * sample: start/vite.config.ts and sveltekit/vite.config.ts.
  */
 const prerenderSamples: Record<string, string> = {
@@ -37,12 +37,6 @@ const prerenderSamples: Record<string, string> = {
   'src/app/layout.tsx': 'samples/react-mui/next',
   'src/app/Providers.tsx': 'samples/react-mui/next',
   'src/app/globals.css': 'samples/react-mui/next',
-  'nuxt.config.ts': 'samples/vue-vuetify/nuxt',
-  'app/plugins/vuetify.ts': 'samples/vue-vuetify/nuxt',
-  'app/plugins/table-bro.client.ts': 'samples/vue-vuetify/nuxt',
-  'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
-  'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
-  'app/app.vue': 'samples/vue-vuetify/nuxt',
   'start/vite.config.ts': 'samples/solid-suid',
   'src/server-dom.ts': 'samples/solid-suid/start',
   'src/prerender-orders.ts': 'samples/solid-suid/start',
@@ -56,7 +50,13 @@ const prerenderSamples: Record<string, string> = {
   'src/hooks.server.ts': 'samples/svelte-m3/sveltekit',
   'src/lib/server/prerender-table.ts': 'samples/svelte-m3/sveltekit',
   'src/routes/+page.server.ts': 'samples/svelte-m3/sveltekit',
-  'src/routes/+page.svelte': 'samples/svelte-m3/sveltekit'
+  'src/routes/+page.svelte': 'samples/svelte-m3/sveltekit',
+  'nuxt.config.ts': 'samples/vue-vuetify/nuxt',
+  'app/plugins/vuetify.ts': 'samples/vue-vuetify/nuxt',
+  'app/plugins/table-bro.client.ts': 'samples/vue-vuetify/nuxt',
+  'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
+  'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
+  'app/app.vue': 'samples/vue-vuetify/nuxt'
 };
 
 /**
@@ -71,9 +71,9 @@ const skinSamples: Record<string, string> = {
   'frameworks/angular': 'samples/angular-material',
   'frameworks/react': 'samples/react-mui/react',
   'frameworks/preact': 'samples/react-mui/preact',
-  'frameworks/vue': 'samples/vue-vuetify/vue',
   'frameworks/solid': 'samples/solid-suid/solid',
-  'frameworks/svelte': 'samples/svelte-m3/svelte'
+  'frameworks/svelte': 'samples/svelte-m3/svelte',
+  'frameworks/vue': 'samples/vue-vuetify/vue'
 };
 
 /**

@@ -90,7 +90,7 @@ export function configCode(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroS
 
 function toolbarButtons(spec: BroTableSpec, skin: BroSpecSkin, hasFilters: boolean): unknown[] {
   // The skins of Material icons show a button of the toolbar as an icon with a tooltip
-  const material = (skin === 'mat' || skin === 'mui' || skin === 'vuetify' || skin === 'suid' || skin === 'm3-svelte');
+  const material = (skin === 'mat' || skin === 'mui' || skin === 'suid' || skin === 'm3-svelte' || skin === 'vuetify');
   const button = ({title, action, icon}: BroSpecToolbarButton) => material ? {buttonTitle: title, iconHTML: icon, eventType: action, buttonTooltip: title} : {buttonTitle: title, eventType: action};
   const buttons: unknown[] = [];
 

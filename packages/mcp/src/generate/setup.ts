@@ -8,9 +8,9 @@ const css: Record<BroSpecSkin | 'core', string> = {
   core: 'node_modules/@table-bro/core/dist/table-bro.min.css',
   mat: 'node_modules/@table-bro/angular-material/dist/table-bro.material.min.css',
   mui: 'node_modules/@table-bro/react-mui/dist/table-bro.react-mui.min.css',
-  vuetify: 'node_modules/@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css',
   suid: 'node_modules/@table-bro/solid-suid/dist/table-bro.solid-suid.min.css',
   'm3-svelte': 'node_modules/@table-bro/svelte-m3/dist/table-bro.svelte-m3.min.css',
+  vuetify: 'node_modules/@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css',
   bs: 'node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css',
   nv: 'node_modules/@table-bro/native/dist/table-bro.native.min.css'
 };
@@ -25,13 +25,13 @@ const packageRoles: Record<string, string> = {
   '@mui/material': '`@mui/material`: MUI itself, whose components the skin renders',
   '@emotion/react': '`@emotion/react` and `@emotion/styled`: the styles of MUI',
   '@emotion/styled': '',
-  '@table-bro/vue-vuetify': '`@table-bro/vue-vuetify`: the skin vuetify, the table on the components of Vuetify for Vue, in the themes of the Vuetify of the application',
-  vuetify: '`vuetify`: Vuetify itself, whose components the skin renders',
   '@table-bro/solid-suid': '`@table-bro/solid-suid`: the skin suid, the table on the components of SUID, the port of MUI to Solid, in the SUID theme of the application',
   '@suid/material': '`@suid/material`: SUID itself, whose components the skin renders; it supports Solid 1, and the plugin of Solid for Vite compiles its components, published as JSX',
   '@table-bro/svelte-m3': '`@table-bro/svelte-m3`: the skin m3-svelte, the table on the components of M3 Svelte for Svelte, in the Material 3 theme of the application',
   'm3-svelte': '`m3-svelte`: M3 Svelte itself, whose components the skin mounts',
   'vite-plugin-functions-mixins': '`vite-plugin-functions-mixins`: the plugin of Vite that compiles the CSS of the components of M3 Svelte',
+  '@table-bro/vue-vuetify': '`@table-bro/vue-vuetify`: the skin vuetify, the table on the components of Vuetify for Vue, in the themes of the Vuetify of the application',
+  vuetify: '`vuetify`: Vuetify itself, whose components the skin renders',
   '@table-bro/bootstrap': '`@table-bro/bootstrap`: the skin bs, the table on the components and the classes of Bootstrap 5: its buttons, dropdowns and tooltips',
   bootstrap: '`bootstrap`: Bootstrap itself, its CSS and the Dropdown and Tooltip that the skin uses',
   '@types/bootstrap': '`@types/bootstrap`: the types of Bootstrap, which the import of Dropdown and Tooltip needs in a strict TypeScript project',
@@ -98,9 +98,9 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   const packages = ['@table-bro/core', ...(angular ? ['@table-bro/angular'] : []), ...{
     mat: ['@table-bro/angular-material', '@angular/elements'],
     mui: ['@table-bro/react-mui', '@mui/material', '@emotion/react', '@emotion/styled'],
-    vuetify: ['@table-bro/vue-vuetify', 'vuetify'],
     suid: ['@table-bro/solid-suid', '@suid/material'],
     'm3-svelte': ['@table-bro/svelte-m3', 'm3-svelte', 'vite-plugin-functions-mixins'],
+    vuetify: ['@table-bro/vue-vuetify', 'vuetify'],
     bs: ['@table-bro/bootstrap', 'bootstrap', '@types/bootstrap'],
     nv: ['@table-bro/native']
   }[skin], ...extraPackages];
@@ -172,18 +172,6 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
       code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">\n<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0" rel="stylesheet">',
       language: 'html'
     });
-  } else if (skin === 'bs') {
-    steps.push({
-      title: 'Register the skin',
-      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin, which takes the classes of Bootstrap. ${optional}${angular ? ssrImport('@table-bro/bootstrap') : ''}`,
-      code: [
-        imports({bootstrap: ['Dropdown', 'Tooltip'], '@table-bro/bootstrap': ['useBootstrap', ...features]}),
-        '',
-        'useBootstrap({Dropdown, Tooltip});',
-        ...vanillaCalls
-      ].join('\n'),
-      language: 'typescript'
-    });
   } else if (skin === 'mui') {
     steps.push({
       title: 'Register the skin with the theme of the application',
@@ -215,37 +203,6 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     }, {
       title: 'Load the font of the icons',
       text: 'The mui skin shows the ligature icons of Material. In `index.html`:',
-      code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
-      language: 'html'
-    });
-  } else if (skin === 'vuetify') {
-    steps.push({
-      title: 'Register the skin with the Vuetify of the application',
-      text: `Once, before the tables: the import registers the skin, and \`setVuetify()\` gives its elements the instance of Vuetify that the application installs, with its themes, defaults and icons. The table reads the colors of the themes from the CSS variables that Vuetify writes, so the application imports \`vuetify/styles\` before the CSS of the table. ${optional}`,
-      code: [
-        imports({vuetify: ['createVuetify'], 'vuetify/blueprints': ['md3'], '@table-bro/vue-vuetify': ['setVuetify', ...features]}),
-        '',
-        'export const vuetify = createVuetify({blueprint: md3});',
-        '',
-        'setVuetify(vuetify);',
-        ...vanillaCalls,
-        '',
-        '// main.ts: createApp(App).use(vuetify).mount(\'#app\');'
-      ].join('\n'),
-      language: 'typescript'
-    }, {
-      title: 'Render the table when the component is mounted',
-      text: 'The elements of the skin render at once, by `render()` of Vue, which patches them before it returns: a component renders the table in `onMounted()`. The plugin of Vue compiles `<table-bro>` of a template as a Custom Element with `isCustomElement: tag => tag.startsWith(\'table-bro\')` of its `compilerOptions`.',
-      code: [
-        'const container = useTemplateRef<HTMLElement>(\'container\');',
-        '',
-        '// The render function of the module of the table, as renderOrderTable()',
-        'onMounted(() => renderOrderTable(container.value!));'
-      ].join('\n'),
-      language: 'typescript'
-    }, {
-      title: 'Load the font of the icons',
-      text: 'The vuetify skin shows the ligature icons of Material, whatever icon set the application gives Vuetify. In `index.html`:',
       code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
       language: 'html'
     });
@@ -315,6 +272,49 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
       text: 'The m3-svelte skin shows the icons of Material Symbols by their names. In `index.html`:',
       code: '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">',
       language: 'html'
+    });
+  } else if (skin === 'vuetify') {
+    steps.push({
+      title: 'Register the skin with the Vuetify of the application',
+      text: `Once, before the tables: the import registers the skin, and \`setVuetify()\` gives its elements the instance of Vuetify that the application installs, with its themes, defaults and icons. The table reads the colors of the themes from the CSS variables that Vuetify writes, so the application imports \`vuetify/styles\` before the CSS of the table. ${optional}`,
+      code: [
+        imports({vuetify: ['createVuetify'], 'vuetify/blueprints': ['md3'], '@table-bro/vue-vuetify': ['setVuetify', ...features]}),
+        '',
+        'export const vuetify = createVuetify({blueprint: md3});',
+        '',
+        'setVuetify(vuetify);',
+        ...vanillaCalls,
+        '',
+        '// main.ts: createApp(App).use(vuetify).mount(\'#app\');'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Render the table when the component is mounted',
+      text: 'The elements of the skin render at once, by `render()` of Vue, which patches them before it returns: a component renders the table in `onMounted()`. The plugin of Vue compiles `<table-bro>` of a template as a Custom Element with `isCustomElement: tag => tag.startsWith(\'table-bro\')` of its `compilerOptions`.',
+      code: [
+        'const container = useTemplateRef<HTMLElement>(\'container\');',
+        '',
+        '// The render function of the module of the table, as renderOrderTable()',
+        'onMounted(() => renderOrderTable(container.value!));'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Load the font of the icons',
+      text: 'The vuetify skin shows the ligature icons of Material, whatever icon set the application gives Vuetify. In `index.html`:',
+      code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
+      language: 'html'
+    });
+  } else if (skin === 'bs') {
+    steps.push({
+      title: 'Register the skin',
+      text: `Once, ${angular ? 'in `main.ts`' : 'before the tables'}: the import registers the skin, which takes the classes of Bootstrap. ${optional}${angular ? ssrImport('@table-bro/bootstrap') : ''}`,
+      code: [
+        imports({bootstrap: ['Dropdown', 'Tooltip'], '@table-bro/bootstrap': ['useBootstrap', ...features]}),
+        '',
+        'useBootstrap({Dropdown, Tooltip});',
+        ...vanillaCalls
+      ].join('\n'),
+      language: 'typescript'
     });
   } else {
     steps.push({

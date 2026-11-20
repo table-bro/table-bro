@@ -123,7 +123,7 @@ export const conf: BroConfig = {
  */
 const skinsSection = `#### Which skins can I use?
 
-Table, Bro ships the skins Angular Material, MUI, Vuetify, SUID, M3 Svelte, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+Table, Bro ships the skins Angular Material, MUI, SUID, M3 Svelte, Vuetify, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
 
 /**
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
@@ -245,15 +245,15 @@ ${mcpSection('###')}
 
 ### Skins
 
-Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, Vuetify for Vue, SUID for Solid, M3 Svelte for Svelte, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, SUID for Solid, M3 Svelte for Svelte, Vuetify for Vue, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
 
 | Skin | Package | Framework | UI components |
 | --- | --- | --- | --- |
 | Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
 | MUI, \`mui\` | \`@table-bro/react-mui\` | React 19, Preact | MUI 9 |
-| Vuetify, \`vuetify\` | \`@table-bro/vue-vuetify\` | Vue 3.5 | Vuetify 4 |
 | SUID, \`suid\` | \`@table-bro/solid-suid\` | Solid 1.9 | SUID 0.19 |
 | M3 Svelte, \`m3-svelte\` | \`@table-bro/svelte-m3\` | Svelte 5 | M3 Svelte 7 |
+| Vuetify, \`vuetify\` | \`@table-bro/vue-vuetify\` | Vue 3.5 | Vuetify 4 |
 | Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
 | Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
 
@@ -1169,16 +1169,6 @@ It supports MUI 9 with React 19, and Preact through \`preact/compat\`. The table
 
 The whole setup is on the pages [React data table](https://table-bro.com/docs/frameworks/react) and [Preact data table](https://table-bro.com/docs/frameworks/preact).
 
-#### Vue Vuetify
-
-Vue Vuetify skin of Table, Bro renders the components of [Vuetify](https://vuetifyjs.com/) in the table: its toolbar, the sort headers of its data table, a footer with the select of the page size, linear progress, chips, inset switches, tooltips and menus, with the sizes of the tables of the skin Angular Material.
-
-It supports Vuetify 4 with Vue 3.5. With the blueprint of Material 3 of Vuetify the components in the table are the ones of Material 3 (M3). The components take the instance of Vuetify of your application, its themes, defaults and icons, and the table takes the colors of its themes from the CSS variables that Vuetify writes. A table with a theme of its own takes the theme of Vuetify of the same name, light or dark, by the attribute \`data-vuetify-theme\`:
-
-{{vuetify-skin.ts}}
-
-The whole setup is on the page [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
-
 #### Solid SUID
 
 Solid SUID skin of Table, Bro renders the components of [SUID](https://suid.dev), the port of MUI to Solid, in the table: its toolbar, linear progress, chips, switches, menus and the select of the page sizes, with the sizes of the tables of the skin Angular Material. SUID has no table pagination, sort label or tooltip: the skin takes the paginator and the sort header of the vanilla skins in the look of MUI, and renders its tooltips on the Popper of SUID with the behavior of the tooltips of Angular Material.
@@ -1197,7 +1187,17 @@ It supports M3 Svelte 7 with Svelte 5. The table takes the colors of the M3 Svel
 
 {{m3-theme.css}}
 
-The whole setup is on the page [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
+The whole setup is on the page [Svelte data table](https://table-bro.com/docs/frameworks/svelte).
+
+#### Vue Vuetify
+
+Vue Vuetify skin of Table, Bro renders the components of [Vuetify](https://vuetifyjs.com/) in the table: its toolbar, the sort headers of its data table, a footer with the select of the page size, linear progress, chips, inset switches, tooltips and menus, with the sizes of the tables of the skin Angular Material.
+
+It supports Vuetify 4 with Vue 3.5. With the blueprint of Material 3 of Vuetify the components in the table are the ones of Material 3 (M3). The components take the instance of Vuetify of your application, its themes, defaults and icons, and the table takes the colors of its themes from the CSS variables that Vuetify writes. A table with a theme of its own takes the theme of Vuetify of the same name, light or dark, by the attribute \`data-vuetify-theme\`:
+
+{{vuetify-skin.ts}}
+
+The whole setup is on the page [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       {file: 'mui-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
 import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
@@ -1212,19 +1212,6 @@ export const theme = createTheme({
 });
 
 setMuiTheme(theme);
-`},
-      {file: 'vuetify-skin.ts', language: 'ts', code: `import 'vuetify/styles';
-import '@table-bro/core/dist/table-bro.min.css';
-import '@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css';
-import {setVuetify} from '@table-bro/vue-vuetify';
-
-import {createVuetify} from 'vuetify';
-import {md3}           from 'vuetify/blueprints';
-
-// The Vuetify of the application, which its app installs: the table reads the CSS variables of its themes
-export const vuetify = createVuetify({blueprint: md3});
-
-setVuetify(vuetify);
 `},
       {file: 'suid-skin.ts', language: 'ts', code: `import '@table-bro/core/dist/table-bro.min.css';
 import '@table-bro/solid-suid/dist/table-bro.solid-suid.min.css';
@@ -1258,6 +1245,19 @@ setSuidTheme(theme);
     /* ... the other colors of the theme */
   }
 }
+`},
+      {file: 'vuetify-skin.ts', language: 'ts', code: `import 'vuetify/styles';
+import '@table-bro/core/dist/table-bro.min.css';
+import '@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css';
+import {setVuetify} from '@table-bro/vue-vuetify';
+
+import {createVuetify} from 'vuetify';
+import {md3}           from 'vuetify/blueprints';
+
+// The Vuetify of the application, which its app installs: the table reads the CSS variables of its themes
+export const vuetify = createVuetify({blueprint: md3});
+
+setVuetify(vuetify);
 `}
     ]
   },
@@ -3180,51 +3180,6 @@ Next.js renders a page on the server, or at the build of a static export: a serv
 
 \`src/theme.ts\`, \`src/skin.ts\`, \`src/orders.ts\` and \`src/elements.d.ts\` are the ones of [React data table](https://table-bro.com/docs/frameworks/react).
 
-<!-- nuxt -->
-#### Nuxt
-
-Nuxt renders a page on the server, or at the build of a static site: a component prerenders the table on the server with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), \`useAsyncData()\` carries the markup to the browser, and \`configure()\` renders the table with its rows in \`onMounted()\`. The skin \`vuetify\` renders the components of Vuetify there with its server entry, \`@table-bro/vue-vuetify/server\`, by the synchronous part of the server render of Vue. The steps are the ones of the sample project \`samples/vue-vuetify/nuxt\` of the repository, a static site with Nuxt 4: its [working page](https://table-bro.com/samples/vue-vuetify/nuxt/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/vue-vuetify/nuxt) opens it in the browser.
-
-1. **Install the packages**
-
-   The table and the skin, Vuetify and the server DOM:
-
-   {{nuxt-install.sh}}
-
-2. **Take Vuetify and the skin through the build**
-
-   The components of Vuetify import their styles, so the build of Nuxt takes Vuetify and the skin through Vite (\`build.transpile\`); the template compiler knows \`‹table-bro›\` as a Custom Element, and the CSS of Vuetify, of the core and of the skin come by \`css\`. The sample also generates its static pages into \`dist\` under the base path of its working page. \`nuxt.config.ts\`:
-
-   {{nuxt.config.ts}}
-
-3. **Give the application its Vuetify**
-
-   A plugin installs a Vuetify for each render of the server and in the browser, with \`ssr: true\`, and provides it. \`app/plugins/vuetify.ts\`:
-
-   {{app/plugins/vuetify.ts}}
-
-   In the browser, the import of the skin defines \`‹table-bro›\` and registers the skin, and \`setVuetify()\` gives its elements the Vuetify of the application. \`app/plugins/table-bro.client.ts\`:
-
-   {{app/plugins/table-bro.client.ts}}
-
-4. **Prerender the table**
-
-   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it, and the server entry takes the Vuetify of the render. The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. \`app/prerender-table.ts\`:
-
-   {{app/prerender-table.ts}}
-
-5. **Render the table in the page**
-
-   The component prerenders the table on the server in \`useAsyncData()\`, renders \`‹table-bro›\` with its attributes and its markup, which the hydration of Vue keeps, and \`configure()\` renders the table with its rows in its place. \`app/components/OrdersTable.vue\`:
-
-   {{app/components/OrdersTable.vue}}
-
-   \`app/app.vue\` renders it in \`VApp\` of Vuetify:
-
-   {{app/app.vue}}
-
-\`app/orders.ts\` is \`src/orders.ts\` of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
-
 <!-- solidstart -->
 #### SolidStart
 
@@ -3323,6 +3278,51 @@ SvelteKit renders a page on the server, or at its build: the load of the page on
 
 \`src/lib/skin.ts\`, \`src/lib/theme.css\` and \`src/lib/orders.ts\` are the ones of \`src/skin.ts\`, \`src/theme.css\` and \`src/orders.ts\` of [Svelte data table](https://table-bro.com/docs/frameworks/svelte).
 
+<!-- nuxt -->
+#### Nuxt
+
+Nuxt renders a page on the server, or at the build of a static site: a component prerenders the table on the server with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), \`useAsyncData()\` carries the markup to the browser, and \`configure()\` renders the table with its rows in \`onMounted()\`. The skin \`vuetify\` renders the components of Vuetify there with its server entry, \`@table-bro/vue-vuetify/server\`, by the synchronous part of the server render of Vue. The steps are the ones of the sample project \`samples/vue-vuetify/nuxt\` of the repository, a static site with Nuxt 4: its [working page](https://table-bro.com/samples/vue-vuetify/nuxt/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/vue-vuetify/nuxt) opens it in the browser.
+
+1. **Install the packages**
+
+   The table and the skin, Vuetify and the server DOM:
+
+   {{nuxt-install.sh}}
+
+2. **Take Vuetify and the skin through the build**
+
+   The components of Vuetify import their styles, so the build of Nuxt takes Vuetify and the skin through Vite (\`build.transpile\`); the template compiler knows \`‹table-bro›\` as a Custom Element, and the CSS of Vuetify, of the core and of the skin come by \`css\`. The sample also generates its static pages into \`dist\` under the base path of its working page. \`nuxt.config.ts\`:
+
+   {{nuxt.config.ts}}
+
+3. **Give the application its Vuetify**
+
+   A plugin installs a Vuetify for each render of the server and in the browser, with \`ssr: true\`, and provides it. \`app/plugins/vuetify.ts\`:
+
+   {{app/plugins/vuetify.ts}}
+
+   In the browser, the import of the skin defines \`‹table-bro›\` and registers the skin, and \`setVuetify()\` gives its elements the Vuetify of the application. \`app/plugins/table-bro.client.ts\`:
+
+   {{app/plugins/table-bro.client.ts}}
+
+4. **Prerender the table**
+
+   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it, and the server entry takes the Vuetify of the render. The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. \`app/prerender-table.ts\`:
+
+   {{app/prerender-table.ts}}
+
+5. **Render the table in the page**
+
+   The component prerenders the table on the server in \`useAsyncData()\`, renders \`‹table-bro›\` with its attributes and its markup, which the hydration of Vue keeps, and \`configure()\` renders the table with its rows in its place. \`app/components/OrdersTable.vue\`:
+
+   {{app/components/OrdersTable.vue}}
+
+   \`app/app.vue\` renders it in \`VApp\` of Vuetify:
+
+   {{app/app.vue}}
+
+\`app/orders.ts\` is \`src/orders.ts\` of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
+
 <!-- limits -->
 #### Limits
 
@@ -3336,7 +3336,7 @@ SvelteKit renders a page on the server, or at its build: the load of the page on
 
 3. **The elements of the skin**
 
-   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`vuetify\`, \`suid\` and \`m3-svelte\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
+   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`suid\`, \`m3-svelte\` and \`vuetify\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
 
 4. **Critical CSS**
 
@@ -4047,36 +4047,36 @@ The texts of the parts that the core renders come first, flat and named as the o
 
 | Field | Default | Skins | Since |
 | --- | --- | --- | --- |
-| \`rowCounterTitle\` | No | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`rowCounterLabel\` | Row number | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`filterDrawer.title\` | Filters | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`filterDrawer.close\` | Close | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.itemsPerPageLabel\` | Items per page: | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.nextPageLabel\` | Next page | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.previousPageLabel\` | Previous page | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.firstPageLabel\` | First page | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.lastPageLabel\` | Last page | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`paginator.label\` | Pagination | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
+| \`rowCounterTitle\` | No | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`rowCounterLabel\` | Row number | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`rowDetailsLoadingMessage\` | Loading details | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`filterDrawer.title\` | Filters | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`filterDrawer.close\` | Close | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.itemsPerPageLabel\` | Items per page: | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.nextPageLabel\` | Next page | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.previousPageLabel\` | Previous page | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.firstPageLabel\` | First page | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.lastPageLabel\` | Last page | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.getRangeLabel(page, pageSize, length)\` | 1 – 5 of 20 | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`paginator.label\` | Pagination | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
 | \`paginator.navigationLabel\` | Table page navigation | suid, bs, nv | 1.2.0 |
 | \`paginator.firstText\` | First | bs, nv | 1.2.0 |
 | \`paginator.previousText\` | Previous | bs, nv | 1.2.0 |
 | \`paginator.nextText\` | Next | bs, nv | 1.2.0 |
 | \`paginator.lastText\` | Last | bs, nv | 1.2.0 |
-| \`progressBar.label\` | Loading progress | mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`state.loading\` | Loading | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`state['no-data']\` | No data | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`state['not-found']\` | No records found | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`state.fail\` | Failed | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`toolbarMain.search\` | Search | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
+| \`progressBar.label\` | Loading progress | mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`state.loading\` | Loading | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`state['no-data']\` | No data | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`state['not-found']\` | No records found | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`state.fail\` | Failed | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`toolbarMain.search\` | Search | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
 | \`toolbarMain.searchRole(title)\` | for Orders, by the title of the toolbar; for rows without a title | bs, nv | 1.2.0 |
 | \`toolbarMain.buttonRole\` | button | bs, nv | 1.2.0 |
 | \`toolbarMain.menuRole\` | menu | bs | 1.2.0 |
 | \`toolbarMain.menuItemRole\` | menu item | bs | 1.2.0 |
-| \`toolbarSearch.field\` | Search in table | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`toolbarSearch.back\` | Back | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
-| \`toolbarSearch.clear\` | Clear | mat, mui, vuetify, suid, m3-svelte, bs, nv | 1.2.0 |
+| \`toolbarSearch.field\` | Search in table | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`toolbarSearch.back\` | Back | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
+| \`toolbarSearch.clear\` | Clear | mat, mui, suid, m3-svelte, vuetify, bs, nv | 1.2.0 |
 
 The flat fields of 1.1.0, as \`texts.itemsPerPage\` for \`texts.paginator.itemsPerPageLabel\` and \`texts.rowCounter\` for \`texts.rowCounterTitle\`, still work and are deprecated: the editor marks them, and 2.0 removes them. A field in a group and a text of the core win over their flat field.
 

@@ -72,6 +72,18 @@ export const builtinSpecs: BroBuiltinSpec[] = [
             template: '<span class="customer">{{ row.customer }}</span>\n<small class="number">{{ row.number }}</small>',
             styles: ':host {\n  display: flex;\n  flex-direction: column;\n  line-height: 1.2;\n}\n\n.number {\n  font-size: 12px;\n  opacity: .7;\n}'
           },
+          mui: {
+            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--mui-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
+          },
+          suid: {
+            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--suid-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
+          },
+          'm3-svelte': {
+            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--m3c-on-surface-variant)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
+          },
+          vuetify: {
+            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
+          },
           bs: {
             template: '<span>{{ row.customer }}</span>\n<small class="text-body-secondary">{{ row.number }}</small>',
             styles: ':host {\n  display: flex;\n  flex-direction: column;\n  line-height: 1.2;\n}',
@@ -81,23 +93,23 @@ export const builtinSpecs: BroBuiltinSpec[] = [
             template: '<span>{{ row.customer }}</span>\n<small class="number">{{ row.number }}</small>',
             styles: ':host {\n  display: flex;\n  flex-direction: column;\n  line-height: 1.2;\n}\n\n.number {\n  opacity: .7;\n}',
             render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.opacity = '.7';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
-          },
-          mui: {
-            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--mui-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
-          },
-          vuetify: {
-            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
-          },
-          suid: {
-            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--suid-palette-text-secondary)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
-          },
-          'm3-svelte': {
-            render: "const customer = document.createElement('div');\nconst number = document.createElement('small');\n\ncustomer.textContent = this.row?.customer ?? '';\nnumber.style.color = 'var(--m3c-on-surface-variant)';\nnumber.textContent = this.row?.number ?? '';\n\nthis.style.lineHeight = '1.2';\nthis.append(customer, number);"
           }
         },
         status: {
           mat: {
             template: '<mat-chip-set>\n  <mat-chip [highlighted]="row.status === \'paid\'">{{ row.status }}</mat-chip>\n</mat-chip-set>'
+          },
+          mui: {
+            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--mui-palette-success-main)' : 'var(--mui-palette-action-selected)';\nchip.style.color = paid ? 'var(--mui-palette-success-contrastText)' : 'var(--mui-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
+          },
+          suid: {
+            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--suid-palette-success-main)' : 'var(--suid-palette-action-selected)';\nchip.style.color = paid ? 'var(--suid-palette-success-contrast-text)' : 'var(--suid-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
+          },
+          'm3-svelte': {
+            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 8px; font-size: 12px; font-weight: 500;';\nchip.style.background = paid ? 'var(--m3c-primary-container)' : 'var(--m3c-surface-container-high)';\nchip.style.color = paid ? 'var(--m3c-on-primary-container)' : 'var(--m3c-on-surface)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
+          },
+          vuetify: {
+            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 8px; font-size: 13px;';\nchip.style.background = paid ? 'rgb(var(--v-theme-success))' : 'rgba(var(--v-theme-on-surface), var(--v-selected-opacity))';\nchip.style.color = paid ? 'rgb(var(--v-theme-on-success))' : 'rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity))';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
           },
           bs: {
             template: '<span class="badge" [class]="colors[row.status] ?? \'text-bg-light\'">{{ row.status }}</span>',
@@ -108,24 +120,24 @@ export const builtinSpecs: BroBuiltinSpec[] = [
             template: '<span class="status" [class.status_paid]="row.status === \'paid\'">{{ row.status }}</span>',
             styles: '.status {\n  padding: 0 6px;\n  border: 1px solid GrayText;\n  border-radius: 4px;\n}\n\n.status_paid {\n  border-color: CanvasText;\n}',
             render: "const badge = document.createElement('span');\n\nbadge.style.padding = '0 6px';\nbadge.style.border = `1px solid ${(this.row?.status === 'paid') ? 'CanvasText' : 'GrayText'}`;\nbadge.style.borderRadius = '4px';\nbadge.textContent = this.row?.status ?? '';\n\nthis.append(badge);"
-          },
-          mui: {
-            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--mui-palette-success-main)' : 'var(--mui-palette-action-selected)';\nchip.style.color = paid ? 'var(--mui-palette-success-contrastText)' : 'var(--mui-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
-          },
-          vuetify: {
-            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 8px; font-size: 13px;';\nchip.style.background = paid ? 'rgb(var(--v-theme-success))' : 'rgba(var(--v-theme-on-surface), var(--v-selected-opacity))';\nchip.style.color = paid ? 'rgb(var(--v-theme-on-success))' : 'rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity))';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
-          },
-          suid: {
-            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 16px; font-size: 13px;';\nchip.style.background = paid ? 'var(--suid-palette-success-main)' : 'var(--suid-palette-action-selected)';\nchip.style.color = paid ? 'var(--suid-palette-success-contrast-text)' : 'var(--suid-palette-text-primary)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
-          },
-          'm3-svelte': {
-            render: "const chip = document.createElement('span');\nconst paid = (this.row?.status === 'paid');\n\nchip.style.cssText = 'padding: 2px 8px; border-radius: 8px; font-size: 12px; font-weight: 500;';\nchip.style.background = paid ? 'var(--m3c-primary-container)' : 'var(--m3c-surface-container-high)';\nchip.style.color = paid ? 'var(--m3c-on-primary-container)' : 'var(--m3c-on-surface)';\nchip.textContent = this.row?.status ?? '';\n\nthis.append(chip);"
           }
         },
         actions: {
           mat: {
             template: '<button matIconButton aria-label="Edit" matTooltip="Edit" matTooltipPosition="above" (click)="action.emit(\'edit\')">\n  <mat-icon>edit</mat-icon>\n</button>\n<button matIconButton aria-label="Delete" matTooltip="Delete" matTooltipPosition="above" (click)="action.emit(\'delete\')">\n  <mat-icon>delete</mat-icon>\n</button>',
             styles: ':host {\n  --mat-icon-button-icon-color: var(--mat-sys-primary);\n}'
+          },
+          mui: {
+            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--mui-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
+          },
+          suid: {
+            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--suid-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
+          },
+          'm3-svelte': {
+            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 12px; border-radius: 20px; font: inherit; font-weight: 500; color: var(--m3c-primary); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
+          },
+          vuetify: {
+            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; color: rgb(var(--v-theme-primary)); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
           },
           bs: {
             template: '<button type="button" class="btn btn-link" (click)="action.emit(\'edit\')">Edit</button>\n<button type="button" class="btn btn-link" (click)="action.emit(\'delete\')">Delete</button>',
@@ -135,24 +147,24 @@ export const builtinSpecs: BroBuiltinSpec[] = [
             template: '<a href="" role="button" (click)="$event.preventDefault(); action.emit(\'edit\')">Edit</a>\n<a href="" role="button" (click)="$event.preventDefault(); action.emit(\'delete\')">Delete</a>',
             styles: ':host {\n  display: flex;\n  gap: 16px;\n}\n\na {\n  color: LinkText;\n}',
             render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const link = document.createElement('a');\n\n  link.href = '';\n  link.setAttribute('role', 'button');\n  link.style.color = 'LinkText';\n  link.textContent = title;\n  link.addEventListener('click', event => {\n    event.preventDefault();\n    this.sendAction(action);\n  });\n\n  this.append(link);\n}"
-          },
-          mui: {
-            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--mui-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
-          },
-          vuetify: {
-            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; color: rgb(var(--v-theme-primary)); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
-          },
-          suid: {
-            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 8px; font: inherit; font-weight: 500; text-transform: uppercase; color: var(--suid-palette-primary-main); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
-          },
-          'm3-svelte': {
-            render: "for (const [action, title] of [['edit', 'Edit'], ['delete', 'Delete']]) {\n  const button = document.createElement('button');\n\n  button.type = 'button';\n  button.style.cssText = 'border: 0; background: none; padding: 6px 12px; border-radius: 20px; font: inherit; font-weight: 500; color: var(--m3c-primary); cursor: pointer;';\n  button.textContent = title;\n  button.addEventListener('click', () => this.sendAction(action));\n\n  this.append(button);\n}"
           }
         },
         details: {
           mat: {
             template: '<dl>\n  <dt>Customer</dt>\n  <dd>{{ row.customer }}</dd>\n  <dt>Total</dt>\n  <dd>{{ row.total }}</dd>\n  <dt>Tags</dt>\n  <dd>\n    <mat-chip-set>\n      @for (tag of row.tags; track tag) {\n        <mat-chip>{{ tag }}</mat-chip>\n      }\n    </mat-chip-set>\n  </dd>\n</dl>',
             styles: ':host {\n  display: block;\n}\n\ndl {\n  padding: 16px 24px;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  align-items: center;\n  gap: 8px 24px;\n  margin: 0;\n}\n\ndt {\n  color: var(--mat-sys-on-surface-variant);\n}\n\ndd {\n  margin: 0;\n}'
+          },
+          mui: {
+            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--mui-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
+          },
+          suid: {
+            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--suid-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
+          },
+          'm3-svelte': {
+            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--m3c-on-surface-variant)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
+          },
+          vuetify: {
+            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
           },
           bs: {
             template: '<dl>\n  <dt>Customer</dt>\n  <dd>{{ row.customer }}</dd>\n  <dt>Total</dt>\n  <dd>{{ row.total }}</dd>\n  <dt>Tags</dt>\n  <dd>\n    @for (tag of row.tags; track tag) {\n      <span class="badge text-bg-secondary me-1">{{ tag }}</span>\n    }\n  </dd>\n</dl>',
@@ -163,18 +175,6 @@ export const builtinSpecs: BroBuiltinSpec[] = [
             template: '<dl>\n  <dt>Customer</dt>\n  <dd>{{ row.customer }}</dd>\n  <dt>Total</dt>\n  <dd>{{ row.total }}</dd>\n  <dt>Tags</dt>\n  <dd>{{ row.tags.join(\', \') }}</dd>\n</dl>',
             styles: ':host {\n  display: block;\n}\n\ndl {\n  padding: 12px 16px;\n  display: grid;\n  grid-template-columns: max-content 1fr;\n  gap: 8px 24px;\n  margin: 0;\n}\n\ndt {\n  color: GrayText;\n}\n\ndd {\n  margin: 0;\n}',
             render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 12px 16px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'GrayText';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
-          },
-          mui: {
-            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--mui-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
-          },
-          vuetify: {
-            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
-          },
-          suid: {
-            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--suid-palette-text-secondary)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
-          },
-          'm3-svelte': {
-            render: "this.style.display = 'block';\n\nconst list = document.createElement('dl');\n\nlist.style.cssText = 'display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; margin: 0; padding: 16px 24px;';\n\nfor (const [label, value] of [['Customer', this.row?.customer], ['Total', this.row?.total], ['Tags', this.row?.tags.join(', ')]] as [string, unknown][]) {\n  const term = document.createElement('dt');\n  const detail = document.createElement('dd');\n\n  term.style.color = 'var(--m3c-on-surface-variant)';\n  term.textContent = label;\n  detail.style.margin = '0';\n  detail.textContent = String(value ?? '');\n  list.append(term, detail);\n}\n\nthis.append(list);"
           }
         }
       },
