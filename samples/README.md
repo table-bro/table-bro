@@ -10,8 +10,8 @@ of the frameworks of Docs, Frameworks:
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;
 - `solid-suid`: Solid and SUID with `@table-bro/solid-suid`, in `solid-suid/solid`, built by Vite with the plugin of
-  Solid, which compiles the components of SUID; the theme of the page follows the color scheme of the system; in
-  `solid-suid/start` SolidStart prerenders the table in the markup of SUID at the build of its static site, with the
+  Solid, which compiles the components of SUID; the theme of the page has the light azure palette and the font of
+  the theme of `angular-material` in the roles of SUID; in `solid-suid/start` SolidStart prerenders the table in the markup of SUID at the build of its static site, with the
   server entry of the skin;
 - `svelte-m3`: Svelte and M3 Svelte with `@table-bro/svelte-m3`, in `svelte-m3/svelte`, built by Vite with the plugins
   of Svelte and of the CSS of M3 Svelte, in the default theme of M3 Svelte; in `svelte-m3/sveltekit` SvelteKit
