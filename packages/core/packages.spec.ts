@@ -70,8 +70,12 @@ describe('the packages of the core and the skins', () => {
       './dist/table-bro.react-mui.esm.js', './dist/table-bro.react-mui.server.esm.js', './dist/table-bro.react-mui.shared.esm.js', './dist/*.css'
     ]);
 
-    // The skin vuetify is built for bundlers only, without a UMD bundle
-    expect(vuetifyPackage.sideEffects).toEqual(['./js/index.ts', './js/table-bro.vue-vuetify.ts', './dist/table-bro.vue-vuetify.esm.js', './dist/*.css']);
+    // The skin vuetify is built for bundlers only, without a UMD bundle; its entries of the browser and of the server
+    // share the chunk that registers it
+    expect(vuetifyPackage.sideEffects).toEqual([
+      './js/index.ts', './js/table-bro.vue-vuetify.ts', './js/table-bro.vue-vuetify.server.ts',
+      './dist/table-bro.vue-vuetify.esm.js', './dist/table-bro.vue-vuetify.server.esm.js', './dist/table-bro.vue-vuetify.shared.esm.js', './dist/*.css'
+    ]);
   });
 
   it('define no tag with the prefix bro-cell-: the library leaves it to the elements of the application', () => {
