@@ -7,11 +7,14 @@ import type {ReactNode}         from 'react';
 
 import {theme} from '../theme';
 
-/** The MUI theme of the application with the styles of Emotion of the server render of Next.js. */
+/**
+ * The MUI theme of the application with the styles of Emotion of the server render of Next.js. The page is light, as the
+ * page of the sample of Angular Material; the table takes the scheme of the system by its theme.
+ */
 export function Providers({children}: {children: ReactNode}) {
   return (
     <AppRouterCacheProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} defaultMode="light">
         <CssBaseline />
         {children}
       </ThemeProvider>

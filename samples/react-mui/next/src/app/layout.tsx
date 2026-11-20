@@ -18,7 +18,7 @@ export default function RootLayout({children}: {children: ReactNode}) {
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       </head>
       <body>
-        <InitColorSchemeScript attribute="data-mui-color-scheme" />
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="light" />
         <Providers>{children}</Providers>
       </body>
     </html>
