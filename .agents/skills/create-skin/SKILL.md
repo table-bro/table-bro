@@ -114,6 +114,11 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
 - The server render of Vue, `renderToString` of `@vue/server-renderer`, is asynchronous, while `prerenderTableBro()`
   renders the elements synchronously: a skin of Vue and its section of Nuxt need a decision of the owner on an
   asynchronous prerender before they start.
+- The server render of Svelte, `render()` of `svelte/server`, is synchronous: the skin `m3-svelte` renders each
+  component of an element to markup in its node (`js/table-bro.svelte-m3.server.ts`). A library that ships its components
+  as sources of Svelte, as M3 Svelte, is compiled by the bundler of the server: the condition `svelte` of the exports of
+  the skin lets the plugin of Svelte bundle the skin with it. SvelteKit makes the `HTMLElement` of the server DOM global
+  in `src/hooks.server.ts`, before the modules of the pages, as `samples/svelte-m3/sveltekit` does.
 
 ## The theme
 

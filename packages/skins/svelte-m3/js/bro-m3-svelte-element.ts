@@ -6,25 +6,58 @@ import {SvelteMap}                                                              
 /** The props of a component of M3 Svelte that an element of the skin gives. */
 export type BroM3SvelteProps = Record<string, unknown>;
 
+/** The render of a component of M3 Svelte with its props to markup, as render() of svelte/server. */
+export type BroM3SvelteServerRender = (component: Component<never>, props: BroM3SvelteProps) => string;
+
+/**
+ * The render of a component to markup, which the server entry of the skin gives: the elements of a prerender in a
+ * server DOM render their markup by it (prerenderTableBro).
+ */
+let serverRender: BroM3SvelteServerRender | undefined;
+/** The console named once a prerender of the skin without its server entry. */
+let serverReported: boolean = false;
+
+/**
+ * Gives the elements the render of a component to markup for a server DOM: the server entry of the skin calls it with
+ * render() of svelte/server, which the bundle of the browser does not carry.
+ * @param render - the render of a component of M3 Svelte with its props to markup
+ */
+export function setServerRender(render: BroM3SvelteServerRender): void {
+  serverRender = render;
+}
+
 /**
  * A component of M3 Svelte mounted into a node of an element of the skin, as an Angular element of the skin mat renders
  * its component. Its props live in a reactive map of Svelte: set() changes the ones that differ, and the component
- * renders them at the next flush, which the element runs at once by flushSync().
+ * renders them at the next flush, which the element runs at once by flushSync(). In a server DOM the component renders
+ * its markup into the node once, without a root of Svelte.
  */
 export class BroM3SveltePart {
   /** A prop changed since the last flush of the element. */
   private changed: boolean = false;
-  private readonly instance: Record<string, unknown>;
+  /** The mounted component; none for the markup of a server DOM. */
+  private readonly instance: Record<string, unknown> | null = null;
+  /** The markup of a server DOM, which renders once. */
+  private readonly markup: boolean;
   private readonly values = new SvelteMap<string, unknown>();
 
   /**
-   * Mounts the component into its node.
+   * Mounts the component into its node, or renders its markup there in a server DOM.
    * @param component - the component of M3 Svelte
    * @param target - the node that holds it
    * @param props - its first props
+   * @param server - the render of the component to markup for a server DOM
    */
-  constructor(component: Component<never>, target: Element, props: BroM3SvelteProps) {
+  constructor(component: Component<never>, target: Element, props: BroM3SvelteProps, server?: BroM3SvelteServerRender) {
     const values = this.values;
+
+    this.markup = !!server;
+
+    if (server) {
+      target.insertAdjacentHTML('beforeend', server(component, props));
+
+      return;
+    }
 
     this.set(props);
     this.changed = false;
@@ -49,6 +82,11 @@ export class BroM3SveltePart {
    * @param props - the props of the component
    */
   set(props: BroM3SvelteProps): void {
+    // The markup of a server DOM renders once
+    if (this.markup) {
+      return;
+    }
+
     [...this.values.keys()].filter(key => !(key in props)).forEach(key => {
       this.values.delete(key);
       this.changed = true;
@@ -72,7 +110,9 @@ export class BroM3SveltePart {
 
   /** Unmounts the component. */
   destroy(): void {
-    void unmount(this.instance);
+    if (this.instance) {
+      void unmount(this.instance);
+    }
   }
 }
 
@@ -133,6 +173,8 @@ export abstract class BroM3SvelteElement extends BroHTMLElement {
   private moving: boolean = false;
   /** The components that the element mounted. */
   private parts: BroM3SveltePart[] = [];
+  /** The element renders its markup in a server DOM. */
+  private server: boolean = false;
 
   /**
    * Builds the markup of the element in its node and mounts the components of M3 Svelte into it with mountPart().
@@ -150,12 +192,25 @@ export abstract class BroM3SvelteElement extends BroHTMLElement {
       return;
     }
 
-    // An element of the prerender keeps its markup until the table renders its own elements in its place. A server DOM,
-    // with a window of its own, gets no markup of the skin: the table renders the elements in the browser
-    if (this.container || isPrerendered(this) || (typeof window === 'undefined') || (this.ownerDocument.defaultView !== window)) {
+    // An element of the prerender keeps its markup until the table renders its own elements in its place
+    if (this.container || isPrerendered(this)) {
       return;
     }
 
+    // A server DOM, as of a prerender on the server, has a window of its own: the element renders its markup there by
+    // the render of the server entry, not by a root of Svelte
+    const server = (typeof window === 'undefined') || (this.ownerDocument.defaultView !== window);
+
+    if (server && !serverRender) {
+      if (!serverReported) {
+        serverReported = true;
+        console.error('Table, Bro: the skin m3-svelte renders its elements on the server with the import of @table-bro/svelte-m3/server');
+      }
+
+      return;
+    }
+
+    this.server = server;
     this.container = new BroDom(this.ownerDocument).createElement('div');
     this.container.className = 'bro-m3-svelte-root';
     this.prepend(this.container);
@@ -215,11 +270,16 @@ export abstract class BroM3SvelteElement extends BroHTMLElement {
    * @param props - its first props
    */
   protected mountPart(component: Component<never>, target: Element, props: BroM3SvelteProps): BroM3SveltePart {
-    const part = new BroM3SveltePart(component, target, props);
+    const part = new BroM3SveltePart(component, target, props, this.server ? serverRender : undefined);
 
     this.parts.push(part);
 
     return part;
+  }
+
+  /** The element renders its markup in a server DOM, where the components render once and measure nothing. */
+  protected get serverRendered(): boolean {
+    return this.server;
   }
 
   /** The element left the DOM and its components are unmounted. */

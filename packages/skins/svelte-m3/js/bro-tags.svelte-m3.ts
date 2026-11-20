@@ -85,10 +85,13 @@ export class BroM3SvelteTagsComponent extends BroM3SvelteElement implements BroC
       }
     });
 
-    // The chips that do not fit the line give way to an ellipsis, from the first render on
+    // The chips that do not fit the line give way to an ellipsis, from the first render on; a server DOM has no layout
     this.fitting?.abort();
-    this.fitting = new AbortController();
-    fitCellItems(line, this.fitting.signal);
+
+    if (!this.serverRendered) {
+      this.fitting = new AbortController();
+      fitCellItems(line, this.fitting.signal);
+    }
   }
 
   protected override unmounted(): void {
