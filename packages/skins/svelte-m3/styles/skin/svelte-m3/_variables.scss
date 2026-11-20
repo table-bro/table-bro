@@ -19,9 +19,10 @@ $m3-svelte-corner-radius: 12px; // the medium shape of Material 3, as the tables
 $m3-svelte-filter-drawer-corner-radius: 16px; // the large shape of Material 3, as the filter drawer of the skin mat
 
 // The colors of the parts of the table: the CSS variables of the theme of M3 Svelte, which the application writes,
-// in the roles of a table of Material 3
+// in the roles of a table of Material 3. The outlines take the property of the skin, the outline of the theme by
+// default (skin/svelte-m3/_themes.scss)
 $m3-svelte-bg: var(--m3c-surface) !default;
-$m3-svelte-border-color: var(--m3c-outline-variant) !default;
+$m3-svelte-border-color: var(--bro-m3-svelte-outline-color) !default;
 $m3-svelte-text-color: var(--m3c-on-surface) !default;
 $m3-svelte-text-secondary-color: var(--m3c-on-surface-variant) !default;
 
