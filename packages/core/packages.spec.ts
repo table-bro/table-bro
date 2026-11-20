@@ -112,8 +112,8 @@ describe('the packages of the core and the skins', () => {
   });
 
   it('give each UMD bundle its own global name', () => {
-    // The skins mui, vuetify, suid and m3-svelte are built for bundlers only: they have no UMD bundle and no global name
-    const bundlerOnly = ['../skins/react-mui/tsdown.config.ts', '../skins/vue-vuetify/tsdown.config.ts', '../skins/solid-suid/tsdown.config.ts', '../skins/svelte-m3/tsdown.config.ts'];
+    // The skins mui, suid, m3-svelte and vuetify are built for bundlers only: they have no UMD bundle and no global name
+    const bundlerOnly = ['../skins/react-mui/tsdown.config.ts', '../skins/solid-suid/tsdown.config.ts', '../skins/svelte-m3/tsdown.config.ts', '../skins/vue-vuetify/tsdown.config.ts'];
     const umdConfigs = Object.entries(buildConfigs).filter(([file]) => !bundlerOnly.includes(file));
     const names = umdConfigs.map(([, config]) => config.match(/globalName:\s*'([^']+)'/)?.[1]);
 

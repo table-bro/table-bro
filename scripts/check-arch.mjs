@@ -25,7 +25,7 @@ import path            from 'node:path';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const core = path.join(root, 'packages/core');
-const skins = ['react-mui/js', 'vue-vuetify/js', 'solid-suid/js', 'svelte-m3/js', 'bootstrap/js', 'native/js', 'shared/js'].map(dir => path.join(root, 'packages/skins', dir));
+const skins = ['react-mui/js', 'solid-suid/js', 'svelte-m3/js', 'vue-vuetify/js', 'bootstrap/js', 'native/js', 'shared/js'].map(dir => path.join(root, 'packages/skins', dir));
 const adapter = path.join(root, 'packages/skins/angular-material/src');
 const wrapper = path.join(root, 'packages/angular/src');
 
