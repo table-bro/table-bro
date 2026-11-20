@@ -36,7 +36,8 @@
 
       font-size: 18px;
 
-      color: var(--m3c-on-surface-variant);
+      // The arrow of the sort header of the skin mat, sorted or not
+      color: var(--m3c-on-surface);
 
       opacity: 0;
       transform: rotate(180deg);
@@ -51,8 +52,6 @@
 
     .bro-m3-svelte-sort-header_sorted .bro-m3-svelte-sort-header-arrow,
     .bro-m3-svelte-sort-header_sorted:hover .bro-m3-svelte-sort-header-arrow {
-      color: var(--m3c-on-surface);
-
       opacity: 1;
     }
 
