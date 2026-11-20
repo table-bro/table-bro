@@ -17,6 +17,13 @@
     font-size: 24px;
   }
 
+  // The icon buttons of the skin, as in the toolbar, the paginator and the filter drawer, have the color of the
+  // standard icon button of Material 3, as the icon buttons of the skin mat: M3 Svelte gives a text button the primary
+  // color. A disabled one keeps the color of M3 Svelte
+  button.m3-container.text.icon-full:enabled {
+    color: var(--m3c-on-surface-variant);
+  }
+
   // The icon and the title of a text button, and of an item of a menu, are the flex items of the component
   .bro-m3-svelte-button-label,
   .bro-m3-svelte-menu-item-label {
