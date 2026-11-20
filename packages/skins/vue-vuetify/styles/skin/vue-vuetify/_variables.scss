@@ -6,7 +6,7 @@ $vuetify-toolbar-selector: '.v-toolbar' !default;
 // defaults of its $bro-* variables, which an application configures as in the other skins
 $vuetify-table-header-height: 56px;
 $vuetify-table-row-height: 52px;
-$vuetify-row-horizontal-padding: 16px; // the padding of the cells of the table of Vuetify
+$vuetify-row-horizontal-padding: 24px; // the padding of the cells of the tables of mat, which the cells of Vuetify take
 
 // The room of the shadow of the table, the offset, the blur and the spread of the elevation z16 of Angular Material,
 // which the skin draws as the skin mat
