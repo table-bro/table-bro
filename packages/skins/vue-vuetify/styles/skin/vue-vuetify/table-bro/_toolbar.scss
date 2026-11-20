@@ -56,6 +56,14 @@
     letter-spacing: .0071em;
   }
 
+  // The divider of the menu has the light surface of the theme, the surface variant of Material, opaque, as the divider
+  // of the menu of mat: Vuetify draws it in the color of the text at the opacity of the border of the theme
+  @at-root .bro-vuetify-menu .v-divider {
+    color: rgb(var(--v-theme-surface-light));
+
+    opacity: 1;
+  }
+
   bro-vuetify-toolbar-main .bro-toolbar-space,
   .bro-filter-drawer-header .bro-filter-drawer-title {
     flex: 1 1 auto;
