@@ -4,9 +4,13 @@
     display: contents;
   }
 
-  // The shadow of the table and of its regions: the elevation 5 of the theme
+  // The shadow of the table and of its regions: the elevation 5 of the theme without the spread of its ambient shadow.
+  // The table draws its shadow by regions, one for each row: a spread grows every region over its neighbors, and the
+  // overlaps darken the edges of the table at each row
   .bro-m3-svelte-elevation-5 {
-    box-shadow: var(--m3-elevation-5);
+    box-shadow:
+      0 4px 4px 0 color-mix(in sRGB, var(--m3c-shadow) 30%, transparent),
+      0 8px 12px 0 color-mix(in sRGB, var(--m3c-shadow) 15%, transparent);
   }
 
   // The icons of the table are the font of Material Symbols in the size of the icons of M3 Svelte
