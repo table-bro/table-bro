@@ -148,18 +148,20 @@ export class BroFiltersCode {
 
   /** The form of the filters in Vanilla JS: the content of the Filter Drawer with slot="filters". */
   vanillaForm(skin: BroSpecSkin): string {
-    // The native fields have no classes of a library: the form brings their rules, in the skins mui, vuetify, m3-svelte
-    // and nv; the page of mui, vuetify or m3-svelte replaces them with the fields of its library when it wants
-    const native = (skin === 'mui' || skin === 'vuetify' || skin === 'm3-svelte' || skin === 'nv');
+    // The native fields have no classes of a library: the form brings their rules, in the skins mui, vuetify, suid,
+    // m3-svelte and nv; the page of mui, vuetify, suid or m3-svelte replaces them with the fields of its library when it
+    // wants
+    const native = (skin === 'mui' || skin === 'vuetify' || skin === 'suid' || skin === 'm3-svelte' || skin === 'nv');
     const style = native ? `<style>\n${indentBlock(styles.nv.replace(/\.app-native-field/g, `.${this.names.filtersSelector} .app-native-field`), '  ')}\n</style>\n\n` : '';
     const markup = style + this.filters.map(filter => this.vanillaField(filter, skin)).join('\n\n');
     const clear = {
       mui: '<button type="button" class="app-filters-clear">Clear</button>',
       vuetify: '<button type="button" class="app-filters-clear">Clear</button>',
+      suid: '<button type="button" class="app-filters-clear">Clear</button>',
       'm3-svelte': '<button type="button" class="app-filters-clear">Clear</button>',
       bs: '<button type="button" class="nav-link px-0 app-filters-clear">Clear</button>',
       nv: '<a href="" class="bro-nav-link app-filters-clear">Clear</a>'
-    }[<'mui' | 'vuetify' | 'm3-svelte' | 'bs' | 'nv'>skin];
+    }[<'mui' | 'vuetify' | 'suid' | 'm3-svelte' | 'bs' | 'nv'>skin];
     const read = this.keys().map(({key, type}) => {
       if (type === 'number') {
         return `    ${objectKey(key)}: data.get('${key}') ? Number(data.get('${key}')) : undefined`;
@@ -255,7 +257,7 @@ export class BroFiltersCode {
     return this.htmlField(filter, skin, false);
   }
 
-  /** A field of the skins mui, vuetify, m3-svelte, bs and nv: Angular binds it with formControlName, Vanilla JS reads it by its name. */
+  /** A field of the skins mui, vuetify, suid, m3-svelte, bs and nv: Angular binds it with formControlName, Vanilla JS reads it by its name. */
   private htmlField(filter: BroSpecFilter, skin: BroSpecSkin, angular: boolean): string {
     const escape = angular ? escapeTemplate : escapeHtml;
     const bootstrap = (skin === 'bs');
@@ -298,6 +300,8 @@ const styles: Record<BroSpecSkin, string> = {
   mui: '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}',
   // The page of the skin vuetify takes the native fields of nv
   vuetify: '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}',
+  // The page of the skin suid takes the native fields of nv
+  suid: '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}',
   // The page of the skin m3-svelte takes the native fields of nv
   'm3-svelte': '.app-native-field {\n  display: block;\n  margin-bottom: 12px;\n}\n\n.app-native-field input:not([type="checkbox"]),\n.app-native-field select {\n  display: block;\n  box-sizing: border-box;\n  width: 100%;\n  margin-top: 4px;\n}',
   bs: ':host {\n  display: block;\n}',

@@ -1,0 +1,18 @@
+@use "variables" as *;
+@use "../shared/mixins/skin-colors" as *;
+
+// The skin takes the theme of the application, as every component of SUID does: the components of SUID in the table
+// take it from their theme provider, and the parts of the table read the CSS variables that setSuidTheme() writes from
+// it. A dark palette of the theme changes the variables
+#{$bro-skin} {
+  color: $suid-text-color;
+
+  @include bro-table-theme(
+      '.bro-suid-table',
+      $suid-toolbar-selector,
+      $suid-bg,
+      $suid-border-color,
+      $suid-text-color,
+      $suid-text-secondary-color
+  );
+}

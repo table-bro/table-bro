@@ -94,6 +94,12 @@ describe('generateCode', () => {
     ]);
   });
 
+  it('keeps the suid skin for Solid', () => {
+    expect(generateCode(orders.spec, {target: 'angular', skin: 'suid'}).report.errors).toEqual([
+      {path: '', message: 'the suid skin is for Solid', fix: 'use the target vanilla in a project of Solid, or the skin mat, bs or nv'}
+    ]);
+  });
+
   it('keeps the m3-svelte skin for Svelte', () => {
     expect(generateCode(orders.spec, {target: 'angular', skin: 'm3-svelte'}).report.errors).toEqual([
       {path: '', message: 'the m3-svelte skin is for Svelte', fix: 'use the target vanilla in a project of Svelte, or the skin mat, bs or nv'}
@@ -363,6 +369,11 @@ describe('generateCode', () => {
     expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain("import {setVuetify, withSwitch, withTags} from '@table-bro/vue-vuetify';");
     expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain('setVuetify(vuetify);\nwithTags();\nwithSwitch();');
     expect(setup(orders.spec, 'vanilla', 'vuetify')).toContain('onMounted(() => renderOrderTable(container.value!));');
+
+    // The skin suid takes the SUID theme of the application, and Solid renders the table in onMount()
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain("import {setSuidTheme, withSwitch, withTags} from '@table-bro/solid-suid';");
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain('setSuidTheme(theme);\nwithTags();\nwithSwitch();');
+    expect(setup(orders.spec, 'vanilla', 'suid')).toContain('onMount(() => {');
 
     // The skin m3-svelte takes the M3 Svelte theme of the application from its CSS, and Svelte renders the table in onMount
     expect(setup(orders.spec, 'vanilla', 'm3-svelte')).toContain("import {withSwitch, withTags} from '@table-bro/svelte-m3';\n\nwithTags();\nwithSwitch();");

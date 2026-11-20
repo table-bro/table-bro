@@ -1,0 +1,44 @@
+@use "../variables" as *;
+
+@mixin styles {
+  // The host is an inline block, whose baseline is its last line of text in the flow: the texts of the toolbar and the
+  // paginator of the skin lie in flex boxes, so the baseline is the bottom of the table, and the line around it adds the
+  // descent of its font below the table. In the filter drawer of the core the card would be longer than the table by it
+  @at-root table-bro#{&} {
+    vertical-align: top;
+  }
+
+  table.bro-suid-table {
+    border-spacing: 0;
+  }
+
+  tr.bro-suid-header-row {
+    height: var(--bro-header-height);
+  }
+
+  tr.bro-suid-row {
+    height: var(--bro-row-height);
+  }
+
+  // The text of the theme, as in the table of MUI that SUID ports: the body text in the cells, the title text in the header below
+  th.bro-suid-header-cell,
+  td.bro-suid-cell {
+    border-color: $suid-border-color;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    font: var(--suid-font-body2);
+
+    color: $suid-text-color;
+  }
+
+  th.bro-suid-header-cell {
+    font: var(--suid-font-subtitle2);
+
+    text-align: left;
+
+    [dir='rtl'] & {
+      text-align: right;
+    }
+  }
+}

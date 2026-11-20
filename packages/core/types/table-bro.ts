@@ -898,7 +898,7 @@ export interface BroTexts {
   last: string;
 
   // Skin component texts: progressBar
-  /** The name of the progress bar of the skins mui, vuetify, m3-svelte, bs and nv. */
+  /** The name of the progress bar of the skins mui, vuetify, suid, m3-svelte, bs and nv. */
   loadingProgress: string;
 
   // Skin component texts: state
@@ -1009,8 +1009,8 @@ export interface BroPaginatorTexts {
 }
 
 /**
- * The texts of the progress bar of the skins mui, vuetify, m3-svelte, bs and nv, components.progressBar of a skin: the
- * group progressBar of the texts of a config.
+ * The texts of the progress bar of the skins mui, vuetify, suid, m3-svelte, bs and nv, components.progressBar of a skin:
+ * the group progressBar of the texts of a config.
  * @group Configuration
  * @since 1.2.0
  */

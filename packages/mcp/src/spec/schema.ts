@@ -142,7 +142,7 @@ export const specSchema: BroJsonSchema = {
     skinConfig: {
       type: 'object',
       description: 'The settings of the components of one skin, with the names of BroConfig',
-      properties: Object.fromEntries(['mat', 'mui', 'vuetify', 'm3-svelte', 'bs', 'nv'].map(skin => [skin, {
+      properties: Object.fromEntries(['mat', 'mui', 'vuetify', 'suid', 'm3-svelte', 'bs', 'nv'].map(skin => [skin, {
         type: 'object',
         properties: {
           css: {type: 'object', description: 'Values of BroConfig.css'},

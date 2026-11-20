@@ -9,6 +9,7 @@ const css: Record<BroSpecSkin | 'core', string> = {
   mat: 'node_modules/@table-bro/angular-material/dist/table-bro.material.min.css',
   mui: 'node_modules/@table-bro/react-mui/dist/table-bro.react-mui.min.css',
   vuetify: 'node_modules/@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css',
+  suid: 'node_modules/@table-bro/solid-suid/dist/table-bro.solid-suid.min.css',
   'm3-svelte': 'node_modules/@table-bro/svelte-m3/dist/table-bro.svelte-m3.min.css',
   bs: 'node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css',
   nv: 'node_modules/@table-bro/native/dist/table-bro.native.min.css'
@@ -26,6 +27,8 @@ const packageRoles: Record<string, string> = {
   '@emotion/styled': '',
   '@table-bro/vue-vuetify': '`@table-bro/vue-vuetify`: the skin vuetify, the table on the components of Vuetify for Vue, in the themes of the Vuetify of the application',
   vuetify: '`vuetify`: Vuetify itself, whose components the skin renders',
+  '@table-bro/solid-suid': '`@table-bro/solid-suid`: the skin suid, the table on the components of SUID, the port of MUI to Solid, in the SUID theme of the application',
+  '@suid/material': '`@suid/material`: SUID itself, whose components the skin renders; it supports Solid 1, and the plugin of Solid for Vite compiles its components, published as JSX',
   '@table-bro/svelte-m3': '`@table-bro/svelte-m3`: the skin m3-svelte, the table on the components of M3 Svelte for Svelte, in the Material 3 theme of the application',
   'm3-svelte': '`m3-svelte`: M3 Svelte itself, whose components the skin mounts',
   'vite-plugin-functions-mixins': '`vite-plugin-functions-mixins`: the plugin of Vite that compiles the CSS of the components of M3 Svelte',
@@ -96,6 +99,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     mat: ['@table-bro/angular-material', '@angular/elements'],
     mui: ['@table-bro/react-mui', '@mui/material', '@emotion/react', '@emotion/styled'],
     vuetify: ['@table-bro/vue-vuetify', 'vuetify'],
+    suid: ['@table-bro/solid-suid', '@suid/material'],
     'm3-svelte': ['@table-bro/svelte-m3', 'm3-svelte', 'vite-plugin-functions-mixins'],
     bs: ['@table-bro/bootstrap', 'bootstrap', '@types/bootstrap'],
     nv: ['@table-bro/native']
@@ -242,6 +246,35 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     }, {
       title: 'Load the font of the icons',
       text: 'The vuetify skin shows the ligature icons of Material, whatever icon set the application gives Vuetify. In `index.html`:',
+      code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
+      language: 'html'
+    });
+  } else if (skin === 'suid') {
+    steps.push({
+      title: 'Register the skin with the theme of the application',
+      text: `Once, before the tables: the import registers the skin, and \`setSuidTheme()\` gives its elements the SUID theme of the application, which the application renders with \`ThemeProvider\` of SUID. The skin writes the CSS variables of the theme that the table reads, and writes them again when a palette given as a getter changes. ${optional}`,
+      code: [
+        imports({'@suid/material/styles': ['createTheme'], '@table-bro/solid-suid': ['setSuidTheme', ...features]}),
+        '',
+        'export const theme = createTheme();',
+        '',
+        'setSuidTheme(theme);',
+        ...vanillaCalls
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Render the table when the component mounts',
+      text: 'Solid renders the elements of the skin at once, also inside its effects, so a component renders the table in `onMount()`.',
+      code: [
+        'onMount(() => {',
+        '  // The render function of the module of the table, as renderOrderTable()',
+        '  renderOrderTable(container);',
+        '});'
+      ].join('\n'),
+      language: 'typescript'
+    }, {
+      title: 'Load the font of the icons',
+      text: 'The suid skin shows the ligature icons of Material. In `index.html`:',
       code: '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">',
       language: 'html'
     });

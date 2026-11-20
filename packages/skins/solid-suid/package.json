@@ -1,0 +1,96 @@
+{
+  "name": "@table-bro/solid-suid",
+  "version": "1.2.1",
+  "description": "Pixel-perfect Material data tables for Solid and SUID, and more. A Web Components table engine on top of existing UI components.",
+  "keywords": [
+    "solid",
+    "solidjs",
+    "suid",
+    "material-ui",
+    "material",
+    "material-design",
+    "table",
+    "data-table",
+    "datatable",
+    "data-grid",
+    "web-components",
+    "mcp",
+    "ai-coding-agents",
+    "vibe-coding",
+    "claude-code",
+    "cursor",
+    "codex",
+    "github-copilot",
+    "windsurf",
+    "gemini-cli",
+    "grok",
+    "cline",
+    "zed",
+    "jetbrains-ai",
+    "suid-table"
+  ],
+  "author": "table-bro",
+  "homepage": "https://table-bro.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/table-bro/table-bro.git",
+    "directory": "packages/skins/solid-suid"
+  },
+  "bugs": {
+    "url": "https://github.com/table-bro/table-bro/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/table-bro.solid-suid.esm.js",
+  "module": "dist/table-bro.solid-suid.esm.js",
+  "types": "dist/table-bro.solid-suid.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/table-bro.solid-suid.d.ts",
+      "import": "./dist/table-bro.solid-suid.esm.js",
+      "default": "./dist/table-bro.solid-suid.esm.js"
+    },
+    "./server": {
+      "types": "./dist/table-bro.solid-suid.server.d.ts",
+      "import": "./dist/table-bro.solid-suid.server.esm.js",
+      "default": "./dist/table-bro.solid-suid.server.esm.js"
+    },
+    "./config": {
+      "types": "./dist/table-bro.solid-suid.config.d.ts",
+      "import": "./dist/table-bro.solid-suid.config.esm.js",
+      "default": "./dist/table-bro.solid-suid.config.esm.js"
+    },
+    "./dist/*.css": "./dist/*.css",
+    "./styles/*": "./styles/*"
+  },
+  "sideEffects": [
+    "./js/index.ts",
+    "./js/table-bro.solid-suid.ts",
+    "./js/table-bro.solid-suid.server.ts",
+    "./dist/table-bro.solid-suid.esm.js",
+    "./dist/table-bro.solid-suid.server.esm.js",
+    "./dist/table-bro.solid-suid.shared.esm.js",
+    "./dist/*.css"
+  ],
+  "files": [
+    "dist/",
+    "styles/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsdown && node ../../../scripts/build-css.mjs . table-bro.solid-suid --vanilla",
+    "build:js": "tsdown",
+    "build:css": "node ../../../scripts/build-css.mjs . table-bro.solid-suid --vanilla",
+    "watch": "tsdown --watch"
+  },
+  "peerDependencies": {
+    "@suid/material": "^0.19.0",
+    "solid-js": "^1.9.7",
+    "@table-bro/core": "^1.2.0"
+  },
+  "devDependencies": {
+    "@suid/material": "^0.19.0",
+    "solid-js": "^1.9.20",
+    "tsdown": "^0.23.0"
+  }
+}

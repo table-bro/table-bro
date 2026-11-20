@@ -1,0 +1,20 @@
+@use "../variables" as *;
+@use "shared-selector-map" as *;
+
+@mixin styles {
+  // The field takes the width between the buttons and has the title text of the toolbar, of the theme of the
+  // application
+  #{$suid-toolbar-selector} #{$bro-toolbar_content-search} {
+    flex: 1 1 auto;
+
+    input {
+      width: 100%;
+
+      font: var(--suid-font-h6);
+
+      &::placeholder {
+        color: $suid-text-secondary-color;
+      }
+    }
+  }
+}

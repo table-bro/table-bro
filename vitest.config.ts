@@ -4,14 +4,16 @@ import {svelte}                    from '@sveltejs/vite-plugin-svelte';
 import {playwright}                from '@vitest/browser-playwright';
 import ts                          from 'typescript';
 import {functionsMixins}           from 'vite-plugin-functions-mixins';
+import solid                       from 'vite-plugin-solid';
 import {defineConfig, type Plugin} from 'vitest/config';
 
 // The unit specs of the library. They run in Chromium, not in a DOM emulation: the code under test reads
 // computed styles and registered custom properties, which only a browser engine gives.
 export default defineConfig({
-  // The skin m3-svelte renders the components of M3 Svelte, which it publishes as their sources: Svelte compiles them, with the
-  // mixins and the functions of their CSS
-  plugins: [angularJit(), svelte(), functionsMixins({deps: ['m3-svelte']})],
+  // The skin suid renders the components of SUID, which publishes them as JSX: the plugin of Solid compiles them for the
+  // specs. The skin m3-svelte renders the components of M3 Svelte, which it publishes as their sources: Svelte compiles
+  // them, with the mixins and the functions of their CSS
+  plugins: [angularJit(), solid({include: /\/node_modules\/@suid\/.*\.jsx$/}), svelte(), functionsMixins({deps: ['m3-svelte']})],
   // The skins and the Angular packages import the core and the wrapper by their names: the specs take their sources
   resolve: {
     alias: {
@@ -31,6 +33,8 @@ export default defineConfig({
   test: {
     include: ['packages/core/**/*.spec.ts', 'packages/skins/*/js/**/*.spec.ts', 'packages/angular/src/**/*.spec.ts', 'packages/skins/angular-material/src/**/*.spec.ts'],
     exclude: ['**/node_modules/**', '**/dist/**'],
+    // The browser mode runs the specs: the plugin of Solid sets jsdom for a config without an environment of its own
+    environment: 'node',
     browser: {
       enabled: true,
       provider: playwright(),

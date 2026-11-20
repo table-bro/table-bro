@@ -1,0 +1,23 @@
+{
+  "name": "table-bro-sample-solid-suid-solid",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@suid/material": "^0.19.0",
+    "@table-bro/core": "^1.2.1",
+    "@table-bro/solid-suid": "^1.2.1",
+    "solid-js": "^1.9.20"
+  },
+  "devDependencies": {
+    "@jridgewell/remapping": "^2.3.5",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vite-plugin-solid": "^2.11.14"
+  }
+}
