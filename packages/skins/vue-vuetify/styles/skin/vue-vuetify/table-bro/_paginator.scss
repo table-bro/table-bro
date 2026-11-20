@@ -5,13 +5,18 @@
 @mixin styles {
   @include skin_paginator($vuetify-paginator-selector);
 
-  // The element of the paginator has the background and the text of the rows, and the corners and the shadow of the
-  // table: Island Details rounds the corners of this element. The footer of Vuetify in it fills it, as the footer of
-  // its data table: the select of the page size, the range and the buttons at the end of the line
+  // The element of the paginator has the background and the text color of the rows, and the corners and the shadow of
+  // the table: Island Details rounds the corners of this element. The footer of Vuetify in it fills it, as the footer of
+  // its data table: the select of the page size, the range and the buttons at the end of the line. Its text is the body
+  // small text of Vuetify, as the paginator of mat
   #{$bro-paginator-container} #{$vuetify-paginator-selector} {
     display: block;
 
     height: $bro-paginator-height;
+
+    font-size: .75rem;
+    line-height: 1.3333;
+    letter-spacing: .0333em;
 
     background-color: $vuetify-bg;
     color: $vuetify-text-color;
@@ -41,6 +46,15 @@
       width: 90px;
 
       flex: none;
+    }
+
+    // The select takes the text of the paginator, as the select of the paginator of mat: the input of Vuetify and its
+    // field have the text of 16px of their own
+    .bro-vuetify-paginator-select,
+    .bro-vuetify-paginator-select .v-field,
+    .bro-vuetify-paginator-select .v-field__input {
+      font-size: inherit;
+      letter-spacing: inherit;
     }
 
     .bro-vuetify-paginator-actions {
