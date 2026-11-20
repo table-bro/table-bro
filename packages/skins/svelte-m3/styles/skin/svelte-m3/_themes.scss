@@ -17,6 +17,13 @@
   );
 }
 
+// The outlines of the rows, of the header and of the toolbar take the outline of the theme, as the rows of a table of
+// Angular Material: an application gives its tables another color by this property, as mat.table-overrides() gives one
+// to the skin mat. :where() lets a plain selector of the application override it
+:where(#{$bro-skin}) {
+  --bro-m3-svelte-outline-color: var(--m3c-outline);
+}
+
 // The dark theme is the dark scheme of the theme of the application: its colors, written with light-dark(), give the
 // dark ones under color-scheme: dark. The class is on the table host or on an ancestor of it
 .bro-dark-theme {

@@ -148,10 +148,17 @@ calls `configure()` and the other methods of the table where it needs, as in `on
 
 The skin has no theme of its own: it takes the M3 Svelte theme of the application. The components of M3 Svelte in the
 table read its CSS variables themselves, and the parts of the table, as its rows and its header, read the same
-variables in the roles of a table of Material 3: `--m3c-surface`, `--m3c-on-surface`, `--m3c-outline-variant`, the
+variables in the roles of a table of Material 3: `--m3c-surface`, `--m3c-on-surface`, `--m3c-outline`, the
 shapes `--m3-shape-*`, the elevations `--m3-elevation-*` and the font `--m3-font`. The theme writes its colors with
 `light-dark()`, so the table turns dark with the color scheme of the page. A table with a theme of its own, as
-`theme="dark"`, takes that color scheme.
+`theme="dark"`, takes that color scheme. The outlines of the rows, of the header and of the toolbar take the property
+`--bro-m3-svelte-outline-color`, the outline of the theme by default, which an application sets for its tables:
+
+```css
+.m3-svelte {
+  --bro-m3-svelte-outline-color: light-dark(rgba(0, 0, 0, .12), #798180);
+}
+```
 
 M3 Svelte has no component of a table, a toolbar, a sort header or an indeterminate progress bar, and does not export
 its tooltip: the skin builds them from the tokens of the theme, in the look of Material 3. The tooltips of the sort
