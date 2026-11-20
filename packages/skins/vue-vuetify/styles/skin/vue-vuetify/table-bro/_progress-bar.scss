@@ -4,4 +4,9 @@
 @mixin styles {
   @include table-header-progress-bar($vuetify-progress-bar-selector);
   @include table-aux-progress-bar($vuetify-progress-bar-selector);
+
+  // The track is opaque, as the track of the bar of mat: Vuetify draws it at the opacity of the border of the theme
+  #{$vuetify-progress-bar-selector} .v-progress-linear__background {
+    opacity: 1;
+  }
 }
