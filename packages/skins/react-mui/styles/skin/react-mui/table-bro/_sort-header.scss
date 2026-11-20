@@ -1,11 +1,29 @@
+@use "../variables" as *;
 @use "../../shared/mixins/shared" as *;
 @use "../../shared/mixins/sort-header" as *;
 
 @mixin styles {
   @at-root table-bro#{&} {
-    // The sort label shrinks with its column, and its title ends with an ellipsis
+    // The sort label shrinks with its column, and its title ends with an ellipsis. The title and the arrow keep the text
+    // color on hover and focus, as the sort header of mat: MUI gives them the secondary text color. The arrow of an
+    // unsorted column shows on hover at the opacity of the arrow of mat
     bro-mui-sort-header .MuiTableSortLabel-root {
       max-width: 100%;
+
+      &:hover,
+      &:focus {
+        color: $mui-text-color;
+      }
+
+      // stylelint-disable-next-line selector-class-pattern -- the state class of the sort label of MUI
+      &:hover:not(.Mui-active) .MuiTableSortLabel-icon {
+        opacity: .54;
+      }
+
+      // The arrow has the text color, as the arrow of mat: MUI gives the arrow of the sorted column the secondary one
+      .MuiTableSortLabel-icon {
+        color: $mui-text-color;
+      }
     }
 
     .bro-mui-sort-header-content {
