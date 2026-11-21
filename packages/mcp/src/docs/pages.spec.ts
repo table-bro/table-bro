@@ -21,49 +21,23 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/**
- * The files of the sections of Prerendering from their sample projects: Angular SSR, Next.js, SolidStart, SvelteKit
- * and Nuxt. A file is unique on its page, so the configs of Vite of SolidStart and SvelteKit name the folder of their
- * sample: start/vite.config.ts and sveltekit/vite.config.ts.
- */
-const prerenderSamples: Record<string, string> = {
-  'src/main.server.ts': 'samples/angular-ssr',
-  'src/app/app.config.ts': 'samples/angular-ssr',
-  'src/app/orders.component.ts': 'samples/angular-ssr',
-  'next.config.ts': 'samples/react-mui/next',
-  'src/prerender-table.ts': 'samples/react-mui/next',
-  'src/app/page.tsx': 'samples/react-mui/next',
-  'src/OrdersTable.tsx': 'samples/react-mui/next',
-  'src/app/layout.tsx': 'samples/react-mui/next',
-  'src/app/Providers.tsx': 'samples/react-mui/next',
-  'src/app/globals.css': 'samples/react-mui/next',
-  'start/vite.config.ts': 'samples/solid-suid',
-  'src/server-dom.ts': 'samples/solid-suid/start',
-  'src/prerender-orders.ts': 'samples/solid-suid/start',
-  'src/entry-server.tsx': 'samples/solid-suid/start',
-  'src/locals.d.ts': 'samples/solid-suid/start',
-  'src/PrerenderedOrdersTable.tsx': 'samples/solid-suid/start',
-  'src/app.tsx': 'samples/solid-suid/start',
-  'src/theme.ts': 'samples/solid-suid/start',
-  'sveltekit/vite.config.ts': 'samples/svelte-m3',
-  'src/routes/+layout.ts': 'samples/svelte-m3/sveltekit',
-  'src/hooks.server.ts': 'samples/svelte-m3/sveltekit',
-  'src/lib/server/prerender-table.ts': 'samples/svelte-m3/sveltekit',
-  'src/routes/+page.server.ts': 'samples/svelte-m3/sveltekit',
-  'src/routes/+page.svelte': 'samples/svelte-m3/sveltekit',
-  'nuxt.config.ts': 'samples/vue-vuetify/nuxt',
-  'app/plugins/vuetify.ts': 'samples/vue-vuetify/nuxt',
-  'app/plugins/table-bro.client.ts': 'samples/vue-vuetify/nuxt',
-  'app/prerender-table.ts': 'samples/vue-vuetify/nuxt',
-  'app/components/OrdersTable.vue': 'samples/vue-vuetify/nuxt',
-  'app/app.vue': 'samples/vue-vuetify/nuxt'
+/** The pages of Server-side rendering with a sample project: Angular SSR, Next.js, SolidStart, SvelteKit and Nuxt. */
+const ssrSamples: Record<string, string> = {
+  'ssr/angular': 'samples/angular-ssr',
+  'ssr/nextjs': 'samples/react-mui/next',
+  'ssr/solidstart': 'samples/solid-suid/start',
+  'ssr/sveltekit': 'samples/svelte-m3/sveltekit',
+  'ssr/nuxt': 'samples/vue-vuetify/nuxt'
 };
 
+/** The files of the pages of Server-side rendering that show a part of a file of their sample: the options of the build of angular.json. */
+const ssrParts = ['angular.json'];
+
 /**
- * The files of the pages of Frameworks and of the sections of Prerendering from their sample projects: the TypeScript of
- * the repository has no frameworks to compile them with, and the build of the samples compiles them.
+ * The files of the pages of Frameworks and of Server-side rendering from their sample projects: the TypeScript of the
+ * repository has no frameworks to compile them with, and the build of the samples compiles them.
  */
-const frameworkFiles = docFiles.filter(docFile => (docFile.page.startsWith('frameworks/') || (docFile.page === 'ssr/prerendering' && docFile.file in prerenderSamples))
+const frameworkFiles = docFiles.filter(docFile => (docFile.page.startsWith('frameworks/') || (docFile.page in ssrSamples && !ssrParts.includes(docFile.file)))
   && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
 
 /** The pages of Frameworks whose framework has a skin of its own: they show the sample of that skin. */
@@ -77,12 +51,12 @@ const skinSamples: Record<string, string> = {
 };
 
 /**
- * The sample project of a page of Frameworks: the sample of the skin of its framework, as React MUI for React and
- * Preact and Solid SUID for Solid, or samples/frameworks/<name> with the Bootstrap skin.
+ * The sample project of a page of Frameworks or of Server-side rendering: the sample of its server, the sample of the
+ * skin of its framework, as React MUI for React and Preact and Solid SUID for Solid, or samples/frameworks/<name> with
+ * the Bootstrap skin.
  * @param page - the path of the page
- * @param file - the file of the page, for the sections of Prerendering
  */
-const sampleOf = (page: string, file: string): string => (page === 'ssr/prerendering') ? prerenderSamples[file] : skinSamples[page] ?? `samples/${page}`;
+const sampleOf = (page: string): string => ssrSamples[page] ?? skinSamples[page] ?? `samples/${page}`;
 
 /** The place of a file of code among the files of the compiler: its page is its folder, so a file imports another one of its page. */
 const docFilePath = (page: string, file: string): string => path.join(root, 'docs-files', page, file);
@@ -191,9 +165,9 @@ describe('the files of code of Docs', () => {
     }
   });
 
-  it('of the pages of Frameworks are the files of their sample projects', () => {
+  it('of the pages of Frameworks and of Server-side rendering are the files of their sample projects', () => {
     for (const docFile of frameworkFiles) {
-      expect(docFile.code, `${docFile.page}/${docFile.file}`).toBe(fs.readFileSync(path.join(root, sampleOf(docFile.page, docFile.file), docFile.file), 'utf8'));
+      expect(docFile.code, `${docFile.page}/${docFile.file}`).toBe(fs.readFileSync(path.join(root, sampleOf(docFile.page), docFile.file), 'utf8'));
     }
   });
 

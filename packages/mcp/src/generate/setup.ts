@@ -92,7 +92,7 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   const own = (skin === 'bs' || skin === 'nv') ? `. A page may define them itself, as \`customElements.define('bro-${skin}-tags', ${(skin === 'bs') ? 'BroBootstrapTagsComponent' : 'BroNativeTagsComponent'})\`` : '';
   const optional = `The elements that only some tables use come with their functions: ${(<BroSkinFeature[]>['withTags', 'withSwitch', ...((skin === 'mat') ? ['withToolbarMenu'] : [])]).map(feature => featureRoles[feature]).join(', ')}; a project that registers the skin already adds the ones of a new table${(skin === 'mat') ? ' to the call' : own}.`;
   // Angular server-side rendering renders a vanilla skin only when the server bundle imports its package
-  const ssrImport = (pkg: string): string => ` With Angular server-side rendering, \`app.config.ts\` imports the package as well, \`import '${pkg}';\`, so that the server renders the skin too: [Prerendering](https://table-bro.com/docs/ssr/prerendering).`;
+  const ssrImport = (pkg: string): string => ` With Angular server-side rendering, \`app.config.ts\` imports the package as well, \`import '${pkg}';\`, so that the server renders the skin too: [Angular SSR](https://table-bro.com/docs/ssr/angular).`;
   // A vanilla skin registers itself on its import, and its optional elements come with calls after it
   const vanillaCalls = features.map(feature => `${feature}();`);
   const packages = ['@table-bro/core', ...(angular ? ['@table-bro/angular'] : []), ...{

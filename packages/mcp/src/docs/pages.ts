@@ -1877,7 +1877,7 @@ Not for \`‹table-bro-ng›\`: it is a component of Angular in \`imports\` of t
 
 ##### Does it work with server-side rendering?
 
-Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the server-side rendering of Angular, as [Prerendering](https://table-bro.com/docs/ssr/prerendering) shows.
+Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the server-side rendering of Angular, as [Angular SSR](https://table-bro.com/docs/ssr/angular) shows.
 
 #### Related
 
@@ -2252,7 +2252,7 @@ The sample uses \`addEventListener\` in an effect: it works in React 18 and 19 a
 
 ##### Does it work with Next.js?
 
-Yes. The table renders in the browser, as \`configure()\` runs in an effect of a client component (\`'use client'\`), and the server render of Next.js prerenders it in its loading state in the markup of MUI: the section Next.js of [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+Yes. The table renders in the browser, as \`configure()\` runs in an effect of a client component (\`'use client'\`), and the server render of Next.js prerenders it in its loading state in the markup of MUI: [Next.js](https://table-bro.com/docs/ssr/nextjs).
 
 #### Related
 
@@ -2696,7 +2696,7 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 ##### Does it work with SvelteKit?
 
-Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, and the server render of SvelteKit prerenders it in its loading state in the markup of M3 Svelte, with the server entry of the skin: the section SvelteKit of [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, and the server render of SvelteKit prerenders it in its loading state in the markup of M3 Svelte, with the server entry of the skin: [SvelteKit](https://table-bro.com/docs/ssr/sveltekit).
 
 #### Related
 
@@ -3000,7 +3000,7 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 ##### Does it work with Nuxt?
 
-Yes. The table renders in the browser, as \`configure()\` runs in \`onMounted()\`, and the server render of Nuxt prerenders it in its loading state in the markup of Vuetify: the section Nuxt of [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+Yes. The table renders in the browser, as \`configure()\` runs in \`onMounted()\`, and the server render of Nuxt prerenders it in its loading state in the markup of Vuetify: [Nuxt](https://table-bro.com/docs/ssr/nuxt).
 
 #### Related
 
@@ -3225,19 +3225,17 @@ createApp(App).use(vuetify).mount('#app');
     ]
   },
   {
-    path: 'ssr/prerendering',
-    name: 'Prerendering',
+    path: 'ssr/angular',
+    name: 'Angular SSR',
     text: `<!-- intro -->
-A page that a server renders shows the table before any script runs. The prerender renders the table in its loading state: the toolbar, the column headers, the loading row and the paginator, in the markup of its skin. The CSS of the skin sizes it, so the table takes its place on the page at once, and the page has no layout shift when the table renders in the browser. There the table renders with its rows in the same element, and the loading animation goes on instead of starting over.
+\`‹table-bro-ng›\` prerenders the table itself during the server-side rendering of Angular, in the skins \`mat\`, \`bs\` and \`nv\`: the component of the table stays as it is in the browser. The application needs only the server render of Angular ([Angular, Server-side and hybrid rendering](https://angular.dev/guide/ssr)): the steps below are the ones of the sample project \`samples/angular-ssr\` of the repository, which prerenders a page with a table at the build and hydrates it in the browser. Its [working page](https://table-bro.com/samples/angular-ssr/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/angular-ssr) opens it in the browser. What the prerender renders, and its limits: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
 
-<!-- angular -->
-#### Angular SSR _since 1.2.0_
-
-\`‹table-bro-ng›\` prerenders the table itself during the server-side rendering of Angular, in the skins \`mat\`, \`bs\` and \`nv\`: the component of the table stays as it is in the browser. The application needs only the server render of Angular ([Angular, Server-side and hybrid rendering](https://angular.dev/guide/ssr)): the steps below are the ones of the sample project \`samples/angular-ssr\` of the repository, which prerenders a page with a table at the build and hydrates it in the browser. Its [working page](https://table-bro.com/samples/angular-ssr/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/angular-ssr) opens it in the browser.
+<!-- setup -->
+#### How do I prerender a table in Angular? _since 1.2.0_
 
 1. **Install the server render of Angular**
 
-   {{install-ssr.sh}}
+   {{install.sh}}
 
 2. **Build the entry of the server**
 
@@ -3267,254 +3265,16 @@ The skin \`mat\` renders its elements on the server with the Angular components 
 
 In the browser the first table of \`‹table-bro-ng›\` renders in the prerendered \`‹table-bro›\`, and the hydration of Angular does not check it.
 
-<!-- function -->
-#### prerenderTableBro() _since 1.2.0_
+A production build of Angular inlines the critical CSS of a page: turn the inlining off, as the limits of [Prerender function](https://table-bro.com/docs/ssr/prerendering) show, so that the stylesheet loads before the page shows.
 
-Without Angular, \`prerenderTableBro(element, {cols, conf})\` of \`@table-bro/core\` renders the table into a \`‹table-bro›\` element of a server DOM, a DOM without a browser. It takes the columns and the config of \`configure()\`; the rows wait for the browser. The table creates its nodes in the document of the element, so the server needs no global \`document\`, and the imports of the core and of the skins \`bs\` and \`nv\` work without a DOM. The element goes into its document before the call, so that the elements of the skin render their markup as they connect:
-
-{{src/prerender.ts}}
-
-In the browser, \`configure()\` on the same element renders the table with its rows in place of the prerender:
-
-{{src/browser.ts}}
-
-The columns, the rows and the config come from \`src/orders.ts\`:
-
-{{src/orders.ts}}
-
-<!-- next -->
-#### Next.js
-
-Next.js renders a page on the server, or at the build of a static export: a server component prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and a client component renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in an effect. The skin \`mui\` renders the components of MUI there with its server entry, \`@table-bro/react-mui/server\`, and the styles of Emotion in their markup. The steps are the ones of the sample project \`samples/react-mui/next\` of the repository, a static export with Next.js 16: its [working page](https://table-bro.com/samples/react-mui/next/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/react-mui/next) opens it in the browser.
-
-1. **Install the packages**
-
-   The table and the skin, MUI with Emotion and its adapter for the App Router of Next.js, the server DOM, and \`server-only\`, which keeps the prerender out of the bundle of the browser:
-
-   {{next-install.sh}}
-
-2. **Keep the packages of the table out of the server bundle**
-
-   The server entry of the skin renders by \`react-dom/server\`, which the server components of Next.js do not bundle: \`serverExternalPackages\` lets Node take the packages of the table as they are. The sample also exports static pages into \`dist\` under the base path of its working page. \`next.config.ts\`:
-
-   {{next.config.ts}}
-
-3. **Prerender the table**
-
-   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it. The prerender takes the columns and the config of \`configure()\` and the theme of the application; the rows wait for the browser. \`src/prerender-table.ts\`:
-
-   {{src/prerender-table.ts}}
-
-4. **Render the table in the page**
-
-   The page, a server component, prerenders the table and gives it to the client component of the table. \`src/app/page.tsx\`:
-
-   {{src/app/page.tsx}}
-
-   The client component renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of React keeps, and \`configure()\` renders the table with its rows in its place. \`src/OrdersTable.tsx\`:
-
-   {{src/OrdersTable.tsx}}
-
-5. **Give the application its theme and the CSS of the table**
-
-   \`InitColorSchemeScript\` sets the color scheme before the page shows, light as the page of the sample of Angular Material, and the provider of MUI for the App Router gives the styles of Emotion of the server render to the page. \`src/app/layout.tsx\`:
-
-   {{src/app/layout.tsx}}
-
-   \`src/app/Providers.tsx\`, whose \`defaultMode="light"\` keeps the page light; the table takes the color scheme of the system by its theme:
-
-   {{src/app/Providers.tsx}}
-
-   The CSS of the core and of the skin come by \`src/app/globals.css\`:
-
-   {{src/app/globals.css}}
-
-\`src/theme.ts\`, \`src/skin.ts\`, \`src/orders.ts\` and \`src/elements.d.ts\` are the ones of [React data table](https://table-bro.com/docs/frameworks/react).
-
-<!-- solidstart -->
-#### SolidStart
-
-SolidStart renders a page on the server, or at the build of a static site: its server entry prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and the component of the table renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in \`onMount()\`. The skin \`suid\` renders the components of SUID there with its server entry, \`@table-bro/solid-suid/server\`, by \`renderToString\` of Solid, with the styles of SUID and the CSS variables of the theme in their markup. The steps are the ones of the sample project \`samples/solid-suid/start\` of the repository, a static site of SolidStart 2 with Nitro, whose [working page](https://table-bro.com/samples/solid-suid/start) shows the prerendered table before its scripts run.
-
-1. **Install the packages**
-
-   The table and the skin, SUID, SolidStart with Nitro, which prerenders the page at the build, and the server DOM:
-
-   {{start-install.sh}}
-
-2. **Bundle SUID, the skin and the core for the server**
-
-   SUID publishes its components as JSX, which the plugin of Solid compiles for the server only when the server bundle carries it: \`ssr.noExternal\` names SUID, the skin and the core. The sample builds a static site into \`dist\` with the page \`/\` prerendered. \`vite.config.ts\`:
-
-   {{start/vite.config.ts}}
-
-3. **Prerender the table**
-
-   The elements of the core and of the skin extend the \`HTMLElement\` of the server DOM, which a module of its own gives to the global scope before they load. \`src/server-dom.ts\`:
-
-   {{src/server-dom.ts}}
-
-   The prerender takes the columns and the config of \`configure()\` and the theme of the application; the rows wait for the browser. \`src/prerender-orders.ts\`:
-
-   {{src/prerender-orders.ts}}
-
-   The server entry imports the server DOM first, and gives the prerendered table to the page by the locals of the request. \`src/entry-server.tsx\`:
-
-   {{src/entry-server.tsx}}
-
-   \`src/locals.d.ts\`:
-
-   {{src/locals.d.ts}}
-
-4. **Render the table in the page**
-
-   The component of the table renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of Solid keeps, and \`configure()\` renders the table with its rows in its place. \`src/PrerenderedOrdersTable.tsx\`:
-
-   {{src/PrerenderedOrdersTable.tsx}}
-
-   The application renders it in the theme of SUID. \`src/app.tsx\`:
-
-   {{src/app.tsx}}
-
-5. **Give the server the light theme**
-
-   The server does not know the color scheme of the system of the user: it renders the light palette, and the browser takes the scheme of the system. The palettes are the ones of [Solid data table](https://table-bro.com/docs/frameworks/solid). \`src/theme.ts\`:
-
-   {{src/theme.ts}}
-
-\`src/skin.ts\`, \`src/orders.ts\` and \`src/elements.d.ts\` are the ones of [Solid data table](https://table-bro.com/docs/frameworks/solid). The select of the page sizes renders as the native select of SUID on the server, since the select of the menu of SUID 0.19 fails in the server render of Solid; the browser renders the select of the menu.
-
-<!-- sveltekit -->
-#### SvelteKit
-
-SvelteKit renders a page on the server, or at its build: the load of the page on the server prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and the page renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in \`onMount()\`. The skin \`m3-svelte\` renders the components of M3 Svelte there with its server entry, \`@table-bro/svelte-m3/server\`, by \`render()\` of \`svelte/server\`. The steps are the ones of the sample project \`samples/svelte-m3/sveltekit\` of the repository, static pages of SvelteKit 3: its [working page](https://table-bro.com/samples/svelte-m3/sveltekit/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/svelte-m3/sveltekit) opens it in the browser.
-
-1. **Install the packages**
-
-   The table and the skin, M3 Svelte and the plugin of its CSS, the server DOM, and SvelteKit with its adapter of static pages:
-
-   {{sveltekit-install.sh}}
-
-2. **Compile M3 Svelte and prerender the pages**
-
-   SvelteKit compiles the components of M3 Svelte for the browser and for the server, and the plugin of M3 Svelte the CSS of their styles; the condition \`svelte\` of the exports of the skin lets SvelteKit bundle the skin with them on the server. The plugin names Vite 7 as its peer dependency and works with Vite 8, by \`"overrides": {"vite-plugin-functions-mixins": {"vite": "$vite"}}\` in \`package.json\`. The sample writes static pages into \`dist\` under the base path of its working page. \`vite.config.ts\`:
-
-   {{sveltekit/vite.config.ts}}
-
-   \`src/routes/+layout.ts\` prerenders the pages at the build:
-
-   {{src/routes/+layout.ts}}
-
-3. **Give the server DOM to the elements**
-
-   The elements of the skin extend the \`HTMLElement\` of the server DOM: the hooks of the server make it global, before the server imports the core and the skin with the modules of the pages. \`src/hooks.server.ts\`:
-
-   {{src/hooks.server.ts}}
-
-4. **Prerender the table**
-
-   The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. The folder \`server\` of \`#lib\` keeps it out of the bundle of the browser. \`src/lib/server/prerender-table.ts\`:
-
-   {{src/lib/server/prerender-table.ts}}
-
-   The load of the page on the server gives the prerendered table to the page. \`src/routes/+page.server.ts\`:
-
-   {{src/routes/+page.server.ts}}
-
-5. **Render the table in the page**
-
-   The page renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of Svelte keeps, and \`configure()\` renders the table with its rows in its place. \`src/routes/+page.svelte\`:
-
-   {{src/routes/+page.svelte}}
-
-\`src/lib/skin.ts\`, \`src/lib/theme.css\` and \`src/lib/orders.ts\` are the ones of \`src/skin.ts\`, \`src/theme.css\` and \`src/orders.ts\` of [Svelte data table](https://table-bro.com/docs/frameworks/svelte).
-
-<!-- nuxt -->
-#### Nuxt
-
-Nuxt renders a page on the server, or at the build of a static site: a component prerenders the table on the server with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), \`useAsyncData()\` carries the markup to the browser, and \`configure()\` renders the table with its rows in \`onMounted()\`. The skin \`vuetify\` renders the components of Vuetify there with its server entry, \`@table-bro/vue-vuetify/server\`, by the synchronous part of the server render of Vue. The steps are the ones of the sample project \`samples/vue-vuetify/nuxt\` of the repository, a static site with Nuxt 4: its [working page](https://table-bro.com/samples/vue-vuetify/nuxt/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/vue-vuetify/nuxt) opens it in the browser.
-
-1. **Install the packages**
-
-   The table and the skin, Vuetify and the server DOM:
-
-   {{nuxt-install.sh}}
-
-2. **Take Vuetify and the skin through the build**
-
-   The components of Vuetify import their styles, so the build of Nuxt takes Vuetify and the skin through Vite (\`build.transpile\`); the template compiler knows \`‹table-bro›\` as a Custom Element, and the CSS of Vuetify, of the core and of the skin come by \`css\`. The sample also generates its static pages into \`dist\` under the base path of its working page. \`nuxt.config.ts\`:
-
-   {{nuxt.config.ts}}
-
-3. **Give the application its Vuetify**
-
-   A plugin installs a Vuetify for each render of the server and in the browser, with \`ssr: true\` and the themes of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), and provides it. \`app/plugins/vuetify.ts\`:
-
-   {{app/plugins/vuetify.ts}}
-
-   In the browser, the import of the skin defines \`‹table-bro›\` and registers the skin, and \`setVuetify()\` gives its elements the Vuetify of the application. \`app/plugins/table-bro.client.ts\`:
-
-   {{app/plugins/table-bro.client.ts}}
-
-4. **Prerender the table**
-
-   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it, and the server entry takes the Vuetify of the render. The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. \`app/prerender-table.ts\`:
-
-   {{app/prerender-table.ts}}
-
-5. **Render the table in the page**
-
-   The component prerenders the table on the server in \`useAsyncData()\`, renders \`‹table-bro›\` with its attributes and its markup, which the hydration of Vue keeps, and \`configure()\` renders the table with its rows in its place. \`app/components/OrdersTable.vue\`:
-
-   {{app/components/OrdersTable.vue}}
-
-   \`app/app.vue\` renders it in \`VApp\` of Vuetify:
-
-   {{app/app.vue}}
-
-\`app/orders.ts\` is \`src/orders.ts\` of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
-
-<!-- limits -->
-#### Limits
-
-1. **The loading state only**
-
-   The prerender renders the table without rows, in its loading state: the rows, the sort and the pages come with the table of the browser.
-
-2. **The theme auto**
-
-   The server does not know the color scheme of the system of the user. With the theme \`auto\` the prerendered table takes no class of a theme and shows the theme of the page; the table of the browser then follows the system. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
-
-3. **The elements of the skin**
-
-   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`suid\`, \`m3-svelte\` and \`vuetify\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
-
-4. **Critical CSS**
-
-   A production build of Angular inlines the critical CSS of a page with Beasties and loads the whole stylesheet after the page shows (\`optimization.styles.inlineCritical\`). The scripts of the page may run before the stylesheet loads: the table then measures its parts without the styles of the components of its skin, and keeps that geometry, with its body collapsed. Turn the inlining off, as the samples of Angular do, so that the stylesheet loads before the page shows. To \`"production"\` of the configurations of the build in \`angular.json\`:
-
-   {{angular-optimization.json}}
-
-   The CSS of the core and of the skins keeps the layout of a prerendered table with the critical CSS too, which drops the selectors that start with a pseudo-class: the sizes of a skin come also by \`table-bro:where([data-bro-prerender].<skin>)\`, so the prerendered table keeps its size before the stylesheets of the page load.
-
-<!-- related -->
 #### Related
 
-[Angular data table](https://table-bro.com/docs/frameworks/angular), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
-      {file: 'install-ssr.sh', language: 'bash', code: `npm install @angular/platform-server @angular/ssr
+      {file: 'install.sh', language: 'bash', code: `npm install @angular/platform-server @angular/ssr
 `},
       {file: 'angular.json', language: 'json', code: `"server": "src/main.server.ts",
 "outputMode": "static"
-`},
-      {file: 'angular-optimization.json', language: 'json', code: `"optimization": {
-  "scripts": true,
-  "styles": {
-    "minify": true,
-    "inlineCritical": false
-  },
-  "fonts": true
-}
 `},
       {file: 'src/main.server.ts', language: 'ts', code: `import {mergeApplicationConfig}                         from '@angular/core';
 import {bootstrapApplication, type BootstrapContext}    from '@angular/platform-browser';
@@ -3604,34 +3364,679 @@ export class OrdersComponent {
     toolbarTitle: 'Orders'
   });
 }
+`}
+    ]
+  },
+  {
+    path: 'ssr/nextjs',
+    name: 'Next.js',
+    text: `<!-- intro -->
+Next.js renders a page on the server, or at the build of a static export: a server component prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and a client component renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in an effect. The skin \`mui\` renders the components of MUI there with its server entry, \`@table-bro/react-mui/server\`, and the styles of Emotion in their markup. The steps are the ones of the sample project \`samples/react-mui/next\` of the repository, a static export with Next.js 16: its [working page](https://table-bro.com/samples/react-mui/next/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/react-mui/next) opens it in the browser. What the prerender renders, and its limits: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
+
+<!-- setup -->
+#### How do I prerender a table in Next.js?
+
+1. **Install the packages**
+
+   The table and the skin, MUI with Emotion and its adapter for the App Router of Next.js, the server DOM, and \`server-only\`, which keeps the prerender out of the bundle of the browser:
+
+   {{install.sh}}
+
+2. **Keep the packages of the table out of the server bundle**
+
+   The server entry of the skin renders by \`react-dom/server\`, which the server components of Next.js do not bundle: \`serverExternalPackages\` lets Node take the packages of the table as they are. The sample also exports static pages into \`dist\` under the base path of its working page. \`next.config.ts\`:
+
+   {{next.config.ts}}
+
+3. **Prerender the table**
+
+   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it. The prerender takes the columns and the config of \`configure()\` and the theme of the application; the rows wait for the browser. \`src/prerender-table.ts\`:
+
+   {{src/prerender-table.ts}}
+
+4. **Render the table in the page**
+
+   The page, a server component, prerenders the table and gives it to the client component of the table. \`src/app/page.tsx\`:
+
+   {{src/app/page.tsx}}
+
+   The client component renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of React keeps, and \`configure()\` renders the table with its rows in its place. \`src/OrdersTable.tsx\`:
+
+   {{src/OrdersTable.tsx}}
+
+5. **Give the application its theme and the CSS of the table**
+
+   \`InitColorSchemeScript\` sets the color scheme before the page shows, light as the page of the sample of Angular Material, and the provider of MUI for the App Router gives the styles of Emotion of the server render to the page. \`src/app/layout.tsx\`:
+
+   {{src/app/layout.tsx}}
+
+   \`src/app/Providers.tsx\`, whose \`defaultMode="light"\` keeps the page light; the table takes the color scheme of the system by its theme:
+
+   {{src/app/Providers.tsx}}
+
+   The CSS of the core and of the skin come by \`src/app/globals.css\`:
+
+   {{src/app/globals.css}}
+
+\`src/theme.ts\`, \`src/skin.ts\`, \`src/orders.ts\` and \`src/elements.d.ts\` are the ones of [React data table](https://table-bro.com/docs/frameworks/react).
+
+#### Related
+
+[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @mui/material-nextjs @emotion/react @emotion/styled @emotion/cache linkedom server-only
 `},
-      {file: 'src/prerender.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
-// The import registers the skin nv; without a DOM it defines no elements
-import '@table-bro/native';
+      {file: 'next.config.ts', language: 'ts', code: `import type {NextConfig} from 'next';
+
+// A static export: the build renders the page with its prerendered table. The server entry of the skin renders the
+// components of MUI by react-dom/server, so Node takes it and its libraries as they are, not the bundle of Next.js
+const config: NextConfig = {
+  output: 'export',
+  distDir: 'dist',
+  basePath: process.env.BASE_PATH ?? '',
+  trailingSlash: true,
+  serverExternalPackages: ['@table-bro/core', '@table-bro/react-mui', 'linkedom']
+};
+
+export default config;
+`},
+      {file: 'src/prerender-table.ts', language: 'ts', code: `import 'server-only';
 
 import {cols, conf} from './orders';
+import {theme}      from './theme';
+
+/** The prerendered table: the attributes of the element <table-bro> and its markup. */
+export interface PrerenderedTable {
+  attributes: Record<string, string>;
+  html: string;
+}
 
 /**
- * Renders the table of the orders in its loading state into a page of a server DOM. The element is in the document
- * first, so the elements of the skin connect and render their markup.
- * @param page - the document of the page in the server DOM
+ * Renders the table of the orders in its loading state on the server, in the markup of the components of MUI: the page
+ * shows it before any script runs, and configure() renders the table with its rows in its place in the browser.
  */
-export function prerenderOrders(page: Document): void {
-  const table = page.createElement('table-bro');
+export async function prerenderOrders(): Promise<PrerenderedTable> {
+  const {parseHTML} = await import('linkedom');
+  const {document, window} = parseHTML('<!doctype html><html><body></body></html>');
 
-  page.body.append(table);
+  // The elements of the skin extend the HTMLElement of the server DOM: it is global before the import of the skin
+  globalThis.HTMLElement ??= window.HTMLElement;
+
+  const {prerenderTableBro} = await import('@table-bro/core');
+  const {setMuiTheme} = await import('@table-bro/react-mui/server');
+
+  setMuiTheme(theme);
+
+  const table = document.createElement('table-bro');
+
+  table.id = 'orders';
+  document.body.append(table);
   prerenderTableBro(table, {cols, conf});
+
+  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
 }
 `},
-      {file: 'src/browser.ts', language: 'ts', code: `import '@table-bro/native';
+      {file: 'src/app/page.tsx', language: 'tsx', code: `import {OrdersTable}     from '../OrdersTable';
+import {prerenderOrders} from '../prerender-table';
+
+export default async function Page() {
+  return <OrdersTable prerendered={await prerenderOrders()} />;
+}
+`},
+      {file: 'src/OrdersTable.tsx', language: 'tsx', code: `'use client';
+
+import './skin';
+
+import {useEffect, useRef} from 'react';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+import {cols, conf, rows}           from './orders';
+import type {PrerenderedTable} from './prerender-table';
+
+/**
+ * The table of the orders: the page of the server has it prerendered, and configure() renders it with its rows in the
+ * browser, in its place.
+ * @param props - the prerendered table
+ * @param props.prerendered - its attributes and its markup
+ */
+export function OrdersTable({prerendered}: {prerendered: PrerenderedTable}) {
+  const table = useRef<TableBroHTMLElement>(null);
+
+  useEffect(() => {
+    const element = table.current!;
+    const onAction = (event: CustomEvent<BroActionDetail>) => console.log(event.detail.action);
+
+    queueMicrotask(() => element.configure({cols, rows, conf}));
+    element.addEventListener('bro-action', onAction);
+
+    return () => element.removeEventListener('bro-action', onAction);
+  }, []);
+
+  return (
+    <div className="bro-table-shadow-container">
+      <table-bro {...prerendered.attributes} ref={table} theme="auto" dangerouslySetInnerHTML={{__html: prerendered.html}}></table-bro>
+    </div>
+  );
+}
+`},
+      {file: 'src/app/layout.tsx', language: 'tsx', code: `import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import type {ReactNode}      from 'react';
+
+import {Providers} from './Providers';
+
+import './globals.css';
+import './sample-page.css';
+
+export const metadata = {title: 'Table, Bro + Next.js + React MUI'};
+
+export default function RootLayout({children}: {children: ReactNode}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      </head>
+      <body>
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="light" />
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+`},
+      {file: 'src/app/Providers.tsx', language: 'tsx', code: `'use client';
+
+import CssBaseline              from '@mui/material/CssBaseline';
+import {ThemeProvider}          from '@mui/material/styles';
+import {AppRouterCacheProvider} from '@mui/material-nextjs/v16-appRouter';
+import type {ReactNode}         from 'react';
+
+import {theme} from '../theme';
+
+/**
+ * The MUI theme of the application with the styles of Emotion of the server render of Next.js. The page is light, as the
+ * page of the sample of Angular Material; the table takes the scheme of the system by its theme.
+ */
+export function Providers({children}: {children: ReactNode}) {
+  return (
+    <AppRouterCacheProvider>
+      <ThemeProvider theme={theme} defaultMode="light">
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </AppRouterCacheProvider>
+  );
+}
+`},
+      {file: 'src/app/globals.css', language: 'css', code: `/* The CSS of the core and of the skin */
+@import '@table-bro/core/dist/table-bro.min.css';
+@import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
+`}
+    ]
+  },
+  {
+    path: 'ssr/solidstart',
+    name: 'SolidStart',
+    text: `<!-- intro -->
+SolidStart renders a page on the server, or at the build of a static site: its server entry prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and the component of the table renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in \`onMount()\`. The skin \`suid\` renders the components of SUID there with its server entry, \`@table-bro/solid-suid/server\`, by \`renderToString\` of Solid, with the styles of SUID and the CSS variables of the theme in their markup. The steps are the ones of the sample project \`samples/solid-suid/start\` of the repository, a static site of SolidStart 2 with Nitro, whose [working page](https://table-bro.com/samples/solid-suid/start) shows the prerendered table before its scripts run. What the prerender renders, and its limits: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
+
+<!-- setup -->
+#### How do I prerender a table in SolidStart?
+
+1. **Install the packages**
+
+   The table and the skin, SUID, SolidStart with Nitro, which prerenders the page at the build, and the server DOM:
+
+   {{install.sh}}
+
+2. **Bundle SUID, the skin and the core for the server**
+
+   SUID publishes its components as JSX, which the plugin of Solid compiles for the server only when the server bundle carries it: \`ssr.noExternal\` names SUID, the skin and the core. The sample builds a static site into \`dist\` with the page \`/\` prerendered. \`vite.config.ts\`:
+
+   {{vite.config.ts}}
+
+3. **Prerender the table**
+
+   The elements of the core and of the skin extend the \`HTMLElement\` of the server DOM, which a module of its own gives to the global scope before they load. \`src/server-dom.ts\`:
+
+   {{src/server-dom.ts}}
+
+   The prerender takes the columns and the config of \`configure()\` and the theme of the application; the rows wait for the browser. \`src/prerender-orders.ts\`:
+
+   {{src/prerender-orders.ts}}
+
+   The server entry imports the server DOM first, and gives the prerendered table to the page by the locals of the request. \`src/entry-server.tsx\`:
+
+   {{src/entry-server.tsx}}
+
+   \`src/locals.d.ts\`:
+
+   {{src/locals.d.ts}}
+
+4. **Render the table in the page**
+
+   The component of the table renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of Solid keeps, and \`configure()\` renders the table with its rows in its place. \`src/PrerenderedOrdersTable.tsx\`:
+
+   {{src/PrerenderedOrdersTable.tsx}}
+
+   The application renders it in the theme of SUID. \`src/app.tsx\`:
+
+   {{src/app.tsx}}
+
+5. **Give the server the light theme**
+
+   The server does not know the color scheme of the system of the user: it renders the light palette, and the browser takes the scheme of the system. The palettes are the ones of [Solid data table](https://table-bro.com/docs/frameworks/solid). \`src/theme.ts\`:
+
+   {{src/theme.ts}}
+
+\`src/skin.ts\`, \`src/orders.ts\` and \`src/elements.d.ts\` are the ones of [Solid data table](https://table-bro.com/docs/frameworks/solid). The select of the page sizes renders as the native select of SUID on the server, since the select of the menu of SUID 0.19 fails in the server render of Solid; the browser renders the select of the menu.
+
+#### Related
+
+[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/solid-suid @suid/material @solidjs/start nitro linkedom
+`},
+      {file: 'vite.config.ts', language: 'ts', code: `import {solidStart}   from '@solidjs/start/config';
+import {nitro}        from 'nitro/vite';
+import {defineConfig} from 'vite';
+
+// A static site: the build prerenders the page with its prerendered table into dist. The plugin of Solid compiles the
+// components of SUID, published as JSX, for the browser and for the server, so the server bundle carries SUID and the
+// skin; it carries the core too, which loads after the server DOM gives it its HTMLElement (src/server-dom.ts)
+export default defineConfig({
+  ssr: {noExternal: [/^@suid\\//, '@table-bro/core', '@table-bro/solid-suid']},
+  plugins: [
+    solidStart(),
+    nitro({
+      preset: 'static',
+      prerender: {routes: ['/']},
+      output: {dir: 'dist', publicDir: 'dist'}
+    })
+  ]
+});
+`},
+      {file: 'src/server-dom.ts', language: 'ts', code: `import {parseHTML} from 'linkedom';
+
+// The elements of the core and of the skin extend the HTMLElement of a server DOM: this module gives it to the global
+// scope, and the modules that import it before the core and the skin load after it
+const {window} = parseHTML('<!doctype html><html><body></body></html>');
+
+globalThis.HTMLElement ??= window.HTMLElement;
+`},
+      {file: 'src/prerender-orders.ts', language: 'ts', code: `// The server DOM first: the core and the skin take its HTMLElement
+import './server-dom';
+
+import {prerenderTableBro} from '@table-bro/core';
+import {setSuidTheme}      from '@table-bro/solid-suid/server';
+
+import {parseHTML} from 'linkedom';
+
+import {cols, conf} from './orders';
+import {theme}      from './theme';
+
+/** The prerendered table: the attributes of the element <table-bro> and its markup. */
+export interface PrerenderedTable {
+  attributes: Record<string, string>;
+  html: string;
+}
+
+/**
+ * Renders the table of the orders in its loading state on the server, in the markup of the components of SUID: the page
+ * shows it before any script runs, and configure() renders the table with its rows in its place in the browser. The
+ * server entry of the skin renders its elements in the theme of the application.
+ */
+export function prerenderOrders(): PrerenderedTable {
+  setSuidTheme(theme);
+
+  const {document} = parseHTML('<!doctype html><html><body></body></html>');
+  const table = document.createElement('table-bro');
+
+  table.id = 'orders';
+  document.body.append(table);
+  prerenderTableBro(table, {cols, conf});
+
+  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
+}
+`},
+      {file: 'src/entry-server.tsx', language: 'tsx', code: `// @refresh reload
+// The server DOM first: the core and the skin, which the server bundle carries, take its HTMLElement
+import './server-dom';
+
+import {createHandler, StartServer} from '@solidjs/start/server';
+
+import {prerenderOrders} from './prerender-orders';
+
+// The page of the server carries the table prerendered in its loading state: the table of the page takes it from the
+// locals of the request
+export default createHandler(event => {
+  event.locals.orders = prerenderOrders();
+
+  return (
+    <StartServer
+      document={({assets, children, scripts}) => (
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Table, Bro + SolidStart + Solid SUID</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+            {assets}
+          </head>
+          <body>
+            <div id="app">{children}</div>
+            {scripts}
+          </body>
+        </html>
+      )}
+    />
+  );
+});
+`},
+      {file: 'src/locals.d.ts', language: 'ts', code: `// The prerendered table of the page in the locals of a request of the server
+import type {PrerenderedTable} from './prerender-orders';
+
+declare global {
+  namespace App {
+    interface RequestEventLocals {
+      orders?: PrerenderedTable;
+    }
+  }
+}
+`},
+      {file: 'src/PrerenderedOrdersTable.tsx', language: 'tsx', code: `import {onMount}                   from 'solid-js';
+import {getRequestEvent, isServer} from 'solid-js/web';
+
+import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
 
 import {cols, conf, rows} from './orders';
 
-// The prerendered table of the page: configure() renders the table with its rows in its place
-document.querySelector('table-bro')!.configure({cols, rows, conf});
+/**
+ * The table of the orders with its prerender: the page of the server has it prerendered, and configure() renders it with its rows in the
+ * browser, in its place. The hydration of Solid keeps the markup of the server, which the browser has no copy of.
+ */
+export function PrerenderedOrdersTable() {
+  let table!: TableBroHTMLElement;
+  const prerendered = isServer ? getRequestEvent()?.locals.orders : undefined;
+  // The attributes of the prerender as they are, but the id, which the element has: the spread of Solid writes the class
+  // of a property with a space after it
+  const attributes = Object.fromEntries(Object.entries(prerendered?.attributes ?? {})
+    .filter(([name]) => name !== 'id')
+    .map(([name, value]) => [\`attr:\${name}\`, value]));
+
+  onMount(() => table.configure({cols, rows, conf}));
+
+  return (
+    <div class="bro-table-shadow-container">
+      <table-bro {...attributes} id="orders" ref={table} theme="auto" innerHTML={prerendered?.html}
+                 on:bro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}></table-bro>
+    </div>
+  );
+}
 `},
-      frameworkOrders,
-      {file: 'nuxt-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/vue-vuetify vuetify linkedom nuxt
+      {file: 'src/app.tsx', language: 'tsx', code: `// The skin is registered before the tables
+import './skin';
+
+import CssBaseline     from '@suid/material/CssBaseline';
+import {ThemeProvider} from '@suid/material/styles';
+
+import {PrerenderedOrdersTable} from './PrerenderedOrdersTable';
+import {theme}                  from './theme';
+
+export default function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <PrerenderedOrdersTable />
+    </ThemeProvider>
+  );
+}
+`},
+      {file: 'src/theme.ts', language: 'ts', code: `import {createPalette, createTheme}           from '@suid/material/styles';
+import {createMemo, createRoot, createSignal} from 'solid-js';
+import {isServer}                             from 'solid-js/web';
+
+// The theme of the application, as the one of samples/angular-material in the roles of the palette of SUID: the azure
+// palette of Material 3, with the texts on-surface and on-surface-variant, the state layers of Material 3, the surface
+// as the background of the table, the outline as the borders of the rows and the outline of the chips, and the font
+// Roboto. The page stays light, as the page of that sample, and the table follows the color scheme of the system:
+// the server renders the light one, and the browser follows a change of the scheme
+const scheme = isServer ? undefined : window.matchMedia('(prefers-color-scheme: dark)');
+const [dark, setDark] = createSignal(scheme?.matches ?? false);
+
+scheme?.addEventListener('change', event => setDark(event.matches));
+
+const lightPalette = {
+  mode: 'light' as const,
+  primary: {main: '#005cbb'},
+  text: {primary: '#1a1b1f', secondary: '#44474e', disabled: 'rgba(26, 27, 31, 0.38)'},
+  divider: '#74777f',
+  background: {default: '#faf9fd', paper: '#faf9fd'},
+  action: {active: '#44474e', hover: 'rgba(26, 27, 31, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(26, 27, 31, 0.38)', disabledOpacity: 0.38},
+  grey: {400: '#74777f'}
+};
+
+// The dark scheme keeps the light background of the page, which CssBaseline gives the body
+const darkPalette = {
+  mode: 'dark' as const,
+  primary: {main: '#abc7ff'},
+  text: {primary: '#e3e2e6', secondary: '#e0e2ec', disabled: 'rgba(227, 226, 230, 0.38)'},
+  divider: '#8e9099',
+  background: {default: '#faf9fd', paper: '#121316'},
+  action: {active: '#e0e2ec', hover: 'rgba(227, 226, 230, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(227, 226, 230, 0.38)', disabledOpacity: 0.38},
+  grey: {700: '#8e9099'}
+};
+
+const palette = createRoot(() => createMemo(() => createPalette(dark() ? darkPalette : lightPalette)));
+
+export const theme = createTheme({palette, typography: {fontFamily: 'Roboto'}});
+`}
+    ]
+  },
+  {
+    path: 'ssr/sveltekit',
+    name: 'SvelteKit',
+    text: `<!-- intro -->
+SvelteKit renders a page on the server, or at its build: the load of the page on the server prerenders the table with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), and the page renders the element \`‹table-bro›\` with that markup and calls \`configure()\` in \`onMount()\`. The skin \`m3-svelte\` renders the components of M3 Svelte there with its server entry, \`@table-bro/svelte-m3/server\`, by \`render()\` of \`svelte/server\`. The steps are the ones of the sample project \`samples/svelte-m3/sveltekit\` of the repository, static pages of SvelteKit 3: its [working page](https://table-bro.com/samples/svelte-m3/sveltekit/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/svelte-m3/sveltekit) opens it in the browser. What the prerender renders, and its limits: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
+
+<!-- setup -->
+#### How do I prerender a table in SvelteKit?
+
+1. **Install the packages**
+
+   The table and the skin, M3 Svelte and the plugin of its CSS, the server DOM, and SvelteKit with its adapter of static pages:
+
+   {{install.sh}}
+
+2. **Compile M3 Svelte and prerender the pages**
+
+   SvelteKit compiles the components of M3 Svelte for the browser and for the server, and the plugin of M3 Svelte the CSS of their styles; the condition \`svelte\` of the exports of the skin lets SvelteKit bundle the skin with them on the server. The plugin names Vite 7 as its peer dependency and works with Vite 8, by \`"overrides": {"vite-plugin-functions-mixins": {"vite": "$vite"}}\` in \`package.json\`. The sample writes static pages into \`dist\` under the base path of its working page. \`vite.config.ts\`:
+
+   {{vite.config.ts}}
+
+   \`src/routes/+layout.ts\` prerenders the pages at the build:
+
+   {{src/routes/+layout.ts}}
+
+3. **Give the server DOM to the elements**
+
+   The elements of the skin extend the \`HTMLElement\` of the server DOM: the hooks of the server make it global, before the server imports the core and the skin with the modules of the pages. \`src/hooks.server.ts\`:
+
+   {{src/hooks.server.ts}}
+
+4. **Prerender the table**
+
+   The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. The folder \`server\` of \`#lib\` keeps it out of the bundle of the browser. \`src/lib/server/prerender-table.ts\`:
+
+   {{src/lib/server/prerender-table.ts}}
+
+   The load of the page on the server gives the prerendered table to the page. \`src/routes/+page.server.ts\`:
+
+   {{src/routes/+page.server.ts}}
+
+5. **Render the table in the page**
+
+   The page renders \`‹table-bro›\` with the attributes and the markup of the prerender, which the hydration of Svelte keeps, and \`configure()\` renders the table with its rows in its place. \`src/routes/+page.svelte\`:
+
+   {{src/routes/+page.svelte}}
+
+\`src/lib/skin.ts\`, \`src/lib/theme.css\` and \`src/lib/orders.ts\` are the ones of \`src/skin.ts\`, \`src/theme.css\` and \`src/orders.ts\` of [Svelte data table](https://table-bro.com/docs/frameworks/svelte).
+
+#### Related
+
+[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte linkedom
+npm install -D @sveltejs/kit @sveltejs/adapter-static vite-plugin-functions-mixins
+`},
+      {file: 'vite.config.ts', language: 'ts', code: `import adapter           from '@sveltejs/adapter-static';
+import {sveltekit}       from '@sveltejs/kit/vite';
+import {defineConfig}    from 'vite';
+import {functionsMixins} from 'vite-plugin-functions-mixins';
+
+// M3 Svelte publishes its components as their sources: SvelteKit compiles them for the browser and for the server, and
+// the plugin of M3 Svelte the mixins and the functions of their CSS. The pages are prerendered at the build into dist,
+// under the base path of the variable BASE_PATH, as the working page of table-bro.com has it; a project of its own
+// leaves it out
+export default defineConfig({
+  plugins: [
+    sveltekit({
+      adapter: adapter({pages: 'dist', assets: 'dist'}),
+      paths: {base: process.env.BASE_PATH ?? ''}
+    }),
+    functionsMixins({deps: ['m3-svelte']})
+  ]
+});
+`},
+      {file: 'src/routes/+layout.ts', language: 'ts', code: `// The page is prerendered at the build, with the table in its loading state
+export const prerender = true;
+`},
+      {file: 'src/hooks.server.ts', language: 'ts', code: `import {parseHTML} from 'linkedom';
+
+// The elements of the skin extend the HTMLElement of the server DOM of the prerender, linkedom: it is global before the
+// server imports the core and the skin, which SvelteKit does after the hooks, with the modules of the pages
+globalThis.HTMLElement ??= parseHTML('<!doctype html><html><body></body></html>').window.HTMLElement;
+`},
+      {file: 'src/lib/server/prerender-table.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
+import '@table-bro/svelte-m3/server';
+
+import {parseHTML} from 'linkedom';
+
+import {cols, conf} from '../orders';
+
+/** The prerendered table: the attributes of the element <table-bro> and its markup. */
+export interface PrerenderedTable {
+  attributes: Record<string, string>;
+  html: string;
+}
+
+/**
+ * Renders the table of the orders in its loading state on the server, in the markup of the components of M3 Svelte: the
+ * page shows it before any script runs, and configure() renders the table with its rows in its place in the browser.
+ */
+export function prerenderOrders(): PrerenderedTable {
+  const {document} = parseHTML('<!doctype html><html><body></body></html>');
+  const table = document.createElement('table-bro');
+
+  table.id = 'orders';
+  document.body.append(table);
+  prerenderTableBro(table, {cols, conf});
+
+  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
+}
+`},
+      {file: 'src/routes/+page.server.ts', language: 'ts', code: `import type {PageServerLoad} from './$types';
+import {prerenderOrders}     from '#lib/server/prerender-table';
+
+export const load: PageServerLoad = () => ({prerendered: prerenderOrders()});
+`},
+      {file: 'src/routes/+page.svelte', language: 'svelte', code: `<script lang="ts">
+  // The skin is registered before the tables
+  import '#lib/skin';
+
+  import {onMount} from 'svelte';
+
+  import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+
+  import {cols, conf, rows} from '#lib/orders';
+
+  import type {PageProps} from './$types';
+
+  // The page of the server has the table prerendered, and configure() renders it with its rows in the browser, in its
+  // place
+  let {data}: PageProps = $props();
+  let table: TableBroHTMLElement;
+
+  onMount(() => table.configure({cols, rows, conf}));
+</script>
+
+<div class="bro-table-shadow-container">
+  <table-bro {...data.prerendered.attributes} bind:this={table} theme="auto"
+             onbro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}>{@html data.prerendered.html}</table-bro>
+</div>
+`}
+    ]
+  },
+  {
+    path: 'ssr/nuxt',
+    name: 'Nuxt',
+    text: `<!-- intro -->
+Nuxt renders a page on the server, or at the build of a static site: a component prerenders the table on the server with \`prerenderTableBro()\` in the server DOM of [linkedom](https://github.com/WebReflection/linkedom), \`useAsyncData()\` carries the markup to the browser, and \`configure()\` renders the table with its rows in \`onMounted()\`. The skin \`vuetify\` renders the components of Vuetify there with its server entry, \`@table-bro/vue-vuetify/server\`, by the synchronous part of the server render of Vue. The steps are the ones of the sample project \`samples/vue-vuetify/nuxt\` of the repository, a static site with Nuxt 4: its [working page](https://table-bro.com/samples/vue-vuetify/nuxt/) shows the prerendered table before its scripts run, and [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/vue-vuetify/nuxt) opens it in the browser. What the prerender renders, and its limits: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
+
+<!-- setup -->
+#### How do I prerender a table in Nuxt?
+
+1. **Install the packages**
+
+   The table and the skin, Vuetify and the server DOM:
+
+   {{install.sh}}
+
+2. **Take Vuetify and the skin through the build**
+
+   The components of Vuetify import their styles, so the build of Nuxt takes Vuetify and the skin through Vite (\`build.transpile\`); the template compiler knows \`‹table-bro›\` as a Custom Element, and the CSS of Vuetify, of the core and of the skin come by \`css\`. The sample also generates its static pages into \`dist\` under the base path of its working page. \`nuxt.config.ts\`:
+
+   {{nuxt.config.ts}}
+
+3. **Give the application its Vuetify**
+
+   A plugin installs a Vuetify for each render of the server and in the browser, with \`ssr: true\` and the themes of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), and provides it. \`app/plugins/vuetify.ts\`:
+
+   {{app/plugins/vuetify.ts}}
+
+   In the browser, the import of the skin defines \`‹table-bro›\` and registers the skin, and \`setVuetify()\` gives its elements the Vuetify of the application. \`app/plugins/table-bro.client.ts\`:
+
+   {{app/plugins/table-bro.client.ts}}
+
+4. **Prerender the table**
+
+   The server DOM gives its \`HTMLElement\` to the global scope before the import of the skin, as its elements extend it, and the server entry takes the Vuetify of the render. The prerender takes the columns and the config of \`configure()\`; the rows wait for the browser. \`app/prerender-table.ts\`:
+
+   {{app/prerender-table.ts}}
+
+5. **Render the table in the page**
+
+   The component prerenders the table on the server in \`useAsyncData()\`, renders \`‹table-bro›\` with its attributes and its markup, which the hydration of Vue keeps, and \`configure()\` renders the table with its rows in its place. \`app/components/OrdersTable.vue\`:
+
+   {{app/components/OrdersTable.vue}}
+
+   \`app/app.vue\` renders it in \`VApp\` of Vuetify:
+
+   {{app/app.vue}}
+
+\`app/orders.ts\` is \`src/orders.ts\` of [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).
+
+#### Related
+
+[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/vue-vuetify vuetify linkedom nuxt
 `},
       {file: 'nuxt.config.ts', language: 'ts', code: `// A static site: the build prerenders the page with its table in the markup of Vuetify, into dist under the base path
 // of BASE_PATH. Vue compiles <table-bro> of its templates as a Custom Element, and the build takes Vuetify and the skin
@@ -3838,445 +4243,90 @@ import {VApp} from 'vuetify/components/VApp';
     <OrdersTable />
   </VApp>
 </template>
-`},
-      {file: 'next-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @mui/material-nextjs @emotion/react @emotion/styled @emotion/cache linkedom server-only
-`},
-      {file: 'next.config.ts', language: 'ts', code: `import type {NextConfig} from 'next';
+`}
+    ]
+  },
+  {
+    path: 'ssr/prerendering',
+    name: 'Prerender function',
+    text: `<!-- intro -->
+A page that a server renders shows the table before any script runs. The prerender renders the table in its loading state: the toolbar, the column headers, the loading row and the paginator, in the markup of its skin. The CSS of the skin sizes it, so the table takes its place on the page at once, and the page has no layout shift when the table renders in the browser. There the table renders with its rows in the same element, and the loading animation goes on instead of starting over. The pages of this section show the prerender in Angular SSR, Next.js, SolidStart, SvelteKit and Nuxt, each with its sample project; this page shows the function that renders the table on any server with a DOM, and the limits of the prerender.
 
-// A static export: the build renders the page with its prerendered table. The server entry of the skin renders the
-// components of MUI by react-dom/server, so Node takes it and its libraries as they are, not the bundle of Next.js
-const config: NextConfig = {
-  output: 'export',
-  distDir: 'dist',
-  basePath: process.env.BASE_PATH ?? '',
-  trailingSlash: true,
-  serverExternalPackages: ['@table-bro/core', '@table-bro/react-mui', 'linkedom']
-};
+<!-- setup -->
+#### prerenderTableBro() _since 1.2.0_
 
-export default config;
-`},
-      {file: 'src/prerender-table.ts', language: 'ts', code: `import 'server-only';
+Without Angular, \`prerenderTableBro(element, {cols, conf})\` of \`@table-bro/core\` renders the table into a \`‹table-bro›\` element of a server DOM, a DOM without a browser. It takes the columns and the config of \`configure()\`; the rows wait for the browser. The table creates its nodes in the document of the element, so the server needs no global \`document\`, and the imports of the core and of the skins \`bs\` and \`nv\` work without a DOM. The element goes into its document before the call, so that the elements of the skin render their markup as they connect:
 
-import {cols, conf} from './orders';
-import {theme}      from './theme';
+{{src/prerender.ts}}
 
-/** The prerendered table: the attributes of the element <table-bro> and its markup. */
-export interface PrerenderedTable {
-  attributes: Record<string, string>;
-  html: string;
-}
+In the browser, \`configure()\` on the same element renders the table with its rows in place of the prerender:
 
-/**
- * Renders the table of the orders in its loading state on the server, in the markup of the components of MUI: the page
- * shows it before any script runs, and configure() renders the table with its rows in its place in the browser.
- */
-export async function prerenderOrders(): Promise<PrerenderedTable> {
-  const {parseHTML} = await import('linkedom');
-  const {document, window} = parseHTML('<!doctype html><html><body></body></html>');
+{{src/browser.ts}}
 
-  // The elements of the skin extend the HTMLElement of the server DOM: it is global before the import of the skin
-  globalThis.HTMLElement ??= window.HTMLElement;
+The columns, the rows and the config come from \`src/orders.ts\`:
 
-  const {prerenderTableBro} = await import('@table-bro/core');
-  const {setMuiTheme} = await import('@table-bro/react-mui/server');
+{{src/orders.ts}}
 
-  setMuiTheme(theme);
+#### Limits
 
-  const table = document.createElement('table-bro');
+1. **The loading state only**
 
-  table.id = 'orders';
-  document.body.append(table);
-  prerenderTableBro(table, {cols, conf});
+   The prerender renders the table without rows, in its loading state: the rows, the sort and the pages come with the table of the browser.
 
-  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
-}
-`},
-      {file: 'src/app/page.tsx', language: 'tsx', code: `import {OrdersTable}     from '../OrdersTable';
-import {prerenderOrders} from '../prerender-table';
+2. **The theme auto**
 
-export default async function Page() {
-  return <OrdersTable prerendered={await prerenderOrders()} />;
-}
-`},
-      {file: 'src/OrdersTable.tsx', language: 'tsx', code: `'use client';
+   The server does not know the color scheme of the system of the user. With the theme \`auto\` the prerendered table takes no class of a theme and shows the theme of the page; the table of the browser then follows the system. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
 
-import './skin';
+3. **The elements of the skin**
 
-import {useEffect, useRef} from 'react';
+   The elements of a skin render on the server only when the skin defines them in a registry of custom elements, \`BroSkinConfig.defineElements(registry)\`, as \`bs\` and \`nv\` do and \`mui\`, \`suid\`, \`m3-svelte\` and \`vuetify\` do with their server entries, and the window of the server DOM has that registry, \`customElements\`. Without them the toolbar, the column headers and the paginator stay the empty tags of the skin with their attributes until the browser renders the table. \`‹table-bro-ng›\` gives the server DOM of Angular a registry for the time of the prerender, and renders the elements of \`mat\` with its Angular components.
 
-import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+4. **Critical CSS**
 
-import {cols, conf, rows}           from './orders';
-import type {PrerenderedTable} from './prerender-table';
+   A production build of Angular inlines the critical CSS of a page with Beasties and loads the whole stylesheet after the page shows (\`optimization.styles.inlineCritical\`). The scripts of the page may run before the stylesheet loads: the table then measures its parts without the styles of the components of its skin, and keeps that geometry, with its body collapsed. Turn the inlining off, as the samples of Angular do, so that the stylesheet loads before the page shows. To \`"production"\` of the configurations of the build in \`angular.json\`:
 
-/**
- * The table of the orders: the page of the server has it prerendered, and configure() renders it with its rows in the
- * browser, in its place.
- * @param props - the prerendered table
- * @param props.prerendered - its attributes and its markup
- */
-export function OrdersTable({prerendered}: {prerendered: PrerenderedTable}) {
-  const table = useRef<TableBroHTMLElement>(null);
+   {{angular-optimization.json}}
 
-  useEffect(() => {
-    const element = table.current!;
-    const onAction = (event: CustomEvent<BroActionDetail>) => console.log(event.detail.action);
+   The CSS of the core and of the skins keeps the layout of a prerendered table with the critical CSS too, which drops the selectors that start with a pseudo-class: the sizes of a skin come also by \`table-bro:where([data-bro-prerender].<skin>)\`, so the prerendered table keeps its size before the stylesheets of the page load.
 
-    queueMicrotask(() => element.configure({cols, rows, conf}));
-    element.addEventListener('bro-action', onAction);
+#### Related
 
-    return () => element.removeEventListener('bro-action', onAction);
-  }, []);
-
-  return (
-    <div className="bro-table-shadow-container">
-      <table-bro {...prerendered.attributes} ref={table} theme="auto" dangerouslySetInnerHTML={{__html: prerendered.html}}></table-bro>
-    </div>
-  );
-}
-`},
-      {file: 'src/app/layout.tsx', language: 'tsx', code: `import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-import type {ReactNode}      from 'react';
-
-import {Providers} from './Providers';
-
-import './globals.css';
-import './sample-page.css';
-
-export const metadata = {title: 'Table, Bro + Next.js + React MUI'};
-
-export default function RootLayout({children}: {children: ReactNode}) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-      </head>
-      <body>
-        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="light" />
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  );
-}
-`},
-      {file: 'src/app/Providers.tsx', language: 'tsx', code: `'use client';
-
-import CssBaseline              from '@mui/material/CssBaseline';
-import {ThemeProvider}          from '@mui/material/styles';
-import {AppRouterCacheProvider} from '@mui/material-nextjs/v16-appRouter';
-import type {ReactNode}         from 'react';
-
-import {theme} from '../theme';
-
-/**
- * The MUI theme of the application with the styles of Emotion of the server render of Next.js. The page is light, as the
- * page of the sample of Angular Material; the table takes the scheme of the system by its theme.
- */
-export function Providers({children}: {children: ReactNode}) {
-  return (
-    <AppRouterCacheProvider>
-      <ThemeProvider theme={theme} defaultMode="light">
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </AppRouterCacheProvider>
-  );
-}
-`},
-      {file: 'src/app/globals.css', language: 'css', code: `/* The CSS of the core and of the skin */
-@import '@table-bro/core/dist/table-bro.min.css';
-@import '@table-bro/react-mui/dist/table-bro.react-mui.min.css';
-`},
-      {file: 'start-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/solid-suid @suid/material @solidjs/start nitro linkedom
-`},
-      {file: 'start/vite.config.ts', language: 'ts', code: `import {solidStart}   from '@solidjs/start/config';
-import {nitro}        from 'nitro/vite';
-import {defineConfig} from 'vite';
-
-// A static site: the build prerenders the page with its prerendered table into dist. The plugin of Solid compiles the
-// components of SUID, published as JSX, for the browser and for the server, so the server bundle carries SUID and the
-// skin; it carries the core too, which loads after the server DOM gives it its HTMLElement (src/server-dom.ts)
-export default defineConfig({
-  ssr: {noExternal: [/^@suid\\//, '@table-bro/core', '@table-bro/solid-suid']},
-  plugins: [
-    solidStart(),
-    nitro({
-      preset: 'static',
-      prerender: {routes: ['/']},
-      output: {dir: 'dist', publicDir: 'dist'}
-    })
-  ]
-});
-`},
-      {file: 'src/server-dom.ts', language: 'ts', code: `import {parseHTML} from 'linkedom';
-
-// The elements of the core and of the skin extend the HTMLElement of a server DOM: this module gives it to the global
-// scope, and the modules that import it before the core and the skin load after it
-const {window} = parseHTML('<!doctype html><html><body></body></html>');
-
-globalThis.HTMLElement ??= window.HTMLElement;
-`},
-      {file: 'src/prerender-orders.ts', language: 'ts', code: `// The server DOM first: the core and the skin take its HTMLElement
-import './server-dom';
-
-import {prerenderTableBro} from '@table-bro/core';
-import {setSuidTheme}      from '@table-bro/solid-suid/server';
-
-import {parseHTML} from 'linkedom';
+[Angular data table](https://table-bro.com/docs/frameworks/angular), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+    files: [
+      {file: 'src/prerender.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
+// The import registers the skin nv; without a DOM it defines no elements
+import '@table-bro/native';
 
 import {cols, conf} from './orders';
-import {theme}      from './theme';
-
-/** The prerendered table: the attributes of the element <table-bro> and its markup. */
-export interface PrerenderedTable {
-  attributes: Record<string, string>;
-  html: string;
-}
 
 /**
- * Renders the table of the orders in its loading state on the server, in the markup of the components of SUID: the page
- * shows it before any script runs, and configure() renders the table with its rows in its place in the browser. The
- * server entry of the skin renders its elements in the theme of the application.
+ * Renders the table of the orders in its loading state into a page of a server DOM. The element is in the document
+ * first, so the elements of the skin connect and render their markup.
+ * @param page - the document of the page in the server DOM
  */
-export function prerenderOrders(): PrerenderedTable {
-  setSuidTheme(theme);
+export function prerenderOrders(page: Document): void {
+  const table = page.createElement('table-bro');
 
-  const {document} = parseHTML('<!doctype html><html><body></body></html>');
-  const table = document.createElement('table-bro');
-
-  table.id = 'orders';
-  document.body.append(table);
+  page.body.append(table);
   prerenderTableBro(table, {cols, conf});
-
-  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
 }
 `},
-      {file: 'src/entry-server.tsx', language: 'tsx', code: `// @refresh reload
-// The server DOM first: the core and the skin, which the server bundle carries, take its HTMLElement
-import './server-dom';
-
-import {createHandler, StartServer} from '@solidjs/start/server';
-
-import {prerenderOrders} from './prerender-orders';
-
-// The page of the server carries the table prerendered in its loading state: the table of the page takes it from the
-// locals of the request
-export default createHandler(event => {
-  event.locals.orders = prerenderOrders();
-
-  return (
-    <StartServer
-      document={({assets, children, scripts}) => (
-        <html lang="en">
-          <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <title>Table, Bro + SolidStart + Solid SUID</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-            {assets}
-          </head>
-          <body>
-            <div id="app">{children}</div>
-            {scripts}
-          </body>
-        </html>
-      )}
-    />
-  );
-});
-`},
-      {file: 'src/locals.d.ts', language: 'ts', code: `// The prerendered table of the page in the locals of a request of the server
-import type {PrerenderedTable} from './prerender-orders';
-
-declare global {
-  namespace App {
-    interface RequestEventLocals {
-      orders?: PrerenderedTable;
-    }
-  }
-}
-`},
-      {file: 'src/PrerenderedOrdersTable.tsx', language: 'tsx', code: `import {onMount}                   from 'solid-js';
-import {getRequestEvent, isServer} from 'solid-js/web';
-
-import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
+      {file: 'src/browser.ts', language: 'ts', code: `import '@table-bro/native';
 
 import {cols, conf, rows} from './orders';
 
-/**
- * The table of the orders with its prerender: the page of the server has it prerendered, and configure() renders it with its rows in the
- * browser, in its place. The hydration of Solid keeps the markup of the server, which the browser has no copy of.
- */
-export function PrerenderedOrdersTable() {
-  let table!: TableBroHTMLElement;
-  const prerendered = isServer ? getRequestEvent()?.locals.orders : undefined;
-  // The attributes of the prerender as they are, but the id, which the element has: the spread of Solid writes the class
-  // of a property with a space after it
-  const attributes = Object.fromEntries(Object.entries(prerendered?.attributes ?? {})
-    .filter(([name]) => name !== 'id')
-    .map(([name, value]) => [\`attr:\${name}\`, value]));
-
-  onMount(() => table.configure({cols, rows, conf}));
-
-  return (
-    <div class="bro-table-shadow-container">
-      <table-bro {...attributes} id="orders" ref={table} theme="auto" innerHTML={prerendered?.html}
-                 on:bro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}></table-bro>
-    </div>
-  );
+// The prerendered table of the page: configure() renders the table with its rows in its place
+document.querySelector('table-bro')!.configure({cols, rows, conf});
+`},
+      frameworkOrders,
+      {file: 'angular-optimization.json', language: 'json', code: `"optimization": {
+  "scripts": true,
+  "styles": {
+    "minify": true,
+    "inlineCritical": false
+  },
+  "fonts": true
 }
-`},
-      {file: 'src/app.tsx', language: 'tsx', code: `// The skin is registered before the tables
-import './skin';
-
-import CssBaseline     from '@suid/material/CssBaseline';
-import {ThemeProvider} from '@suid/material/styles';
-
-import {PrerenderedOrdersTable} from './PrerenderedOrdersTable';
-import {theme}                  from './theme';
-
-export default function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <PrerenderedOrdersTable />
-    </ThemeProvider>
-  );
-}
-`},
-      {file: 'src/theme.ts', language: 'ts', code: `import {createPalette, createTheme}           from '@suid/material/styles';
-import {createMemo, createRoot, createSignal} from 'solid-js';
-import {isServer}                             from 'solid-js/web';
-
-// The theme of the application, as the one of samples/angular-material in the roles of the palette of SUID: the azure
-// palette of Material 3, with the texts on-surface and on-surface-variant, the state layers of Material 3, the surface
-// as the background of the table, the outline as the borders of the rows and the outline of the chips, and the font
-// Roboto. The page stays light, as the page of that sample, and the table follows the color scheme of the system:
-// the server renders the light one, and the browser follows a change of the scheme
-const scheme = isServer ? undefined : window.matchMedia('(prefers-color-scheme: dark)');
-const [dark, setDark] = createSignal(scheme?.matches ?? false);
-
-scheme?.addEventListener('change', event => setDark(event.matches));
-
-const lightPalette = {
-  mode: 'light' as const,
-  primary: {main: '#005cbb'},
-  text: {primary: '#1a1b1f', secondary: '#44474e', disabled: 'rgba(26, 27, 31, 0.38)'},
-  divider: '#74777f',
-  background: {default: '#faf9fd', paper: '#faf9fd'},
-  action: {active: '#44474e', hover: 'rgba(26, 27, 31, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(26, 27, 31, 0.38)', disabledOpacity: 0.38},
-  grey: {400: '#74777f'}
-};
-
-// The dark scheme keeps the light background of the page, which CssBaseline gives the body
-const darkPalette = {
-  mode: 'dark' as const,
-  primary: {main: '#abc7ff'},
-  text: {primary: '#e3e2e6', secondary: '#e0e2ec', disabled: 'rgba(227, 226, 230, 0.38)'},
-  divider: '#8e9099',
-  background: {default: '#faf9fd', paper: '#121316'},
-  action: {active: '#e0e2ec', hover: 'rgba(227, 226, 230, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(227, 226, 230, 0.38)', disabledOpacity: 0.38},
-  grey: {700: '#8e9099'}
-};
-
-const palette = createRoot(() => createMemo(() => createPalette(dark() ? darkPalette : lightPalette)));
-
-export const theme = createTheme({palette, typography: {fontFamily: 'Roboto'}});
-`},
-      {file: 'sveltekit-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte linkedom
-npm install -D @sveltejs/kit @sveltejs/adapter-static vite-plugin-functions-mixins
-`},
-      {file: 'sveltekit/vite.config.ts', language: 'ts', code: `import adapter           from '@sveltejs/adapter-static';
-import {sveltekit}       from '@sveltejs/kit/vite';
-import {defineConfig}    from 'vite';
-import {functionsMixins} from 'vite-plugin-functions-mixins';
-
-// M3 Svelte publishes its components as their sources: SvelteKit compiles them for the browser and for the server, and
-// the plugin of M3 Svelte the mixins and the functions of their CSS. The pages are prerendered at the build into dist,
-// under the base path of the variable BASE_PATH, as the working page of table-bro.com has it; a project of its own
-// leaves it out
-export default defineConfig({
-  plugins: [
-    sveltekit({
-      adapter: adapter({pages: 'dist', assets: 'dist'}),
-      paths: {base: process.env.BASE_PATH ?? ''}
-    }),
-    functionsMixins({deps: ['m3-svelte']})
-  ]
-});
-`},
-      {file: 'src/routes/+layout.ts', language: 'ts', code: `// The page is prerendered at the build, with the table in its loading state
-export const prerender = true;
-`},
-      {file: 'src/hooks.server.ts', language: 'ts', code: `import {parseHTML} from 'linkedom';
-
-// The elements of the skin extend the HTMLElement of the server DOM of the prerender, linkedom: it is global before the
-// server imports the core and the skin, which SvelteKit does after the hooks, with the modules of the pages
-globalThis.HTMLElement ??= parseHTML('<!doctype html><html><body></body></html>').window.HTMLElement;
-`},
-      {file: 'src/lib/server/prerender-table.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
-import '@table-bro/svelte-m3/server';
-
-import {parseHTML} from 'linkedom';
-
-import {cols, conf} from '../orders';
-
-/** The prerendered table: the attributes of the element <table-bro> and its markup. */
-export interface PrerenderedTable {
-  attributes: Record<string, string>;
-  html: string;
-}
-
-/**
- * Renders the table of the orders in its loading state on the server, in the markup of the components of M3 Svelte: the
- * page shows it before any script runs, and configure() renders the table with its rows in its place in the browser.
- */
-export function prerenderOrders(): PrerenderedTable {
-  const {document} = parseHTML('<!doctype html><html><body></body></html>');
-  const table = document.createElement('table-bro');
-
-  table.id = 'orders';
-  document.body.append(table);
-  prerenderTableBro(table, {cols, conf});
-
-  return {attributes: Object.fromEntries([...table.attributes].map(({name, value}) => [name, value])), html: table.innerHTML};
-}
-`},
-      {file: 'src/routes/+page.server.ts', language: 'ts', code: `import type {PageServerLoad} from './$types';
-import {prerenderOrders}     from '#lib/server/prerender-table';
-
-export const load: PageServerLoad = () => ({prerendered: prerenderOrders()});
-`},
-      {file: 'src/routes/+page.svelte', language: 'svelte', code: `<script lang="ts">
-  // The skin is registered before the tables
-  import '#lib/skin';
-
-  import {onMount} from 'svelte';
-
-  import type {BroActionDetail, TableBroHTMLElement} from '@table-bro/core';
-
-  import {cols, conf, rows} from '#lib/orders';
-
-  import type {PageProps} from './$types';
-
-  // The page of the server has the table prerendered, and configure() renders it with its rows in the browser, in its
-  // place
-  let {data}: PageProps = $props();
-  let table: TableBroHTMLElement;
-
-  onMount(() => table.configure({cols, rows, conf}));
-</script>
-
-<div class="bro-table-shadow-container">
-  <table-bro {...data.prerendered.attributes} bind:this={table} theme="auto"
-             onbro-action={(event: CustomEvent<BroActionDetail>) => console.log(event.detail.action)}>{@html data.prerendered.html}</table-bro>
-</div>
 `}
     ]
   },
