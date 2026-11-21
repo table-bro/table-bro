@@ -59,14 +59,14 @@ test('the SolidStart sample shows the prerendered table in the markup of SUID be
   const table = page.locator('table-bro#orders');
 
   // The loading state of the table: the toolbar and the progress bar of SUID, the sort headers, and the paginator with
-  // the native select of SUID, in the colors of the theme
+  // the native select of SUID, in the colors of the theme: the background of the azure of the sample of mat
   await expect(table).toHaveAttribute('data-bro-prerender', '');
   await expect(table).toHaveAttribute('class', 'suid');
   await expect(table.locator('bro-suid-toolbar-main .MuiToolbar-root')).toHaveCount(1);
   await expect(table.locator('bro-suid-sort-header .bro-sort-header-content')).not.toHaveCount(0);
   await expect(table.locator('bro-suid-progress-bar .MuiLinearProgress-root')).toHaveCount(1);
   await expect(table.locator('bro-suid-paginator bro-suid-dropdown .MuiNativeSelect-select')).toHaveCount(1);
-  expect(await table.evaluate(element => getComputedStyle(element).getPropertyValue('--suid-palette-background-paper'))).toBe('#fff');
+  expect(await table.evaluate(element => getComputedStyle(element).getPropertyValue('--suid-palette-background-paper'))).toBe('#faf9fd');
 
   const prerendered = (await table.boundingBox())!.height;
 

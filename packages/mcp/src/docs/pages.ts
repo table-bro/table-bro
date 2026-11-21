@@ -2366,7 +2366,7 @@ ${mcpSection('#####', 'Solid')}
 
 2. **Give the skin the theme of the application**
 
-   The SUID theme of the application takes the palette of the color scheme of the system, and follows it when it changes. \`src/theme.ts\`:
+   The SUID theme of the application takes the palette of the color scheme of the system, and follows it when it changes. Its palettes have the colors of the sample of Angular Material, the azure palette of Material 3, and the font Roboto, so that the table looks as the table of the skin \`mat\`; the page stays light, as the page of that sample. \`src/theme.ts\`:
 
    {{src/theme.ts}}
 
@@ -2439,16 +2439,40 @@ The element needs the browser: \`onMount\` runs only there, so the server render
       {file: 'src/theme.ts', language: 'ts', code: `import {createPalette, createTheme}           from '@suid/material/styles';
 import {createMemo, createRoot, createSignal} from 'solid-js';
 
-// The theme of the application in the color scheme of the system: its palette follows a change of the scheme, and the
-// components of SUID and the table take it
+// The theme of the application, as the one of samples/angular-material in the roles of the palette of SUID: the azure
+// palette of Material 3, with the texts on-surface and on-surface-variant, the state layers of Material 3, the surface
+// as the background of the table, the outline as the borders of the rows and the outline of the chips, and the font
+// Roboto. The page stays light, as the page of that sample, and the table follows the color scheme of the system:
+// the palette follows a change of the scheme, and the components of SUID and the table take it
 const scheme = window.matchMedia('(prefers-color-scheme: dark)');
 const [dark, setDark] = createSignal(scheme.matches);
 
 scheme.addEventListener('change', event => setDark(event.matches));
 
-const palette = createRoot(() => createMemo(() => createPalette({mode: dark() ? 'dark' : 'light'})));
+const lightPalette = {
+  mode: 'light' as const,
+  primary: {main: '#005cbb'},
+  text: {primary: '#1a1b1f', secondary: '#44474e', disabled: 'rgba(26, 27, 31, 0.38)'},
+  divider: '#74777f',
+  background: {default: '#faf9fd', paper: '#faf9fd'},
+  action: {active: '#44474e', hover: 'rgba(26, 27, 31, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(26, 27, 31, 0.38)', disabledOpacity: 0.38},
+  grey: {400: '#74777f'}
+};
 
-export const theme = createTheme({palette});
+// The dark scheme keeps the light background of the page, which CssBaseline gives the body
+const darkPalette = {
+  mode: 'dark' as const,
+  primary: {main: '#abc7ff'},
+  text: {primary: '#e3e2e6', secondary: '#e0e2ec', disabled: 'rgba(227, 226, 230, 0.38)'},
+  divider: '#8e9099',
+  background: {default: '#faf9fd', paper: '#121316'},
+  action: {active: '#e0e2ec', hover: 'rgba(227, 226, 230, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(227, 226, 230, 0.38)', disabledOpacity: 0.38},
+  grey: {700: '#8e9099'}
+};
+
+const palette = createRoot(() => createMemo(() => createPalette(dark() ? darkPalette : lightPalette)));
+
+export const theme = createTheme({palette, typography: {fontFamily: 'Roboto'}});
 `},
       {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin suid, and
 // setSuidTheme() gives its elements the theme of the application
@@ -3285,7 +3309,7 @@ SolidStart renders a page on the server, or at the build of a static site: its s
 
 5. **Give the server the light theme**
 
-   The server does not know the color scheme of the system of the user: it renders the light palette, and the browser takes the scheme of the system. \`src/theme.ts\`:
+   The server does not know the color scheme of the system of the user: it renders the light palette, and the browser takes the scheme of the system. The palettes are the ones of [Solid data table](https://table-bro.com/docs/frameworks/solid). \`src/theme.ts\`:
 
    {{src/theme.ts}}
 
@@ -3990,16 +4014,40 @@ export default function App() {
 import {createMemo, createRoot, createSignal} from 'solid-js';
 import {isServer}                             from 'solid-js/web';
 
-// The theme of the application in the color scheme of the system: the server renders the light one, and the browser
-// takes the scheme of the system and follows a change of it, as the components of SUID and the table do
+// The theme of the application, as the one of samples/angular-material in the roles of the palette of SUID: the azure
+// palette of Material 3, with the texts on-surface and on-surface-variant, the state layers of Material 3, the surface
+// as the background of the table, the outline as the borders of the rows and the outline of the chips, and the font
+// Roboto. The page stays light, as the page of that sample, and the table follows the color scheme of the system:
+// the server renders the light one, and the browser follows a change of the scheme
 const scheme = isServer ? undefined : window.matchMedia('(prefers-color-scheme: dark)');
 const [dark, setDark] = createSignal(scheme?.matches ?? false);
 
 scheme?.addEventListener('change', event => setDark(event.matches));
 
-const palette = createRoot(() => createMemo(() => createPalette({mode: dark() ? 'dark' : 'light'})));
+const lightPalette = {
+  mode: 'light' as const,
+  primary: {main: '#005cbb'},
+  text: {primary: '#1a1b1f', secondary: '#44474e', disabled: 'rgba(26, 27, 31, 0.38)'},
+  divider: '#74777f',
+  background: {default: '#faf9fd', paper: '#faf9fd'},
+  action: {active: '#44474e', hover: 'rgba(26, 27, 31, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(26, 27, 31, 0.38)', disabledOpacity: 0.38},
+  grey: {400: '#74777f'}
+};
 
-export const theme = createTheme({palette});
+// The dark scheme keeps the light background of the page, which CssBaseline gives the body
+const darkPalette = {
+  mode: 'dark' as const,
+  primary: {main: '#abc7ff'},
+  text: {primary: '#e3e2e6', secondary: '#e0e2ec', disabled: 'rgba(227, 226, 230, 0.38)'},
+  divider: '#8e9099',
+  background: {default: '#faf9fd', paper: '#121316'},
+  action: {active: '#e0e2ec', hover: 'rgba(227, 226, 230, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(227, 226, 230, 0.38)', disabledOpacity: 0.38},
+  grey: {700: '#8e9099'}
+};
+
+const palette = createRoot(() => createMemo(() => createPalette(dark() ? darkPalette : lightPalette)));
+
+export const theme = createTheme({palette, typography: {fontFamily: 'Roboto'}});
 `},
       {file: 'sveltekit-install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte linkedom
 npm install -D @sveltejs/kit @sveltejs/adapter-static vite-plugin-functions-mixins
