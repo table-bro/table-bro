@@ -1853,6 +1853,8 @@ ${setupNgBs.text}
 
 ${setupNgNv.text}
 
+With server-side rendering, the steps of [Angular SSR](https://table-bro.com/docs/ssr/angular) come after these: the server render of Angular prerenders the table in its loading state, with the same component.
+
 ${skinsSection}
 
 #### How do I pass cols, rows and conf?
@@ -1881,7 +1883,7 @@ Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular SSR](https://table-bro.com/docs/ssr/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
       ...setupMat.files,
@@ -2214,6 +2216,8 @@ ${mcpSection('#####', 'React')}
 
    {{src/orders.ts}}
 
+With server-side rendering, the steps of [Next.js](https://table-bro.com/docs/ssr/nextjs) come after these: a server component prerenders the table in its loading state in the markup of MUI.
+
 ${skinsSection}
 
 #### How do I pass cols, rows and conf?
@@ -2256,7 +2260,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in an effect of a
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Next.js](https://table-bro.com/docs/ssr/nextjs), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
       muiInstall,
@@ -2386,6 +2390,8 @@ ${mcpSection('#####', 'Solid')}
 
    {{src/orders.ts}}
 
+With server-side rendering, the steps of [SolidStart](https://table-bro.com/docs/ssr/solidstart) come after these: the server entry prerenders the table in its loading state in the markup of SUID.
+
 ${skinsSection}
 
 #### How do I pass cols, rows and conf?
@@ -2428,11 +2434,11 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 ##### Does it work with SolidStart?
 
-The element needs the browser: \`onMount\` runs only there, so the server render leaves the element empty and the browser fills it.
+Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, and the server render of SolidStart prerenders it in its loading state in the markup of SUID, with the server entry of the skin: [SolidStart](https://table-bro.com/docs/ssr/solidstart).
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SolidStart](https://table-bro.com/docs/ssr/solidstart), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
       suidInstall,
@@ -2666,6 +2672,8 @@ ${mcpSection('#####', 'Svelte')}
 
    {{src/orders.ts}}
 
+With server-side rendering, the steps of [SvelteKit](https://table-bro.com/docs/ssr/sveltekit) come after these: the load of the page prerenders the table in its loading state in the markup of M3 Svelte.
+
 ${skinsSection}
 
 #### How do I pass cols, rows and conf?
@@ -2700,7 +2708,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, a
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SvelteKit](https://table-bro.com/docs/ssr/sveltekit), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte
@@ -2966,6 +2974,8 @@ Without it, Vue resolves \`‹table-bro›\` as a component of the app and warns
 
 \`mergeConfig\` adds \`sample-page.config.ts\` of the sample, the source maps and the readable code of its working page; a project of its own exports \`defineConfig()\` with the plugins alone.
 
+With server-side rendering, the steps of [Nuxt](https://table-bro.com/docs/ssr/nuxt) come after these: a component prerenders the table in its loading state in the markup of Vuetify.
+
 ${skinsSection}
 
 #### How do I pass cols, rows and conf?
@@ -3004,7 +3014,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in \`onMounted()\
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Nuxt](https://table-bro.com/docs/ssr/nuxt), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
     files: [
       mcpInstall,
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/vue-vuetify vuetify
@@ -3276,7 +3286,7 @@ A production build of Angular inlines the critical CSS of a page: turn the inlin
 
 #### Related
 
-[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Angular data table](https://table-bro.com/docs/frameworks/angular), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'install.sh', language: 'bash', code: `npm install @angular/platform-server @angular/ssr
 `},
@@ -3429,7 +3439,7 @@ Next.js renders a page on the server, or at the build of a static export: a serv
 
 #### Related
 
-[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[React data table](https://table-bro.com/docs/frameworks/react), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @mui/material-nextjs @emotion/react @emotion/styled @emotion/cache linkedom server-only
 `},
@@ -3643,7 +3653,7 @@ SolidStart renders a page on the server, or at the build of a static site: its s
 
 #### Related
 
-[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Solid data table](https://table-bro.com/docs/frameworks/solid), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/solid-suid @suid/material @solidjs/start nitro linkedom
 `},
@@ -3897,7 +3907,7 @@ SvelteKit renders a page on the server, or at its build: the load of the page on
 
 #### Related
 
-[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte linkedom
 npm install -D @sveltejs/kit @sveltejs/adapter-static vite-plugin-functions-mixins
@@ -4041,7 +4051,7 @@ Nuxt renders a page on the server, or at the build of a static site: a component
 
 #### Related
 
-[Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/vue-vuetify vuetify linkedom nuxt
 `},
