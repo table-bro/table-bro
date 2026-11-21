@@ -188,7 +188,8 @@ site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-serv
 
 ### Manual setup
 
-The site gives these steps on [Getting started](https://table-bro.com/docs/getting-started).
+The site gives these steps on the pages of its frameworks: [Angular data table](https://table-bro.com/docs/frameworks/angular)
+for Angular Material and [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) for Vanilla Bootstrap.
 
 #### Angular Material
 
