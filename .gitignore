@@ -16,6 +16,7 @@ packages/mcp/.check/
 
 # Dependencies and caches
 node_modules/
+.astro/
 .next/
 .svelte-kit/
 next-env.d.ts

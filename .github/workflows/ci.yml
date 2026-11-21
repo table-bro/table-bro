@@ -127,6 +127,8 @@ jobs:
         run: npx playwright test e2e/samples-skins.spec.ts e2e/samples-frameworks.spec.ts e2e/samples-no-build.spec.ts --project chromium
       - name: Pages of samples/react-mui
         run: npx playwright test e2e/samples-react-mui.spec.ts --project chromium
+      - name: Pages of samples/preact-astro
+        run: npx playwright test e2e/samples-preact-astro.spec.ts --project chromium
       - name: Pages of samples/solid-suid
         run: npx playwright test e2e/samples-solid-suid.spec.ts --project chromium
       - name: Pages of samples/svelte-m3

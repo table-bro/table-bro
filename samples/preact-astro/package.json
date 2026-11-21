@@ -1,0 +1,25 @@
+{
+  "name": "table-bro-sample-preact-astro",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/preact": "^6.1.6",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.5.0",
+    "@table-bro/core": "^1.2.1",
+    "@table-bro/react-mui": "^1.2.1",
+    "astro": "^7.4.13",
+    "linkedom": "^0.18.15",
+    "preact": "^11.0.1"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}
