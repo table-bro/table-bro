@@ -9,6 +9,9 @@ of the frameworks of Docs, Frameworks:
 - `react-mui`: React and MUI with `@table-bro/react-mui`, in `react-mui/react`, and the same page in Preact through
   `preact/compat`, in `react-mui/preact`, built by Vite; in `react-mui/next` Next.js prerenders the table in the markup
   of MUI at the build of its static export, with the server entry of the skin;
+- `preact-astro`: the page of `react-mui/preact` with Astro and its integration of Preact, `@astrojs/preact`, which
+  takes React from `preact/compat`: Astro prerenders the table in the markup of MUI at the build of its static site,
+  with the server entry of the skin, and an island of Preact hydrates the page in the browser;
 - `solid-suid`: Solid and SUID with `@table-bro/solid-suid`, in `solid-suid/solid`, built by Vite with the plugin of
   Solid, which compiles the components of SUID; the theme has the azure palette and the font of the theme of
   `angular-material` in the roles of SUID, on a light page with the table in the color scheme of the system; in
