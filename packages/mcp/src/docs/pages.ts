@@ -248,6 +248,158 @@ The quickest start is the MCP server of Table, Bro: add it to your AI coding age
 
 [MCP server](https://table-bro.com/docs/ai/mcp-server) gives the setup for Codex, Cursor, VS Code and Claude Desktop.`;
 
+/** The page without a build of Vanilla Bootstrap, the files of samples/no-build. */
+const noBuildIndex: BroDocFile = {file: 'index.html', language: 'html', code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Table, Bro + Vanilla Bootstrap without a build</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.min.css" />
+    <!-- The page around the table, as on table-bro.com -->
+    <link rel="stylesheet" href="sample-page.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.esm.js",
+          "@table-bro/bootstrap": "https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.esm.js",
+          "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.esm.min.js",
+          "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
+`};
+const noBuildApp: BroDocFile = {file: 'app.js', language: 'js', code: `// The import of the skin defines <table-bro> and registers the skin bs, and useBootstrap() gives it the Dropdown and
+// the Tooltip of Bootstrap
+import {useBootstrap}      from '@table-bro/bootstrap';
+import {Dropdown, Tooltip} from 'bootstrap';
+
+useBootstrap({Dropdown, Tooltip});
+
+const cols = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+// The orders of the demos of Docs on table-bro.com
+const rows = [
+  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
+  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
+  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
+  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
+  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
+  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
+  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
+  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
+  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
+  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
+  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
+  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
+  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
+  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
+  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
+];
+
+const conf = {
+  skin: 'bs',
+  toolbarTitle: 'Orders'
+};
+
+const table = document.createElement('table-bro');
+
+table.id = 'orders';
+table.configure({cols, rows, conf});
+table.addEventListener('bro-action', event => console.log(event.detail.action));
+
+// The shadows of the table fall into the margins of this element: the visible table takes its full width
+const container = document.createElement('div');
+
+container.className = 'bro-table-shadow-container';
+container.append(table);
+document.body.append(container);
+`};
+
+/** The orders of the pages of Vanilla JS, as the sample projects samples/bootstrap and samples/native have them. */
+const vanillaOrders: BroDocFile = {file: 'src/orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
+
+interface Order extends BroRow {
+  description: string;
+  price: number;
+}
+
+const cols: BroCol<Order>[] = [
+  {
+    title: 'Description',
+    name: 'description'
+  }, {
+    title: 'Price',
+    name: 'price',
+    dataType: 'number',
+    className: 'bro-col_text-right'
+  }
+];
+
+// The orders of the demos of Docs on table-bro.com
+const rows: Order[] = [
+  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
+  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
+  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
+  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
+  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
+  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
+  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
+  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
+  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
+  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
+  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
+  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
+  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
+  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
+  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
+  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
+  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
+];
+
+const conf: BroConfig = {
+  skin: 'bs', // 'nv' for Vanilla HTML
+  toolbarTitle: 'Orders'
+};
+
+const table = document.createElement('table-bro');
+
+table.id = 'orders';
+table.configure({cols, rows, conf});
+
+// The shadows of the table fall into the margins of this element: the visible table takes its full width
+const container = document.createElement('div');
+
+container.className = 'bro-table-shadow-container';
+container.append(table);
+document.body.append(container);
+`};
+
 /** The pages of Docs, in the order of reading. Island Details have their own pages on the site, apart from this package. */
 export const docPages: BroDocPage[] = [
   {
@@ -321,94 +473,8 @@ Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-br
 An AI coding agent builds a skin of the components of your library with the skill [create-skin](https://github.com/table-bro/table-bro/tree/main/.agents/skills/create-skin) of the repository: the package, the elements and their contract with the table, the theme, the styles, a sample and the checks. The skin \`mui\` on MUI is its reference.`,
     files: [
       mcpInstall,
-      {file: 'index.html', language: 'html', code: `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Table, Bro + Vanilla Bootstrap without a build</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.min.css" />
-    <!-- The page around the table, as on table-bro.com -->
-    <link rel="stylesheet" href="sample-page.css" />
-    <script type="importmap">
-      {
-        "imports": {
-          "@table-bro/core": "https://cdn.jsdelivr.net/npm/@table-bro/core@${tableBroVersion}/dist/table-bro.esm.js",
-          "@table-bro/bootstrap": "https://cdn.jsdelivr.net/npm/@table-bro/bootstrap@${tableBroVersion}/dist/table-bro.bootstrap.esm.js",
-          "bootstrap": "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.esm.min.js",
-          "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/popper.min.js"
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <script type="module" src="app.js"></script>
-  </body>
-</html>
-`},
-      {file: 'app.js', language: 'js', code: `// The import of the skin defines <table-bro> and registers the skin bs, and useBootstrap() gives it the Dropdown and
-// the Tooltip of Bootstrap
-import {useBootstrap}      from '@table-bro/bootstrap';
-import {Dropdown, Tooltip} from 'bootstrap';
-
-useBootstrap({Dropdown, Tooltip});
-
-const cols = [
-  {
-    title: 'Description',
-    name: 'description'
-  }, {
-    title: 'Price',
-    name: 'price',
-    dataType: 'number',
-    className: 'bro-col_text-right'
-  }
-];
-
-// The orders of the demos of Docs on table-bro.com
-const rows = [
-  {description: 'Handcrafted Wooden Table, Gorgeous Bronze Watch, Modern Fresh Salad, Refined Plastic Keyboard, Practical Rubber Shoes', price: 80},
-  {description: 'Small Concrete Gloves, Licensed Frozen Pizza, Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes', price: 57},
-  {description: 'Rustic Cotton Shirt, Ergonomic Steel Chair, Handcrafted Wooden Table, Small Concrete Gloves, Sleek Granite Lamp', price: 13},
-  {description: 'Refined Plastic Keyboard, Ergonomic Steel Chair, Modern Fresh Salad, Gorgeous Bronze Watch, Sleek Granite Lamp', price: 27},
-  {description: 'Licensed Frozen Pizza, Practical Rubber Shoes, Gorgeous Bronze Watch, Sleek Granite Lamp, Rustic Cotton Shirt', price: 96},
-  {description: 'Small Concrete Gloves, Handcrafted Wooden Table, Gorgeous Bronze Watch, Ergonomic Steel Chair, Practical Rubber Shoes', price: 69},
-  {description: 'Practical Rubber Shoes, Modern Fresh Salad, Refined Plastic Keyboard, Handcrafted Wooden Table, Gorgeous Bronze Watch', price: 91},
-  {description: 'Modern Fresh Salad, Practical Rubber Shoes, Ergonomic Steel Chair, Licensed Frozen Pizza, Gorgeous Bronze Watch', price: 48},
-  {description: 'Gorgeous Bronze Watch, Refined Plastic Keyboard, Licensed Frozen Pizza, Ergonomic Steel Chair, Rustic Cotton Shirt', price: 75},
-  {description: 'Small Concrete Gloves, Refined Plastic Keyboard, Handcrafted Wooden Table, Rustic Cotton Shirt, Practical Rubber Shoes', price: 97},
-  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Licensed Frozen Pizza, Practical Rubber Shoes, Sleek Granite Lamp', price: 54},
-  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Ergonomic Steel Chair, Practical Rubber Shoes, Handcrafted Wooden Table', price: 99},
-  {description: 'Sleek Granite Lamp, Ergonomic Steel Chair, Handcrafted Wooden Table, Gorgeous Bronze Watch, Practical Rubber Shoes', price: 55},
-  {description: 'Refined Plastic Keyboard, Sleek Granite Lamp, Modern Fresh Salad, Handcrafted Wooden Table, Ergonomic Steel Chair', price: 81},
-  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Practical Rubber Shoes, Small Concrete Gloves, Rustic Cotton Shirt', price: 86},
-  {description: 'Practical Rubber Shoes, Small Concrete Gloves, Refined Plastic Keyboard, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 56},
-  {description: 'Rustic Cotton Shirt, Practical Rubber Shoes, Small Concrete Gloves, Ergonomic Steel Chair, Licensed Frozen Pizza', price: 20},
-  {description: 'Modern Fresh Salad, Refined Plastic Keyboard, Small Concrete Gloves, Sleek Granite Lamp, Handcrafted Wooden Table', price: 34},
-  {description: 'Refined Plastic Keyboard, Modern Fresh Salad, Small Concrete Gloves, Licensed Frozen Pizza, Rustic Cotton Shirt', price: 72},
-  {description: 'Ergonomic Steel Chair, Practical Rubber Shoes, Gorgeous Bronze Watch, Rustic Cotton Shirt, Modern Fresh Salad', price: 57}
-];
-
-const conf = {
-  skin: 'bs',
-  toolbarTitle: 'Orders'
-};
-
-const table = document.createElement('table-bro');
-
-table.id = 'orders';
-table.configure({cols, rows, conf});
-table.addEventListener('bro-action', event => console.log(event.detail.action));
-
-// The shadows of the table fall into the margins of this element: the visible table takes its full width
-const container = document.createElement('div');
-
-container.className = 'bro-table-shadow-container';
-container.append(table);
-document.body.append(container);
-`},
+      noBuildIndex,
+      noBuildApp,
       {file: 'orders.component.ts', language: 'ts', code: `import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 
 import {TableBroNg}                     from '@table-bro/angular';
@@ -1818,7 +1884,7 @@ const cols: BroCol<Order>[] = [
     path: 'frameworks',
     name: 'Frameworks',
     text: `<!-- intro -->
-Table, Bro is the Custom Element \`‹table-bro›\`: every framework that renders HTML elements renders it, without a wrapper package. A page gives the table its columns, rows and config by \`configure({cols, rows, conf})\`, listens to its \`bro-action\` events and sets its \`theme\` attribute; each framework does it in its own way. The pages of this section show it in Angular, whose package \`@table-bro/angular\` gives the component \`‹table-bro-ng›\` with inputs and outputs, and in Preact, React, Solid, Svelte and Vue, each with a working page of its sample project in the repository and StackBlitz in the Bootstrap skin; a skin of your own design system or UI components works in each of them the same way. How each framework passes data and events to Custom Elements is tested by [Custom Elements Everywhere](https://custom-elements-everywhere.com/).
+Table, Bro is the Custom Element \`‹table-bro›\`: every framework that renders HTML elements renders it, without a wrapper package. A page gives the table its columns, rows and config by \`configure({cols, rows, conf})\`, listens to its \`bro-action\` events and sets its \`theme\` attribute; each framework does it in its own way. The pages of this section show it in Angular, whose package \`@table-bro/angular\` gives the component \`‹table-bro-ng›\` with inputs and outputs, in Preact, React, Solid, Svelte and Vue, each with a working page of its sample project in the repository and StackBlitz in the Bootstrap skin, and in Vanilla JS, without a framework; a skin of your own design system or UI components works in each of them the same way. How each framework passes data and events to Custom Elements is tested by [Custom Elements Everywhere](https://custom-elements-everywhere.com/).
 
 <!-- polymer -->
 #### Polymer and Lit
@@ -1883,7 +1949,7 @@ Yes: \`‹table-bro-ng›\` prerenders the table in its loading state during the
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular SSR](https://table-bro.com/docs/ssr/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular SSR](https://table-bro.com/docs/ssr/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       ...setupMat.files,
@@ -2046,7 +2112,7 @@ The table takes its data by \`configure()\`, one call for the columns, the rows 
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Angular data table](https://table-bro.com/docs/frameworks/angular), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       {...muiInstall, code: muiInstall.code.replace('\n', ' preact\n')},
@@ -2260,7 +2326,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in an effect of a
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Next.js](https://table-bro.com/docs/ssr/nextjs), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Next.js](https://table-bro.com/docs/ssr/nextjs), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       muiInstall,
@@ -2438,7 +2504,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, a
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SolidStart](https://table-bro.com/docs/ssr/solidstart), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SolidStart](https://table-bro.com/docs/ssr/solidstart), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       suidInstall,
@@ -2708,7 +2774,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in \`onMount\`, a
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SvelteKit](https://table-bro.com/docs/ssr/sveltekit), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [SvelteKit](https://table-bro.com/docs/ssr/sveltekit), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte
@@ -3014,7 +3080,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in \`onMounted()\
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Nuxt](https://table-bro.com/docs/ssr/nuxt), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Nuxt](https://table-bro.com/docs/ssr/nuxt), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla).`,
     files: [
       mcpInstall,
       {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/vue-vuetify vuetify
@@ -3232,6 +3298,85 @@ import {vuetify} from './vuetify';
 
 createApp(App).use(vuetify).mount('#app');
 `}
+    ]
+  },
+  {
+    path: 'frameworks/vanilla',
+    name: 'Vanilla JS data table',
+    text: `<!-- intro -->
+Table, Bro is the Custom Element \`‹table-bro›\`, so a page without a framework creates it as any HTML element: \`configure()\` gives it its columns, rows and config, \`addEventListener()\` listens to its \`bro-action\` events, and the \`theme\` attribute sets its theme. Two skins need no framework: Vanilla Bootstrap, the table on the classes and the components of Bootstrap 5, and Vanilla HTML, plain HTML elements, the reference skin to start your own from. The [working page](https://table-bro.com/samples/bootstrap) is the sample project \`samples/bootstrap\` of the repository, built by Vite, and the [working page of Vanilla HTML](https://table-bro.com/samples/native) is \`samples/native\`; a page without a build takes the same packages from a CDN.
+
+<!-- setup -->
+#### How do I install Table, Bro in Vanilla JS?
+
+${mcpSection('#####')}
+
+##### Manual setup
+
+The steps of each skin; the code of the table is the same in both.
+
+###### Vanilla Bootstrap
+
+[See a working page](https://table-bro.com/samples/bootstrap)
+
+${setupBs.text}
+
+###### Vanilla HTML
+
+[See a working page](https://table-bro.com/samples/native)
+
+${setupNv.text}
+
+With server-side rendering, the steps of [Prerender function](https://table-bro.com/docs/ssr/prerendering) come after these: \`prerenderTableBro()\` renders the table in its loading state into a server DOM.
+
+##### Without a build
+
+[See a working page](https://table-bro.com/samples/no-build), [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/no-build)
+
+A page without a bundler takes the same packages from [jsDelivr](https://www.jsdelivr.com/), the CDN of npm, at an exact version: the CSS by \`‹link›\`, the modules by an import map, which gives \`@table-bro/core\` to the skin and \`@popperjs/core\` to Bootstrap ([MDN, importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)). \`index.html\`:
+
+{{index.html}}
+
+\`app.js\` imports the skin, gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap, and gives the table its columns, rows and config:
+
+{{app.js}}
+
+${skinsSection}
+
+#### How do I pass cols, rows and conf?
+
+The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`. New rows go by \`replaceRows(rows)\`, and \`conf.skin\` names the registered skin. \`src/main.ts\` of the sample imports the skin before the table, and \`src/orders.ts\` renders the table:
+
+{{src/orders.ts}}
+
+#### How do I listen to bro-action?
+
+\`bro-action\` is a \`CustomEvent\` of the table, whose \`detail\` is a \`BroActionDetail\`: custom cells, the toolbar, the paginator. \`table.addEventListener('bro-action', event => console.log(event.detail.action))\` logs the name of each action ([MDN, CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent)).
+
+#### How do I switch the theme?
+
+The \`theme\` attribute or property of the table is \`'light'\`, \`'dark'\` or \`'auto'\`, which follows the color scheme of the system; the attribute wins over \`config.theme\`, \`'auto'\` by default. \`table.setAttribute('theme', 'dark')\` switches it, and the table puts the class \`bro-dark-theme\` or \`bro-light-theme\` on itself, and \`data-bs-theme\` of Bootstrap in the skin \`bs\`. More in [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode).
+
+#### Questions
+
+##### Does it need a framework?
+
+No. \`‹table-bro›\` is a Custom Element, a part of the HTML standard that every browser supports ([MDN, Using custom elements](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements)); the pages of [Frameworks](https://table-bro.com/docs/frameworks) render the same element in their templates.
+
+##### Does it work with server-side rendering?
+
+Yes. The table renders in the browser, and \`prerenderTableBro()\` renders it on the server in its loading state into a server DOM, with the elements of the skins \`bs\` and \`nv\`: [Prerender function](https://table-bro.com/docs/ssr/prerendering).
+
+#### Related
+
+[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+    files: [
+      mcpInstall,
+      ...setupBs.files,
+      ...setupNv.files,
+      noBuildIndex,
+      noBuildApp,
+      vanillaOrders
     ]
   },
   {
@@ -4308,7 +4453,7 @@ The columns, the rows and the config come from \`src/orders.ts\`:
 
 #### Related
 
-[Angular data table](https://table-bro.com/docs/frameworks/angular), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
+[Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
       {file: 'src/prerender.ts', language: 'ts', code: `import {prerenderTableBro} from '@table-bro/core';
 // The import registers the skin nv; without a DOM it defines no elements
