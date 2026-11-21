@@ -21,9 +21,10 @@ const styles = ['core', 'skins/angular-material', 'skins/bootstrap', 'skins/nati
 
 const docFiles = docPages.flatMap(page => page.files.map(docFile => ({page: page.path, ...docFile})));
 
-/** The pages of Server-side rendering with a sample project: Angular SSR, Next.js, SolidStart, SvelteKit and Nuxt. */
+/** The pages of Server-side rendering with a sample project: Angular SSR, Preact (Astro), Next.js, SolidStart, SvelteKit and Nuxt. */
 const ssrSamples: Record<string, string> = {
   'ssr/angular': 'samples/angular-ssr',
+  'ssr/preact': 'samples/preact-astro',
   'ssr/nextjs': 'samples/react-mui/next',
   'ssr/solidstart': 'samples/solid-suid/start',
   'ssr/sveltekit': 'samples/svelte-m3/sveltekit',
