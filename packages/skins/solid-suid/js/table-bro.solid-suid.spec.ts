@@ -191,6 +191,42 @@ describe('the SUID progress bar', () => {
     expect(determinate.querySelector('[role="progressbar"]')).toBe(bar);
     expect(bar.getAttribute('aria-valuenow')).toBe('60');
   });
+
+  it('continues the animation of the prerendered progress bar, whose keyframes SUID names with another id', async () => {
+    const host = document.createElement('table-bro');
+    const prerendered = <HTMLElement & {connectedCallback(): void}>document.createElement('bro-suid-progress-bar');
+
+    // The markup of the prerender: the bar of SUID with the keyframes of the server render
+    host.setAttribute('data-bro-prerender', '');
+    prerendered.innerHTML = '<style>@keyframes indeterminate1-server {to {left: 100%}}</style>'
+      + '<span style="position: absolute; animation: indeterminate1-server 2.1s infinite"></span>';
+    host.append(prerendered);
+    document.body.append(host);
+
+    const [animation] = prerendered.getAnimations({subtree: true});
+
+    await animation.ready;
+
+    const {startTime} = animation;
+
+    // The definition of the skin upgrades the prerendered element of the page once its animation runs
+    prerendered.connectedCallback();
+
+    // The table renders its own progress bar in the place of the prerendered one
+    host.removeAttribute('data-bro-prerender');
+    host.replaceChildren();
+
+    const bar = Object.assign(document.createElement('bro-suid-progress-bar'), {config});
+
+    bar.setAttribute('mode', 'indeterminate');
+    host.append(bar);
+
+    const continued = <CSSAnimation>bar.getAnimations({subtree: true}).find(item => (<CSSAnimation>item).animationName.startsWith('indeterminate1-'));
+
+    expect(continued.animationName).not.toBe('indeterminate1-server');
+    expect(startTime).not.toBeNull();
+    expect(continued.startTime).toBe(startTime);
+  });
 });
 
 describe('the SUID tags', () => {
