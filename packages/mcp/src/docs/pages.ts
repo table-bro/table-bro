@@ -61,6 +61,13 @@ function setup(target: BroTarget, skin: BroSpecSkin): {text: string; files: BroD
   return {text, files};
 }
 
+/**
+ * The command that installs the table and a skin, the first step of its setup.
+ * @param target - an Angular project or Vanilla JS
+ * @param skin - the skin of the project
+ */
+const installCommand = (target: BroTarget, skin: BroSpecSkin): string => setupSteps(target, skin)[0].code!;
+
 const setupMat = setup('angular', 'mat');
 const setupBs = setup('vanilla', 'bs');
 const setupNv = setup('vanilla', 'nv');
@@ -406,62 +413,28 @@ export const docPages: BroDocPage[] = [
     path: 'getting-started',
     name: 'Getting started',
     text: `<!-- steps -->
-Table, Bro is the Custom Element \`‹table-bro›\`: it takes the columns, the rows and a config with the name of its skin, and renders the table with its toolbar and its paginator.
-
-### Angular
-
-{{orders.component.ts}}
-
-### Vanilla JS
+Table, Bro is the Custom Element \`‹table-bro›\`: it takes the columns, the rows and a config with the name of its skin, and renders the table with its toolbar and its paginator. A page in Vanilla JS creates the element and gives it the three, \`orders.ts\`:
 
 {{orders.ts}}
 
 <!-- setup -->
 ${mcpSection('###')}
 
-### Skins
+### Install manually
 
-Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today: Angular Material for Angular apps, MUI for React and Preact, SUID for Solid, M3 Svelte for Svelte, Vuetify for Vue, Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way. See Create your own skin below.
+Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library: Angular Material for Angular apps, React MUI for React and Preact, Solid SUID for Solid, Svelte M3 for Svelte, Vue Vuetify for Vue, and for any page Vanilla Bootstrap, on Bootstrap 5, and Vanilla HTML, plain HTML elements, the reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system, or of the component library of your framework, is built the same way, as Create your own skin below shows. The command installs the table and its skin; the page of the framework gives the whole setup, step by step, with a working page.
 
-| Skin | Package | Framework | UI components |
+| Framework | Skin | Install | Page |
 | --- | --- | --- | --- |
-| Angular Material, \`mat\` | \`@table-bro/angular-material\` | Angular | Angular Material 20, 21 and 22 |
-| MUI, \`mui\` | \`@table-bro/react-mui\` | React 19, Preact | MUI 9 |
-| SUID, \`suid\` | \`@table-bro/solid-suid\` | Solid 1.9 | SUID 0.19 |
-| M3 Svelte, \`m3-svelte\` | \`@table-bro/svelte-m3\` | Svelte 5 | M3 Svelte 7 |
-| Vuetify, \`vuetify\` | \`@table-bro/vue-vuetify\` | Vue 3.5 | Vuetify 4 |
-| Bootstrap, \`bs\` | \`@table-bro/bootstrap\` | Any | Bootstrap 5.3 |
-| Native, \`nv\` | \`@table-bro/native\` | Any | Plain HTML elements |
+| Angular | Angular Material, \`mat\` | \`${installCommand('angular', 'mat')}\` | [Angular data table](https://table-bro.com/docs/frameworks/angular) |
+| React and Preact | React MUI, \`mui\` | \`${installCommand('vanilla', 'mui')}\` | [React data table](https://table-bro.com/docs/frameworks/react), [Preact data table](https://table-bro.com/docs/frameworks/preact) |
+| Solid | Solid SUID, \`suid\` | \`${installCommand('vanilla', 'suid')}\` | [Solid data table](https://table-bro.com/docs/frameworks/solid) |
+| Svelte | Svelte M3, \`m3-svelte\` | \`${installCommand('vanilla', 'm3-svelte')}\` | [Svelte data table](https://table-bro.com/docs/frameworks/svelte) |
+| Vue | Vue Vuetify, \`vuetify\` | \`${installCommand('vanilla', 'vuetify')}\` | [Vue 3 data table](https://table-bro.com/docs/frameworks/vue) |
+| Vanilla JS | Vanilla Bootstrap, \`bs\` | \`${installCommand('vanilla', 'bs')}\` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
+| Vanilla JS | Vanilla HTML, \`nv\` | \`${installCommand('vanilla', 'nv')}\` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
 
-### Table, Bro + Angular Material
-
-[See a working page](https://table-bro.com/samples/angular-material)
-
-${setupMat.text}
-
-### Table, Bro + Vanilla Bootstrap
-
-[See a working page](https://table-bro.com/samples/bootstrap)
-
-${setupBs.text}
-
-#### Without a build
-
-[See a working page](https://table-bro.com/samples/no-build), [StackBlitz](https://stackblitz.com/github/table-bro/table-bro/tree/main/samples/no-build)
-
-A page without a bundler takes the same packages from [jsDelivr](https://www.jsdelivr.com/), the CDN of npm, at an exact version: the CSS by \`‹link›\`, the modules by an import map, which gives \`@table-bro/core\` to the skin and \`@popperjs/core\` to Bootstrap ([MDN, importmap](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)). \`index.html\`:
-
-{{index.html}}
-
-\`app.js\` imports the skin, gives it the \`Dropdown\` and the \`Tooltip\` of Bootstrap, and gives the table its columns, rows and config:
-
-{{app.js}}
-
-### Table, Bro + Vanilla HTML
-
-[See a working page](https://table-bro.com/samples/native)
-
-${setupNv.text}
+The skins Vanilla Bootstrap and Vanilla HTML work in every framework: install them as on [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla). In Angular they render through the component \`table-bro-ng\`, and [Angular data table](https://table-bro.com/docs/frameworks/angular) shows their setup.
 
 <!-- own-skin -->
 ### Create your own skin
@@ -473,57 +446,6 @@ Native is the skin to start from: its config \`nativeSkinConfig\` of \`@table-br
 An AI coding agent builds a skin of the components of your library with the skill [create-skin](https://github.com/table-bro/table-bro/tree/main/.agents/skills/create-skin) of the repository: the package, the elements and their contract with the table, the theme, the styles, a sample and the checks. The skin \`mui\` on MUI is its reference.`,
     files: [
       mcpInstall,
-      noBuildIndex,
-      noBuildApp,
-      {file: 'orders.component.ts', language: 'ts', code: `import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-
-import {TableBroNg}                     from '@table-bro/angular';
-import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
-
-interface Order extends BroRow {
-  description: string;
-  price: number;
-}
-
-@Component({
-  selector: 'app-orders',
-  template: \`
-    <table-bro-ng class="bro-table-shadow-container" tableId="orders"
-                  [cols]="cols()" [rows]="rows()" [conf]="conf()"></table-bro-ng>\`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    TableBroNg
-  ]
-})
-export class OrdersComponent {
-  cols = signal<BroCol<Order>[]>([
-    {
-      title: 'Description',
-      name: 'description'
-    }, {
-      title: 'Price',
-      name: 'price',
-      dataType: 'number',
-      className: 'bro-col_text-right'
-    }
-  ]);
-
-  rows = signal<Order[]>([
-    {
-      description: 'Modern Cotton Chair',
-      price: 100
-    }, {
-      description: 'Awesome Concrete Ball',
-      price: 200
-    }
-  ]);
-
-  conf = signal<BroConfig>({
-    skin: 'mat',
-    toolbarTitle: 'Orders'
-  });
-}
-`},
       {file: 'orders.ts', language: 'ts', code: `import type {BroCol, BroConfig, BroRow} from '@table-bro/core';
 
 interface Order extends BroRow {
@@ -569,10 +491,7 @@ const container = document.createElement('div');
 container.className = 'bro-table-shadow-container';
 container.append(table);
 document.body.append(container);
-`},
-      ...setupMat.files,
-      ...setupBs.files,
-      ...setupNv.files
+`}
     ]
   },
   {
