@@ -21,7 +21,7 @@ const prerendered = await prerenderOrders();
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   </head>
   <body>
-    {/* The color scheme of MUI on the page before its scripts run, as the theme of the island sets it in the browser */}
+    {/* The color scheme of MUI on the page before its scripts run, as the theme of App sets it in the browser */}
     <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="light" />
     <App client:load prerendered={prerendered} />
   </body>

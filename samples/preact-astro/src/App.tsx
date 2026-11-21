@@ -6,9 +6,9 @@ import type {PrerenderedTable} from './prerender-orders';
 import {theme}                 from './theme';
 
 /**
- * The island of the page: the MUI theme of the application, whose server render gives the page the CSS variables of the
- * theme in its styles of Emotion, and the table. The page is light, as the page of the sample of Angular Material; the
- * table takes the scheme of the system by its theme.
+ * The component of the page that Astro hydrates in the browser: the MUI theme of the application, whose server render
+ * gives the page the CSS variables of the theme in its styles of Emotion, and the table. The page is light, as the page
+ * of the sample of Angular Material; the table takes the scheme of the system by its theme.
  * @param props - the prerendered table
  * @param props.prerendered - its attributes and its markup
  */
