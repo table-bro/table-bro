@@ -6,6 +6,7 @@ Written by `npm run check:api -- --update` from the types of the build, without 
 import "@table-bro/core";
 import { Theme } from "@suid/material/styles";
 import "solid-js";
+export declare function suidThemeVariables(theme: Theme): string;
 export declare function setSuidTheme(theme: Theme): void;
 interface BroTagsTexts {
     empty: string;
