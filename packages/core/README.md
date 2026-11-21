@@ -133,7 +133,8 @@ conf})` renders a `<table-bro>` of a server DOM in its loading state: the toolba
 and the paginator, with the elements of the skins `bs` and `nv` where the window of the server DOM has
 `customElements`. The rows wait for the browser: there `configure()` on the same element renders the table with its
 rows in its place, and the loading animation goes on. `<table-bro-ng>` of `@table-bro/angular` prerenders the table
-itself during Angular server-side rendering. More in [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+itself during Angular server-side rendering. More in [Prerender function](https://table-bro.com/docs/ssr/prerendering)
+and [Angular SSR](https://table-bro.com/docs/ssr/angular).
 
 ### Texts
 

@@ -205,7 +205,7 @@ Solid with SSR does when they are not external (`ssr.noExternal` of Vite). The s
 native select of SUID on the server: the select of the menu of SUID 0.19 fails in the server render of Solid. The bundle
 of the browser does not carry the server entry. Without it a prerender leaves the elements of the skin empty, and the
 console names the entry once. The browser keeps the prerendered elements until `configure()` renders the table in
-their place. The setup with SolidStart is on the page [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+their place. The setup with SolidStart is on the page [SolidStart](https://table-bro.com/docs/ssr/solidstart).
 
 ## Build
 
