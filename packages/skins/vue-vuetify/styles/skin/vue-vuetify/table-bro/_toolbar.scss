@@ -17,8 +17,12 @@
 
     color: $vuetify-text-color;
 
+    // The content takes the height of the toolbar inside its border, 63px, as the toolbar of mat centers the title and
+    // the buttons: Vuetify gives it the height of the whole toolbar, 64px, in its style attribute, which the maximum
+    // height bounds
     .v-toolbar__content {
       height: 100%;
+      max-height: 100%;
       padding: 0 16px;
     }
 
