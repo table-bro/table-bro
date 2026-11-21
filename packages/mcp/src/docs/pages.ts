@@ -434,7 +434,7 @@ Table, Bro is a table engine, and a skin gives it the look and the controls of a
 | Vanilla JS | Vanilla Bootstrap, \`bs\` | \`${installCommand('vanilla', 'bs')}\` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
 | Vanilla JS | Vanilla HTML, \`nv\` | \`${installCommand('vanilla', 'nv')}\` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
 
-The skins Vanilla Bootstrap and Vanilla HTML work in every framework too, as the pages of Frameworks show; Angular has steps of its own for them on [Angular data table](https://table-bro.com/docs/frameworks/angular).
+The skins Vanilla Bootstrap and Vanilla HTML work in every framework: install them as on [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla). In Angular they render through the component \`table-bro-ng\`, and [Angular data table](https://table-bro.com/docs/frameworks/angular) shows their setup.
 
 <!-- own-skin -->
 ### Create your own skin
