@@ -65,7 +65,7 @@ export function withSwitch(): void {
 }
 
 export *                                                     from './table-bro.solid-suid.config';
-export {setSuidTheme}                                        from './bro-suid-element';
+export {setSuidTheme, suidThemeVariables}                    from './bro-suid-element';
 export {attachSuidTooltip}                                   from './bro-suid-tooltip';
 export type {BroSuidTooltipOptions, BroSuidTooltipPlacement} from './bro-suid-tooltip';
 export {setTagsTexts}                                        from './bro-tags.solid-suid';

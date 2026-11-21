@@ -205,6 +205,20 @@ of the browser does not carry the server entry. Without it a prerender leaves th
 console names the entry once. The browser keeps the prerendered elements until `configure()` renders the table in
 their place. The setup with SolidStart is on the page [SolidStart](https://table-bro.com/docs/ssr/solidstart).
 
+A prerender knows one color scheme: the markup has the CSS variables of the theme of `setSuidTheme()`, and a table that
+follows the scheme of the system gets `data-suid-theme` only in the browser. A page that switches to its dark scheme
+before its scripts load writes the variables of its dark theme for the prerendered tables, `suidThemeVariables()`, in a
+rule of that scheme:
+
+```ts
+import {suidThemeVariables} from '@table-bro/solid-suid/server';
+
+const style = document.createElement('style');
+
+style.textContent = `.dark table-bro.suid:not([data-suid-theme]) {${suidThemeVariables(darkTheme)}}`;
+document.head.append(style);
+```
+
 ## Build
 
 ```sh

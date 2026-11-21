@@ -103,10 +103,11 @@ function hostScheme(node: Element): Accessor<string | null> {
  * The CSS variables of a theme of SUID, which the CSS of the skin reads for the parts of the table, as the rows and the
  * header, and the cells of the application: SUID, a port of MUI 5, writes no CSS variables of its own. The names follow
  * the CSS variables of MUI in kebab case. The border of the cells is the divider of the theme, as the outline of the rows
- * of the tables of mat.
+ * of the tables of mat. They are declarations for a rule of the application, as the variables of the dark theme for the
+ * prerendered tables of a page in its dark scheme, which the prerender, with the theme of one scheme, does not write.
  * @param theme - the theme of the scheme
  */
-function schemeVariables(theme: Theme): string {
+export function suidThemeVariables(theme: Theme): string {
   const {palette, shadows, typography} = theme;
   const font = (variant: 'body2' | 'button' | 'caption' | 'h6' | 'subtitle2') => {
     const style = typography[variant];
@@ -145,8 +146,8 @@ function themeVariables(theme: Theme): string {
     .join(', ');
 
   return [
-    `${hosts()} {${schemeVariables(theme)}\n}`,
-    ...(<BroSuidScheme[]>['light', 'dark']).map(scheme => `${hosts(scheme)} {${schemeVariables(schemeTheme(theme, scheme))}\n}`)
+    `${hosts()} {${suidThemeVariables(theme)}\n}`,
+    ...(<BroSuidScheme[]>['light', 'dark']).map(scheme => `${hosts(scheme)} {${suidThemeVariables(schemeTheme(theme, scheme))}\n}`)
   ].join('\n');
 }
 

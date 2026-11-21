@@ -5,7 +5,7 @@ import {createComponent, createSignal, onMount} from 'solid-js';
 import {Dynamic, render}                        from 'solid-js/web';
 import {afterEach, describe, expect, it, vi}    from 'vitest';
 
-import {attachSuidTooltip, setSuidTheme, setTagsTexts, suidSkinConfig, withSwitch, withTags} from './table-bro.solid-suid';
+import {attachSuidTooltip, setSuidTheme, setTagsTexts, suidSkinConfig, suidThemeVariables, withSwitch, withTags} from './table-bro.solid-suid';
 
 // The CSS of the core and of the skin from their builds: the table measures its columns in them
 const skinCssModule: string = '../dist/table-bro.solid-suid.min.css?inline';
@@ -60,6 +60,13 @@ describe('the SUID theme', () => {
     expect(background()).toBe('#121212');
 
     setDark(false);
+  });
+
+  it('gives the CSS variables of a theme for a rule of the application, as of the dark theme of a prerendered page', () => {
+    const variables = suidThemeVariables(createTheme({palette: createPalette({mode: 'dark', background: {paper: '#211f22'}})}));
+
+    expect(variables).toContain('--suid-palette-background-paper: #211f22;');
+    expect(variables).toContain('--suid-palette-text-primary: #fff;');
   });
 });
 
