@@ -9,9 +9,11 @@ import {createRoot}    from 'react-dom/client';
 import {OrdersTable} from './OrdersTable';
 import {theme}       from './theme';
 
+// The page is light, as the page of the sample of Angular Material; the table takes the scheme of the system by its
+// theme
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} defaultMode="light">
       <CssBaseline />
       <OrdersTable />
     </ThemeProvider>

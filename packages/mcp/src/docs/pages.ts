@@ -139,10 +139,34 @@ const muiInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm
 const muiTheme: BroDocFile = {file: 'src/theme.ts', language: 'ts', code: `import {createTheme} from '@mui/material/styles';
 
 // The theme of the application: its CSS variables give the colors to the table, and the attribute of its color
-// schemes lets a table with a theme of its own take the light or the dark one
+// schemes lets a table with a theme of its own take the light or the dark one. The colors are the ones of the theme of
+// the sample of Angular Material, the azure palette of Material 3, so the table looks as the table of the skin mat
 export const theme = createTheme({
   cssVariables: {colorSchemeSelector: 'data-mui-color-scheme'},
-  colorSchemes: {light: true, dark: true}
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {main: '#005cbb', contrastText: '#ffffff'},
+        text: {primary: '#1a1b1f', secondary: '#44474e'},
+        action: {active: '#44474e', hover: 'rgba(26, 27, 31, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(26, 27, 31, 0.38)'},
+        background: {default: '#faf9fd', paper: '#faf9fd'},
+        divider: '#e0e2ec',
+        'LinearProgress': {primaryBg: '#e0e2ec'},
+        'TableCell': {border: '#74777f'}
+      }
+    },
+    dark: {
+      palette: {
+        primary: {main: '#abc7ff', contrastText: '#002f65'},
+        text: {primary: '#e3e2e6', secondary: '#e0e2ec'},
+        action: {active: '#e0e2ec', hover: 'rgba(227, 226, 230, 0.08)', hoverOpacity: 0.08, disabled: 'rgba(227, 226, 230, 0.38)'},
+        background: {default: '#121316', paper: '#121316'},
+        divider: '#44474e',
+        'LinearProgress': {primaryBg: '#44474e'},
+        'TableCell': {border: '#8e9099'}
+      }
+    }
+  }
 });
 `};
 const muiSkin: BroDocFile = {file: 'src/skin.ts', language: 'ts', code: `// The CSS of the core and of the skin, then the skin: its import defines <table-bro> and registers the skin mui, and
@@ -1959,7 +1983,7 @@ ${mcpSection('#####', 'Preact')}
 
 3. **Give the skin the theme of the application**
 
-   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. \`src/theme.ts\`:
+   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. Its light and dark schemes have the colors of the sample of Angular Material, the azure palette of Material 3, so that the table looks as the table of the skin \`mat\`. \`src/theme.ts\`:
 
    {{src/theme.ts}}
 
@@ -1996,7 +2020,7 @@ A declaration adds \`‹table-bro›\` to the JSX of Preact, with the methods of
 
 #### How do I render it?
 
-\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`:
+\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`. \`defaultMode="light"\` keeps the page light, as the page of the sample of Angular Material; the table takes the color scheme of the system by its theme:
 
 {{src/main.tsx}}
 
@@ -2137,8 +2161,10 @@ import {render}        from 'preact';
 import {OrdersTable} from './OrdersTable';
 import {theme}       from './theme';
 
+// The page is light, as the page of the sample of Angular Material; the table takes the scheme of the system by its
+// theme
 render(
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme} defaultMode="light">
     <CssBaseline />
     <OrdersTable />
   </ThemeProvider>,
@@ -2168,7 +2194,7 @@ ${mcpSection('#####', 'React')}
 
 2. **Give the skin the theme of the application**
 
-   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. \`src/theme.ts\`:
+   The MUI theme of the application turns on its CSS variables, which the table reads, and the attribute of its color schemes, which a table with a theme of its own sets. Its light and dark schemes have the colors of the sample of Angular Material, the azure palette of Material 3, so that the table looks as the table of the skin \`mat\`. \`src/theme.ts\`:
 
    {{src/theme.ts}}
 
@@ -2206,7 +2232,7 @@ JSX of React knows the HTML elements only; a declaration adds \`‹table-bro›\
 
 #### How do I render it?
 
-\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`:
+\`src/main.tsx\` imports the skin before the tables, and renders them in \`ThemeProvider\` of MUI, which writes the CSS variables of the theme, with \`CssBaseline\`. \`defaultMode="light"\` keeps the page light, as the page of the sample of Angular Material; the table takes the color scheme of the system by its theme:
 
 {{src/main.tsx}}
 
@@ -2306,9 +2332,11 @@ import {createRoot}    from 'react-dom/client';
 import {OrdersTable} from './OrdersTable';
 import {theme}       from './theme';
 
+// The page is light, as the page of the sample of Angular Material; the table takes the scheme of the system by its
+// theme
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} defaultMode="light">
       <CssBaseline />
       <OrdersTable />
     </ThemeProvider>
@@ -3196,11 +3224,11 @@ Next.js renders a page on the server, or at the build of a static export: a serv
 
 5. **Give the application its theme and the CSS of the table**
 
-   \`InitColorSchemeScript\` sets the color scheme before the page shows, and the provider of MUI for the App Router gives the styles of Emotion of the server render to the page. \`src/app/layout.tsx\`:
+   \`InitColorSchemeScript\` sets the color scheme before the page shows, light as the page of the sample of Angular Material, and the provider of MUI for the App Router gives the styles of Emotion of the server render to the page. \`src/app/layout.tsx\`:
 
    {{src/app/layout.tsx}}
 
-   \`src/app/Providers.tsx\`:
+   \`src/app/Providers.tsx\`, whose \`defaultMode="light"\` keeps the page light; the table takes the color scheme of the system by its theme:
 
    {{src/app/Providers.tsx}}
 
@@ -3763,7 +3791,7 @@ export default function RootLayout({children}: {children: ReactNode}) {
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       </head>
       <body>
-        <InitColorSchemeScript attribute="data-mui-color-scheme" />
+        <InitColorSchemeScript attribute="data-mui-color-scheme" defaultMode="light" />
         <Providers>{children}</Providers>
       </body>
     </html>
@@ -3779,11 +3807,14 @@ import type {ReactNode}         from 'react';
 
 import {theme} from '../theme';
 
-/** The MUI theme of the application with the styles of Emotion of the server render of Next.js. */
+/**
+ * The MUI theme of the application with the styles of Emotion of the server render of Next.js. The page is light, as the
+ * page of the sample of Angular Material; the table takes the scheme of the system by its theme.
+ */
 export function Providers({children}: {children: ReactNode}) {
   return (
     <AppRouterCacheProvider>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} defaultMode="light">
         <CssBaseline />
         {children}
       </ThemeProvider>
