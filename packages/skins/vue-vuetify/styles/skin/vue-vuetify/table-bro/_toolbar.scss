@@ -6,7 +6,8 @@
   @include skin_toolbar($vuetify-toolbar-selector);
 
   // The toolbar of Vuetify takes the height of the toolbar of the table at every width of the page, with the text of the
-  // table: the toolbar of Vuetify has a background and a text of its own
+  // table: the toolbar of Vuetify has a background and a text of its own. Its content keeps the buttons and the title
+  // 16px from the edges, and so the icons of the buttons 24px, as the toolbar and the header of the filter drawer of mat
   #{$bro-table-toolbar_container} #{$vuetify-toolbar-selector},
   .bro-filter-drawer-header #{$vuetify-toolbar-selector} {
     height: $bro-toolbar-height;
@@ -18,12 +19,15 @@
 
     .v-toolbar__content {
       height: 100%;
-      padding: 0 4px;
+      padding: 0 16px;
     }
 
-    // The icons of the buttons have the medium emphasis of the text of Vuetify, the role of the icons of the toolbar of
-    // mat, on-surface-variant
+    // The icon buttons have the comfortable density of Vuetify, whose size is the height of the button: 40px, as the
+    // icon buttons of the toolbar of mat, with the icon of 24px of the default size. Their icons have the medium emphasis
+    // of the text of Vuetify, the role of the icons of the toolbar of mat, on-surface-variant
     .v-btn--icon {
+      --v-btn-height: 40px;
+
       color: $vuetify-text-secondary-color;
     }
   }
@@ -32,13 +36,6 @@
   .bro-filter-drawer-header .bro-filter-drawer-title {
     font-size: 1.375rem;
     line-height: 1.75rem;
-  }
-
-  // The toolbar of the table keeps the icons of its buttons 24px from its edges, as the toolbar of mat and the header of
-  // the filter drawer: the icon button of Vuetify is 48px wide, 8px wider than the one of mat. The title and the field
-  // follow the place of the navigation icon, as in mat
-  #{$bro-table-toolbar_container} #{$vuetify-toolbar-selector} .v-toolbar__content {
-    padding: 0 12px;
   }
 
   // The hidden button keeps the place of the navigation icon; classes, not style attributes, which a strict Content

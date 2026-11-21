@@ -26,7 +26,8 @@ export class BroVuetifyButtonComponent extends BroVuetifyElement {
     // The name of a button without a title: the table gives it as the attribute label, not aria-label on the element.
     // An icon button is in a toolbar, as the close button of the filter drawer: an empty color, not the default color of
     // the application, as the buttons of a toolbar of Vuetify, whose defaults it does not take in a root of its own; the
-    // skin gives its icon the color of the icons
-    return name ? h(VBtn, {class: className, type: 'button', icon: true, variant: 'text', color: '', 'aria-label': this.getAttribute('label') ?? undefined, onClick}, () => icon(name)) : null;
+    // skin gives its icon the color of the icons. It has the comfortable density of Vuetify, whose size is the height of
+    // the button: 40px in a toolbar, as the icon buttons of the toolbars of mat (styles of the skin)
+    return name ? h(VBtn, {class: className, type: 'button', icon: true, variant: 'text', density: 'comfortable', color: '', 'aria-label': this.getAttribute('label') ?? undefined, onClick}, () => icon(name)) : null;
   }
 }

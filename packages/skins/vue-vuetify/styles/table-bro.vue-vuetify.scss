@@ -14,7 +14,6 @@
 @use "./skin/shared/table-bro/table" as shared-table;
 @use "./skin/shared/table-bro/text-ellipsis" as shared-text-ellipsis;
 @use "./skin/vue-vuetify/table-bro/elements" as vuetify-elements;
-@use "./skin/vue-vuetify/table-bro/filter-drawer" as vuetify-filter-drawer;
 @use "./skin/vue-vuetify/table-bro/paginator" as vuetify-paginator;
 @use "./skin/vue-vuetify/table-bro/progress-bar" as vuetify-progress-bar;
 @use "./skin/vue-vuetify/table-bro/sort-header" as vuetify-sort-header;
@@ -47,7 +46,6 @@
 
 /* Table-bro extensions */
 #{$bro-skin} {
-  @include vuetify-filter-drawer.styles;
   @include vuetify-paginator.styles;
   @include vuetify-progress-bar.styles;
   @include vuetify-sort-header.styles;

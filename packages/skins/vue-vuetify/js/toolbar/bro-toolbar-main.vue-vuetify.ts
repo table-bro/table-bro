@@ -14,14 +14,15 @@ import {BroVuetifyElement, icon} from '../bro-vuetify-element';
 type BroActivatorProps = {props: Record<string, unknown>};
 
 /**
- * An icon button of the toolbar with its tooltip.
+ * An icon button of the toolbar with its tooltip, of the comfortable density of Vuetify, whose size is the height of
+ * the button: 40px in the toolbar, as the icon buttons of the toolbar of mat (styles of the skin).
  * @param ligature - the icon of the button
  * @param props - the props of the button: its name, its class and its click
  * @param tooltip - the text of the tooltip; none without it
  */
 function toolbarButton(ligature: string, props: Record<string, unknown>, tooltip?: string): VNode {
   return h(VTooltip, {text: tooltip, disabled: !tooltip, location: 'top', contentClass: 'bro-vuetify-tooltip'}, {
-    activator: ({props: activator}: BroActivatorProps) => h(VBtn, mergeProps(activator, props, {icon: true, variant: 'text'}), () => icon(ligature))
+    activator: ({props: activator}: BroActivatorProps) => h(VBtn, mergeProps(activator, props, {icon: true, variant: 'text', density: 'comfortable'}), () => icon(ligature))
   });
 }
 
@@ -44,7 +45,7 @@ export class BroVuetifyToolbarMainComponent extends BroVuetifyElement implements
 
     // The hidden menu button keeps the place of the navigation icon of a Material toolbar before the title
     return h(VToolbar, {flat: true}, () => [
-      h(VBtn, {class: 'bro-toolbar-placeholder', icon: true, variant: 'text', tabindex: -1, 'aria-hidden': 'true'}, () => icon('menu')),
+      h(VBtn, {class: 'bro-toolbar-placeholder', icon: true, variant: 'text', density: 'comfortable', tabindex: -1, 'aria-hidden': 'true'}, () => icon('menu')),
       h('span', {class: 'bro-toolbar-title text-title-large'}, this.getAttribute('title') ?? ''),
       h('span', {class: 'bro-toolbar-space'}),
       toolbarButton('search', {class: 'bro-toolbar-button-search', 'aria-label': this.config?.texts.search, onClick: () => send(events.toolbarSearchOpenEvent)}),
