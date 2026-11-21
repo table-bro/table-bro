@@ -33,21 +33,25 @@ const ssrSamples: Record<string, string> = {
 /** The files of the pages of Server-side rendering that show a part of a file of their sample: the options of the build of angular.json. */
 const ssrParts = ['angular.json'];
 
+/** The files of the page without a build of Vanilla JS: they are the files of samples/no-build, which its own test checks. */
+const noBuildFiles = ['index.html', 'app.js'];
+
 /**
  * The files of the pages of Frameworks and of Server-side rendering from their sample projects: the TypeScript of the
  * repository has no frameworks to compile them with, and the build of the samples compiles them.
  */
 const frameworkFiles = docFiles.filter(docFile => (docFile.page.startsWith('frameworks/') || (docFile.page in ssrSamples && !ssrParts.includes(docFile.file)))
-  && docFile.language !== 'bash' && !docFile.file.startsWith('setup-'));
+  && docFile.language !== 'bash' && !docFile.file.startsWith('setup-') && !(docFile.page === 'frameworks/vanilla' && noBuildFiles.includes(docFile.file)));
 
-/** The pages of Frameworks whose framework has a skin of its own: they show the sample of that skin. */
+/** The pages of Frameworks whose framework has a skin of its own, and Vanilla JS: they show the sample of that skin. */
 const skinSamples: Record<string, string> = {
   'frameworks/angular': 'samples/angular-material',
   'frameworks/react': 'samples/react-mui/react',
   'frameworks/preact': 'samples/react-mui/preact',
   'frameworks/solid': 'samples/solid-suid/solid',
   'frameworks/svelte': 'samples/svelte-m3/svelte',
-  'frameworks/vue': 'samples/vue-vuetify/vue'
+  'frameworks/vue': 'samples/vue-vuetify/vue',
+  'frameworks/vanilla': 'samples/bootstrap'
 };
 
 /**
@@ -171,10 +175,10 @@ describe('the files of code of Docs', () => {
     }
   });
 
-  it('of Getting started without a build are the files of samples/no-build, at the versions of the packages', () => {
-    const files = docPages.find(page => page.path === 'getting-started')!.files;
+  it('of Vanilla JS without a build are the files of samples/no-build, at the versions of the packages', () => {
+    const files = docPages.find(page => page.path === 'frameworks/vanilla')!.files;
 
-    for (const file of ['index.html', 'app.js']) {
+    for (const file of noBuildFiles) {
       expect(files.find(item => item.file === file)?.code, file).toBe(fs.readFileSync(path.join(root, 'samples/no-build', file), 'utf8'));
     }
 
