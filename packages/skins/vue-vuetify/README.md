@@ -176,7 +176,7 @@ const {setVuetify}        = await import('@table-bro/vue-vuetify/server');
 The bundle of the browser does not carry the server entry. Without it the package registers only the config of the
 skin on the server, and a prerender leaves the elements of the skin empty, which the console names once. The browser
 keeps the prerendered elements until `configure()` renders the table in their place. The setup with Nuxt is on the page
-[Prerendering](https://table-bro.com/docs/ssr/prerendering).
+[Nuxt](https://table-bro.com/docs/ssr/nuxt).
 
 ## Build
 

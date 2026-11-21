@@ -68,7 +68,7 @@ export class OrdersComponent {
 ```
 
 During Angular server-side rendering `<table-bro-ng>` prerenders the table in its loading state with the same template:
-[Prerendering](https://table-bro.com/docs/ssr/prerendering).
+[Angular SSR](https://table-bro.com/docs/ssr/angular).
 
 ### The server mode
 

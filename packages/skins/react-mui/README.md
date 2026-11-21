@@ -167,7 +167,7 @@ const {setMuiTheme}       = await import('@table-bro/react-mui/server');
 The bundle of the browser does not carry the server entry, which renders by `react-dom/server`. Without it the
 package registers only the config of the skin on the server, and a prerender leaves the elements of the skin empty.
 The browser keeps the prerendered elements until `configure()` renders the table in their place. The setup with
-Next.js is on the page [Prerendering](https://table-bro.com/docs/ssr/prerendering).
+Next.js is on the page [Next.js](https://table-bro.com/docs/ssr/nextjs).
 
 ## Build
 

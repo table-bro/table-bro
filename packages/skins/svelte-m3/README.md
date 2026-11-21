@@ -253,7 +253,7 @@ prerenderTableBro(table, {cols, conf});
 The bundle of the browser does not carry the server entry. Without it the package registers only the config of the
 skin on the server, and a prerender leaves the elements of M3 Svelte empty. The browser keeps the prerendered elements
 until `configure()` renders the table in their place. The setup with SvelteKit is on the page
-[Prerendering](https://table-bro.com/docs/ssr/prerendering).
+[SvelteKit](https://table-bro.com/docs/ssr/sveltekit).
 
 ## Build
 
