@@ -3225,6 +3225,13 @@ createApp(App).use(vuetify).mount('#app');
     ]
   },
   {
+    path: 'ssr',
+    name: 'Server-side rendering',
+    text: `<!-- intro -->
+A page that a server renders shows the table before any script runs: the prerender renders the table in its loading state, with the toolbar, the column headers, the loading row and the paginator in the markup of its skin, and the table takes its place on the page at once, without a layout shift. In the browser the table renders with its rows in the same element. The pages of this section show it in Angular SSR, where \`‹table-bro-ng›\` prerenders the table itself, and in Next.js, SolidStart, SvelteKit and Nuxt, where \`prerenderTableBro()\` renders it into a server DOM with the elements of the skin of the framework, each with the steps of its sample project in the repository and a working page. Prerender function shows \`prerenderTableBro()\` on any server with a DOM, and the limits of the prerender.`,
+    files: []
+  },
+  {
     path: 'ssr/angular',
     name: 'Angular SSR',
     text: `<!-- intro -->

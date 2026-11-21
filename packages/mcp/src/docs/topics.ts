@@ -395,8 +395,9 @@ The wrapper creates the table outside of the Angular zone; its outputs emit insi
 - Limits: the loading state only. With the theme \`auto\` the prerendered table takes no theme class and shows the theme of the page, since the server knows no system theme. The elements of a skin render on the server only where the skin has \`BroSkinConfig.defineElements(registry)\` (bs, nv) and the window of the server DOM has \`customElements\`; else they stay empty tags until the browser renders the table. Angular inlines the critical CSS of a prerendered page with Beasties, and the CSS of the core and of the skins keeps the layout of a prerendered table there.
 - The pages of Docs with the code, a page for each server with its sample project: get_docs topics \`ssr/angular\` (Angular SSR), \`ssr/nextjs\` (Next.js), \`ssr/solidstart\` (SolidStart), \`ssr/sveltekit\` (SvelteKit), \`ssr/nuxt\` (Nuxt), and \`ssr/prerendering\` (prerenderTableBro() on any server with a DOM, and the limits).`
   },
-  // The pages of Docs on table-bro.com, from the same source as the site
-  ...docPages.map(page => ({name: page.path, title: page.name, summary: `The page of Docs ${page.name}, with its code`, text: () => docPageMarkdown(page)}))
+  // The pages of Docs on table-bro.com, from the same source as the site; the topic ssr above stands for the overview of
+  // Server-side rendering
+  ...docPages.filter(page => page.path !== 'ssr').map(page => ({name: page.path, title: page.name, summary: `The page of Docs ${page.name}, with its code`, text: () => docPageMarkdown(page)}))
 ];
 
 /** The fields of a JSON Schema that its lines show. */
