@@ -22,7 +22,7 @@ export class BroMuiToolbarComponent extends BroMuiElement implements BroConfigur
 
   appendToolbarContent(...nodes: (Node | string)[]): void {
     this.nodes.push(...nodes);
-    this.toolbar?.append(...nodes);
+    this.toolbarNode()?.append(...nodes);
   }
 
   protected content() {
@@ -38,6 +38,11 @@ export class BroMuiToolbarComponent extends BroMuiElement implements BroConfigur
    */
   protected override update(): void {
     super.update();
-    this.toolbar?.append(...this.nodes);
+    this.toolbarNode()?.append(...this.nodes);
+  }
+
+  /** The rendered toolbar of MUI: the markup of a server DOM has no ref of React, its toolbar is the node of the markup. */
+  private toolbarNode(): HTMLElement | null {
+    return this.toolbar ?? this.querySelector<HTMLElement>('.MuiToolbar-root');
   }
 }

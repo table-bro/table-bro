@@ -121,7 +121,7 @@ export abstract class BroMuiElement extends BroHTMLElement {
     this.prepend(this.container);
 
     if (server) {
-      this.renderMarkup();
+      this.update();
 
       return;
     }

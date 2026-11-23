@@ -192,6 +192,21 @@ describe('the MUI toolbar', () => {
     expect([...toolbar.querySelector('.MuiToolbar-root')!.children]).toEqual([before, after]);
   });
 
+  it('takes the nodes of the table into its markup in a server DOM', () => {
+    setServerRender(() => '<div class="MuiToolbar-root bro-toolbar-content"></div>');
+
+    const server = document.implementation.createHTMLDocument('');
+    const toolbar = document.createElement('bro-mui-toolbar') as HTMLElement & {appendToolbarContent(...nodes: Node[]): void};
+    const before = server.createElement('input');
+    const after = server.createElement('span');
+
+    toolbar.appendToolbarContent(before);
+    server.body.append(toolbar);
+    toolbar.appendToolbarContent(after);
+
+    expect([...toolbar.querySelector('.MuiToolbar-root')!.children]).toEqual([before, after]);
+  });
+
   it('renders an element of the skin among its nodes at once, as the close button of the filter drawer', () => {
     const errors = vi.spyOn(console, 'error');
     const toolbar = document.createElement('bro-mui-toolbar') as HTMLElement & {appendToolbarContent(...nodes: Node[]): void};
