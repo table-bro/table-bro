@@ -142,11 +142,14 @@ for its first render and apply in their order. A new `configure()` drops the cal
 
 Since 1.2.0 a page that a server renders shows the table before any script runs. `prerenderTableBro(element, {cols,
 conf})` renders a `<table-bro>` of a server DOM in its loading state: the toolbar, the column headers, the loading row
-and the paginator, with the elements of the skins `bs` and `nv` where the window of the server DOM has
-`customElements`. The rows wait for the browser: there `configure()` on the same element renders the table with its
-rows in its place, and the loading animation goes on. `<table-bro-ng>` of `@table-bro/angular` prerenders the table
-itself during Angular server-side rendering. More in [Prerender function](https://table-bro.com/docs/ssr/prerendering)
-and [Angular SSR](https://table-bro.com/docs/ssr/angular).
+and the paginator, with the elements of the skin where the window of the server DOM has `customElements`. The skins
+`bs` and `nv` define their elements there from their packages; the skins `mui`, `suid`, `m3-svelte` and `vuetify` from
+their server entries, `@table-bro/<package>/server`. The rows wait for the browser: there `configure()` on the same
+element renders the table with its rows in its place, and the loading animation goes on. `<table-bro-ng>` of
+`@table-bro/angular` prerenders the table itself during Angular server-side rendering. The server render of each
+framework, with its skin, its server entry and its sample, is in the table of
+[Server-side rendering](https://github.com/table-bro/table-bro#server-side-rendering) of the repository; the limits of
+the prerender are on [Prerender function](https://table-bro.com/docs/ssr/prerendering).
 
 ### Texts
 

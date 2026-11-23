@@ -194,7 +194,8 @@ The skin changes these files with the minimal lines it needs, in the commit of t
    order of their frameworks, the vanilla skins last: `@table-bro/angular-material`, `@table-bro/react-mui`,
    `@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/vue-vuetify`, then `@table-bro/bootstrap`,
    `@table-bro/native`. Every list of the skins keeps this order, in the texts and in the code: `mat`, `mui`, `suid`,
-   `m3-svelte`, `vuetify`, `bs`, `nv`.
+   `m3-svelte`, `vuetify`, `bs`, `nv`. A skin with a server entry also gets its row in the table of the server render
+   of the root `README.md`, in the row of its framework.
 6. The texts that list the skins: the root `README.md` and the READMEs of the other skins (Your own skin). They name
    the skins without a count, so the next skin adds its name only. The README of Angular Material names only the skins
    for Angular.

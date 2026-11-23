@@ -105,8 +105,22 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
   the page shows its layout before any script runs; in the browser the table takes its place, and the loading
   animation goes on.
 - **Angular SSR.** `<table-bro-ng>` prerenders during Angular server-side rendering in the skins `mat`, `bs` and `nv`,
-  with the template of the browser; `prerenderTableBro()` renders the same loading state into a server DOM without
-  Angular.
+  with the template of the browser.
+- **Any other server.** `prerenderTableBro()` of `@table-bro/core` renders the same loading state into a server DOM,
+  such as linkedom. A skin on the components of a framework renders its elements there with its server entry,
+  `@table-bro/<package>/server`; the vanilla skins need none, as their packages define their elements in the server DOM.
+
+| Framework | Server render | Skin, package | Server entry | Sample | Docs |
+| --- | --- | --- | --- | --- | --- |
+| Angular | Angular SSR | Angular Material, `@table-bro/angular-material` | None: `<table-bro-ng>` of `@table-bro/angular` prerenders the table, and `provideTableBroMatSkin()` gives it the components of the skin | [`samples/angular-ssr`](samples/angular-ssr) | [Angular SSR](https://table-bro.com/docs/ssr/angular) |
+| React | Next.js | React MUI, `@table-bro/react-mui` | `@table-bro/react-mui/server` | [`samples/react-mui/next`](samples/react-mui/next) | [Next.js](https://table-bro.com/docs/ssr/nextjs) |
+| Preact | Astro | React MUI, `@table-bro/react-mui` | `@table-bro/react-mui/server`, through `preact/compat` | [`samples/preact-astro`](samples/preact-astro) | [Preact (Astro)](https://table-bro.com/docs/ssr/preact) |
+| Solid | SolidStart | Solid SUID, `@table-bro/solid-suid` | `@table-bro/solid-suid/server` | [`samples/solid-suid/start`](samples/solid-suid/start) | [SolidStart](https://table-bro.com/docs/ssr/solidstart) |
+| Svelte | SvelteKit | Svelte M3, `@table-bro/svelte-m3` | `@table-bro/svelte-m3/server` | [`samples/svelte-m3/sveltekit`](samples/svelte-m3/sveltekit) | [SvelteKit](https://table-bro.com/docs/ssr/sveltekit) |
+| Vue | Nuxt | Vue Vuetify, `@table-bro/vue-vuetify` | `@table-bro/vue-vuetify/server` | [`samples/vue-vuetify/nuxt`](samples/vue-vuetify/nuxt) | [Nuxt](https://table-bro.com/docs/ssr/nuxt) |
+| Vanilla JS | `prerenderTableBro()` on any server with a DOM | Vanilla Bootstrap, `@table-bro/bootstrap`; Vanilla HTML, `@table-bro/native` | None: the package of the skin | None: the page of Docs gives the code | [Prerender function](https://table-bro.com/docs/ssr/prerendering) |
+
+[Server-side rendering](https://table-bro.com/docs/ssr) of the Docs describes the prerender and its limits.
 
 ## Accessibility & localization
 
