@@ -210,7 +210,7 @@ with the table, the theme, the styles, a sample and the checks. The skin React M
 
 ## Getting started
 
-### With the MCP server
+### Install with the MCP server
 
 The quickest start is the MCP server of Table, Bro: add it to your AI coding agent and describe the table you need. The
 agent installs the packages, generates the table, its setup and its cells, and checks the result. For Claude Code, in
@@ -223,7 +223,7 @@ claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2
 The README of [`@table-bro/mcp`](packages/mcp) gives the setup for Codex, Cursor, VS Code and Claude Desktop, and the
 site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-server).
 
-### Manual setup
+### Install manually
 
 Install the core with the skin of your framework. The page of the framework on the site gives the whole setup, with a
 working page:
