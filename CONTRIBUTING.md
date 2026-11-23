@@ -39,6 +39,9 @@ framework wrappers.
 
 | Folder | What it holds |
 | --- | --- |
+| `samples` | The pages with a table of each skin and framework and the pages of the server render, which the site serves: [samples/README.md](samples/README.md) |
+| `stand` | An Angular application with the tables of the features in the skins `mat`, `bs` and `nv`, which the e2e tests open: `npm run stand` |
+| `e2e` | The Playwright tests of the stand and of the pages of `samples` |
 | `scripts` | The build of the CSS, the checks of the architecture and of the public API, the git hook |
 | `docs` | The [API reference](docs/api/README.md) and the interactive [architecture page](docs/architecture.html) |
 
@@ -55,19 +58,22 @@ npm run build
 ```
 
 `npm ci` also points git to the hook in `scripts/git-hooks`: a commit with lint errors in its files stops there.
-`npm run build` builds every package in order: the core, the vanilla skins, the Angular packages, the MCP server. The
-skins and the Angular packages take the core by its name from the workspace, so build the core again after a change of
-it.
+`npm run build` builds every package in order: the core, the skins of React MUI, Solid SUID, Svelte M3 and Vue Vuetify,
+the vanilla skins, the Angular packages (the wrapper and Angular Material), the MCP server. The skins and the Angular
+packages take the core by its name from the workspace, so build the core again after a change of it.
 
 ## Checks
 
 | Command | What it checks |
 | --- | --- |
 | `npm test` | `check:arch`, `check:api` and the unit tests in Chromium |
+| `npm run typecheck` | The types of every package, of the stand and of the e2e tests |
 | `npm run check:arch` | The dependency rules of the code, see [ARCHITECTURE.md](ARCHITECTURE.md#the-rules) |
 | `npm run check:api` | The public types of the built packages against `*.api.md` of each package |
 | `npm run lint`, `npm run lint:styles` | ESLint and stylelint; `npm run format` and `npm run lint:styles:fix` fix what they can |
 | `npm run test:mcp`, `npm run check:mcp` | The tests of the MCP server and the check of its generated code |
+| `npm run check:pack` | The packages as npm publishes them, after `npm run build`: the fields of each manifest and the resolution of its types |
+| `npm run e2e` | The Playwright tests of the stand; `npm run build:samples` builds the pages of `samples` for their tests |
 | `npm run test:coverage` | The unit tests with a coverage report in `coverage/` |
 
 A pull request passes all of them. A change of the public API updates the reports with
