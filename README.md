@@ -73,9 +73,10 @@ follows the theme of your application instead of bringing its own.
 ### AI
 
 - **MCP server for AI coding agents.** `@table-bro/mcp` gives Claude Code, Codex, Cursor or VS Code the reference of the
-  table, a check of a table spec and a code generator for Angular and Vanilla JS with the three skins. The agent writes
-  the files; the server only reads. With it an agent builds a full table up to 2× faster and with ~45% fewer tokens,
-  measured with Claude Opus, Sonnet and Haiku. [Getting started](#getting-started) gives its setup.
+  table, a check of a table spec and a code generator for Angular, Vanilla JS and the pages of React, Preact, Solid,
+  Svelte and Vue, in every skin of the table. The agent writes the files; the server only reads. With it an agent builds
+  a full table up to 2× faster and with ~45% fewer tokens, measured with Claude Opus, Sonnet and Haiku. [Getting
+  started](#getting-started) gives its setup.
 
 ## On the roadmap
 
