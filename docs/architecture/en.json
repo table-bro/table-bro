@@ -77,7 +77,7 @@
       "l": "phases of one update, after its input"
     },
     "2": {
-      "l": "skins: mat · bs · nv"
+      "l": "skins: mat · mui · suid · m3-svelte · vuetify · bs · nv"
     },
     "3": {
       "l": "interface for extensions: BroBodyLayout"
@@ -285,10 +285,11 @@
       "steps": {
         "0": "On import in the browser the skin calls `defineElements(customElements)` of its config: its elements, prefixed `bro-nv-*`, and the shared ones; its optional elements come with `withTags()` and `withSwitch()`.",
         "1": "The elements extend `BroHTMLElement` and implement `BroView` and the element interfaces of the core.",
-        "2": "`registerSkin('nv', config)` stores its `BroSkinConfig`: class names and component selectors.",
-        "3": "`configure({conf: {skin: 'nv'}})` requires the registered skin and merges its config."
+        "2": "A skin of a framework UI library defines each of its elements on import in the browser, `bro-mui-*` for mui; an element renders the components of the library in a root of its own: React for mui, Solid for suid, Svelte for m3-svelte, Vue for vuetify.",
+        "3": "`registerSkin('nv', config)` stores its `BroSkinConfig`: class names and component selectors.",
+        "4": "`configure({conf: {skin: 'nv'}})` requires the registered skin and merges its config."
       },
-      "note": "The mat skin does the same in `provideTableBroMatSkin(withTags(), …)` when the Angular application starts; its elements wrap Angular Material components with `@angular/elements`."
+      "note": "The mat skin does the same in `provideTableBroMatSkin(withTags(), …)` when the Angular application starts; its elements wrap Angular Material components with `@angular/elements`. The browser entry of a framework skin has no `defineElements()`: its server entry, as `@table-bro/react-mui/server`, registers the skin again with it for a prerender."
     },
     "width": {
       "t": "Width change",
@@ -315,18 +316,18 @@
     },
     "prerender": {
       "t": "Prerender",
-      "trig": "prerenderTableBro() · Angular server-side rendering",
+      "trig": "prerenderTableBro() · Angular server-side rendering · server entries of the skins",
       "steps": {
-        "0": "During Angular server-side rendering `TableBroNg` creates `<table-bro>` in the server DOM and calls `prerenderTableBro()`; without Angular the page calls it on its own server DOM.",
+        "0": "During Angular server-side rendering `TableBroNg` creates `<table-bro>` in the server DOM and calls `prerenderTableBro()`. On the server of another framework, as Next.js, Astro, SolidStart, SvelteKit and Nuxt in `samples/`, the page calls it on a `<table-bro>` of a linkedom document and puts the attributes and the markup of the table into its own markup.",
         "1": "`prerenderTableBro()` resolves the columns and the config as `configure()` does, with `config.prerender`: the table measures nothing, runs no animation of its own and subscribes to nothing.",
-        "2": "It calls `defineElements(registry)` of the skin config with the registry of the server DOM; `TableBroNg` gives the server DOM of Angular one while the core renders. The mat skin gives the components of its elements through `TABLE_BRO_ELEMENTS` instead.",
+        "2": "It calls `defineElements(registry)` of the skin config with the registry of the server DOM; `TableBroNg` gives the server DOM of Angular one while the core renders. The vanilla skins have it in their config; mui, suid, m3-svelte and vuetify have it in their server entry, as `@table-bro/react-mui/server`, which also renders the components of the library to markup by the server render of its framework. The mat skin gives the components of its elements through `TABLE_BRO_ELEMENTS` instead.",
         "3": "`createContext()` takes `prerenderStyles` instead of the computed style of the host and makes `ctx.dom`, a `BroDom` of `host.ownerDocument`.",
         "4": "`BroTableRegions` and the views create every node through `ctx.dom`, in the document of the host: a server DOM has no global document.",
         "5": "`controller.mount()` without rows renders the loading state; the heights of the body and its shadows are `calc()` of `--bro-row-height` and `--bro-shadow-size`.",
         "6": "The skin elements render their markup without the scripts of the browser. The host gets `data-bro-prerender`, and `isPrerendered()` tells the elements to keep that markup in the browser.",
         "7": "In the browser `configure()` renders the table into the same element at the same height and continues the CSS animations of the prerender at their start times."
       },
-      "note": "The prerender shows no rows: a server DOM has no layout to measure the columns in. A skin with neither `defineElements()` nor `TABLE_BRO_ELEMENTS` leaves the host empty on the server."
+      "note": "The prerender shows no rows: a server DOM has no layout to measure the columns in. A skin with neither `defineElements()` nor `TABLE_BRO_ELEMENTS` leaves the host empty on the server, as a framework skin imported without its server entry."
     }
   },
   "phases": {
@@ -403,7 +404,7 @@
     },
     "skinsThroughA": {
       "t": "Skins through a registry",
-      "d": "A skin imports only `@table-bro/core` and registers a `BroSkinConfig` and its elements; the core reads class names and selectors from it. No module touches `window` or `document` on load, and a prerender defines the elements in the registry of its server DOM through `defineElements()`.",
+      "d": "A skin imports only `@table-bro/core` and registers a `BroSkinConfig` and its elements; the core reads class names and selectors from it. No module touches `window` or `document` on load, and a prerender defines the elements in the registry of its server DOM through `defineElements()`, which a skin of a framework UI library gives in its server entry.",
       "r": "swappable skins, server render"
     },
     "nodesInTheHost": {
@@ -558,13 +559,17 @@
     },
     "skins": {
       "t": "Skins",
-      "s": "BroSkinConfig + elements + CSS",
+      "s": "BroSkinConfig + elements + CSS; a framework skin adds a server entry",
       "items": {
-        "nv": "No UI library; elements bro-nv-*.",
+        "mat": "Angular Material components as custom elements (ng-mat-*) and skin components (bro-mat-*), defined by provideTableBroMatSkin(); reads the tokens of the Material theme of the application. Imports @table-bro/angular for TABLE_BRO_ELEMENTS and its filter drawer.",
+        "mui": "MUI components in React roots of their own, elements bro-mui-*; setMuiTheme() gives them the MUI theme of the application. The server entry @table-bro/react-mui/server renders them to markup by renderToString with the styles of Emotion.",
+        "suid": "SUID components in Solid roots of their own, elements bro-suid-*, with the shared paginator and sort header for the parts SUID does not port. The server entry @table-bro/solid-suid/server renders them by renderToString of Solid.",
+        "m3": "M3 Svelte components mounted by Svelte 5, elements bro-m3-svelte-*. The server entry @table-bro/svelte-m3/server renders them by render() of svelte/server.",
+        "vuetify": "Vuetify components in Vue roots in the context of an app of the skin, elements bro-vuetify-*; setVuetify() gives it the Vuetify of the application. The server entry @table-bro/vue-vuetify/server renders them by the server render of Vue.",
         "bs": "Bootstrap 5 as a peer; elements bro-bs-*.",
-        "mat": "Angular Material components as custom elements (ng-mat-*) and skin components (bro-mat-*); reads the tokens of the Material theme of the application.",
+        "nv": "No UI library; elements bro-nv-*.",
         "sharedTitle": "Shared skin elements",
-        "shared": "Button, sort header, paginator, tags, text ellipsis, toolbar, switch; bundled into each vanilla skin.",
+        "shared": "Button, sort header, paginator, tags, text ellipsis, toolbar, switch; bundled into each vanilla skin. Solid SUID bundles the paginator, the sort header and the text ellipsis.",
         "css": "table-bro.scss for the core and one entry per skin; --bro-* custom properties set sizes and timings without a rebuild."
       }
     },

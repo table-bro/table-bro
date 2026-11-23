@@ -1757,7 +1757,7 @@
     const FACTS = [
       {v: '0', l: T('facts.0.l')},
       {v: '6', l: T('facts.1.l')},
-      {v: '3', l: T('facts.2.l')},
+      {v: '7', l: T('facts.2.l')},
       {v: '1', l: T('facts.3.l')},
       {v: '11', l: T('facts.4.l')}
     ];
@@ -1802,10 +1802,14 @@
       layout: {x: 780, y: 710, w: 290, h: 56, z: 'z-core', t: 'BroBodyLayout', s: T('nodes.layout.s')},
 
       css: {x: 1130, y: 80, w: 270, h: 52, z: 'z-skin', t: 'CSS · --bro-*', s: T('nodes.css.s')},
-      mat: {x: 1130, y: 170, w: 270, h: 52, z: 'z-skin', t: 'mat', s: '@table-bro/angular-material'},
-      bs: {x: 1130, y: 236, w: 270, h: 52, z: 'z-skin', t: 'bs', s: '@table-bro/bootstrap'},
-      nv: {x: 1130, y: 302, w: 270, h: 52, z: 'z-skin', t: 'nv', s: '@table-bro/native'},
-      elements: {x: 1130, y: 480, w: 270, h: 56, z: 'z-skin', t: T('nodes.elements.t'), s: T('nodes.elements.s')},
+      mat: {x: 1130, y: 150, w: 270, h: 44, z: 'z-skin', t: 'mat · Angular Material', s: '@table-bro/angular-material'},
+      mui: {x: 1130, y: 200, w: 270, h: 44, z: 'z-skin', t: 'mui · React MUI', s: '@table-bro/react-mui · /server'},
+      suid: {x: 1130, y: 250, w: 270, h: 44, z: 'z-skin', t: 'suid · Solid SUID', s: '@table-bro/solid-suid · /server'},
+      m3: {x: 1130, y: 300, w: 270, h: 44, z: 'z-skin', t: 'm3-svelte · Svelte M3', s: '@table-bro/svelte-m3 · /server'},
+      vuetify: {x: 1130, y: 350, w: 270, h: 44, z: 'z-skin', t: 'vuetify · Vue Vuetify', s: '@table-bro/vue-vuetify · /server'},
+      bs: {x: 1130, y: 400, w: 270, h: 44, z: 'z-skin', t: 'bs · Vanilla Bootstrap', s: '@table-bro/bootstrap'},
+      nv: {x: 1130, y: 450, w: 270, h: 44, z: 'z-skin', t: 'nv · Vanilla HTML', s: '@table-bro/native'},
+      elements: {x: 1130, y: 540, w: 270, h: 56, z: 'z-skin', t: T('nodes.elements.t'), s: T('nodes.elements.s')},
 
       dom: {mvcOnly: 1, z: 'z-app', t: T('nodes.dom.t'), s: T('nodes.dom.s')},
       broDom: {mvcOnly: 1, z: 'z-core', t: 'BroDom', s: T('nodes.broDom.s')},
@@ -1840,12 +1844,16 @@
       {id: 'views-layout', from: 'views', to: 'layout', pts: [[925, 680], [925, 710]]},
       {id: 'views-motion', from: 'views', to: 'motion', pts: [[780, 640], [762, 640], [762, 548], [750, 548]]},
       {id: 'views-el', from: 'views', to: 'element', dashed: 1, pts: [[1070, 412], [1082, 412], [1082, 98], [1070, 98]], l: 'bro-action', lp: [1082, 298]},
-      {id: 'views-elements', from: 'views', to: 'elements', pts: [[1070, 508], [1130, 508]]},
-      {id: 'elements-el', from: 'elements', to: 'element', dashed: 1, pts: [[1400, 508], [1426, 508], [1426, 26], [1000, 26], [1000, 70]], l: 'bro-action', lp: [1220, 26]},
-      {id: 'mat-reg', from: 'mat', to: 'registry', pts: [[1130, 196], [1104, 196]].concat(REG_BUS), l: 'registerSkin()', lp: [940, 830]},
-      {id: 'bs-reg', from: 'bs', to: 'registry', pts: [[1130, 262], [1104, 262]].concat(REG_BUS)},
-      {id: 'nv-reg', from: 'nv', to: 'registry', pts: [[1130, 328], [1104, 328]].concat(REG_BUS)},
-      {id: 'nv-elements', from: 'nv', to: 'elements', pts: [[1265, 354], [1265, 480]], l: T('edges.nv-elements.l'), lp: [1265, 417]},
+      {id: 'views-elements', from: 'views', to: 'elements', pts: [[1070, 568], [1130, 568]]},
+      {id: 'elements-el', from: 'elements', to: 'element', dashed: 1, pts: [[1400, 568], [1426, 568], [1426, 26], [1000, 26], [1000, 70]], l: 'bro-action', lp: [1220, 26]},
+      {id: 'mat-reg', from: 'mat', to: 'registry', pts: [[1130, 172], [1104, 172]].concat(REG_BUS), l: 'registerSkin()', lp: [940, 830]},
+      {id: 'mui-reg', from: 'mui', to: 'registry', pts: [[1130, 222], [1104, 222]].concat(REG_BUS)},
+      {id: 'suid-reg', from: 'suid', to: 'registry', pts: [[1130, 272], [1104, 272]].concat(REG_BUS)},
+      {id: 'm3-reg', from: 'm3', to: 'registry', pts: [[1130, 322], [1104, 322]].concat(REG_BUS)},
+      {id: 'vuetify-reg', from: 'vuetify', to: 'registry', pts: [[1130, 372], [1104, 372]].concat(REG_BUS)},
+      {id: 'bs-reg', from: 'bs', to: 'registry', pts: [[1130, 422], [1104, 422]].concat(REG_BUS)},
+      {id: 'nv-reg', from: 'nv', to: 'registry', pts: [[1130, 472], [1104, 472]].concat(REG_BUS)},
+      {id: 'nv-elements', from: 'nv', to: 'elements', pts: [[1265, 494], [1265, 540]], l: T('edges.nv-elements.l'), lp: [1265, 517]},
       {id: 'layout-island', from: 'layout', to: 'island', pts: [[1070, 738], [1130, 738]]},
       {id: 'island-models', from: 'island', to: 'models', dashed: 1, pts: [[1130, 722], [1086, 722], [1086, 338], [1070, 338]], l: 'BroIslandTable', lp: [1086, 620]},
       {id: 'island-reg', from: 'island', to: 'registry', pts: [[1130, 754], [1104, 754]].concat(REG_BUS), l: 'useIslandDetails()', lp: [720, 830]},
@@ -1953,14 +1961,15 @@
       {
         id: 'skin', col: 'env',
         t: T('flows.skin.t'),
-        trig: "import '@table-bro/native' · provideTableBroMatSkin()",
+        trig: "import '@table-bro/native' · import '@table-bro/react-mui' · provideTableBroMatSkin()",
         steps: [
           ['nv', T('flows.skin.steps.0')],
           ['elements', T('flows.skin.steps.1')],
-          ['registry', T('flows.skin.steps.2')],
-          ['element', T('flows.skin.steps.3')]
+          ['mui', T('flows.skin.steps.2')],
+          ['registry', T('flows.skin.steps.3')],
+          ['element', T('flows.skin.steps.4')]
         ],
-        edges: ['nv-elements', 'nv-reg'],
+        edges: ['nv-elements', 'nv-reg', 'mui-reg'],
         note: T('flows.skin.note')
       },
       {
@@ -1997,7 +2006,7 @@
         steps: [
           ['ng', T('flows.prerender.steps.0')],
           ['prerender', T('flows.prerender.steps.1')],
-          ['nv', T('flows.prerender.steps.2')],
+          ['mui', T('flows.prerender.steps.2')],
           ['context', T('flows.prerender.steps.3')],
           ['regions', T('flows.prerender.steps.4')],
           ['body', T('flows.prerender.steps.5')],
@@ -2163,9 +2172,13 @@
         ['<table-bro-filter-drawer-container>', 'view/features/filters/filter-drawer.view.ts', T('groups.views.items.filterDrawer')]
       ]},
       {z: 'z-skin', t: T('groups.skins.t'), s: T('groups.skins.s'), items: [
-        ['nv · @table-bro/native', 'packages/skins/native/js', T('groups.skins.items.nv')],
-        ['bs · @table-bro/bootstrap', 'packages/skins/bootstrap/js', T('groups.skins.items.bs')],
         ['mat · @table-bro/angular-material', 'packages/skins/angular-material', T('groups.skins.items.mat')],
+        ['mui · @table-bro/react-mui', 'packages/skins/react-mui/js', T('groups.skins.items.mui')],
+        ['suid · @table-bro/solid-suid', 'packages/skins/solid-suid/js', T('groups.skins.items.suid')],
+        ['m3-svelte · @table-bro/svelte-m3', 'packages/skins/svelte-m3/js', T('groups.skins.items.m3')],
+        ['vuetify · @table-bro/vue-vuetify', 'packages/skins/vue-vuetify/js', T('groups.skins.items.vuetify')],
+        ['bs · @table-bro/bootstrap', 'packages/skins/bootstrap/js', T('groups.skins.items.bs')],
+        ['nv · @table-bro/native', 'packages/skins/native/js', T('groups.skins.items.nv')],
         [T('groups.skins.items.sharedTitle'), 'packages/skins/shared/js', T('groups.skins.items.shared')],
         ['CSS', 'packages/core/styles · packages/skins/*/styles', T('groups.skins.items.css')]
       ]},
@@ -2250,10 +2263,15 @@
         broDom: [1244, 214, 246, 52],
         island: [1244, 350, 246, 56],
         spaces: [1244, 430, 246, 48],
-        css: [1244, 570, 246, 48],
-        mat: [1244, 640, 246, 44],
-        bs: [1244, 696, 246, 44],
-        nv: [1244, 752, 246, 44]
+        css: [1244, 562, 246, 44],
+        // The skins show their names only: the packages map gives their packages
+        mat: [1244, 616, 246, 32, null, {s: null}],
+        mui: [1244, 652, 246, 32, null, {s: null}],
+        suid: [1244, 688, 246, 32, null, {s: null}],
+        m3: [1244, 724, 246, 32, null, {s: null}],
+        vuetify: [1244, 760, 246, 32, null, {s: null}],
+        bs: [1244, 796, 246, 32, null, {s: null}],
+        nv: [1244, 832, 246, 32, null, {s: null}]
       },
       edges: {
         'app-el': {pts: [[150, 150], [150, 92], [250, 92]], l: 'configure()', lp: [200, 92]},
@@ -2266,7 +2284,7 @@
         'drawer-el': {pts: [[192, 488], [242, 488], [242, 120], [250, 120]], lp: [114, 532]},
         'el-ctrl': {pts: [[380, 126], [380, 200]]},
         'el-ctx': {pts: [[770, 98], [800, 98]]},
-        'css-ctx': {pts: [[1490, 594], [1510, 594], [1510, 30], [1000, 30], [1000, 70]], lp: [1250, 30]},
+        'css-ctx': {pts: [[1490, 584], [1510, 584], [1510, 30], [1000, 30], [1000, 70]], lp: [1250, 30]},
         'upd-state': {pts: [[500, 262], [540, 262], [540, 238], [566, 238]]},
         'body-models': {pts: [[500, 370], [544, 370], [544, 328], [566, 328]]},
         'body-views': {pts: [[500, 388], [886, 388]], l: T('mvc.edges.body-views.l'), lp: [700, 388]},
@@ -2283,9 +2301,13 @@
         'elements-el': null,
         'nv-elements': null,
         'island-reg': null,
-        'mat-reg': {pts: [[1244, 662], [1237, 662], [1237, 884], [1040, 884], [1040, 866]], lp: [1140, 884]},
-        'bs-reg': {pts: [[1244, 718], [1237, 718], [1237, 884], [1040, 884], [1040, 866]]},
-        'nv-reg': {pts: [[1244, 774], [1237, 774], [1237, 884], [1040, 884], [1040, 866]]},
+        'mat-reg': {pts: [[1244, 632], [1237, 632], [1237, 884], [1040, 884], [1040, 866]], lp: [1140, 884]},
+        'mui-reg': {pts: [[1244, 668], [1237, 668], [1237, 884], [1040, 884], [1040, 866]]},
+        'suid-reg': {pts: [[1244, 704], [1237, 704], [1237, 884], [1040, 884], [1040, 866]]},
+        'm3-reg': {pts: [[1244, 740], [1237, 740], [1237, 884], [1040, 884], [1040, 866]]},
+        'vuetify-reg': {pts: [[1244, 776], [1237, 776], [1237, 884], [1040, 884], [1040, 866]]},
+        'bs-reg': {pts: [[1244, 812], [1237, 812], [1237, 884], [1040, 884], [1040, 866]]},
+        'nv-reg': {pts: [[1244, 848], [1237, 848], [1237, 884], [1040, 884], [1040, 866]]},
         'layout-island': {pts: [[1194, 598], [1214, 598], [1214, 378], [1244, 378]]},
         'island-models': {pts: [[1244, 394], [1222, 394], [1222, 772], [842, 772], [842, 340], [834, 340]], lp: [1030, 772]},
         'island-spaces': {pts: [[1367, 406], [1367, 430]]}
@@ -2340,8 +2362,8 @@
       }
 
       Object.keys(MVC.pos).forEach(id => {
-        const [x, y, w, h, parent] = MVC.pos[id];
-        nodes[id] = Object.assign({}, NODES[id], {x, y, w, h}, parent ? {parent} : {});
+        const [x, y, w, h, parent, own] = MVC.pos[id];
+        nodes[id] = Object.assign({}, NODES[id], {x, y, w, h}, parent ? {parent} : {}, own || {});
       });
 
       EDGES.forEach(e => {
