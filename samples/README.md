@@ -1,7 +1,8 @@
 # Samples
 
-Pages with a table of Table, Bro, one per skin, each set up as its page of Docs, Getting started, says, and the pages
-of the frameworks of Docs, Frameworks:
+Each folder is a page with a table of Table, Bro, set up as Getting started and the pages of Frameworks and
+Server-side rendering of the Docs describe it: a page per skin, a page of the server render per framework, and a Vite
+project per framework:
 
 - `angular-material`: Angular, Angular Material and `@table-bro/angular-material`;
 - `angular-ssr`: the same page with the server render of Angular, which prerenders the table at the build in its
@@ -28,7 +29,7 @@ of the frameworks of Docs, Frameworks:
 - `native`: Vanilla JS with `@table-bro/native`, built by Vite;
 - `no-build`: Vanilla JS with Bootstrap and `@table-bro/bootstrap` without a bundler: `index.html` takes the packages
   from jsDelivr by an import map, and `npm run build:samples` copies the folder as it is;
-- `frameworks`: a Vite project per framework, `react`, `vue`, `svelte`, `solid` and `preact`, each with Bootstrap
+- `frameworks`: a Vite project per framework, `preact`, `react`, `solid`, `svelte` and `vue`, each with Bootstrap
   and `@table-bro/bootstrap`; StackBlitz opens each folder as it is.
 
 A page installs the packages as its users do: `npm install`, then `npm run build` or `npm start` (`npm run dev` for Vite).
