@@ -343,6 +343,43 @@
     color: var(--muted);
   }
 
+  /* section navigation: a row of anchors that stays at the top while the page scrolls */
+  .secnav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+  }
+  .secnav-in {
+    display: flex;
+    gap: 4px 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .secnav-in::-webkit-scrollbar {
+    display: none;
+  }
+  .secnav a {
+    flex: none;
+    padding: 11px 2px 9px;
+    border-bottom: 2px solid transparent;
+    font: 500 13px var(--font-body);
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .secnav a:hover {
+    color: var(--ink);
+  }
+  .secnav a[aria-current="true"] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+  main > section[id] {
+    scroll-margin-top: 48px;
+  }
+
   /* map */
   .map-sec {
     padding-block: 8px 32px;
@@ -1760,6 +1797,21 @@
   <div class="facts" id="facts"></div>
 </header>
 
+<nav class="secnav" id="secnav">
+  <div class="wrap secnav-in">
+    <a href="#map" data-i18n="navMap"></a>
+    <a href="#why" data-i18n="navWhy"></a>
+    <a href="#flows" data-i18n="navFlows"></a>
+    <a href="#lifecycle" data-i18n="navLifecycle"></a>
+    <a href="#update" data-i18n="navUpdate"></a>
+    <a href="#rules" data-i18n="navRules"></a>
+    <a href="#dom" data-i18n="navDom"></a>
+    <a href="#blocks" data-i18n="navBlocks"></a>
+  </div>
+</nav>
+
+<main>
+
 <section class="map-sec wide" id="map">
   <div class="map-top">
     <div class="sec-head">
@@ -1859,6 +1911,8 @@
   </div>
   <div id="groups"></div>
 </section>
+
+</main>
 
 <footer class="wrap"><span data-i18n="footer"></span></footer>
 
@@ -1966,7 +2020,16 @@
       lcSees: T('ui.lcSees'),
       lcSame: T('ui.lcSame'),
       lcShowFlow: T('ui.lcShowFlow'),
-      lcShowUpdate: T('ui.lcShowUpdate')
+      lcShowUpdate: T('ui.lcShowUpdate'),
+      navAria: T('ui.navAria'),
+      navMap: T('ui.navMap'),
+      navWhy: T('ui.navWhy'),
+      navFlows: T('ui.navFlows'),
+      navLifecycle: T('ui.navLifecycle'),
+      navUpdate: T('ui.navUpdate'),
+      navRules: T('ui.navRules'),
+      navDom: T('ui.navDom'),
+      navBlocks: T('ui.navBlocks')
     };
 
     const FACTS = [
@@ -3332,6 +3395,44 @@
       }
     });
 
+    /** Marks the link of the section at the top of the window, under the row of the links, and keeps it in sight. */
+    function markSection() {
+      const nav = document.getElementById('secnav');
+      const links = [...nav.querySelectorAll('a')];
+      const edge = nav.offsetHeight + 12;
+      let current = links[0];
+
+      links.forEach(link => {
+        if (document.querySelector(link.getAttribute('href')).getBoundingClientRect().top <= edge) {
+          current = link;
+        }
+      });
+
+      // The last section is too short to reach the top: the end of the page marks it
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        current = links[links.length - 1];
+      }
+
+      if (current.getAttribute('aria-current') === 'true') {
+        return;
+      }
+
+      links.forEach(link => link.toggleAttribute('aria-current', link === current));
+      current.setAttribute('aria-current', 'true');
+
+      // On a narrow screen the row scrolls sideways: the marked link stays in it
+      const row = current.parentElement;
+      const left = current.offsetLeft - row.offsetLeft;
+
+      if (left < row.scrollLeft || left + current.offsetWidth > row.scrollLeft + row.clientWidth) {
+        row.scrollLeft = left - 16;
+      }
+    }
+
+    document.getElementById('secnav').setAttribute('aria-label', L(UI.navAria));
+    window.addEventListener('scroll', markSection, {passive: true});
+    window.addEventListener('resize', markSection, {passive: true});
+
     document.getElementById('theme-seg').addEventListener('click', event => {
       const btn = event.target.closest('button');
 
@@ -3374,6 +3475,7 @@
     }
 
     render();
+    markSection();
   }
 })();
 </script>

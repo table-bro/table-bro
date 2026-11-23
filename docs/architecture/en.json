@@ -74,7 +74,16 @@
     "lcSees": "User sees",
     "lcSame": "The same for every skin: the core does it.",
     "lcShowFlow": "Show its flow on the map ↑",
-    "lcShowUpdate": "See the phases of one update ↓"
+    "lcShowUpdate": "See the phases of one update ↓",
+    "navAria": "Sections of the page",
+    "navMap": "Map",
+    "navWhy": "Why",
+    "navFlows": "Flows",
+    "navLifecycle": "Render phases",
+    "navUpdate": "One update",
+    "navRules": "Rules",
+    "navDom": "DOM",
+    "navBlocks": "Blocks"
   },
   "facts": {
     "0": {
