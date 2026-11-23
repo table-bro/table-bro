@@ -12,10 +12,40 @@ import {attachSuidTooltip}        from './bro-suid-tooltip';
  * names of its buttons in tooltips above them, as the paginator of the skin mat shows them.
  */
 export class BroSuidPaginatorComponent extends BroPaginatorComponent {
+  /** The removals of the tooltips of the buttons: a removed paginator takes its tooltips out of the body. */
+  private releases: (() => void)[] = [];
+  private released: boolean = false;
+
   override render(): void {
     super.render();
 
-    this.querySelectorAll('[class*="bro-paginator-navigation-"]').forEach(button => attachSuidTooltip(button, button.getAttribute('aria-label') ?? ''));
+    this.attachTooltips();
+  }
+
+  override connectedCallback(): void {
+    if (this.released) {
+      this.released = false;
+
+      this.attachTooltips();
+    }
+
+    super.connectedCallback();
+  }
+
+  disconnectedCallback(): void {
+    // A move connects the element again in the same task; only a removed element releases its tooltips
+    queueMicrotask(() => {
+      if (!this.isConnected) {
+        this.releases.forEach(release => release());
+
+        this.releases = [];
+        this.released = true;
+      }
+    });
+  }
+
+  private attachTooltips(): void {
+    this.querySelectorAll('[class*="bro-paginator-navigation-"]').forEach(button => this.releases.push(attachSuidTooltip(button, button.getAttribute('aria-label') ?? '')));
   }
 }
 

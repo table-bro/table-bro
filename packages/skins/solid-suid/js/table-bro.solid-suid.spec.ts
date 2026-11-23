@@ -365,6 +365,30 @@ describe('a table of the skin suid', () => {
     expect(document.querySelector('.bro-suid-tooltip')!.textContent).toBe(next.getAttribute('aria-label'));
   });
 
+  it('keeps the tooltips of the paginator through a move in the DOM and takes them out of the body with the paginator', async () => {
+    const table = document.createElement('table-bro');
+
+    styles();
+    document.body.append(table);
+    table.configure({cols: [{name: 'price', title: 'Price', dataType: 'number'}], rows: Array.from({length: 12}, (_, i) => ({price: i})), conf: {skin: 'suid', toolbarTitle: 'Orders'}});
+
+    const paginator = table.querySelector<HTMLElement>('bro-suid-paginator')!;
+    const next = paginator.querySelector<HTMLElement>('.bro-paginator-navigation-next')!;
+
+    await vi.waitFor(() => expect(next.closest('.disabled')).toBeNull());
+
+    // A move connects the paginator again in the same task: its buttons keep their tooltips
+    paginator.parentElement!.append(paginator);
+    await Promise.resolve();
+    next.dispatchEvent(new MouseEvent('mouseenter'));
+    expect(document.querySelector('.bro-suid-tooltip')!.textContent).toBe(next.getAttribute('aria-label'));
+
+    // A table that takes new columns removes its paginator under the pointer, which gets no mouseleave
+    paginator.remove();
+    await Promise.resolve();
+    expect(document.querySelector('.bro-suid-tooltip')).toBeNull();
+  });
+
   it('renders its elements at once when Solid configures it in onMount', () => {
     const errors = vi.spyOn(console, 'error');
     const host = document.createElement('div');
