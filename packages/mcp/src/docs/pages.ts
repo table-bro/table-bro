@@ -3326,6 +3326,10 @@ A page without a bundler takes the same packages from [jsDelivr](https://www.jsd
 
 ${skinsSection}
 
+#### How do I start a skin of my own?
+
+From Vanilla HTML: its plain HTML elements are the parts of a skin with no UI library around them. A skin of your design system takes its config \`nativeSkinConfig\` of \`@table-bro/native\`, gives the parts of the table your classes or replaces its elements with Custom Elements of your components, and registers it under a name of its own, as \`registerSkin('brand', brandSkinConfig)\`; on this page \`conf: {skin: 'brand'}\` then takes the place of \`'nv'\`. [Your own skin](https://table-bro.com/docs/design/your-own-skin) describes the config, the elements, the styles and the server render of a skin.
+
 #### How do I pass cols, rows and conf?
 
 The columns, the rows and the config go to the table in one call, \`configure({cols, rows, conf})\`. New rows go by \`replaceRows(rows)\`, and \`conf.skin\` names the registered skin. \`src/main.ts\` of the sample imports the skin before the table, and \`src/orders.ts\` renders the table:
@@ -3352,7 +3356,7 @@ Yes. The table renders in the browser, and \`prerenderTableBro()\` renders it on
 
 #### Related
 
-[Getting started](https://table-bro.com/docs/getting-started), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
+[Getting started](https://table-bro.com/docs/getting-started), [Your own skin](https://table-bro.com/docs/design/your-own-skin), [Custom content in tables using Custom Elements](https://table-bro.com/docs/design/custom-content), [MCP server for AI coding agents](https://table-bro.com/docs/ai/mcp-server), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Angular data table](https://table-bro.com/docs/frameworks/angular), [Preact data table](https://table-bro.com/docs/frameworks/preact), [React data table](https://table-bro.com/docs/frameworks/react), [Solid data table](https://table-bro.com/docs/frameworks/solid), [Svelte data table](https://table-bro.com/docs/frameworks/svelte), [Vue 3 data table](https://table-bro.com/docs/frameworks/vue).`,
     files: [
       mcpInstall,
       ...setupBs.files,
