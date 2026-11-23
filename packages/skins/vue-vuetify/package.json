@@ -1,7 +1,7 @@
 {
   "name": "@table-bro/vue-vuetify",
   "version": "1.2.1",
-  "description": "Pixel-perfect Material data tables for Vue and Vuetify, and more. A Web Components table engine on top of existing UI components.",
+  "description": "Pixel-perfect Material data tables for any framework and plain JavaScript. A Web Components table engine on top of existing UI components: Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Bootstrap, or a skin of your own.",
   "keywords": [
     "vue",
     "vue3",

@@ -6,7 +6,7 @@
     "themeDark": "DARK",
     "eyebrow": "@table-bro/* 1.2 · architecture for library developers",
     "h1": "How Table, Bro is built",
-    "lede": "A Web Components table engine on top of existing UI components. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Views write the DOM, skins supply the UI components, framework wrappers translate inputs into the methods of the element, and the Island Details module extends the body through one interface. The core follows MVC with passive views and a one-way data flow. On a server, `prerenderTableBro()` renders the loading state of a table into the document of its host, and the browser renders the table in its place.",
+    "lede": "A Web Components table engine on top of existing UI components: Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Bootstrap, or a skin of your own. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Views write the DOM, skins supply the UI components, framework wrappers translate inputs into the methods of the element, and the Island Details module extends the body through one interface. The core follows MVC with passive views and a one-way data flow. On a server, `prerenderTableBro()` renders the loading state of a table into the document of its host, and the browser renders the table in its place.",
     "tabMvc": "Layers (MVC)",
     "tabPkg": "Packages",
     "mvcTitle": "Layers: model, view, controller",

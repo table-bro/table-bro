@@ -1,7 +1,7 @@
 # Table, Bro
 
-Pixel-perfect Material data tables for Angular, and more.\
-A Web Components table engine on top of existing UI components.
+Pixel-perfect Material data tables for any framework and plain JavaScript.\
+A Web Components table engine on top of existing UI components: Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Bootstrap, or a skin of your own.
 
 Table, Bro is the Custom Element `<table-bro>`, a data table built for the look of a design system and the speed of a
 native page. Rows have a fixed height, pages turn with a kinetic scroll, row details open as animated islands with
