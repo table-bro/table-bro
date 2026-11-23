@@ -111,9 +111,14 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
   with Next.js, and its section on the page Prerendering with the files of the sample, which `pages.spec.ts` compares
   (`nextFiles`), and an e2e spec of the sample, as `e2e/samples-react-mui.spec.ts`: the prerendered markup without
   scripts, and the table of the browser at the same height.
-- The server render of Vue, `renderToString` of `@vue/server-renderer`, is asynchronous, while `prerenderTableBro()`
-  renders the elements synchronously: a skin of Vue and its section of Nuxt need a decision of the owner on an
-  asynchronous prerender before they start.
+- The server render of Vue, `renderToString` of `vue/server-renderer`, returns a promise, while `prerenderTableBro()`
+  renders the elements synchronously. The skin `vuetify` renders the root of each element with `ssrRenderVNode` of
+  `vue/server-renderer` into a buffer, in the context of the app of the skin and with a context of the server render of
+  its own, and joins the markup at once, as in `js/table-bro.vue-vuetify.server.ts`: the components of Vuetify render
+  synchronously, and a promise in the buffer, as of an asynchronous setup, fails the render. The render stops the
+  watchers of its components. The bundler of the server compiles the library and the skin (`build.transpile` of Nuxt),
+  and the page of the prerender gives the `HTMLElement` of the server DOM to the global scope before the import of the
+  skin. The sample is `samples/vue-vuetify/nuxt` with Nuxt.
 - The server render of Solid, `renderToString` of the server build of `solid-js/web`, is synchronous, as in
   `js/table-bro.solid-suid.server.ts`. The server bundle of the application compiles the JSX of the library for the
   server and carries the library, the skin and the core (`ssr.noExternal` of Vite); the core loads after a module of its
@@ -140,8 +145,7 @@ server render of its framework, in a server entry of its own, `@table-bro/<libra
   them, and no `var()` fallbacks.
 - `themeAttribute` names the attribute of the color scheme of the library, which a table with a theme of its own sets on
   its host. The core sets only an attribute, and stays so: a library that selects the scheme by a class, as
-  `v-theme--light` and `v-theme--dark` of Vuetify, gets the variables of the class from the skin (the owner decided it
-  on 2026-11-19). CSS cannot take the variables of another class, and Vuetify writes their values at runtime from the
+  `v-theme--light` and `v-theme--dark` of Vuetify, gets the variables of the class from the skin. CSS cannot take the variables of another class, and Vuetify writes their values at runtime from the
   themes of the application, so the setter of the theme of the skin writes one stylesheet of its own: for each theme of
   the application the rule `table-bro[<themeAttribute>="<name>"]` with its `--v-theme-*` variables, from the themes of
   the instance of Vuetify, again when they change.
@@ -253,7 +257,7 @@ npm run build:samples
 
 Look at the samples in a browser, in the light and the dark scheme: the toolbar and its search with the focus in the
 field, the sort, the paginator and its page sizes, the filter drawer next to the table at its height, the tags, the
-switch. No e2e without the consent of the owner.
+switch. The e2e specs run in CI on the pull request; run them locally only when the change needs them.
 
 ## Commits
 
