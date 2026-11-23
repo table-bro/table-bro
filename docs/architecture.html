@@ -1144,6 +1144,201 @@
     text-underline-offset: 3px;
   }
 
+  /* render phases */
+  .lc-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .lc-bar .lc-lbl {
+    font: 700 10px var(--font-body);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .lc-bar .seg {
+    flex-wrap: wrap;
+  }
+  .lc-bar .seg button {
+    font-size: 12.5px;
+    letter-spacing: .01em;
+    padding: 5px 12px;
+  }
+  .lc-steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: lc;
+  }
+  @media (max-width: 960px) {
+    .lc-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 520px) {
+    .lc-steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .lc {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto 1fr;
+    gap: 4px 10px;
+    align-content: start;
+    padding: 12px 12px 14px;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--sc);
+    border-radius: 12px;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .lc:hover, .lc[aria-pressed="true"] {
+    background: var(--surface);
+  }
+  .lc[aria-pressed="true"] {
+    border-color: var(--sc);
+    box-shadow: inset 0 0 0 1px var(--sc);
+  }
+  .lc .lc-st {
+    grid-column: 1 / -1;
+    font: 700 9.5px var(--font-body);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--sc);
+  }
+  .lc b {
+    font: 600 14.5px/1.3 var(--font-body);
+    overflow-wrap: anywhere;
+  }
+  .lc b::before {
+    counter-increment: lc;
+    content: counter(lc) ". ";
+    color: var(--sc);
+  }
+  .lc .lc-s {
+    grid-column: 1;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  .lc svg {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    width: 64px;
+    height: 40px;
+    align-self: start;
+  }
+  .lc.server {
+    --sc: var(--z-wrap-t);
+  }
+  .lc.html {
+    --sc: var(--z-app-t);
+  }
+  .lc.start {
+    --sc: var(--z-core-t);
+  }
+  .lc.life {
+    --sc: var(--k-view);
+  }
+  .lc.end {
+    --sc: var(--z-skin-t);
+  }
+  .scr .scr-f {
+    fill: var(--surface);
+    stroke: var(--rule);
+  }
+  .scr .scr-g {
+    fill: var(--rule);
+  }
+  .scr .scr-i {
+    fill: var(--muted);
+  }
+  .scr .scr-a {
+    fill: var(--accent);
+  }
+  .scr .scr-d {
+    fill: none;
+    stroke: var(--line);
+    stroke-dasharray: 3 3;
+  }
+  .scr text {
+    font: 700 11px var(--font-mono);
+    fill: var(--muted);
+  }
+  .scr .scr-p {
+    animation: scr-run 1.6s linear infinite;
+  }
+  @keyframes scr-run {
+    from {
+      transform: translateX(-34px);
+    }
+    to {
+      transform: translateX(34px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scr .scr-p {
+      animation: none;
+    }
+  }
+  .lc-detail {
+    margin-top: 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 14px 32px;
+  }
+  @media (max-width: 860px) {
+    .lc-detail {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .lc-detail h3 {
+    font: 600 17px var(--font-body);
+    margin-bottom: 6px;
+  }
+  .lc-detail p {
+    margin: 0 0 10px;
+    font-size: 14.5px;
+  }
+  .lc-detail .kv {
+    margin-bottom: 12px;
+  }
+  .lc-skins {
+    list-style: none;
+    margin: 0;
+    padding: 12px 0 0;
+    border-top: 1px dashed var(--rule);
+    display: grid;
+    gap: 8px;
+    font-size: 13.5px;
+  }
+  .lc-skins b {
+    display: block;
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--z-skin-t);
+  }
+  .lc-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+
   /* update phases */
   .phases {
     display: grid;
@@ -1616,6 +1811,19 @@
   </div>
 </section>
 
+<section class="sec wrap" id="lifecycle">
+  <div class="sec-head">
+    <h2 data-i18n="lcTitle"></h2>
+    <p data-i18n="lcLede"></p>
+  </div>
+  <div class="lc-bar">
+    <span class="lc-lbl" id="lc-skins-lbl" data-i18n="lcSkinsLbl"></span>
+    <div class="seg" role="group" id="lc-skins" aria-labelledby="lc-skins-lbl"></div>
+  </div>
+  <ol class="lc-steps" id="lc-steps"></ol>
+  <div class="lc-detail" id="lc-detail" aria-live="polite"></div>
+</section>
+
 <section class="sec wrap" id="update">
   <div class="sec-head">
     <h2 data-i18n="updTitle"></h2>
@@ -1751,7 +1959,14 @@
       doesLbl: T('ui.doesLbl'),
       mayLbl: T('ui.mayLbl'),
       mayNotLbl: T('ui.mayNotLbl'),
-      codeLbl: T('ui.codeLbl')
+      codeLbl: T('ui.codeLbl'),
+      lcTitle: T('ui.lcTitle'),
+      lcLede: T('ui.lcLede'),
+      lcSkinsLbl: T('ui.lcSkinsLbl'),
+      lcSees: T('ui.lcSees'),
+      lcSame: T('ui.lcSame'),
+      lcShowFlow: T('ui.lcShowFlow'),
+      lcShowUpdate: T('ui.lcShowUpdate')
     };
 
     const FACTS = [
@@ -2018,6 +2233,47 @@
       }
     ];
 
+    /* ---------- render phases ---------- */
+    // The phases of a table from the server to its release, in their order; each skin family adds its own part
+    const LC_STAGES = {
+      server: T('lifecycle.stages.server'),
+      html: T('lifecycle.stages.html'),
+      start: T('lifecycle.stages.start'),
+      life: T('lifecycle.stages.life'),
+      end: T('lifecycle.stages.end')
+    };
+
+    const LC_SKINS = [
+      {id: 'all', t: T('lifecycle.skins.all')},
+      {id: 'mat', t: 'Angular Material'},
+      {id: 'fw', t: 'React MUI · Solid SUID · Svelte M3 · Vue Vuetify'},
+      {id: 'vanilla', t: 'Vanilla Bootstrap · Vanilla HTML'}
+    ];
+
+    const lcPhase = (id, stage, screen, code, link) => ({
+      id, stage, screen, code, link,
+      t: T(`lifecycle.phases.${id}.t`),
+      s: T(`lifecycle.phases.${id}.s`),
+      d: T(`lifecycle.phases.${id}.d`),
+      sees: T(`lifecycle.phases.${id}.sees`),
+      mat: T(`lifecycle.phases.${id}.mat`),
+      fw: T(`lifecycle.phases.${id}.fw`),
+      vanilla: T(`lifecycle.phases.${id}.vanilla`)
+    });
+
+    const LIFECYCLE = [
+      lcPhase('prerender', 'server', 'server', 'prerenderTableBro · resolveTable · createContext(prerenderStyles) · BroDom · controller.mount()', {flow: 'prerender'}),
+      lcPhase('markup', 'server', 'server', 'BroSkinConfig.defineElements(registry) · TABLE_BRO_ELEMENTS · data-bro-prerender', {flow: 'prerender'}),
+      lcPhase('html', 'html', 'loading', 'data-bro-prerender · --bro-row-height · --bro-shadow-size'),
+      lcPhase('define', 'start', 'loading', "customElements.define('table-bro') · registerSkin · isPrerendered"),
+      lcPhase('configure', 'start', 'loading', 'configure · resolveTable · resolveConfig · pendingCalls'),
+      lcPhase('fonts', 'start', 'loading', 'renderSafely · document.fonts.ready'),
+      lcPhase('render', 'start', 'rows', 'render · createContext(resolveStyles) · BroController · BroTableRegions.render · controller.mount(rows) · continueAnimations', {flow: 'render'}),
+      lcPhase('updates', 'life', 'rows', 'BroController.update · BroFrame · onDelegateEvents · dispatchServerLoad · failRender', {update: 1}),
+      lcPhase('motion', 'life', 'motion', 'ctx.motion.animate · animateKinetic · browserClock.request', {flow: 'details'}),
+      lcPhase('release', 'end', 'gone', 'disconnectedCallback · lifecycle.abort() · controller.dispose() · motion.cancelAll()')
+    ];
+
     /* ---------- update phases ---------- */
     const PHASES = [
       {n: 'in', cls: 'input', t: 'input', s: T('phases.input.s'),
@@ -2205,6 +2461,8 @@
     /* ---------- state ---------- */
     let flowId = null;
     let phaseIdx = 2;
+    let lcIdx = 0;
+    let lcSkin = 'all';
     let mapTab = 'mvc';
     let forbidOn = false;
 
@@ -2861,6 +3119,68 @@
         + `<dl class="kv"><dt>${esc(L(UI.mayLbl))}</dt><dd>${fmt(L(p.may))}</dd><dt>${esc(L(UI.mayNotLbl))}</dt><dd>${fmt(L(p.not))}</dd><dt>${esc(L(UI.codeLbl))}</dt><dd><code>${esc(p.code)}</code></dd></dl>`;
     }
 
+    /** A small picture of what the user sees in a phase of the render. */
+    function screenSVG(kind) {
+      let out = '<svg class="scr" viewBox="0 0 72 44" aria-hidden="true">';
+
+      if (kind === 'gone') {
+        return out + '<rect class="scr-d" x="1.5" y="1.5" width="69" height="41" rx="5"/></svg>';
+      }
+
+      out += '<rect class="scr-f" x="1" y="1" width="70" height="42" rx="5"/>';
+
+      if (kind === 'server') {
+        return out + '<text x="36" y="26" text-anchor="middle">&lt;/&gt;</text></svg>';
+      }
+
+      out += '<rect class="scr-g" x="6" y="6" width="26" height="3" rx="1.5"/><rect class="scr-g" x="6" y="12" width="60" height="4" rx="1"/>';
+
+      if (kind === 'loading') {
+        out += '<svg x="6" y="17" width="60" height="2" overflow="hidden"><rect class="scr-a scr-p" x="13" y="0" width="34" height="2"/></svg>';
+        [23, 29, 35].forEach(y => out += `<rect class="scr-g" x="6" y="${y}" width="60" height="3" rx="1" opacity=".55"/>`);
+
+        return out + '</svg>';
+      }
+
+      [21, 28, 35].forEach((y, i) => {
+        const cls = (kind === 'motion' && i === 1) ? 'scr-a' : 'scr-i';
+
+        out += `<rect class="${cls}" x="6" y="${y}" width="20" height="3" rx="1" opacity=".7"/><rect class="${cls}" x="32" y="${y}" width="14" height="3" rx="1" opacity=".45"/><rect class="${cls}" x="52" y="${y}" width="14" height="3" rx="1" opacity=".45"/>`;
+      });
+
+      return out + '</svg>';
+    }
+
+    function lcSkinsHTML() {
+      return LC_SKINS.map(k => `<button type="button" data-skin="${k.id}" aria-pressed="${k.id === lcSkin}">${esc(L(k.t))}</button>`).join('');
+    }
+
+    function lcStepsHTML() {
+      return LIFECYCLE.map((p, i) => `<li><button type="button" class="lc ${p.stage}" data-lc="${i}" aria-pressed="${i === lcIdx}"><span class="lc-st">${esc(L(LC_STAGES[p.stage]))}</span><b>${esc(L(p.t))}</b>${screenSVG(p.screen)}<span class="lc-s">${esc(L(p.s))}</span></button></li>`).join('');
+    }
+
+    function lcDetailHTML() {
+      const p = LIFECYCLE[lcIdx];
+      const skins = LC_SKINS.filter(k => k.id !== 'all' && (lcSkin === 'all' || lcSkin === k.id));
+      let links = '';
+
+      if (p.link && p.link.flow) {
+        links = `<button type="button" class="show-btn" data-lc-flow="${p.link.flow}">${esc(L(UI.lcShowFlow))}</button>`;
+      } else if (p.link && p.link.update) {
+        links = `<button type="button" class="show-btn" data-lc-update="1">${esc(L(UI.lcShowUpdate))}</button>`;
+      }
+
+      return `<div><h3>${lcIdx + 1}. ${esc(L(p.t))}</h3><p>${fmt(L(p.d))}</p><div class="lc-links">${links}</div></div>`
+        + `<div><dl class="kv"><dt>${esc(L(UI.lcSees))}</dt><dd>${fmt(L(p.sees))}</dd><dt>${esc(L(UI.codeLbl))}</dt><dd><code>${esc(p.code)}</code></dd></dl>`
+        + '<ul class="lc-skins">' + skins.map(k => `<li><b>${esc(L(k.t))}</b>${fmt(L(p[k.id]) || L(UI.lcSame))}</li>`).join('') + '</ul></div>';
+    }
+
+    function renderLifecycle() {
+      document.getElementById('lc-skins').innerHTML = lcSkinsHTML();
+      document.getElementById('lc-steps').innerHTML = lcStepsHTML();
+      document.getElementById('lc-detail').innerHTML = lcDetailHTML();
+    }
+
     function rulesHTML() {
       return RULES.map(r => `<li><span class="rn">${r.n}</span><div><b>${esc(L(r.t))}</b><p>${esc(L(r.d))}</p></div></li>`).join('');
     }
@@ -2916,6 +3236,7 @@
 
       document.getElementById('flows-data').innerHTML = FLOWS.map((f, i) => f.col === 'data' ? cardHTML(f, i) : '').join('');
       document.getElementById('flows-env').innerHTML = FLOWS.map((f, i) => f.col === 'env' ? cardHTML(f, i) : '').join('');
+      renderLifecycle();
       document.getElementById('phases').innerHTML = phasesHTML();
       document.getElementById('ph-detail').innerHTML = phaseDetailHTML();
       document.getElementById('rules-list').innerHTML = rulesHTML();
@@ -2975,6 +3296,27 @@
       if (btn) {
         selectFlow(btn.dataset.flow);
         document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    });
+
+    document.getElementById('lifecycle').addEventListener('click', event => {
+      const step = event.target.closest('.lc');
+      const skin = event.target.closest('#lc-skins button');
+      const flow = event.target.closest('[data-lc-flow]');
+
+      if (step) {
+        lcIdx = Number(step.dataset.lc);
+        document.querySelectorAll('#lc-steps .lc').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.lc) === lcIdx)));
+        document.getElementById('lc-detail').innerHTML = lcDetailHTML();
+      } else if (skin) {
+        lcSkin = skin.dataset.skin;
+        document.querySelectorAll('#lc-skins button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.skin === lcSkin)));
+        document.getElementById('lc-detail').innerHTML = lcDetailHTML();
+      } else if (flow) {
+        selectFlow(flow.dataset.lcFlow);
+        document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'start'});
+      } else if (event.target.closest('[data-lc-update]')) {
+        document.getElementById('update').scrollIntoView({behavior: 'smooth', block: 'start'});
       }
     });
 

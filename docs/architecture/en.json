@@ -67,7 +67,14 @@
     "doesLbl": "What it does",
     "mayLbl": "May",
     "mayNotLbl": "May not",
-    "codeLbl": "Code"
+    "codeLbl": "Code",
+    "lcTitle": "Render phases",
+    "lcLede": "The life of one table, from a server to its release. The server phases run only on a page rendered on a server; without them the host is empty until the first render. The core runs the same phases for every skin; pick a skin family to see its own part. One phase, Updates, repeats for every change and has its own phases below.",
+    "lcSkinsLbl": "Skins",
+    "lcSees": "User sees",
+    "lcSame": "The same for every skin: the core does it.",
+    "lcShowFlow": "Show its flow on the map ↑",
+    "lcShowUpdate": "See the phases of one update ↓"
   },
   "facts": {
     "0": {
@@ -686,6 +693,110 @@
         "mat": {
           "l": "✕ deep imports"
         }
+      }
+    }
+  },
+  "lifecycle": {
+    "stages": {
+      "server": "Server",
+      "html": "Browser, before scripts",
+      "start": "Browser, start",
+      "life": "Browser, life",
+      "end": "Browser, end"
+    },
+    "skins": {
+      "all": "All skins"
+    },
+    "phases": {
+      "prerender": {
+        "t": "Prerender",
+        "s": "the loading state in a server DOM",
+        "d": "Optional. A page rendered on a server calls `prerenderTableBro(element, {cols, conf})` on a `<table-bro>` of its server DOM. The columns and the config resolve as in `configure()`, with `config.prerender` and `autoColumnWidth: false`. `createContext()` takes `prerenderStyles` instead of a computed style and makes `ctx.dom` of `host.ownerDocument`. `BroTableRegions` renders the toolbar and the header, and `controller.mount()` without rows renders the loading state, with the heights of the body in `calc()` of `--bro-row-height`. Nothing is measured, animated or subscribed to.",
+        "sees": "Nothing yet: the server builds the markup of the page.",
+        "mat": "`TableBroNg` prerenders the table during Angular server-side rendering (`prerenderTableBroNg`). It gives the server DOM of Angular the methods of `ParentNode` and a registry of custom elements only while the core renders.",
+        "fw": "A server route of Next.js, Astro, SolidStart, SvelteKit or Nuxt calls it on a `<table-bro>` of a linkedom document, after the import of the server entry of the skin, as `@table-bro/react-mui/server`.",
+        "vanilla": "Any server with a DOM, as linkedom or happy-dom, calls it after the import of the package of the skin."
+      },
+      "markup": {
+        "t": "Skin markup",
+        "s": "the elements render without scripts",
+        "d": "The elements of the skin in the prerendered table render their markup in the server DOM, without the scripts of the browser. The host gets `data-bro-prerender`, and the server writes the attributes and the markup of the table into the page. A skin with neither `defineElements()` nor `TABLE_BRO_ELEMENTS` leaves the host empty.",
+        "sees": "Nothing yet: the page is on its way.",
+        "mat": "The server DOM of Angular has no custom elements: the wrapper renders the Angular components of `TABLE_BRO_ELEMENTS`, which `provideTableBroMatSkin()` fills, into the elements of the table, with `BrowserAnimations` in their injector.",
+        "fw": "The server entry registers the skin again with `defineElements()` and gives the elements the server render of the framework: `renderToString` of React with the styles of Emotion, `renderToString` of Solid, `render()` of `svelte/server`, the server render of Vue.",
+        "vanilla": "`defineElements(registry)` of the config of the skin defines its elements in the registry of the server DOM, and they render their plain markup as in the browser."
+      },
+      "html": {
+        "t": "HTML before scripts",
+        "s": "the prerender is painted",
+        "d": "The browser parses the page and paints the prerendered table with the CSS of the core and of the skin. The browser does not know its elements until the scripts define them, so the markup stays as the server wrote it. The CSS animations of the prerender, as the progress bar, run from the first paint.",
+        "sees": "The toolbar, the header and the loading state at the final height of the body, with a running progress bar. Without a prerender, an empty host.",
+        "mat": "The page shows the table before the Angular application starts; hydration does not check the prerendered `<table-bro>`.",
+        "fw": "The markup carries the styles that the server render of the library gave it, as the classes of Emotion or SUID.",
+        "vanilla": "The markup is plain HTML with the classes of Bootstrap or of the core."
+      },
+      "define": {
+        "t": "Define and upgrade",
+        "s": "the scripts define the elements",
+        "d": "The import of `@table-bro/core` defines `<table-bro>` and its own elements. The prerendered `<table-bro>` upgrades: its constructor applies a `theme` property set before, and `connectedCallback()` renders nothing before `configure()`. The import of the skin registers its config by `registerSkin()` and defines its elements; an element in a prerendered table finds `isPrerendered(this)` and keeps the markup of the server.",
+        "sees": "No change: the prerender stays as it is.",
+        "mat": "`provideTableBroMatSkin()` registers the skin and defines its Angular elements by `createCustomElement()` when the application starts.",
+        "fw": "The import defines each element; an element creates no root of its library while `isPrerendered(this)`.",
+        "vanilla": "The import calls `defineElements(customElements)` of the config of the skin."
+      },
+      "configure": {
+        "t": "configure()",
+        "s": "columns, rows and config",
+        "d": "`configure({cols, rows, conf})` copies the columns and the rows, finds the skin of `conf.skin` in the registry and resolves the config over the one of the skin; a missing or unknown skin throws here. The host gets an `id` and an instance attribute. `replaceRows()`, `appendRows()` and `setState()` called before the first render wait in a queue and run after it, in their order.",
+        "sees": "No change yet.",
+        "mat": "`TableBroNg` configures the prerendered `<table-bro>` that it finds in its host, or a new one, outside the Angular zone, and turns its inputs into the methods of the element.",
+        "fw": "The component of the application configures the element from its ref after the mount. React MUI asks for `queueMicrotask()` inside an effect: React renders the roots of its elements at once only outside its render and effects.",
+        "vanilla": "The page calls `configure()` on the element that it created or found."
+      },
+      "fonts": {
+        "t": "Wait for fonts",
+        "s": "document.fonts.ready",
+        "d": "The first render waits while the document loads fonts: the table measures its titles and values in the fonts it shows them in, and a web font that comes later would cut them by a few pixels. A table out of the document waits for its connection.",
+        "sees": "The prerender, or an empty host, a little longer.",
+        "mat": "",
+        "fw": "",
+        "vanilla": ""
+      },
+      "render": {
+        "t": "First render",
+        "s": "the table replaces the prerender",
+        "d": "`render()` reads the start times of the CSS animations of the prerender, clears the host and removes `data-bro-prerender`. It makes a new `AbortController`, the context, whose sizes and timings now come from the computed `--bro-*` properties of the host, and the controller with its parts. `BroTableRegions` renders the regions, and `controller.mount(rows)` runs the first update: the rows, the paginator, the body and the measurement of the columns in the aux table. The animations of the same names go on from the start times that it read, the element listens to `bro-action`, runs the queued calls and observes the width of the host.",
+        "sees": "The table takes the place of the prerender at the same height in one frame, and the progress bar goes on instead of starting over; with rows, the rows appear.",
+        "mat": "The new elements are Angular elements: each one creates its Angular Material component.",
+        "fw": "Each new element renders the components of its library at once: a React root by `flushSync`, a Solid root, a Svelte mount, a Vue root in the app of the skin.",
+        "vanilla": "The new elements render their plain DOM."
+      },
+      "updates": {
+        "t": "Updates",
+        "s": "one update per change",
+        "d": "Every call of the application and every action of a view runs as one synchronous update: state, render, reads, dependent writes, animations, events. The inputs are the methods of the element, the `bro-action` events of the sort header, the search, the paginator, the details and a filter drawer, the `ResizeObserver` of the host and the theme. In the server mode a sort, a filter or a page sends `bro-filters-server-loaded` with a `BroQuery`, and the rows of the answer come back by `replaceRows()` or `appendRows()`. A write that throws shows the fail state and sends `bro-error`.",
+        "sees": "Rows replaced, sorted, filtered or paged, the progress of a refresh, or the fail state after an error.",
+        "mat": "`TableBroNg` turns its inputs into the methods of the element outside the Angular zone and emits `action` and `query` inside it.",
+        "fw": "The application calls the methods of the element; an element of the skin renders its root again when the table sets its values.",
+        "vanilla": "The page calls the methods and listens to `bro-action` on the element."
+      },
+      "motion": {
+        "t": "Motion frames",
+        "s": "one frame loop per table",
+        "d": "The animations that an update starts run in `BroMotion`, `ctx.motion`: one loop of animation frames per table, requested only by its clock (`shared/clock.ts`) while a track runs. Each frame draws the tracks in their order with one frame time on the grid of the display period: the kinetic page scroll with the body height, the details, the progress. A run with the same key cancels the previous one, and `prefers-reduced-motion` draws the end at once.",
+        "sees": "A smooth scroll to the page, row details that open while the body grows.",
+        "mat": "",
+        "fw": "",
+        "vanilla": ""
+      },
+      "release": {
+        "t": "Disconnection",
+        "s": "release and cleanup",
+        "d": "An element that leaves the document waits for a microtask: a move in the DOM disconnects and connects it in one task and keeps everything. A table still out of the document aborts the signal of its render, which removes every listener, observer and timer of `ctx.signal`, and `controller.dispose()` cancels the animations and releases the theme service. Connected again, the table renders anew from an empty host with its current rows; a new `configure()` builds a new table.",
+        "sees": "Nothing: the table is gone, or moved without a flash.",
+        "mat": "The Angular elements keep their components through a move (`keepThroughMoves`); a removed `<table-bro-ng>` takes its table with it.",
+        "fw": "An element unmounts the root of its library after a microtask, unless it was only moved.",
+        "vanilla": ""
       }
     }
   }
