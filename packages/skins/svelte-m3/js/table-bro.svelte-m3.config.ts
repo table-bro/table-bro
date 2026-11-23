@@ -30,7 +30,7 @@ export const m3SvelteSkinConfig = {
     },
 
     shadow: {
-      className: 'bro-m3-svelte-elevation-5'
+      className: 'bro-m3-svelte-elevation-16'
     }
   },
 

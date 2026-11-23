@@ -34,7 +34,7 @@ export const vuetifySkinConfig = {
     },
 
     shadow: {
-      className: 'elevation-5'
+      className: 'bro-vuetify-elevation-16'
     }
   },
 
