@@ -112,9 +112,10 @@ The skin has a light and a dark theme, as the README of `@table-bro/core` descri
 ## Your own skin
 
 This skin is one of the skins of Table, Bro, with `@table-bro/angular-material`, `@table-bro/react-mui`,
-`@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/vue-vuetify` and `@table-bro/native`. A skin of your
-design system, or of the component library of your framework, is built the same way: see
-[Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+`@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/vue-vuetify` and `@table-bro/native`. A skin of your design
+system, or of the component library of your framework, is built the same way: see [Create your own
+skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository and [Your own
+skin](https://table-bro.com/docs/design/your-own-skin) in the Docs.
 
 ## License
 

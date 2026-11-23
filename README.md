@@ -201,6 +201,9 @@ components of Angular Material, then register the config under a name of its own
 `config.components` and `config.css` of the table are enough: they change any value or function of the config of the
 skin.
 
+The page [Your own skin](https://table-bro.com/docs/design/your-own-skin) of the Docs shows the parts of a skin, its registration and its server
+render, with an example on the elements of Vanilla HTML.
+
 An AI coding agent builds a skin of the components of your library with the skill
 [`create-skin`](.agents/skills/create-skin/SKILL.md) of the repository: the package, the elements and their contract
 with the table, the theme, the styles, a sample and the checks. The skin React MUI, `mui`, is its reference.

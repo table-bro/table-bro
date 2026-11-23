@@ -177,8 +177,9 @@ functions, at any depth, for that table. The sizes and timings are CSS variables
 ## Your own skin
 
 This skin is one of the skins of Table, Bro for Angular, with `@table-bro/bootstrap` and `@table-bro/native`. A skin of
-your design system, or of the component library of your framework, is built the same way: see
-[Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+your design system, or of the component library of your framework, is built the same way: see [Create your own
+skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository and [Your own
+skin](https://table-bro.com/docs/design/your-own-skin) in the Docs.
 
 ## Versions of Angular Material
 

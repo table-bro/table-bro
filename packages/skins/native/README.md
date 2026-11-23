@@ -102,7 +102,8 @@ Vanilla HTML is the reference skin of Table, Bro, next to `@table-bro/angular-ma
 `@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/vue-vuetify` and `@table-bro/bootstrap`: a skin of your
 design system, or of the component library of your framework, starts from its config `nativeSkinConfig` and its sources
 in [`packages/skins/native`](https://github.com/table-bro/table-bro/tree/main/packages/skins/native). See [Create your
-own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository and [Your own
+skin](https://table-bro.com/docs/design/your-own-skin) in the Docs.
 
 ## License
 
