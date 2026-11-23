@@ -1300,7 +1300,7 @@ A skin gives the table the look and the controls of a UI library: the classes of
 
 #### Register the skin
 
-This skin takes the elements of Vanilla HTML and gives the parts of the table the classes of a design system. \`registerSkin()\` registers it once, before the tables, and \`conf: {skin: 'brand'}\` of a table names it:
+This skin takes the config \`nativeSkinConfig\` of \`@table-bro/native\`, with the elements of Vanilla HTML, and gives the parts of the table the classes of a design system. \`registerSkin(name, config)\` of \`@table-bro/core\` registers it once, before the tables, and \`conf: {skin: 'brand'}\` of a table names it:
 
 {{brand-skin.ts}}
 
