@@ -85,7 +85,8 @@
     "navDom": "DOM",
     "navBlocks": "Blocks",
     "nodeHint": "Its focus lights up its links on the map; Enter or a click keeps them lit until Enter again or Escape.",
-    "designLbl": "Design"
+    "designLbl": "Design",
+    "lgImport": "import of a package"
   },
   "facts": {
     "0": {

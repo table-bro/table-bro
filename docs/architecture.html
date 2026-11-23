@@ -924,6 +924,20 @@
   .edge.dashed .e-line {
     stroke-dasharray: 5 4;
   }
+  /* An import of a package: dots and an open arrowhead, apart from the dashes of events and contracts */
+  .edge.import .e-line {
+    stroke-dasharray: 0 5;
+    stroke-linecap: round;
+    stroke-width: 2.2;
+    marker-end: url(#ah-imp);
+  }
+  .ah-imp {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
   .edge .e-run {
     stroke: none;
@@ -2002,6 +2016,7 @@
       lgCall: T('ui.lgCall'),
       lgEvent: T('ui.lgEvent'),
       lgActive: T('ui.lgActive'),
+      lgImport: T('ui.lgImport'),
       lgBadge: T('ui.lgBadge'),
       flowsTitle: T('ui.flowsTitle'),
       flowsLede: T('ui.flowsLede'),
@@ -2140,6 +2155,8 @@
       {id: 'views-elements', from: 'views', to: 'elements', pts: [[1070, 568], [1130, 568]]},
       {id: 'elements-el', from: 'elements', to: 'element', dashed: 1, pts: [[1400, 568], [1426, 568], [1426, 26], [1000, 26], [1000, 70]], l: 'bro-action', lp: [1220, 26]},
       {id: 'mat-reg', from: 'mat', to: 'registry', pts: [[1130, 172], [1104, 172]].concat(REG_BUS), l: 'registerSkin()', lp: [940, 830]},
+      // The skin mat imports the wrapper: the token of the components of its elements and TableBroNg for its filter drawer
+      {id: 'mat-ng', from: 'mat', to: 'ng', import: 1, pts: [[1400, 172], [1414, 172], [1414, 862], [233, 862], [233, 190], [240, 190]], l: 'TABLE_BRO_ELEMENTS · TableBroNg', lp: [760, 862]},
       {id: 'mui-reg', from: 'mui', to: 'registry', pts: [[1130, 222], [1104, 222]].concat(REG_BUS)},
       {id: 'suid-reg', from: 'suid', to: 'registry', pts: [[1130, 272], [1104, 272]].concat(REG_BUS)},
       {id: 'm3-reg', from: 'm3', to: 'registry', pts: [[1130, 322], [1104, 322]].concat(REG_BUS)},
@@ -2702,7 +2719,7 @@
         });
         EDGES.forEach(e => edges.push(e));
 
-        return {W: 1440, H: 866, zones: ZONES, notes: [], nodes, edges, alias: {}};
+        return {W: 1440, H: 880, zones: ZONES, notes: [], nodes, edges, alias: {}};
       }
 
       Object.keys(MVC.pos).forEach(id => {
@@ -2805,7 +2822,7 @@
     function edgeSVG(e) {
       const d = rpath(e.pts, 7);
 
-      return `<g class="edge${e.dashed ? ' dashed' : ''}" data-id="${e.id}" aria-hidden="true"><path class="e-line" d="${d}"/><path class="e-run" d="${d}"/></g>`;
+      return `<g class="edge${e.dashed ? ' dashed' : ''}${e.import ? ' import' : ''}" data-id="${e.id}" aria-hidden="true"><path class="e-line" d="${d}"/><path class="e-run" d="${d}"/></g>`;
     }
 
     function labelSVG(e, cls) {
@@ -2851,6 +2868,7 @@
       out += '<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>';
       out += '<marker id="ah-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="ah-on" d="M0,0 L10,5 L0,10 z"/></marker>';
       out += '<marker id="ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path class="ah-hl" d="M0,0 L10,5 L0,10 z"/></marker>';
+      out += '<marker id="ah-imp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="ah-imp" d="M1.5,1.5 L9,5 L1.5,8.5"/></marker>';
       out += '<marker id="ah-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path class="ah-fb" d="M0,0 L10,5 L0,10 z"/></marker>';
       out += '</defs>';
 
@@ -3171,7 +3189,8 @@
       }
 
       return sw('z-app', 'lgApp') + sw('z-wrap', 'lgWrap') + sw('z-core', 'lgCore') + sw('z-skin', 'lgSkin') + sw('z-mod', 'lgMod')
-        + sw('kind k-state', 'lgState') + sw('kind k-view', 'lgView') + lines;
+        + sw('kind k-state', 'lgState') + sw('kind k-view', 'lgView') + lines
+        + `<li><svg viewBox="0 0 30 14" aria-hidden="true"><path d="M2 7H24" stroke="var(--line)" stroke-width="2.2" stroke-dasharray="0 5" stroke-linecap="round" fill="none"/><path d="M23 3 L28 7 L23 11" stroke="var(--line)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>${esc(L(UI.lgImport))}</li>`;
     }
 
     function renderPanel() {
