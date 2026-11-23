@@ -2159,7 +2159,7 @@
         ['BroModels', 'model/models.ts', T('groups.state.items.broModels')],
         ['BroRowSlot · BroRowSlots', 'model/row-slots.ts', T('groups.state.items.broRowSlot')],
         ['BroRowHeights', 'model/row-heights.ts', T('groups.state.items.broRowHeights')],
-        ['rowKeys · keysDiff', 'model/row-keys.ts', T('groups.state.items.rowKeys')]
+        ['rowKeys · diffKeys', 'model/row-keys.ts', T('groups.state.items.rowKeys')]
       ]},
       {z: 'z-core', t: T('groups.views.t'), s: 'view/ · shared/', items: [
         ['BroTableRegions', 'view/dom/table-regions.view.ts', T('groups.views.items.broTableRegions')],
@@ -2171,6 +2171,9 @@
         ['BroDom', 'shared/dom.ts', T('groups.views.items.broDom')],
         ['dispatchAction', 'shared/interaction.ts · shared/events.ts', T('groups.views.items.dispatchAction')],
         ['<table-bro-filter-drawer-container>', 'view/features/filters/filter-drawer.view.ts', T('groups.views.items.filterDrawer')]
+      ]},
+      {z: 'z-app', t: T('groups.mcp.t'), s: '@table-bro/mcp · packages/mcp', items: [
+        ['@table-bro/mcp', 'packages/mcp', T('groups.tooling.items.mcp')]
       ]},
       {z: 'z-skin', t: T('groups.skins.t'), s: T('groups.skins.s'), items: [
         ['mat · @table-bro/angular-material', 'packages/skins/angular-material', T('groups.skins.items.mat')],
@@ -2185,7 +2188,7 @@
       ]},
       {z: 'z-wrap', t: T('groups.frameworkWrapper.t'), s: '@table-bro/angular · packages/angular', items: [
         ['TableBroNg', 'src/lib/table-bro-ng.ts', T('groups.frameworkWrapper.items.tableBroNg')],
-        ['TABLE_BRO_ELEMENTS · prerender', 'src/lib/table-bro-prerender.ts', T('groups.frameworkWrapper.items.prerender')],
+        ['TABLE_BRO_ELEMENTS · prerenderTableBroNg', 'src/lib/table-bro-prerender.ts', T('groups.frameworkWrapper.items.prerender')],
         ['BroFacade · BroService', 'src/lib/table-bro.facade.ts · table-bro.service.ts', T('groups.frameworkWrapper.items.broFacade')]
       ]},
       {z: 'z-mod', t: T('groups.extensionModule.t'), s: '@table-bro-extended/island-details', items: [
@@ -2195,8 +2198,7 @@
       ]},
       {z: 'z-app', t: T('groups.tooling.t'), s: T('groups.tooling.s'), items: [
         ['check:arch', 'scripts/check-arch.mjs', T('groups.tooling.items.checkArch')],
-        ['check:api', 'scripts/check-api.mjs', T('groups.tooling.items.checkApi')],
-        ['@table-bro/mcp', 'packages/mcp', T('groups.tooling.items.mcp')]
+        ['check:api', 'scripts/check-api.mjs', T('groups.tooling.items.checkApi')]
       ]}
     ];
 

@@ -117,7 +117,7 @@
     },
     "drawer": {
       "t": "Filter drawer",
-      "s": "element of the core"
+      "s": "element of the core or of mat"
     },
     "element": {
       "s": "configure · replaceRows · appendRows · setState · theme"
@@ -278,7 +278,7 @@
         "5": "The views tell the layout the facts of the body: rows rendered, moved or resized, details toggled, window moved.",
         "6": "The module draws the spaces, the row shadows and the rounded corners and keeps their geometry itself."
       },
-      "note": "Without the module a table with `rowDetailsIsland` shows the fail state and sends `bro-error` with `island-details-missing`."
+      "note": "Without the module a table with `rowDetailsIsland` shows the fail state and sends `bro-error` with `island-details-missing`. A prerender does not connect the module: it shows the loading state with the window shadow of the core."
     },
     "skin": {
       "t": "Skin registration",
@@ -557,6 +557,9 @@
         "filterDrawer": "The table and the filters of the application in a grid; the drawer is outside the table. Defined on demand."
       }
     },
+    "mcp": {
+      "t": "MCP server"
+    },
     "skins": {
       "t": "Skins",
       "s": "BroSkinConfig + elements + CSS; a framework skin adds a server entry",
@@ -595,7 +598,7 @@
       "items": {
         "checkArch": "Dependency rules of the code.",
         "checkApi": "Public API reports of the packages.",
-        "mcp": "MCP server that generates table code for an application; depends on no runtime package."
+        "mcp": "The reference, the spec check and the code generator of a table for AI coding agents. It reads, never writes, and imports no other package of Table, Bro."
       }
     }
   },
