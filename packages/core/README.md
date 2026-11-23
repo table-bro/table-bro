@@ -336,7 +336,7 @@ package exports the config of its skin: `matSkinConfig`, `muiSkinConfig`, `suidS
 `vuetifySkinConfig`, `bootstrapSkinConfig` and `nativeSkinConfig`. `config.components` and `config.css` of a table
 change any value or function of the config of its skin, at any depth. `registerSkin(name, config)` registers a skin of
 your own: [Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the
-repository describes its config.
+repository and [Your own skin](https://table-bro.com/docs/design/your-own-skin) in the Docs describe it.
 
 The skin `mat` and `@table-bro/angular-material` are built for Angular Material 20, 21 and 22. The skin can work with
 another version of Angular Material too, but that takes a build from the sources and a check of the result: the SCSS
