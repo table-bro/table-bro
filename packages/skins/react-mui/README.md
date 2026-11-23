@@ -7,7 +7,7 @@ sizes of the tables of the skin Angular Material. The skin is `mui`.
 The package holds the config of the skin, its elements (Custom Elements that render the components of MUI in React roots
 of their own) and its CSS. The table itself is `<table-bro>` of `@table-bro/core`, in the JSX of the application.
 
-## With an AI coding agent
+## Install with an AI coding agent
 
 Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the
 packages, generates the table, its setup and its cells from one request, and checks the result. The table is a module
@@ -22,7 +22,7 @@ The setup for Cursor, Codex and VS Code is in the README of
 server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
 [Docs](https://table-bro.com/docs).
 
-## Install
+## Install manually
 
 In a project of React 19 with MUI 9:
 

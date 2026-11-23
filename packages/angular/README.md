@@ -7,7 +7,7 @@ The wrapper does not depend on a skin. It works with any registered skin of Tabl
 Angular Material (`@table-bro/angular-material`), Vanilla Bootstrap (`@table-bro/bootstrap`) and Vanilla HTML
 (`@table-bro/native`).
 
-## With an AI coding agent
+## Install with an AI coding agent
 
 `<table-bro-ng>` is the table that the agent adds to an Angular project: a pixel-perfect Material data table with
 search, paging, sorting and row details. Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code,
@@ -23,7 +23,7 @@ The setup for Cursor, Codex and VS Code is in the README of
 server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
 [Docs](https://table-bro.com/docs), [Material Design](https://table-bro.com/docs/design/material-design).
 
-## Install
+## Install manually
 
 ```sh
 npm install @table-bro/core @table-bro/angular

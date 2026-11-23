@@ -34,7 +34,7 @@ the Material 3 blueprint of Vuetify, which its setup installs.
 | --- | --- |
 | `@table-bro/angular` | `<table-bro-ng>`, the Angular wrapper of the table |
 
-## With an AI coding agent
+## Install with an AI coding agent
 
 The core is what the AI coding agent puts on the page: a pixel-perfect Material data table with search, paging, sorting,
 row details and dark mode, for Angular, Preact, React, Solid, Svelte, Vue and plain HTML. Tell your AI assistant to use
@@ -50,7 +50,7 @@ The setup for Cursor, Codex and VS Code is in the README of
 server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
 [Docs](https://table-bro.com/docs).
 
-## Install
+## Install manually
 
 Install the core with the skin of your framework. The README of the skin and the page of the framework on the site give
 the whole setup:

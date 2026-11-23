@@ -3,7 +3,7 @@
 The Vanilla Bootstrap skin of [Table, Bro](https://table-bro.com): data tables built from the components and the
 styles of Bootstrap 5, for any framework. The skin is `bs`.
 
-## With an AI coding agent
+## Install with an AI coding agent
 
 The skin `bs` gives a table made by the agent the look of Bootstrap 5 for any framework. Tell your AI assistant to use
 Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages, generates the table,
@@ -18,7 +18,7 @@ The setup for Cursor, Codex and VS Code is in the README of
 server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
 [Docs](https://table-bro.com/docs), [Bootstrap design](https://table-bro.com/docs/design/bootstrap-design).
 
-## Install
+## Install manually
 
 ```sh
 npm install @table-bro/core @table-bro/bootstrap bootstrap @types/bootstrap

@@ -6,7 +6,7 @@ components of Angular Material, in the theme of the application. The skin implem
 The package holds the config of the skin, its elements (Angular components that the table creates as Custom Elements),
 its CSS and its filter drawer container. The table itself is `<table-bro-ng>` of `@table-bro/angular`.
 
-## With an AI coding agent
+## Install with an AI coding agent
 
 The skin `mat` is the look that the agent gives an Angular table by default: a pixel-perfect Material Design 3 (M3) data
 table in the theme of the application. Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code,
@@ -22,7 +22,7 @@ The setup for Cursor, Codex and VS Code is in the README of
 server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https://table-bro.com/docs/getting-started),
 [Docs](https://table-bro.com/docs), [Material Design](https://table-bro.com/docs/design/material-design).
 
-## Install
+## Install manually
 
 In a project with Angular Material (`ng add @angular/material` adds it):
 
