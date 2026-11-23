@@ -161,9 +161,12 @@ describe('prerenderTableBro', () => {
 
     // The progress bar of the prerender has run since the first paint of the page
     const [prerenderAnimation] = element.getAnimations({subtree: true});
-    const startTime = <number>document.timeline.currentTime - 700;
 
-    prerenderAnimation.startTime = startTime;
+    prerenderAnimation.startTime = <number>document.timeline.currentTime - 700;
+
+    // The browser keeps a start time in a unit of its own, so the value it gives back can differ from the one set in the
+    // last bit; the table copies the value that the browser gives, and a copy of it stays exact
+    const startTime = prerenderAnimation.startTime;
 
     (<HTMLElement & {configure(options: object): void}>element).configure(options);
 
