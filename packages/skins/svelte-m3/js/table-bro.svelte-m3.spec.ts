@@ -150,6 +150,24 @@ describe('the M3 sort header', () => {
     expect(control().classList.contains('bro-m3-svelte-sort-header_before')).toBe(true);
     expect(header.querySelector('.bro-m3-svelte-sort-header-content')!.textContent).toBe('Price');
   });
+
+  it('keeps the markup of a prerendered table and sorts nothing until the table renders', () => {
+    const prerendered = document.createElement('table-bro');
+    const sorts: unknown[] = [];
+
+    prerendered.setAttribute('data-bro-prerender', '');
+    prerendered.innerHTML = '<bro-m3-svelte-sort-header header-title="Price" sort-id="price"><div class="bro-m3-svelte-sort-header" role="button" tabindex="0">Price</div></bro-m3-svelte-sort-header>';
+    prerendered.addEventListener('bro-action', event => sorts.push((<CustomEvent>event).detail.data));
+    document.body.append(prerendered);
+
+    const control = prerendered.querySelector<HTMLElement>('.bro-m3-svelte-sort-header')!;
+
+    control.click();
+    control.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+
+    expect(sorts).toEqual([]);
+    expect(prerendered.querySelector('bro-m3-svelte-sort-header')!.innerHTML).toBe('<div class="bro-m3-svelte-sort-header" role="button" tabindex="0">Price</div>');
+  });
 });
 
 describe('the M3 tooltip', () => {

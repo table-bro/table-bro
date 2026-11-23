@@ -1,4 +1,4 @@
-import {type BroColSort, BroDom, BroHTMLElement, type BroSortHeader, dispatchAction, events} from '@table-bro/core';
+import {type BroColSort, BroDom, BroHTMLElement, type BroSortHeader, dispatchAction, events, isPrerendered} from '@table-bro/core';
 
 import {iconHTML}              from './bro-m3-svelte-element';
 import {attachM3SvelteTooltip} from './m3-tooltip';
@@ -55,6 +55,11 @@ export class BroM3SvelteSortHeaderComponent extends BroHTMLElement implements Br
   }
 
   connectedCallback(): void {
+    // An element of a prerendered table keeps its markup until the table renders its own elements in its place
+    if (isPrerendered(this)) {
+      return;
+    }
+
     // A header without a title, as of a column of buttons, sorts nothing and is no control, as in the skin mat
     if (!this.headerTitle) {
       return;
