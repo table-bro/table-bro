@@ -2544,6 +2544,8 @@
     let lcSkin = 'all';
     let mapTab = 'mvc';
     let forbidOn = false;
+    /** The block whose links stay lit after Enter, Space or a click on it, until the same again or Escape. */
+    let pinnedId = null;
 
     // A text of the page or a plain label; an absent one renders as nothing
     const L = v => (v === undefined || v === null) ? '' : v;
@@ -2774,7 +2776,7 @@
       const cls = ['node', n.z, n.k || '', n.container ? 'container' : '', n.actor ? 'actor' : ''].join(' ');
       // A screen reader names the block, its role on the map, and what its focus does
       const name = [L(n.t), L(n.s)].filter(Boolean).join(': ') + '. ' + L(UI.nodeHint);
-      let out = `<g class="${cls}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(name)}">`;
+      let out = `<g class="${cls}" data-id="${id}" tabindex="0" role="button" aria-pressed="${id === pinnedId}" aria-label="${esc(name)}">`;
 
       if (n.actor) {
         out += `<rect class="n-box" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${n.h / 2}"/>`;
@@ -3038,6 +3040,11 @@
         return;
       }
 
+      // A pinned block keeps its links lit: the pointer and the focus on other blocks change nothing
+      if (pinnedId) {
+        id = pinnedId;
+      }
+
       svg.querySelectorAll('.hl, .holder').forEach(el => el.classList.remove('hl', 'holder'));
 
       if (!id) {
@@ -3078,7 +3085,32 @@
         g.addEventListener('pointerleave', () => hover(geo.nodes[id].parent || null));
         g.addEventListener('focus', () => hover(id));
         g.addEventListener('blur', () => hover(null));
+        g.addEventListener('click', () => pin(id));
+        g.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            // Space would scroll the page
+            event.preventDefault();
+            pin(id);
+          }
+        });
       });
+    }
+
+    /**
+     * Pins the links of a block, or releases them when the block is pinned already. A flow takes the map over: the pin
+     * waits until no flow is selected.
+     * @param id - the block, or null to release the pin
+     */
+    function pin(id) {
+      const svg = document.getElementById('map-svg');
+
+      pinnedId = (id && id !== pinnedId) ? id : null;
+      svg.querySelectorAll('.node').forEach(g => g.setAttribute('aria-pressed', String(g.dataset.id === pinnedId)));
+
+      // Released, the map shows the links of the focused block, as before the pin
+      const focused = document.activeElement?.closest?.('#map-svg .node');
+
+      hover(pinnedId || (focused ? focused.dataset.id : null));
     }
 
     function renderMap() {
@@ -3104,6 +3136,13 @@
       document.getElementById('legend').innerHTML = legendHTML();
       renderPanel();
       applyFlow();
+
+      // The other map may lack the pinned block
+      if (pinnedId && !geo.nodes[pinnedId]) {
+        pinnedId = null;
+      }
+
+      hover(null);
       syncURL();
     }
 
@@ -3344,6 +3383,7 @@
 
       renderPanel();
       applyFlow();
+      hover(null);
       syncURL();
     }
 
@@ -3502,7 +3542,9 @@
     });
 
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && flowId) {
+      if (event.key === 'Escape' && pinnedId) {
+        pin(null);
+      } else if (event.key === 'Escape' && flowId) {
         selectFlow(null);
       }
     });

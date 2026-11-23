@@ -33,7 +33,7 @@
     "mapTitle": "System map",
     "mapLede": "Blocks are grouped by package: the application, the wrapper, the core, the skins and the extension module. Pick a flow to light up its path; the numbers on the blocks show the order of its steps.",
     "all": "All links",
-    "hint": "Hover a block to see its links, or pick a flow above the map.",
+    "hint": "Hover a block to see its links, click it to keep them lit, or pick a flow above the map.",
     "caption": "Every change goes through BroController.update(). The controller is the only writer of ctx.state; views write the DOM; the body layout is the only part of the core that calls Island Details. Packages above the core import it only as @table-bro/core.",
     "lgApp": "Application, browser and the MCP server",
     "lgWrap": "Framework wrapper and page elements",
@@ -84,7 +84,7 @@
     "navRules": "Rules",
     "navDom": "DOM",
     "navBlocks": "Blocks",
-    "nodeHint": "Its focus lights up its links on the map.",
+    "nodeHint": "Its focus lights up its links on the map; Enter or a click keeps them lit until Enter again or Escape.",
     "designLbl": "Design"
   },
   "facts": {
