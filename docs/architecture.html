@@ -1005,6 +1005,13 @@
   .node.hl .n-box {
     stroke-width: 2;
   }
+  .map-svg .node:focus {
+    outline: none;
+  }
+  .map-svg .node:focus-visible .n-box {
+    stroke: var(--accent);
+    stroke-width: 3;
+  }
 
   .lbl.on rect {
     stroke: var(--accent);
@@ -2014,6 +2021,7 @@
       mayLbl: T('ui.mayLbl'),
       mayNotLbl: T('ui.mayNotLbl'),
       codeLbl: T('ui.codeLbl'),
+      nodeHint: T('ui.nodeHint'),
       lcTitle: T('ui.lcTitle'),
       lcLede: T('ui.lcLede'),
       lcSkinsLbl: T('ui.lcSkinsLbl'),
@@ -2756,7 +2764,9 @@
     function nodeSVG(id) {
       const n = geo.nodes[id];
       const cls = ['node', n.z, n.k || '', n.container ? 'container' : '', n.actor ? 'actor' : ''].join(' ');
-      let out = `<g class="${cls}" data-id="${id}" tabindex="0">`;
+      // A screen reader names the block, its role on the map, and what its focus does
+      const name = [L(n.t), L(n.s)].filter(Boolean).join(': ') + '. ' + L(UI.nodeHint);
+      let out = `<g class="${cls}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(name)}">`;
 
       if (n.actor) {
         out += `<rect class="n-box" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="${n.h / 2}"/>`;
@@ -2785,7 +2795,7 @@
     function edgeSVG(e) {
       const d = rpath(e.pts, 7);
 
-      return `<g class="edge${e.dashed ? ' dashed' : ''}" data-id="${e.id}"><path class="e-line" d="${d}"/><path class="e-run" d="${d}"/></g>`;
+      return `<g class="edge${e.dashed ? ' dashed' : ''}" data-id="${e.id}" aria-hidden="true"><path class="e-line" d="${d}"/><path class="e-run" d="${d}"/></g>`;
     }
 
     function labelSVG(e, cls) {
@@ -2794,7 +2804,7 @@
       }
 
       const [x, y] = labelPoint(e);
-      const attr = cls ? `class="${cls}"` : `class="lbl" data-edge="${e.id}"`;
+      const attr = (cls ? `class="${cls}"` : `class="lbl" data-edge="${e.id}"`) + ' aria-hidden="true"';
 
       return `<g ${attr}><rect x="${x}" y="${y - 9}" width="0" height="18" rx="5"/><text x="${x}" y="${y + 3.5}" text-anchor="middle">${esc(L(e.l))}</text></g>`;
     }
@@ -2804,7 +2814,7 @@
         return '';
       }
 
-      let out = '<g class="fb">';
+      let out = '<g class="fb" aria-hidden="true">';
 
       MVC.forbid.arrows.forEach(a => {
         out += `<path class="fb-line" d="${rpath(a.pts, 6)}"/>`;
@@ -2825,9 +2835,9 @@
     }
 
     function svgMap() {
-      let out = `<svg class="map-svg${forbidOn && mapTab === 'mvc' ? ' forbidding' : ''}" id="map-svg" viewBox="0 0 ${geo.W} ${geo.H}" role="img" aria-label="${esc(L(mapTab === 'mvc' ? UI.mvcAria : UI.mapAria))}">`;
+      let out = `<svg class="map-svg${forbidOn && mapTab === 'mvc' ? ' forbidding' : ''}" id="map-svg" viewBox="0 0 ${geo.W} ${geo.H}" role="group" aria-label="${esc(L(mapTab === 'mvc' ? UI.mvcAria : UI.mapAria))}">`;
 
-      out += '<defs>';
+      out += '<defs aria-hidden="true">';
       out += '<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>';
       out += '<marker id="ah-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="ah-on" d="M0,0 L10,5 L0,10 z"/></marker>';
       out += '<marker id="ah-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path class="ah-hl" d="M0,0 L10,5 L0,10 z"/></marker>';
@@ -2835,11 +2845,11 @@
       out += '</defs>';
 
       geo.zones.forEach(z => {
-        out += `<g class="zone ${z.cls}${z.big ? ' big' : ''}"><rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="14"/><text x="${z.x + 14}" y="${z.y + (z.big ? 24 : 20)}">${esc(L(z.t))}</text></g>`;
+        out += `<g class="zone ${z.cls}${z.big ? ' big' : ''}" aria-hidden="true"><rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="14"/><text x="${z.x + 14}" y="${z.y + (z.big ? 24 : 20)}">${esc(L(z.t))}</text></g>`;
       });
 
       geo.notes.forEach(n => {
-        out += `<text class="lane-note" x="${n.x}" y="${n.y}">`;
+        out += `<text class="lane-note" x="${n.x}" y="${n.y}" aria-hidden="true">`;
         L(n.lines).forEach((line, i) => out += `<tspan x="${n.x}" dy="${i ? 16 : 0}">${esc(line)}</tspan>`);
         out += '</text>';
       });
@@ -2852,7 +2862,7 @@
       ids.filter(id => !geo.nodes[id].container).forEach(id => out += nodeSVG(id));
       geo.edges.forEach(e => out += labelSVG(e));
       out += forbidSVG();
-      out += '<g id="badges"></g>';
+      out += '<g id="badges" aria-hidden="true"></g>';
 
       return out + '</svg>';
     }

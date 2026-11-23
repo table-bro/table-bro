@@ -83,7 +83,8 @@
     "navUpdate": "One update",
     "navRules": "Rules",
     "navDom": "DOM",
-    "navBlocks": "Blocks"
+    "navBlocks": "Blocks",
+    "nodeHint": "Its focus lights up its links on the map."
   },
   "facts": {
     "0": {
