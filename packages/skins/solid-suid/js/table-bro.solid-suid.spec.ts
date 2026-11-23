@@ -259,6 +259,19 @@ describe('the SUID tags', () => {
 
     expect(empty.querySelector('.MuiChip-label')!.textContent).toBe('No tags');
   });
+
+  it('leaves the chips of a server DOM unfitted, as a prerender measures nothing', () => {
+    setServerRender(() => '<div class="bro-suid-tags-chips"><span>red</span><span>green</span></div>');
+
+    const server = document.implementation.createHTMLDocument('');
+    const tags = document.createElement('bro-suid-tags');
+
+    Object.assign(tags, {config});
+    server.body.append(tags);
+
+    expect(tags.querySelectorAll('.bro-suid-tags-chips > span')).toHaveLength(2);
+    expect(tags.querySelector('.bro-cell-items-ellipsis')).toBeNull();
+  });
 });
 
 describe('the SUID switch', () => {

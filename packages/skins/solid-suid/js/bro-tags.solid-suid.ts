@@ -75,8 +75,15 @@ export class BroSuidTagsComponent extends BroSuidElement implements BroCellEleme
     return tag('div', {class: 'bro-suid-tags-chips', children: chips});
   }
 
-  /** The chips that do not fit the line give way to an ellipsis, from the first render on. */
+  /**
+   * The chips that do not fit the line give way to an ellipsis, from the first render on. The markup of a server DOM is
+   * not fitted, as a prerender measures nothing.
+   */
   protected override rendered(): void {
+    if (this.ownerDocument.defaultView !== globalThis.window) {
+      return;
+    }
+
     this.fitting = new AbortController();
     fitCellItems(this.querySelector<HTMLElement>('.bro-suid-tags-chips')!, this.fitting.signal);
   }
