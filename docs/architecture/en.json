@@ -671,15 +671,24 @@
         "l": "phase 2: render"
       },
       "views-motion": {
-        "l": "phase 5: animate"
+        "l": "phase 5: frame animations"
+      },
+      "upd-state": {
+        "l": "phase 1: state"
+      },
+      "el-app": {
+        "l": "phase 6: events · bro-action · bro-error"
       }
     },
     "extra": {
       "views-dom": {
-        "l": "writes"
+        "l": "phases 2, 4: writes"
       },
       "views-read": {
         "l": "reads"
+      },
+      "dom-views": {
+        "l": "phase 3: frame reads"
       }
     },
     "forbid": {

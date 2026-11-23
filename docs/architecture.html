@@ -2091,7 +2091,7 @@
           ['elements', T('flows.render.steps.6')],
           ['layout', T('flows.render.steps.7')]
         ],
-        edges: ['app-el', 'el-ctx', 'css-ctx', 'el-ctrl', 'upd-state', 'body-views', 'views-elements', 'views-layout'],
+        edges: ['app-el', 'el-ctx', 'css-ctx', 'el-ctrl', 'upd-state', 'body-views', 'views-elements', 'dom-views', 'views-layout'],
         note: T('flows.render.note')
       },
       {
@@ -2154,7 +2154,7 @@
           ['layout', T('flows.details.steps.5')],
           ['island', T('flows.details.steps.6')]
         ],
-        edges: ['views-el', 'el-ctrl', 'details-views', 'views-motion', 'views-layout', 'layout-island'],
+        edges: ['views-el', 'el-ctrl', 'details-views', 'dom-views', 'views-motion', 'views-layout', 'layout-island'],
         note: T('flows.details.note')
       },
       {
@@ -2536,7 +2536,7 @@
       },
       edges: {
         'app-el': {pts: [[150, 150], [150, 92], [250, 92]], l: 'configure()', lp: [200, 92]},
-        'el-app': {pts: [[600, 70], [600, 26], [60, 26], [60, 150]]},
+        'el-app': {pts: [[600, 70], [600, 26], [60, 26], [60, 150]], l: T('mvc.edges.el-app.l')},
         'app-srv': {pts: [[114, 190], [114, 228]], lp: [114, 209]},
         'app-ng': {pts: [[36, 175], [26, 175], [26, 328], [36, 328]]},
         'ng-el': {pts: [[192, 328], [228, 328], [228, 104], [250, 104]]},
@@ -2546,7 +2546,7 @@
         'el-ctrl': {pts: [[380, 126], [380, 200]]},
         'el-ctx': {pts: [[770, 98], [800, 98]]},
         'css-ctx': {pts: [[1490, 584], [1510, 584], [1510, 30], [1000, 30], [1000, 70]], lp: [1250, 30]},
-        'upd-state': {pts: [[500, 262], [540, 262], [540, 238], [566, 238]]},
+        'upd-state': {pts: [[500, 262], [540, 262], [540, 238], [566, 238]], l: T('mvc.edges.upd-state.l'), lp: [512, 226]},
         'body-models': {pts: [[500, 370], [544, 370], [544, 328], [566, 328]]},
         'body-views': {pts: [[500, 388], [886, 388]], l: T('mvc.edges.body-views.l'), lp: [700, 388]},
         'details-views': {pts: [[500, 442], [886, 442]]},
@@ -2574,8 +2574,10 @@
         'island-spaces': {pts: [[1367, 406], [1367, 430]]}
       },
       extra: [
-        {id: 'views-dom', from: 'views', to: 'dom', pts: [[1194, 222], [1210, 222], [1210, 150], [1244, 150]], l: T('mvc.extra.views-dom.l'), lp: [1222, 186]},
+        {id: 'views-dom', from: 'views', to: 'dom', pts: [[1194, 222], [1210, 222], [1210, 150], [1244, 150]], l: T('mvc.extra.views-dom.l'), lp: [1146, 186]},
         {id: 'views-broDom', from: 'views', to: 'broDom', pts: [[1194, 250], [1244, 250]]},
+        // The measurements of the frame: the views and the aux table read the layout of the host after all the writes
+        {id: 'dom-views', from: 'dom', to: 'views', dashed: 1, pts: [[1290, 190], [1290, 202], [1222, 202], [1222, 236], [1194, 236]], l: T('mvc.extra.dom-views.l'), lp: [1295, 202]},
         {id: 'broDom-dom', from: 'broDom', to: 'dom', pts: [[1367, 214], [1367, 190]]},
         {id: 'dom-el', from: 'dom', to: 'element', dashed: 1, pts: [[1300, 110], [1300, 54], [720, 54], [720, 70]], l: 'bro-action', lp: [1010, 54]},
         {id: 'views-read', from: 'views', to: 'models', dashed: 1, pts: [[886, 320], [834, 320]], l: T('mvc.extra.views-read.l'), lp: [860, 308]}
