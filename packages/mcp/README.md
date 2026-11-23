@@ -1,13 +1,13 @@
 # @table-bro/mcp
 
-The MCP server of [Table, Bro](https://table-bro.com): pixel-perfect Material (M3) data tables for any framework and
-plain JavaScript. Add it to Claude Code, Cursor or Codex, tell the agent what table you need, and it installs the
-packages and generates the table, its setup and its cells from one request. The server gives the agent the reference of
-the table, the check of a table spec and the code generator of a table: for Angular, with `<table-bro-ng>`, and for a
-page of Vanilla JS, React, Preact, Solid, Svelte or Vue, with `<table-bro>`. The generator knows every skin: `mat`
-(Angular Material) for Angular, `mui` (React MUI) for React and Preact, `suid` (Solid SUID) for Solid, `m3-svelte`
-(Svelte M3) for Svelte, `vuetify` (Vue Vuetify) for Vue, and `bs` (Vanilla Bootstrap) and `nv` (Vanilla HTML) for any of
-them. The agent writes the files; the server only reads.
+The MCP server of [Table, Bro](https://table-bro.com): pixel-perfect Material data tables for any framework and plain
+JavaScript. Add it to Claude Code, Cursor or Codex, tell the agent what table you need, and it installs the packages and
+generates the table, its setup and its cells from one request. The server gives the agent the reference of the table,
+the check of a table spec and the code generator of a table: for Angular, with `<table-bro-ng>`, and for a page of
+Vanilla JS, React, Preact, Solid, Svelte or Vue, with `<table-bro>`. The generator knows every skin: `mat` (Angular
+Material) for Angular, `mui` (React MUI) for React and Preact, `suid` (Solid SUID) for Solid, `m3-svelte` (Svelte M3)
+for Svelte, `vuetify` (Vue Vuetify) for Vue, and `bs` (Vanilla Bootstrap) and `nv` (Vanilla HTML) for any of them. The
+agent writes the files; the server only reads.
 
 ```sh
 claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2

@@ -1,7 +1,7 @@
 # @table-bro/core
 
-Pixel-perfect Material (M3) data tables as Web Components: the core of [Table, Bro](https://table-bro.com) with its CSS,
-for any framework or none.
+Pixel-perfect Material data tables as Web Components: the core of [Table, Bro](https://table-bro.com) with its CSS, for
+any framework or none.
 
 The table is the Custom Element `<table-bro>` with pages, sort, search, row details, a filter drawer and a server mode.
 A skin gives it the look and the controls of a UI library. The packages of Table, Bro:
@@ -36,10 +36,10 @@ the Material 3 blueprint of Vuetify, which its setup installs.
 
 ## With an AI coding agent
 
-The core is what the AI coding agent puts on the page: a pixel-perfect Material (M3) data table with search, paging,
-sorting, row details and dark mode, for Angular, Preact, React, Solid, Svelte, Vue and plain HTML. Tell your AI
-assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages,
-generates the table, its setup and its cells from one request, and checks the result.
+The core is what the AI coding agent puts on the page: a pixel-perfect Material data table with search, paging, sorting,
+row details and dark mode, for Angular, Preact, React, Solid, Svelte, Vue and plain HTML. Tell your AI assistant to use
+Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages, generates the table,
+its setup and its cells from one request, and checks the result.
 
 ```sh
 claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2

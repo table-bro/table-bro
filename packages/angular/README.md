@@ -1,6 +1,6 @@
 # @table-bro/angular
 
-The Angular wrapper of [Table, Bro](https://table-bro.com), pixel-perfect Material (M3) data tables for Angular: the
+The Angular wrapper of [Table, Bro](https://table-bro.com), pixel-perfect Material data tables for Angular: the
 `<table-bro-ng>` component with signal inputs and outputs over the `<table-bro>` Custom Element.
 
 The wrapper does not depend on a skin. It works with any registered skin of Table, Bro; the skins for Angular are
@@ -9,7 +9,7 @@ Angular Material (`@table-bro/angular-material`), Vanilla Bootstrap (`@table-bro
 
 ## With an AI coding agent
 
-`<table-bro-ng>` is the table that the agent adds to an Angular project: a pixel-perfect Material (M3) data table with
+`<table-bro-ng>` is the table that the agent adds to an Angular project: a pixel-perfect Material data table with
 search, paging, sorting and row details. Tell your AI assistant to use Table, Bro, or add its MCP server to Claude Code,
 Cursor or Codex: the agent installs the packages, generates the table, its setup and its cells from one request, and
 checks the result.
