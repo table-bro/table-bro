@@ -1736,6 +1736,10 @@
     overflow-wrap: anywhere;
   }
 
+  .item .item-design {
+    justify-self: start;
+  }
+
   .item .path {
     font: 400 11.5px/1.45 var(--font-mono);
     color: var(--zt);
@@ -2022,6 +2026,7 @@
       mayNotLbl: T('ui.mayNotLbl'),
       codeLbl: T('ui.codeLbl'),
       nodeHint: T('ui.nodeHint'),
+      designLbl: T('ui.designLbl'),
       lcTitle: T('ui.lcTitle'),
       lcLede: T('ui.lcLede'),
       lcSkinsLbl: T('ui.lcSkinsLbl'),
@@ -2061,6 +2066,8 @@
       app: {x: 36, y: 150, w: 156, h: 40, z: 'z-app', actor: 1, t: T('nodes.app.t')},
       server: {x: 36, y: 260, w: 156, h: 52, z: 'z-app', t: T('nodes.server.t'), s: T('nodes.server.s')},
       browser: {x: 36, y: 440, w: 156, h: 56, z: 'z-app', t: T('nodes.browser.t'), s: T('nodes.browser.s')},
+      // A package of its own that imports none of the others: no link on the map
+      mcp: {x: 36, y: 770, w: 156, h: 56, z: 'z-app', t: '@table-bro/mcp', s: T('nodes.mcp.s')},
 
       ng: {x: 240, y: 150, w: 178, h: 56, z: 'z-wrap', t: 'TableBroNg', s: '<table-bro-ng>'},
       prerender: {x: 240, y: 226, w: 178, h: 56, z: 'z-core', t: 'prerenderTableBro', s: T('nodes.prerender.s')},
@@ -2503,13 +2510,14 @@
         ['@table-bro/mcp', 'packages/mcp', T('groups.tooling.items.mcp')]
       ]},
       {z: 'z-skin', t: T('groups.skins.t'), s: T('groups.skins.s'), items: [
-        ['mat · @table-bro/angular-material', 'packages/skins/angular-material', T('groups.skins.items.mat')],
-        ['mui · @table-bro/react-mui', 'packages/skins/react-mui/js', T('groups.skins.items.mui')],
-        ['suid · @table-bro/solid-suid', 'packages/skins/solid-suid/js', T('groups.skins.items.suid')],
-        ['m3-svelte · @table-bro/svelte-m3', 'packages/skins/svelte-m3/js', T('groups.skins.items.m3')],
-        ['vuetify · @table-bro/vue-vuetify', 'packages/skins/vue-vuetify/js', T('groups.skins.items.vuetify')],
-        ['bs · @table-bro/bootstrap', 'packages/skins/bootstrap/js', T('groups.skins.items.bs')],
-        ['nv · @table-bro/native', 'packages/skins/native/js', T('groups.skins.items.nv')],
+        // The fourth field is the design of the skin, as the column Design of the README names it
+        ['mat · @table-bro/angular-material', 'packages/skins/angular-material', T('groups.skins.items.mat'), T('groups.skins.design.m3')],
+        ['mui · @table-bro/react-mui', 'packages/skins/react-mui/js', T('groups.skins.items.mui'), T('groups.skins.design.m2')],
+        ['suid · @table-bro/solid-suid', 'packages/skins/solid-suid/js', T('groups.skins.items.suid'), T('groups.skins.design.m2')],
+        ['m3-svelte · @table-bro/svelte-m3', 'packages/skins/svelte-m3/js', T('groups.skins.items.m3'), T('groups.skins.design.m3')],
+        ['vuetify · @table-bro/vue-vuetify', 'packages/skins/vue-vuetify/js', T('groups.skins.items.vuetify'), T('groups.skins.design.m3')],
+        ['bs · @table-bro/bootstrap', 'packages/skins/bootstrap/js', T('groups.skins.items.bs'), T('groups.skins.design.bootstrap')],
+        ['nv · @table-bro/native', 'packages/skins/native/js', T('groups.skins.items.nv'), T('groups.skins.design.html')],
         [T('groups.skins.items.sharedTitle'), 'packages/skins/shared/js', T('groups.skins.items.shared')],
         ['CSS', 'packages/core/styles · packages/skins/*/styles', T('groups.skins.items.css')]
       ]},
@@ -3276,7 +3284,7 @@
 
     function groupsHTML() {
       return GROUPS.map(g => {
-        const items = g.items.map(([t, p, d]) => `<div class="item ${g.z}"><h4>${esc(L(t))}</h4><div class="path">${esc(p)}</div><p>${esc(L(d))}</p></div>`).join('');
+        const items = g.items.map(([t, p, d, design]) => `<div class="item ${g.z}"><h4>${esc(L(t))}</h4>${design ? `<span class="kind skin item-design">${esc(L(UI.designLbl))}: ${esc(L(design))}</span>` : ''}<div class="path">${esc(p)}</div><p>${esc(L(d))}</p></div>`).join('');
 
         return `<div class="group ${g.z}"><div class="g-name"><h3>${esc(L(g.t))}</h3><p>${esc(L(g.s))}</p></div><div class="items">${items}</div></div>`;
       }).join('');

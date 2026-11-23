@@ -35,7 +35,7 @@
     "all": "All links",
     "hint": "Hover a block to see its links, or pick a flow above the map.",
     "caption": "Every change goes through BroController.update(). The controller is the only writer of ctx.state; views write the DOM; the body layout is the only part of the core that calls Island Details. Packages above the core import it only as @table-bro/core.",
-    "lgApp": "Application and browser",
+    "lgApp": "Application, browser and the MCP server",
     "lgWrap": "Framework wrapper and page elements",
     "lgCore": "Core: @table-bro/core",
     "lgSkin": "Skins",
@@ -84,7 +84,8 @@
     "navRules": "Rules",
     "navDom": "DOM",
     "navBlocks": "Blocks",
-    "nodeHint": "Its focus lights up its links on the map."
+    "nodeHint": "Its focus lights up its links on the map.",
+    "designLbl": "Design"
   },
   "facts": {
     "0": {
@@ -207,6 +208,9 @@
     },
     "broDom": {
       "s": "ctx.dom · document of the host"
+    },
+    "mcp": {
+      "s": "MCP server for AI agents"
     }
   },
   "edges": {
@@ -591,6 +595,12 @@
         "sharedTitle": "Shared skin elements",
         "shared": "Button, sort header, paginator, tags, text ellipsis, toolbar, switch; bundled into each vanilla skin. Solid SUID bundles the paginator, the sort header and the text ellipsis.",
         "css": "table-bro.scss for the core and one entry per skin; --bro-* custom properties set sizes and timings without a rebuild."
+      },
+      "design": {
+        "m3": "Material M3",
+        "m2": "Material M2",
+        "bootstrap": "Bootstrap",
+        "html": "HTML"
       }
     },
     "frameworkWrapper": {
