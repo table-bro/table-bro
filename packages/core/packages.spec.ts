@@ -28,7 +28,7 @@ function inFolder(files: Record<string, string>, folder: string): Record<string,
 /** The sources of the core, the skins and the Angular wrapper, as text, without their specs and builds. */
 const librarySources = import.meta.glob<string>(['./**/*.ts', '../skins/**/*.ts', '../angular/src/**/*.ts', '!**/*.spec.ts', '!**/*.d.ts', '!**/dist/**', '!**/node_modules/**'], {query: '?raw', import: 'default', eager: true});
 
-const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage, vuetifyPackage, suidPackage, m3Package];
+const packages = [corePackage, bootstrapPackage, nativePackage, muiPackage, suidPackage, m3Package, vuetifyPackage];
 
 describe('the packages of the core and the skins', () => {
   it('give import and require one ES module, so a project gets one copy of the core', () => {
@@ -75,13 +75,6 @@ describe('the packages of the core and the skins', () => {
       './dist/table-bro.react-mui.esm.js', './dist/table-bro.react-mui.server.esm.js', './dist/table-bro.react-mui.shared.esm.js', './dist/*.css'
     ]);
 
-    // The skin vuetify is built for bundlers only, without a UMD bundle; its entries of the browser and of the server
-    // share the chunk that registers it
-    expect(vuetifyPackage.sideEffects).toEqual([
-      './js/index.ts', './js/table-bro.vue-vuetify.ts', './js/table-bro.vue-vuetify.server.ts',
-      './dist/table-bro.vue-vuetify.esm.js', './dist/table-bro.vue-vuetify.server.esm.js', './dist/table-bro.vue-vuetify.shared.esm.js', './dist/*.css'
-    ]);
-
     // The skin suid is built for bundlers only, without a UMD bundle; its entries of the browser and of the server share
     // the chunk that registers it
     expect(suidPackage.sideEffects).toEqual([
@@ -94,6 +87,13 @@ describe('the packages of the core and the skins', () => {
     expect(m3Package.sideEffects).toEqual([
       './js/index.ts', './js/table-bro.svelte-m3.ts', './js/table-bro.svelte-m3.server.ts',
       './dist/table-bro.svelte-m3.esm.js', './dist/table-bro.svelte-m3.server.esm.js', './dist/table-bro.svelte-m3.shared.esm.js', './dist/*.css'
+    ]);
+
+    // The skin vuetify is built for bundlers only, without a UMD bundle; its entries of the browser and of the server
+    // share the chunk that registers it
+    expect(vuetifyPackage.sideEffects).toEqual([
+      './js/index.ts', './js/table-bro.vue-vuetify.ts', './js/table-bro.vue-vuetify.server.ts',
+      './dist/table-bro.vue-vuetify.esm.js', './dist/table-bro.vue-vuetify.server.esm.js', './dist/table-bro.vue-vuetify.shared.esm.js', './dist/*.css'
     ]);
   });
 

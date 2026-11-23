@@ -16,7 +16,7 @@ import {type BroSpecLimits, rowDetailsByDefault, validateSpec}                  
 import {tableBroVersion}                                                                 from '../version.js';
 
 const skin = z.enum(['mat', 'mui', 'suid', 'm3-svelte', 'vuetify', 'bs', 'nv']).describe('The skin, the UI library the table works on top of: mat (Angular Material), mui (MUI for React and Preact, with the target vanilla), suid (SUID for Solid, with the target vanilla), m3-svelte (M3 Svelte for Svelte, with the target vanilla), vuetify (Vuetify for Vue, with the target vanilla), bs (Bootstrap 5) or nv (native HTML, no library)');
-const target = z.enum(['angular', 'vanilla']).describe('The target: angular for an Angular project, through the wrapper <table-bro-ng>; vanilla for a page without a framework or a project of React, Preact, Vue, Solid or Svelte, the Custom Element <table-bro> itself');
+const target = z.enum(['angular', 'vanilla']).describe('The target: angular for an Angular project, through the wrapper <table-bro-ng>; vanilla for a page without a framework or a project of React, Preact, Solid, Svelte or Vue, the Custom Element <table-bro> itself');
 
 /**
  * A value that the tool checks itself, shown to the agent with its JSON Schema: the check of the tool names every
