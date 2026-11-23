@@ -178,6 +178,13 @@ skin on the server, and a prerender leaves the elements of the skin empty, which
 keeps the prerendered elements until `configure()` renders the table in their place. The setup with Nuxt is on the page
 [Nuxt](https://table-bro.com/docs/ssr/nuxt).
 
+## Your own skin
+
+This skin is one of the skins of Table, Bro, with `@table-bro/angular-material`, `@table-bro/react-mui`,
+`@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/bootstrap` and `@table-bro/native`. A skin of your design
+system, or of the component library of your framework, is built the same way: see [Create your own
+skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository.
+
 ## Build
 
 ```sh

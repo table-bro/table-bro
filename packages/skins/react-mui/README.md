@@ -188,6 +188,16 @@ the styles of the column widths. An application with a strict policy allows inli
 `style-src 'unsafe-inline'`, with no nonce and no hash in that directive, since a browser ignores `'unsafe-inline'`
 next to them.
 
+## Your own skin
+
+This skin is one of the skins of Table, Bro, with `@table-bro/angular-material`, `@table-bro/solid-suid`,
+`@table-bro/svelte-m3`, `@table-bro/vue-vuetify`, `@table-bro/bootstrap` and `@table-bro/native`. A skin of your design
+system, or of the component library of your framework, is built the same way: see [Create your own
+skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the repository. An AI coding agent
+builds such a skin with the skill
+[`create-skin`](https://github.com/table-bro/table-bro/blob/main/.agents/skills/create-skin/SKILL.md) of the repository,
+whose reference is this skin.
+
 ## Build
 
 ```sh
