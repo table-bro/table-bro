@@ -15,7 +15,7 @@
     "mvcCaption": "Data goes one way and comes back only as an event: view → bro-action → element → controller → model → view. A view never calls the controller, and the context has no methods to do it. Show the forbidden links to see the arrows that check:arch rejects.",
     "forbidBtn": "✕ Forbidden links",
     "forbidHead": "Forbidden links",
-    "forbidLede": "Red marks are the arrows that the rules forbid; each one keeps a boundary of the loop. Rules 3, 10 and 11 check the text of the code and have no arrow.",
+    "forbidLede": "Red marks are the arrows that the rules forbid; each one keeps a boundary of the loop. Rules 3, 11 and 12 check the text of the code and have no arrow.",
     "contract": "contract",
     "ctxNoMethods": "BroContext has no methods: a view cannot reach the controller through it.",
     "islandNoCtx": "Island Details never gets the context, only BroIslandTable.",
@@ -56,7 +56,7 @@
     "updTitle": "One update",
     "updLede": "BroController.update(reason, {state, render, events}) in controller/controller.ts, with BroUpdate and BroFrame in shared/frame.ts. An update is synchronous: after it the DOM is ready. The writes queue their layout reads in the frame, so the browser lays the table out once per update. Pick a phase.",
     "rulesTitle": "Dependency rules",
-    "rulesLede": "npm run check:arch checks them by searching the code (scripts/check-arch.mjs); npm test runs it first. Unit specs are exempt.",
+    "rulesLede": "npm run check:arch checks them by searching the code (scripts/check-arch.mjs); npm test runs it first. Unit specs are exempt. The numbers are the ones of check:arch and ARCHITECTURE.md: rule 4, the mutable state of modules, holds by review.",
     "domTitle": "Views and the DOM of the host",
     "domLede": "A view implements BroView (types/view.ts) and creates its nodes through ctx.dom, in the document of the host. A parent view creates its children and assigns them to the registry ctx.view right before it renders them; the directories of view/dom follow this tree.",
     "blocksTitle": "Blocks",
@@ -452,7 +452,7 @@
     },
     "packagesAboveThe": {
       "t": "Packages above the core import @table-bro/core",
-      "d": "Skins, the adapter and the wrappers never import a path into the core sources."
+      "d": "Skins and the wrapper import the core only from @table-bro/core, their unit specs too, never a path into its sources."
     },
     "noGlobalsNo": {
       "t": "No globals, no work on load",

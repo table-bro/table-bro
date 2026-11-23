@@ -2095,18 +2095,19 @@
     ];
 
     /* ---------- rules ---------- */
+    // The numbers of check:arch and ARCHITECTURE.md: rule 4 holds by review and has no check
     const RULES = [
-      {t: T('rules.viewsAndModels.t'), d: T('rules.viewsAndModels.d')},
-      {t: T('rules.packagesAboveThe.t'), d: T('rules.packagesAboveThe.d')},
-      {t: T('rules.noGlobalsNo.t'), d: T('rules.noGlobalsNo.d')},
-      {t: T('rules.animationsThroughBroMotion.t'), d: T('rules.animationsThroughBroMotion.d')},
-      {t: T('rules.viewsReadNo.t'), d: T('rules.viewsReadNo.d')},
-      {t: T('rules.viewsAssignNo.t'), d: T('rules.viewsAssignNo.d')},
-      {t: T('rules.modelsWriteNo.t'), d: T('rules.modelsWriteNo.d')},
-      {t: T('rules.theControllerNeither.t'), d: T('rules.theControllerNeither.d')},
-      {t: T('rules.theElementRenders.t'), d: T('rules.theElementRenders.d')},
-      {t: T('rules.everyControllerMethod.t'), d: T('rules.everyControllerMethod.d')},
-      {t: T('rules.skinStylesheets.t'), d: T('rules.skinStylesheets.d')}
+      {n: 1, t: T('rules.viewsAndModels.t'), d: T('rules.viewsAndModels.d')},
+      {n: 2, t: T('rules.packagesAboveThe.t'), d: T('rules.packagesAboveThe.d')},
+      {n: 3, t: T('rules.noGlobalsNo.t'), d: T('rules.noGlobalsNo.d')},
+      {n: 5, t: T('rules.animationsThroughBroMotion.t'), d: T('rules.animationsThroughBroMotion.d')},
+      {n: 6, t: T('rules.viewsReadNo.t'), d: T('rules.viewsReadNo.d')},
+      {n: 7, t: T('rules.viewsAssignNo.t'), d: T('rules.viewsAssignNo.d')},
+      {n: 8, t: T('rules.modelsWriteNo.t'), d: T('rules.modelsWriteNo.d')},
+      {n: 9, t: T('rules.theControllerNeither.t'), d: T('rules.theControllerNeither.d')},
+      {n: 10, t: T('rules.theElementRenders.t'), d: T('rules.theElementRenders.d')},
+      {n: 11, t: T('rules.everyControllerMethod.t'), d: T('rules.everyControllerMethod.d')},
+      {n: 12, t: T('rules.skinStylesheets.t'), d: T('rules.skinStylesheets.d')}
     ];
 
     /* ---------- DOM tree ---------- */
@@ -2330,15 +2331,15 @@
       forbid: {
         arrows: [
           {rule: 1, pts: [[886, 284], [514, 284]], l: 'import', lp: [700, 284]},
-          {rule: 6, pts: [[886, 352], [834, 352]], l: 'ctx.model =', lp: [860, 364]},
-          {rule: 5, pts: [[1180, 320], [1190, 320], [1190, 436], [1180, 436]], l: 'ctx.view.*', lp: [1150, 378]}
+          {rule: 7, pts: [[886, 352], [834, 352]], l: 'ctx.model =', lp: [860, 364]},
+          {rule: 6, pts: [[1180, 320], [1190, 320], [1190, 436], [1180, 436]], l: 'ctx.view.*', lp: [1150, 378]}
         ],
         marks: [
-          {node: 'element', rule: 9, l: T('mvc.forbid.marks.element.l')},
+          {node: 'element', rule: 10, l: T('mvc.forbid.marks.element.l')},
           {node: 'context', rule: 0, l: T('mvc.forbid.marks.context.l')},
-          {node: 'controller', rule: 8, l: '✕ DOM'},
-          {node: 'models', rule: 7, l: '✕ DOM', side: 'left'},
-          {node: 'views', rule: 4, l: '✕ requestAnimationFrame'},
+          {node: 'controller', rule: 9, l: '✕ DOM'},
+          {node: 'models', rule: 8, l: '✕ DOM', side: 'left'},
+          {node: 'views', rule: 5, l: '✕ requestAnimationFrame'},
           {node: 'island', rule: 0, l: '✕ ctx'},
           {node: 'mat', rule: 2, l: T('mvc.forbid.marks.mat.l'), side: 'top'}
         ]
@@ -2799,7 +2800,9 @@
 
         MVC.forbid.arrows.concat(MVC.forbid.marks).forEach(x => {
           if (x.rule && !items.some(i => i.rule === x.rule)) {
-            items.push({rule: x.rule, t: L(RULES[x.rule - 1].t) + ': ' + L(RULES[x.rule - 1].d)});
+            const rule = RULES.find(r => r.n === x.rule);
+
+            items.push({rule: x.rule, t: L(rule.t) + ': ' + L(rule.d)});
           }
         });
         items.sort((a, b) => a.rule - b.rule);
@@ -2857,7 +2860,7 @@
     }
 
     function rulesHTML() {
-      return RULES.map((r, i) => `<li><span class="rn">${i + 1}</span><div><b>${esc(L(r.t))}</b><p>${esc(L(r.d))}</p></div></li>`).join('');
+      return RULES.map(r => `<li><span class="rn">${r.n}</span><div><b>${esc(L(r.t))}</b><p>${esc(L(r.d))}</p></div></li>`).join('');
     }
 
     function treeHTML() {
