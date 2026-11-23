@@ -187,15 +187,16 @@ The skin changes these files with the minimal lines it needs, in the commit of t
 3. `stylelint.config.mjs`: only when the library names classes or variables outside kebab-case.
 4. `packages/core/packages.spec.ts`: the package of the skin in the checks of the exports, the files and the side
    effects; a skin without a UMD bundle out of the check of the global names, by its name.
-5. The tables of the packages: `README.md`, `packages/core/README.md`, `CONTRIBUTING.md` (the table of the
-   repository), `ARCHITECTURE.md` (the parts, and rule 4 for a setter of module state, as the theme). Each file has
-   three tables, Core and MCP server, Skins and Framework wrappers; the skin gets a row in the table Skins, with its
-   design in the column Design: Material, Bootstrap or HTML. The skins of the frameworks come first, in the alphabetical
-   order of their frameworks, the vanilla skins last: `@table-bro/angular-material`, `@table-bro/react-mui`,
-   `@table-bro/solid-suid`, `@table-bro/svelte-m3`, `@table-bro/vue-vuetify`, then `@table-bro/bootstrap`,
-   `@table-bro/native`. Every list of the skins keeps this order, in the texts and in the code: `mat`, `mui`, `suid`,
-   `m3-svelte`, `vuetify`, `bs`, `nv`. A skin with a server entry also gets its row in the table of the server render
-   of the root `README.md`, in the row of its framework.
+5. The tables of the packages: `README.md`, `packages/core/README.md`, `CONTRIBUTING.md` (the table of the repository),
+   `ARCHITECTURE.md` (the parts, and rule 4 for a setter of module state, as the theme). Each file has three tables,
+   Core and MCP server, Skins and Framework wrappers; the skin gets a row in the table Skins, with its design in the
+   column Design: Material M2 or Material M3, by the version of Material Design that the library implements and the skin
+   uses, Bootstrap or HTML. The skins of the frameworks come first, in the alphabetical order of their frameworks, the
+   vanilla skins last: `@table-bro/angular-material`, `@table-bro/react-mui`, `@table-bro/solid-suid`,
+   `@table-bro/svelte-m3`, `@table-bro/vue-vuetify`, then `@table-bro/bootstrap`, `@table-bro/native`. Every list of the
+   skins keeps this order, in the texts and in the code: `mat`, `mui`, `suid`, `m3-svelte`, `vuetify`, `bs`, `nv`. A
+   skin with a server entry also gets its row in the table of the server render of the root `README.md`, in the row of
+   its framework.
 6. The texts that list the skins: the root `README.md` and the READMEs of the other skins (Your own skin). They name
    the skins without a count, so the next skin adds its name only. The README of Angular Material names only the skins
    for Angular.

@@ -153,13 +153,16 @@ The Angular packages support Angular `>=20 <23`.
 
 | Package | Design | What it gives |
 | --- | --- | --- |
-| [`@table-bro/angular-material`](packages/skins/angular-material) | Material | Angular Material, `mat`: the components of Angular Material for Angular, in the theme of the application |
-| [`@table-bro/react-mui`](packages/skins/react-mui) | Material | React MUI, `mui`: the components of MUI for React and Preact, in the theme of the application |
-| [`@table-bro/solid-suid`](packages/skins/solid-suid) | Material | Solid SUID, `suid`: the components of SUID, the port of MUI to Solid, in the theme of the application |
-| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | Material | Svelte M3, `m3-svelte`: the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
-| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | Material | Vue Vuetify, `vuetify`: the components of Vuetify for Vue, in the themes of the application |
+| [`@table-bro/angular-material`](packages/skins/angular-material) | Material M3 | Angular Material, `mat`: the components of Angular Material for Angular, in the theme of the application |
+| [`@table-bro/react-mui`](packages/skins/react-mui) | Material M2 | React MUI, `mui`: the components of MUI for React and Preact, in the theme of the application |
+| [`@table-bro/solid-suid`](packages/skins/solid-suid) | Material M2 | Solid SUID, `suid`: the components of SUID, the port of MUI to Solid, in the theme of the application |
+| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | Material M3 | Svelte M3, `m3-svelte`: the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
+| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | Material M3 | Vue Vuetify, `vuetify`: the components of Vuetify for Vue, in the themes of the application |
 | [`@table-bro/bootstrap`](packages/skins/bootstrap) | Bootstrap | Vanilla Bootstrap, `bs`: the components and the classes of Bootstrap 5, for any framework |
 | [`@table-bro/native`](packages/skins/native) | HTML | Vanilla HTML, `nv`: plain HTML elements, no UI library, for any framework |
+
+Design names the version of Material Design that the library of the skin implements. Vue Vuetify is Material M3 with
+the Material 3 blueprint of Vuetify, which its setup installs.
 
 ### Framework wrappers
 

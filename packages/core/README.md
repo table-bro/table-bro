@@ -17,13 +17,16 @@ A skin gives it the look and the controls of a UI library. The packages of Table
 
 | Package | Design | What it gives |
 | --- | --- | --- |
-| `@table-bro/angular-material` | Material | Angular Material, `mat`, for Angular |
-| `@table-bro/react-mui` | Material | React MUI, `mui`, for React and Preact |
-| `@table-bro/solid-suid` | Material | Solid SUID, `suid`, for Solid |
-| `@table-bro/svelte-m3` | Material | Svelte M3, `m3-svelte`, for Svelte |
-| `@table-bro/vue-vuetify` | Material | Vue Vuetify, `vuetify`, for Vue |
+| `@table-bro/angular-material` | Material M3 | Angular Material, `mat`, for Angular |
+| `@table-bro/react-mui` | Material M2 | React MUI, `mui`, for React and Preact |
+| `@table-bro/solid-suid` | Material M2 | Solid SUID, `suid`, for Solid |
+| `@table-bro/svelte-m3` | Material M3 | Svelte M3, `m3-svelte`, for Svelte |
+| `@table-bro/vue-vuetify` | Material M3 | Vue Vuetify, `vuetify`, for Vue |
 | `@table-bro/bootstrap` | Bootstrap | Vanilla Bootstrap, `bs`, on Bootstrap 5 for any framework |
 | `@table-bro/native` | HTML | Vanilla HTML, `nv`: plain HTML elements, no UI library, for any framework |
+
+Design names the version of Material Design that the library of the skin implements. Vue Vuetify is Material M3 with
+the Material 3 blueprint of Vuetify, which its setup installs.
 
 ### Framework wrappers
 

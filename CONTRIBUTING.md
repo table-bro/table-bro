@@ -20,11 +20,11 @@ framework wrappers.
 
 | Folder | Design | Package |
 | --- | --- | --- |
-| `packages/skins/angular-material` | Material | `@table-bro/angular-material`, the skin `mat` and its Angular components |
-| `packages/skins/react-mui` | Material | `@table-bro/react-mui`, the skin `mui` and its React elements |
-| `packages/skins/solid-suid` | Material | `@table-bro/solid-suid`, the skin `suid` and its Solid elements |
-| `packages/skins/svelte-m3` | Material | `@table-bro/svelte-m3`, the skin `m3-svelte` and its Svelte elements |
-| `packages/skins/vue-vuetify` | Material | `@table-bro/vue-vuetify`, the skin `vuetify` and its Vue elements |
+| `packages/skins/angular-material` | Material M3 | `@table-bro/angular-material`, the skin `mat` and its Angular components |
+| `packages/skins/react-mui` | Material M2 | `@table-bro/react-mui`, the skin `mui` and its React elements |
+| `packages/skins/solid-suid` | Material M2 | `@table-bro/solid-suid`, the skin `suid` and its Solid elements |
+| `packages/skins/svelte-m3` | Material M3 | `@table-bro/svelte-m3`, the skin `m3-svelte` and its Svelte elements |
+| `packages/skins/vue-vuetify` | Material M3 | `@table-bro/vue-vuetify`, the skin `vuetify` and its Vue elements |
 | `packages/skins/bootstrap` | Bootstrap | `@table-bro/bootstrap`, the skin `bs` |
 | `packages/skins/native` | HTML | `@table-bro/native`, the skin `nv` |
 | `packages/skins/shared` | Bootstrap, HTML | The elements and styles that the vanilla skins share; each skin bundles them |
