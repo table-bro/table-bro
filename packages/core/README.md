@@ -49,27 +49,22 @@ server](https://table-bro.com/docs/ai/mcp-server). Docs: [Getting started](https
 
 ## Install
 
-With Angular and Angular Material:
+Install the core with the skin of your framework. The README of the skin and the page of the framework on the site give
+the whole setup:
 
-```sh
-npm install @table-bro/core @table-bro/angular @table-bro/angular-material @angular/elements
-```
-
-or, with Bootstrap:
-
-```sh
-npm install @table-bro/core @table-bro/bootstrap bootstrap
-```
-
-or, with plain HTML elements:
-
-```sh
-npm install @table-bro/core @table-bro/native
-```
+| Framework | Skin | Install |
+| --- | --- | --- |
+| Angular | Angular Material, `mat` | `npm install @table-bro/core @table-bro/angular @table-bro/angular-material @angular/elements` |
+| React and Preact | React MUI, `mui` | `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled` |
+| Solid | Solid SUID, `suid` | `npm install @table-bro/core @table-bro/solid-suid @suid/material` |
+| Svelte | Svelte M3, `m3-svelte` | `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte vite-plugin-functions-mixins` |
+| Vue | Vue Vuetify, `vuetify` | `npm install @table-bro/core @table-bro/vue-vuetify vuetify` |
+| Any, or none | Vanilla Bootstrap, `bs` | `npm install @table-bro/core @table-bro/bootstrap bootstrap @types/bootstrap` |
+| Any, or none | Vanilla HTML, `nv` | `npm install @table-bro/core @table-bro/native` |
 
 ## Getting started
 
-Link the CSS of the core and of the skin:
+A page in Vanilla JS with the skin Vanilla HTML. Link the CSS of the core and of the skin:
 
 ```html
 <link rel="stylesheet" href="node_modules/@table-bro/core/dist/table-bro.min.css">
@@ -103,7 +98,8 @@ The import of a skin package registers the skin. `configure()` throws when `conf
 
 ### Without a bundler
 
-The UMD builds put the core on the `TableBro` global and the skins on `TableBroNative` and `TableBroBootstrap`.
+The UMD builds put the core on the `TableBro` global and the vanilla skins on `TableBroNative` and
+`TableBroBootstrap`; the skins on the components of a framework have no UMD build, as their framework needs a bundler.
 Load the core first:
 
 ```html
@@ -119,6 +115,10 @@ Each package holds its own CSS. A page links the CSS of the core and of its skin
 | --- | --- |
 | `@table-bro/core/dist/table-bro.min.css` | Every table |
 | `@table-bro/angular-material/dist/table-bro.material.min.css` | The skin `mat` |
+| `@table-bro/react-mui/dist/table-bro.react-mui.min.css` | The skin `mui` |
+| `@table-bro/solid-suid/dist/table-bro.solid-suid.min.css` | The skin `suid` |
+| `@table-bro/svelte-m3/dist/table-bro.svelte-m3.min.css` | The skin `m3-svelte` |
+| `@table-bro/vue-vuetify/dist/table-bro.vue-vuetify.min.css` | The skin `vuetify` |
 | `@table-bro/bootstrap/dist/table-bro.bootstrap.min.css` | The skin `bs`, after the CSS of Bootstrap |
 | `@table-bro/native/dist/table-bro.native.min.css` | The skin `nv` |
 
@@ -180,24 +180,25 @@ config, and the fields of a group have short names: `filterDrawer` (`title`, `cl
 the names of `MatPaginatorIntl`, as `itemsPerPageLabel` and `getRangeLabel`, `progressBar` (`label`), `state`, with the
 messages of the states by their names, `toolbarMain` and `toolbarSearch`. The text of a cell of tags without items
 belongs to the tags of the skin: `withTags({texts: {empty: 'No tags'}})`, and later `TableBroMatTagsTexts` of `mat` or
-`setTagsTexts()` of `bs` and `nv`.
-The flat fields of 1.1.0, as `{itemsPerPage: 'Rows per page:'}`, still work and are deprecated; they are removed in 2.0. A
-field in a group and a text of the core win over their flat field; a text that is undefined keeps the one below it.
+`setTagsTexts()` of the other skins.
+
+The flat fields of 1.1.0, as `{itemsPerPage: 'Rows per page:'}`, still work and are deprecated; they are removed in 2.0.
+A field in a group and a text of the core win over their flat field; a text that is undefined keeps the one below it.
 
 The fields name the buttons of the search line and of the filter drawer, the paginator of the skins `bs` and `nv` and
-the messages of the states. For screen readers `rowCounterLabel` names the column of the
-row numbers, whose title is short. A live region of the table has screen readers say the
-state of the table and the loading of row details from the server, `rowDetailsLoadingMessage`. The skin `mat` takes the texts of its paginator from
-`MatPaginatorIntl`, as an application of Angular Material gives them. The filter drawer of every skin takes its title
-and the name of its close button from `texts.filterDrawer` of the config of its table.
+the messages of the states. For screen readers `rowCounterLabel` names the column of the row numbers, whose title is
+short. A live region of the table has screen readers say the state of the table and the loading of row details from the
+server, `rowDetailsLoadingMessage`. The skin `mat` takes the texts of its paginator from `MatPaginatorIntl`, as an
+application of Angular Material gives them. The filter drawer of every skin takes its title and the name of its close
+button from `texts.filterDrawer` of the config of its table.
 
 The toolbar links of the skins `bs` and `nv` that act on the table, the search, the buttons and the menu, have the role
-`button`, as Bootstrap gives it to a link that goes nowhere, and take Space; the items of the menu of `bs` and the
-links of the paginator stay links, as in the markup of Bootstrap. The toolbar links say what they are with visually
-hidden words after their titles, for screen readers and search engines, in `toolbarMain`: `searchRole(title)` by the title of the toolbar
-(Search for Orders, Search for rows without a title), `buttonRole` (Filters button, for search engines only: a screen
-reader hears the role), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs` (Print menu item).
-An empty string adds no words.
+`button`, as Bootstrap gives it to a link that goes nowhere, and take Space; the items of the menu of `bs` and the links
+of the paginator stay links, as in the markup of Bootstrap. The toolbar links say what they are with visually hidden
+words after their titles, for screen readers and search engines, in `toolbarMain`: `searchRole(title)` by the title of
+the toolbar (Search for Orders, Search for rows without a title), `buttonRole` (Filters button, for search engines only:
+a screen reader hears the role), `menuRole` (More menu) and `menuItemRole` of the items of the menu of `bs` (Print menu
+item). An empty string adds no words.
 
 More in [Texts and localization](https://table-bro.com/docs/accessibility/localization), [Keyboard and
 focus](https://table-bro.com/docs/accessibility/keyboard-and-focus) and [Screen
@@ -326,9 +327,11 @@ load({page: 1, pageSize});
 
 ## Skins
 
-`config.skin` is `'mat'`, `'bs'` or `'nv'`. Each skin package registers its skin and exports its config:
-`matSkinConfig`, `bootstrapSkinConfig` and `nativeSkinConfig`. `config.components` and `config.css` of a table change
-any value or function of the config of its skin, at any depth. `registerSkin(name, config)` registers a skin of
+`config.skin` names a registered skin: `'mat'`, `'mui'`, `'suid'`, `'m3-svelte'`, `'vuetify'`, `'bs'` or `'nv'`, or one
+of your own. The import of a skin package registers its skin, `provideTableBroMatSkin()` registers `mat`, and each
+package exports the config of its skin: `matSkinConfig`, `muiSkinConfig`, `suidSkinConfig`, `m3SvelteSkinConfig`,
+`vuetifySkinConfig`, `bootstrapSkinConfig` and `nativeSkinConfig`. `config.components` and `config.css` of a table
+change any value or function of the config of its skin, at any depth. `registerSkin(name, config)` registers a skin of
 your own: [Create your own skin](https://github.com/table-bro/table-bro#create-your-own-skin) in the README of the
 repository describes its config.
 
@@ -358,12 +361,12 @@ class `bro-light-theme` sets `color-scheme: light`.
 ### The filter drawer
 
 `<table-bro-filter-drawer-container skin="nv">` holds a table and the filters of the application, an element with
-`slot="filters"`, in a drawer next to the table, for the skins `bs` and `nv`. Call
-`defineTableBroFilterDrawerContainer()` once before using it. The skin `mat` has its own container in
-`@table-bro/angular-material`. The title of the drawer and the name of its close button come from
-`texts.filterDrawer` of the config of the table, as in the container of `mat`: the drawer reads them when it connects
-and when it opens, so a new `configure()` of the table shows at the next opening. The property `texts` of the
-container of 1.1.0 still works and wins over the config of the table; it is deprecated and removed in 2.0.
+`slot="filters"`, in a drawer next to the table, for every skin but `mat`. Call `defineTableBroFilterDrawerContainer()`
+once before using it. The skin `mat` has its own container in `@table-bro/angular-material`. The title of the drawer and
+the name of its close button come from `texts.filterDrawer` of the config of the table, as in the container of `mat`:
+the drawer reads them when it connects and when it opens, so a new `configure()` of the table shows at the next opening.
+The property `texts` of the container of 1.1.0 still works and wins over the config of the table; it is deprecated and
+removed in 2.0.
 
 The filters are the region of the drawer, named by its title unless the application names them. The drawer opened from
 the Filters button of the table takes the focus into the filters, Escape in it closes it, and the focus goes back to the
@@ -380,8 +383,8 @@ Lottie player shows them, for example [lottie-player](https://www.npmjs.com/pack
 npm install @lottiefiles/lottie-player
 ```
 
-The application serves the files of `node_modules/@table-bro/core/dist/lottie` with its own files. An Angular application
-copies them by an entry of `assets` in `angular.json`:
+The application serves the files of `node_modules/@table-bro/core/dist/lottie` with its own files. An Angular
+application copies them by an entry of `assets` in `angular.json`:
 
 ```json
 {"glob": "**/*", "input": "node_modules/@table-bro/core/dist/lottie", "output": "lottie"}
@@ -551,8 +554,8 @@ registry `ctx.view`, which only the controller reads. A link between two regions
   caching. The framework wrappers describe a service of the page for it instead.
 - **No immutable store, reducer or snapshots.** The state has one owner that changes it in the phases of an update; a
   gesture allocates no copies of the state, and the context shows it as it is.
-- **No virtual DOM and no framework at runtime.** Plain Custom Elements without dependencies; the framework wrappers wrap
-  the element.
+- **No virtual DOM and no framework at runtime.** Plain Custom Elements without dependencies; the framework wrappers
+  wrap the element.
 - **No virtualization.** All loaded rows are in the DOM and have one fixed height, so the page scroll moves them as one
   layer; this holds for thousands of rows.
 - **No Shadow DOM.** The table lives in the light DOM, so the styles of the skins and of UI libraries such as Angular
