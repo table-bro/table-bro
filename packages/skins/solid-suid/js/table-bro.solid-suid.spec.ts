@@ -5,6 +5,7 @@ import {createComponent, createSignal, onMount} from 'solid-js';
 import {Dynamic, render}                        from 'solid-js/web';
 import {afterEach, describe, expect, it, vi}    from 'vitest';
 
+import {setServerRender}                                                                                         from './bro-suid-element';
 import {attachSuidTooltip, setSuidTheme, setTagsTexts, suidSkinConfig, suidThemeVariables, withSwitch, withTags} from './table-bro.solid-suid';
 
 // The CSS of the core and of the skin from their builds: the table measures its columns in them
@@ -172,6 +173,22 @@ describe('the SUID button', () => {
     await Promise.resolve();
 
     expect(button.childElementCount).toBe(0);
+  });
+
+  it('renders its markup in a server DOM once, also when it connects there again', async () => {
+    // The render of the server entry, as a prerender on the server has it: a server DOM has a window of its own
+    setServerRender(() => '<button></button>');
+
+    const server = document.implementation.createHTMLDocument('');
+    const button = document.createElement('bro-suid-button');
+
+    Object.assign(button, {config});
+    server.body.append(button);
+    button.remove();
+    await Promise.resolve();
+    server.body.append(button);
+
+    expect(button.querySelectorAll('.bro-suid-root')).toHaveLength(1);
   });
 });
 

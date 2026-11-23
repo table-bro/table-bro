@@ -262,7 +262,7 @@ export abstract class BroSuidElement extends BroHTMLElement {
     }
 
     // An element of the prerender keeps its markup until the table renders its own elements in its place
-    if (this.dispose || isPrerendered(this)) {
+    if (this.container || isPrerendered(this)) {
       return;
     }
 

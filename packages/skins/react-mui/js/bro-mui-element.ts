@@ -99,7 +99,7 @@ export abstract class BroMuiElement extends BroHTMLElement {
     }
 
     // An element of the prerender keeps its markup until the table renders its own elements in its place
-    if (this.root || isPrerendered(this)) {
+    if (this.container || isPrerendered(this)) {
       return;
     }
 
