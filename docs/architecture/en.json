@@ -783,7 +783,7 @@
       "updates": {
         "t": "Updates",
         "s": "one update per change",
-        "d": "Every call of the application and every action of a view runs as one synchronous update: state, render, reads, dependent writes, animations, events. The inputs are the methods of the element, the `bro-action` events of the sort header, the search, the paginator, the details and a filter drawer, the `ResizeObserver` of the host and the theme. In the server mode a sort, a filter or a page sends `bro-filters-server-loaded` with a `BroQuery`, and the rows of the answer come back by `replaceRows()` or `appendRows()`. A write that throws shows the fail state and sends `bro-error`.",
+        "d": "Every call of the application and every action of a view runs as one synchronous update: state, render, frame: reads, frame: writes, frame: animations, events. The inputs are the methods of the element, the `bro-action` events of the sort header, the search, the paginator, the details and a filter drawer, the `ResizeObserver` of the host and the theme. In the server mode a sort, a filter or a page sends `bro-filters-server-loaded` with a `BroQuery`, and the rows of the answer come back by `replaceRows()` or `appendRows()`. A write that throws shows the fail state and sends `bro-error`.",
         "sees": "Rows replaced, sorted, filtered or paged, the progress of a refresh, or the fail state after an error.",
         "mat": "`TableBroNg` turns its inputs into the methods of the element outside the Angular zone and emits `action` and `query` inside it.",
         "fw": "The application calls the methods of the element; an element of the skin renders its root again when the table sets its values.",
