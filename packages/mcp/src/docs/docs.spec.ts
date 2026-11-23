@@ -46,6 +46,19 @@ describe('the reference', () => {
     expect(getStarted({target: 'vanilla', skin: 'nv'})).toContain('export function renderProductTable(container: HTMLElement): TableBroHTMLElement {');
   });
 
+  it('names the ready elements of every skin of the server', () => {
+    // The skins that the tools of the server take, from the enum of their argument skin
+    const server = fs.readFileSync(new URL('../server/server.ts', import.meta.url), 'utf8');
+    const skins = JSON.parse(server.match(/const skin = z\.enum\((\[[^\]]+\])\)/)![1].replaceAll('\'', '"')) as string[];
+    const table = getDocs({topic: 'columns'}).split('\n').filter(line => /^\| (Element|tags) \|/.test(line));
+
+    expect(skins.length).toBeGreaterThan(0);
+    skins.forEach(skin => {
+      expect(table[0]).toContain(`| ${skin} |`);
+      expect(table[1]).toContain(`\`bro-${skin}-tags\``);
+    });
+  });
+
   it('names no paid module', () => {
     // The island space is a variable of the core: the Filter Drawer stands this far from the table
     const texts = [getStarted(), ...topics.map(topic => topic.text())].join('\n').replaceAll('--bro-island-space-size', '');
