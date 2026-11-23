@@ -79,12 +79,23 @@
     "watch": "tsdown --watch"
   },
   "peerDependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
     "@mui/material": "^9.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@table-bro/core": "^1.2.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/cache": {
+      "optional": true
+    },
+    "@emotion/react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.5.0",

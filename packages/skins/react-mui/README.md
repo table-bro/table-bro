@@ -30,6 +30,14 @@ In a project of React 19 with MUI 9:
 npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled
 ```
 
+`@emotion/react` and `@emotion/styled` are the style engine of MUI. The skin itself imports Emotion only in its server
+entry, `@table-bro/react-mui/server`, which takes `@emotion/react` and `@emotion/cache` as optional peer dependencies.
+A project that prerenders tables on the server, as with Next.js or Astro, installs `@emotion/cache` too:
+
+```sh
+npm install @emotion/cache
+```
+
 A project of Preact takes React from `preact/compat`: the aliases `react`, `react-dom` and `react/jsx-runtime` of its
 bundler, as the setup of MUI for Preact gives them. The working page of
 [`samples/react-mui/preact`](https://github.com/table-bro/table-bro/tree/main/samples/react-mui/preact) has them in its

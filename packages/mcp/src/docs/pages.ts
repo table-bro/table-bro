@@ -3505,7 +3505,7 @@ Astro renders a page at the build of a static site, or on the server: the frontm
 
 [Preact data table](https://table-bro.com/docs/frameworks/preact), [Prerender function](https://table-bro.com/docs/ssr/prerendering), [Animated table states](https://table-bro.com/docs/basics/table-states), [Dark/Light mode](https://table-bro.com/docs/design/dark-light-mode), [Fixed row height](https://table-bro.com/docs/basics/fixed-row-height).`,
     files: [
-      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled preact astro @astrojs/preact linkedom
+      {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled @emotion/cache preact astro @astrojs/preact linkedom
 `},
       {file: 'astro.config.ts', language: 'ts', code: `import preact         from '@astrojs/preact';
 import {defineConfig} from 'astro/config';
