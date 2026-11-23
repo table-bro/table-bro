@@ -1,7 +1,7 @@
 # @table-bro/angular-material
 
 The Angular Material skin of [Table, Bro](https://table-bro.com): pixel-perfect Material (M3) data tables built from the
-components of Angular Material, in the theme of the application. The skin is `mat`.
+components of Angular Material, in the theme of the application. The skin implements Material M3. The skin is `mat`.
 
 The package holds the config of the skin, its elements (Angular components that the table creates as Custom Elements),
 its CSS and its filter drawer container. The table itself is `<table-bro-ng>` of `@table-bro/angular`.

@@ -2,8 +2,8 @@
 
 The Vue Vuetify skin of [Table, Bro](https://table-bro.com): Material data tables built from the components of
 [Vuetify](https://vuetifyjs.com/) for Vue, in the themes of the Vuetify of the application, with the sizes of the tables
-of the skin Angular Material. With the Material 3 blueprint of Vuetify, the components in the table are the ones of
-Material 3. The skin is `vuetify`.
+of the skin Angular Material. The skin implements Material M3 with the blueprint `md3` of Vuetify, which the setup below
+installs. The skin is `vuetify`.
 
 The package holds the config of the skin, its elements (Custom Elements that render the components of Vuetify in Vue
 roots of their own) and its CSS. The table itself is `<table-bro>` of `@table-bro/core`, in the template of the

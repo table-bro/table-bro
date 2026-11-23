@@ -1,8 +1,8 @@
 # @table-bro/svelte-m3
 
-The Svelte M3 skin of [Table, Bro](https://table-bro.com): Material 3 data tables built from the components of
-[M3 Svelte](https://github.com/KTibow/m3-svelte) for Svelte 5, in the Material 3 theme of the application, with the
-sizes of the tables of the skin Angular Material. The skin is `m3-svelte`.
+The Svelte M3 skin of [Table, Bro](https://table-bro.com): Material 3 data tables built from the components of [M3
+Svelte](https://github.com/KTibow/m3-svelte) for Svelte 5, in the Material 3 theme of the application, with the sizes of
+the tables of the skin Angular Material. The skin implements Material M3. The skin is `m3-svelte`.
 
 The package holds the config of the skin, its elements (Custom Elements that mount the components of M3 Svelte) and its
 CSS. The table itself is `<table-bro>` of `@table-bro/core`, in the markup of a component of the application.
