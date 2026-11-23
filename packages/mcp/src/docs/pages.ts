@@ -130,7 +130,7 @@ export const conf: BroConfig = {
  */
 const skinsSection = `#### Which skins can I use?
 
-Table, Bro ships the skins Angular Material, MUI, SUID, M3 Svelte, Vuetify, Bootstrap 5 and Native, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and its section [Create your own skin](https://table-bro.com/docs/getting-started#create-your-own-skin) how to build one.`;
+Table, Bro ships the skins Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Vanilla Bootstrap and Vanilla HTML, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and [Your own skin](https://table-bro.com/docs/design/your-own-skin) how to build one.`;
 
 /**
  * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
