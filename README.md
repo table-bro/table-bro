@@ -90,13 +90,15 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
   [Custom Elements Everywhere](https://custom-elements-everywhere.com/) tests how each framework passes data and events
   to Custom Elements.
 - **Angular.** `@table-bro/angular` gives the component `<table-bro-ng>` with the signal inputs `cols`, `rows` and
-  `conf` and the outputs `action` and `query`, in the three skins.
-- **Preact, React, Solid, Svelte and Vue.** Each framework has a Vite project in
-  [`samples/frameworks`](samples/frameworks) with its working page on the site and StackBlitz in the Bootstrap skin,
-  and its page of the Docs:
+  `conf` and the outputs `action` and `query`, in the skins Angular Material, Vanilla Bootstrap and Vanilla HTML.
+- **Preact, React, Solid, Svelte and Vue.** Each framework has its page of the Docs with a working page:
   [Preact](https://table-bro.com/docs/frameworks/preact), [React](https://table-bro.com/docs/frameworks/react),
   [Solid](https://table-bro.com/docs/frameworks/solid), [Svelte](https://table-bro.com/docs/frameworks/svelte),
-  [Vue](https://table-bro.com/docs/frameworks/vue).
+  [Vue](https://table-bro.com/docs/frameworks/vue). The page shows the skin of the framework from its sample: React MUI
+  in [`samples/react-mui`](samples/react-mui) for React and Preact, Solid SUID in
+  [`samples/solid-suid`](samples/solid-suid), Svelte M3 in [`samples/svelte-m3`](samples/svelte-m3) and Vue Vuetify in
+  [`samples/vue-vuetify`](samples/vue-vuetify). [`samples/frameworks`](samples/frameworks) has a Vite project of each
+  framework in the skin Vanilla Bootstrap, which StackBlitz opens.
 - **Polymer and Lit.** They build Custom Elements themselves, so their templates render `<table-bro>` as any HTML
   element.
 
@@ -216,8 +218,21 @@ site describes the server on [MCP server](https://table-bro.com/docs/ai/mcp-serv
 
 ### Manual setup
 
-The site gives these steps on the pages of its frameworks: [Angular data table](https://table-bro.com/docs/frameworks/angular)
-for Angular Material and [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) for Vanilla Bootstrap.
+Install the core with the skin of your framework. The page of the framework on the site gives the whole setup, with a
+working page:
+
+| Framework | Skin | Install | Docs |
+| --- | --- | --- | --- |
+| Angular | Angular Material, `mat` | `npm install @table-bro/core @table-bro/angular @table-bro/angular-material @angular/elements` | [Angular data table](https://table-bro.com/docs/frameworks/angular) |
+| React and Preact | React MUI, `mui` | `npm install @table-bro/core @table-bro/react-mui @mui/material @emotion/react @emotion/styled` | [React data table](https://table-bro.com/docs/frameworks/react), [Preact data table](https://table-bro.com/docs/frameworks/preact) |
+| Solid | Solid SUID, `suid` | `npm install @table-bro/core @table-bro/solid-suid @suid/material` | [Solid data table](https://table-bro.com/docs/frameworks/solid) |
+| Svelte | Svelte M3, `m3-svelte` | `npm install @table-bro/core @table-bro/svelte-m3 m3-svelte vite-plugin-functions-mixins` | [Svelte data table](https://table-bro.com/docs/frameworks/svelte) |
+| Vue | Vue Vuetify, `vuetify` | `npm install @table-bro/core @table-bro/vue-vuetify vuetify` | [Vue 3 data table](https://table-bro.com/docs/frameworks/vue) |
+| Any, or none | Vanilla Bootstrap, `bs` | `npm install @table-bro/core @table-bro/bootstrap bootstrap @types/bootstrap` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
+| Any, or none | Vanilla HTML, `nv` | `npm install @table-bro/core @table-bro/native` | [Vanilla JS data table](https://table-bro.com/docs/frameworks/vanilla) |
+
+The steps below set up Angular Material, Vanilla Bootstrap and Vanilla HTML; the README of each skin gives the setup
+of its framework.
 
 #### Angular Material
 
