@@ -9,7 +9,8 @@ import {type BroDocTopic, topics}  from './topics.js';
 /** The short text the MCP server gives a client when it connects. */
 export const serverInstructions = `Table, Bro ${tableBroVersion}: pixel-perfect Material data tables for any framework and plain JavaScript. `
   + 'A Web Components table engine on top of existing UI components: Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Bootstrap, or a skin of your own. '
-  + 'It is the Custom Element <table-bro> with the skins mat (Angular Material), bs (Bootstrap 5) and nv (native HTML). '
+  + 'It is the Custom Element <table-bro> with the skins mat (Angular Material), mui (React MUI for React and Preact), suid (Solid SUID), '
+  + 'm3-svelte (Svelte M3), vuetify (Vue Vuetify), bs (Bootstrap 5) and nv (native HTML). '
   + 'Call get_started first: it explains how the table works and which tool to use when. Describe a table as a BroTableSpec '
   + '(with row details by default), check it with validate_spec, and get its code from generate_code. The server writes no files.';
 
