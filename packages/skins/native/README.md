@@ -10,7 +10,7 @@ assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Cod
 generates the table, its setup and its cells from one request, and checks the result.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.3.0
 ```
 
 The setup for Cursor, Codex and VS Code is in the README of
@@ -56,8 +56,8 @@ document.body.append(table);
 Without a bundler, load the UMD build after the core: it puts the skin on the `TableBroNative` global.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.2.2/dist/table-bro.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@table-bro/native@1.2.2/dist/table-bro.native.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/core@1.3.0/dist/table-bro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@table-bro/native@1.3.0/dist/table-bro.native.umd.js"></script>
 ```
 
 Load one vanilla skin per page: `@table-bro/bootstrap` and `@table-bro/native` share elements, and the skin loaded

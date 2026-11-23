@@ -4,7 +4,7 @@
     "themeAuto": "AUTO",
     "themeLight": "LIGHT",
     "themeDark": "DARK",
-    "eyebrow": "@table-bro/* 1.2.2 · architecture for library developers",
+    "eyebrow": "@table-bro/* 1.3.0 · architecture for library developers",
     "h1": "How Table, Bro is built",
     "lede": "A Web Components table engine on top of existing UI components: Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Bootstrap, or a skin of your own. One `<table-bro>` element creates a controller that runs every change of the table in fixed phases. Inside, the core is MVC with passive views and a one-way data flow. On a server, `prerenderTableBro()` renders the loading state of a table, and the browser replaces it with the table.",
     "tabMvc": "Layers (MVC)",

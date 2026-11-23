@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.3.0
+
+Four Material skins for React, Solid, Svelte and Vue, with server-side rendering.
+
+### Added
+
+- Four skins on the Material component libraries of their frameworks, which look like the skin `mat` of Angular
+  Material and take the theme of the app, light or dark:
+  - `@table-bro/react-mui`, the skin `mui` on MUI for React and Preact. `@emotion/react` and `@emotion/cache` are
+    optional peer dependencies, needed only by the server entry for the prerender;
+  - `@table-bro/solid-suid`, the skin `suid` on SUID for Solid;
+  - `@table-bro/svelte-m3`, the skin `m3-svelte` on M3 Svelte for Svelte;
+  - `@table-bro/vue-vuetify`, the skin `vuetify` on Vuetify for Vue.
+- Server-side rendering in each of the four skins: `prerenderTableBro()` with the server entry
+  `@table-bro/<package>/server` renders the table in Next.js, Astro, SolidStart, SvelteKit and Nuxt, and the
+  browser continues its progress bar.
+- `@table-bro/mcp` generates the tables of the four skins, checks their specs and documents them, with a page of
+  server-side rendering for each server. A generated vanilla table in the server mode loads its pages from the API
+  of the spec or from the simulated server, as an Angular table does.
+
 ## 1.2.2
 
 A fix of the Angular packages of 1.2.1 on npm.

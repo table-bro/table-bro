@@ -14,7 +14,7 @@ packages, generates the table, its setup and its cells from one request, and che
 that renders `<table-bro>` into a container, which a component of Svelte gives it in `onMount()`.
 
 ```sh
-claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2
+claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.3.0
 ```
 
 The setup for Cursor, Codex and VS Code is in the README of
