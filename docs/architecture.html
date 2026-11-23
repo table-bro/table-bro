@@ -3086,6 +3086,7 @@
       document.getElementById('legend').innerHTML = legendHTML();
       renderPanel();
       applyFlow();
+      syncURL();
     }
 
     /* ---------- html parts ---------- */
@@ -3325,6 +3326,7 @@
 
       renderPanel();
       applyFlow();
+      syncURL();
     }
 
     document.getElementById('chips').addEventListener('click', event => {
@@ -3373,10 +3375,12 @@
         lcIdx = Number(step.dataset.lc);
         document.querySelectorAll('#lc-steps .lc').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.lc) === lcIdx)));
         document.getElementById('lc-detail').innerHTML = lcDetailHTML();
+        syncURL();
       } else if (skin) {
         lcSkin = skin.dataset.skin;
         document.querySelectorAll('#lc-skins button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.skin === lcSkin)));
         document.getElementById('lc-detail').innerHTML = lcDetailHTML();
+        syncURL();
       } else if (flow) {
         selectFlow(flow.dataset.lcFlow);
         document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -3392,8 +3396,35 @@
         phaseIdx = Number(btn.dataset.ph);
         document.querySelectorAll('#phases .ph').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.ph) === phaseIdx)));
         document.getElementById('ph-detail').innerHTML = phaseDetailHTML();
+        syncURL();
       }
     });
+
+    /**
+     * Writes the choices of the page into its address, so a link opens the page as it is now: the theme, the map, the
+     * flow, the forbidden links, the phase of one update, the render phase and its skin family. A default leaves its
+     * parameter out; the other parameters and the hash stay.
+     */
+    function syncURL() {
+      const query = new URLSearchParams(location.search);
+      const set = (name, value, fallback) => (value === null || value === fallback) ? query.delete(name) : query.set(name, value);
+
+      set('theme', document.documentElement.getAttribute('data-theme'), null);
+      set('tab', mapTab, 'mvc');
+      set('flow', flowId, null);
+      set('forbid', forbidOn ? '1' : null, null);
+      set('phase', PHASES[phaseIdx].n, '2');
+      set('render', LIFECYCLE[lcIdx].id, LIFECYCLE[0].id);
+      set('skins', lcSkin, 'all');
+
+      const search = query.toString();
+
+      try {
+        history.replaceState(history.state, '', location.pathname + (search ? `?${search}` : '') + location.hash);
+      } catch (error) {
+        // A page in a sandbox may not change its address: the choices still work
+      }
+    }
 
     /** Marks the link of the section at the top of the window, under the row of the links, and keeps it in sight. */
     function markSection() {
@@ -3449,6 +3480,7 @@
       }
 
       document.querySelectorAll('#theme-seg button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+      syncURL();
     });
 
     document.addEventListener('keydown', event => {
@@ -3472,6 +3504,18 @@
 
     if (flowById(params.get('flow'))) {
       flowId = params.get('flow');
+    }
+
+    if (PHASES.some(p => p.n === params.get('phase'))) {
+      phaseIdx = PHASES.findIndex(p => p.n === params.get('phase'));
+    }
+
+    if (LIFECYCLE.some(p => p.id === params.get('render'))) {
+      lcIdx = LIFECYCLE.findIndex(p => p.id === params.get('render'));
+    }
+
+    if (LC_SKINS.some(k => k.id === params.get('skins'))) {
+      lcSkin = params.get('skins');
     }
 
     render();
