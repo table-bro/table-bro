@@ -247,7 +247,7 @@ const mcpInstall: BroDocFile = {file: 'mcp.sh', language: 'bash', code: `claude 
  * @param framework - the framework of the page, whose components render the table for Vanilla JS; none for Getting
  * started and Angular, whose code the server generates
  */
-const mcpSection = (level: string, framework?: string): string => `${level} With the MCP server
+const mcpSection = (level: string, framework?: string): string => `${level} Install with the MCP server
 
 The quickest start is the MCP server of Table, Bro: add it to your AI coding agent and describe the table you need. The agent installs the packages, generates the table, its setup and its cells, and checks the result.${framework ? ` In a ${framework} app the server generates the table for Vanilla JS: a module with a function that renders \`‹table-bro›\` into an element, which a component gives it.` : ''} For Claude Code, in the root of the project:
 
@@ -1882,7 +1882,7 @@ Table, Bro has its own package for Angular, \`@table-bro/angular\`: the componen
 
 ${mcpSection('#####')}
 
-##### Manual setup
+##### Install manually
 
 The steps of each skin; the component of the table is the same in all three.
 
@@ -2010,7 +2010,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Preact app renders it
 
 ${mcpSection('#####', 'Preact')}
 
-##### Manual setup
+##### Install manually
 
 1. **Install the packages**
 
@@ -2237,7 +2237,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a React 19 app renders 
 
 ${mcpSection('#####', 'React')}
 
-##### Manual setup
+##### Install manually
 
 1. **Install the packages**
 
@@ -2411,7 +2411,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Solid app renders it 
 
 ${mcpSection('#####', 'Solid')}
 
-##### Manual setup
+##### Install manually
 
 1. **Install the packages**
 
@@ -2685,7 +2685,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Svelte 5 app renders 
 
 ${mcpSection('#####', 'Svelte')}
 
-##### Manual setup
+##### Install manually
 
 1. **Install the packages**
 
@@ -2987,7 +2987,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a Vue 3 app renders it 
 
 ${mcpSection('#####', 'Vue')}
 
-##### Manual setup
+##### Install manually
 
 1. **Install the packages**
 
@@ -3296,7 +3296,7 @@ Table, Bro is the Custom Element \`‹table-bro›\`, so a page without a framew
 
 ${mcpSection('#####')}
 
-##### Manual setup
+##### Install manually
 
 The steps of each skin; the code of the table is the same in both.
 
