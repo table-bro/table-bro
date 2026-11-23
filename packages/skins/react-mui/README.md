@@ -178,6 +178,16 @@ The browser keeps the prerendered elements until `configure()` renders the table
 Next.js is on the page [Next.js](https://table-bro.com/docs/ssr/nextjs), and the setup of Preact with Astro on the page
 [Preact (Astro)](https://table-bro.com/docs/ssr/preact).
 
+## Content Security Policy
+
+The skin gives no nonce to the styles of MUI. Each element of the skin renders its components in a React root of its
+own, outside the `CacheProvider` of the application, so the components of MUI in the table insert their styles into
+the head through the default cache of Emotion, without a nonce. A prerender with the server entry puts the styles of
+Emotion into the markup as inline `<style>` elements, also without a nonce. `config.styleNonce` of the core covers only
+the styles of the column widths. An application with a strict policy allows inline styles for the table:
+`style-src 'unsafe-inline'`, with no nonce and no hash in that directive, since a browser ignores `'unsafe-inline'`
+next to them.
+
 ## Build
 
 ```sh

@@ -219,6 +219,16 @@ style.textContent = `.dark table-bro.suid:not([data-suid-theme]) {${suidThemeVar
 document.head.append(style);
 ```
 
+## Content Security Policy
+
+The skin gives no nonce to the styles of SUID. Each element of the skin renders its components in a Solid root of its
+own, outside the `StyledEngineProvider` of the application, so the components of SUID in the table insert their styles
+into the head without a nonce. A prerender with the server entry puts the styles of SUID and the CSS variables of the
+theme into the markup as inline `<style>` elements, also without a nonce. `config.styleNonce` of the core covers only
+the styles of the column widths. An application with a strict policy allows inline styles for the table:
+`style-src 'unsafe-inline'`, with no nonce and no hash in that directive, since a browser ignores `'unsafe-inline'`
+next to them.
+
 ## Build
 
 ```sh
