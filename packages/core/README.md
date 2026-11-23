@@ -6,18 +6,30 @@ for any framework or none.
 The table is the Custom Element `<table-bro>` with pages, sort, search, row details, a filter drawer and a server mode.
 A skin gives it the look and the controls of a UI library. The packages of Table, Bro:
 
+### Core and MCP server
+
 | Package | What it gives |
 | --- | --- |
 | `@table-bro/core` | The table itself and the CSS of the core |
-| `@table-bro/angular-material` | The Angular Material skin `mat` |
-| `@table-bro/react-mui` | The MUI skin `mui` for React and Preact |
-| `@table-bro/solid-suid` | The SUID skin `suid` for Solid |
-| `@table-bro/svelte-m3` | The M3 Svelte skin `m3-svelte` for Svelte |
-| `@table-bro/vue-vuetify` | The Vuetify skin `vuetify` for Vue |
-| `@table-bro/bootstrap` | The Bootstrap skin `bs` |
-| `@table-bro/native` | The native skin `nv`: plain HTML elements, no UI library |
-| `@table-bro/angular` | `<table-bro-ng>`, the Angular wrapper of the table |
 | `@table-bro/mcp` | The MCP server: the reference, the spec check and the code generator of a table for AI coding agents |
+
+### Skins
+
+| Package | Design | What it gives |
+| --- | --- | --- |
+| `@table-bro/angular-material` | Material | The Angular Material skin `mat` |
+| `@table-bro/react-mui` | Material | The MUI skin `mui` for React and Preact |
+| `@table-bro/solid-suid` | Material | The SUID skin `suid` for Solid |
+| `@table-bro/svelte-m3` | Material | The M3 Svelte skin `m3-svelte` for Svelte |
+| `@table-bro/vue-vuetify` | Material | The Vuetify skin `vuetify` for Vue |
+| `@table-bro/bootstrap` | Bootstrap | The Bootstrap skin `bs` |
+| `@table-bro/native` | HTML | The native skin `nv`: plain HTML elements, no UI library |
+
+### Framework wrappers
+
+| Package | What it gives |
+| --- | --- |
+| `@table-bro/angular` | `<table-bro-ng>`, the Angular wrapper of the table |
 
 ## With an AI coding agent
 

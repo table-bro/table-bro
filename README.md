@@ -121,20 +121,33 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
 
 ## Packages
 
+A page takes the core and one skin; an Angular application also takes the wrapper. All packages share one version.
+The Angular packages support Angular `>=20 <23`.
+
+### Core and MCP server
+
 | Package | What it gives |
 | --- | --- |
 | [`@table-bro/core`](packages/core) | The table, `<table-bro>`, its CSS and the filter drawer container |
-| [`@table-bro/angular-material`](packages/skins/angular-material) | The skin `mat` on the components of Angular Material, in the theme of the application |
-| [`@table-bro/react-mui`](packages/skins/react-mui) | The skin `mui` on the components of MUI for React and Preact, in the theme of the application |
-| [`@table-bro/solid-suid`](packages/skins/solid-suid) | The skin `suid` on the components of SUID, the port of MUI to Solid, in the theme of the application |
-| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | The skin `m3-svelte` on the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
-| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | The skin `vuetify` on the components of Vuetify for Vue, in the themes of the application |
-| [`@table-bro/bootstrap`](packages/skins/bootstrap) | The skin `bs` on the components and the classes of Bootstrap 5 |
-| [`@table-bro/native`](packages/skins/native) | The skin `nv`: plain HTML elements, no UI library |
-| [`@table-bro/angular`](packages/angular) | `<table-bro-ng>`, the Angular wrapper with signal inputs and outputs |
 | [`@table-bro/mcp`](packages/mcp) | The MCP server: the reference, the spec check and the code generator of a table for AI coding agents |
 
-All packages share one version. Angular packages support Angular `>=20 <23`.
+### Skins
+
+| Package | Design | What it gives |
+| --- | --- | --- |
+| [`@table-bro/angular-material`](packages/skins/angular-material) | Material | The skin `mat` on the components of Angular Material, in the theme of the application |
+| [`@table-bro/react-mui`](packages/skins/react-mui) | Material | The skin `mui` on the components of MUI for React and Preact, in the theme of the application |
+| [`@table-bro/solid-suid`](packages/skins/solid-suid) | Material | The skin `suid` on the components of SUID, the port of MUI to Solid, in the theme of the application |
+| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | Material | The skin `m3-svelte` on the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
+| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | Material | The skin `vuetify` on the components of Vuetify for Vue, in the themes of the application |
+| [`@table-bro/bootstrap`](packages/skins/bootstrap) | Bootstrap | The skin `bs` on the components and the classes of Bootstrap 5 |
+| [`@table-bro/native`](packages/skins/native) | HTML | The skin `nv`: plain HTML elements, no UI library |
+
+### Framework wrappers
+
+| Package | What it gives |
+| --- | --- |
+| [`@table-bro/angular`](packages/angular) | `<table-bro-ng>`, the Angular wrapper with signal inputs and outputs |
 
 ### Settings of the table
 

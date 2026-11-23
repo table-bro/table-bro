@@ -9,23 +9,38 @@ with `npx http-server docs`.
 
 ## The parts
 
-The core is the base: the skins and the wrapper import it, and the Material skin also imports the wrapper. The MCP
-server is a package of its own:
+The parts form three groups: the core with the MCP server, the skins, and the framework wrappers. The core is the base:
+the skins and the wrapper import it, and the Material skin also imports the wrapper. The MCP server is a package of its
+own and imports none of the others.
+
+A skin, the wrapper and the Material skin import the core only by its name, `@table-bro/core`, as an application does.
+The core knows the skins only as configs in its registry, by `registerSkin()`.
+
+### Core and MCP server
 
 | Part | Package, folder | What it owns |
 | --- | --- | --- |
 | The core | `@table-bro/core`, `packages/core` | The element `<table-bro>`, the state of each table, its geometry, its DOM, its motion, its prerender and its public types. No runtime dependencies |
-| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
-| The MUI skin | `@table-bro/react-mui`, `packages/skins/react-mui` | The same for MUI in React and Preact: Custom Elements that render the components of MUI in React roots of their own, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the MUI theme |
-| The SUID skin | `@table-bro/solid-suid`, `packages/skins/solid-suid` | The same for SUID in Solid: Custom Elements that render the components of SUID in Solid roots of their own, defined in the browser by the import of the skin, the paginator and the sort header of the vanilla skins for the parts that SUID does not port, and CSS that reads the CSS variables that the skin writes from the SUID theme |
-| The M3 skin | `@table-bro/svelte-m3`, `packages/skins/svelte-m3` | The same for M3 Svelte in Svelte 5: Custom Elements that mount the components of M3 Svelte, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the M3 Svelte theme |
-| The Vuetify skin | `@table-bro/vue-vuetify`, `packages/skins/vue-vuetify` | The same for Vuetify in Vue: Custom Elements that render the components of Vuetify in Vue roots of their own, in the context of an app of the skin that installs the Vuetify of the application, and CSS that reads the CSS variables of its themes |
-| The vanilla skins | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
-| The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, its prerender during Angular server-side rendering, and the contracts of a page and of its service |
 | The MCP server | `@table-bro/mcp`, `packages/mcp` | The reference, the spec check and the code generator of a table for AI coding agents. It reads, never writes |
 
-A skin, the wrapper and the Material skin import the core only by its name, `@table-bro/core`, as an application does.
-The core knows the skins only as configs in its registry, by `registerSkin()`.
+### Skins
+
+| Part | Package, folder | Design | What it owns |
+| --- | --- | --- | --- |
+| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | Material | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
+| The MUI skin | `@table-bro/react-mui`, `packages/skins/react-mui` | Material | The same for MUI in React and Preact: Custom Elements that render the components of MUI in React roots of their own, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the MUI theme |
+| The SUID skin | `@table-bro/solid-suid`, `packages/skins/solid-suid` | Material | The same for SUID in Solid: Custom Elements that render the components of SUID in Solid roots of their own, defined in the browser by the import of the skin, the paginator and the sort header of the vanilla skins for the parts that SUID does not port, and CSS that reads the CSS variables that the skin writes from the SUID theme |
+| The M3 skin | `@table-bro/svelte-m3`, `packages/skins/svelte-m3` | Material | The same for M3 Svelte in Svelte 5: Custom Elements that mount the components of M3 Svelte, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the M3 Svelte theme |
+| The Vuetify skin | `@table-bro/vue-vuetify`, `packages/skins/vue-vuetify` | Material | The same for Vuetify in Vue: Custom Elements that render the components of Vuetify in Vue roots of their own, in the context of an app of the skin that installs the Vuetify of the application, and CSS that reads the CSS variables of its themes |
+| The vanilla skins | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | Bootstrap, HTML | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
+
+### Framework wrappers
+
+| Part | Package, folder | What it owns |
+| --- | --- | --- |
+| The wrapper | `@table-bro/angular`, `packages/angular` | `<table-bro-ng>`: signal inputs and outputs over the element, its prerender during Angular server-side rendering, and the contracts of a page and of its service |
+
+### Inside the core
 
 Inside the core the table is a strict MVC in one Custom Element. A gesture of the user changes many regions at once:
 the rows move with a kinetic page scroll, row details open while the body grows, the columns take new widths, the
