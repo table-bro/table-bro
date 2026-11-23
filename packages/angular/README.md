@@ -3,8 +3,9 @@
 The Angular wrapper of [Table, Bro](https://table-bro.com), pixel-perfect Material (M3) data tables for Angular: the
 `<table-bro-ng>` component with signal inputs and outputs over the `<table-bro>` Custom Element.
 
-The wrapper does not depend on a skin. It works with any registered skin of Table, Bro: Angular Material
-(`@table-bro/angular-material`), Bootstrap (`@table-bro/bootstrap`) or native (`@table-bro/native`).
+The wrapper does not depend on a skin. It works with any registered skin of Table, Bro; the skins for Angular are
+Angular Material (`@table-bro/angular-material`), Vanilla Bootstrap (`@table-bro/bootstrap`) and Vanilla HTML
+(`@table-bro/native`).
 
 ## With an AI coding agent
 

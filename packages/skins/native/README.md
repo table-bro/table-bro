@@ -1,7 +1,7 @@
 # @table-bro/native
 
-The native skin of [Table, Bro](https://table-bro.com): data tables on the native controls of the browser, without a
-UI library. The skin is `nv`.
+The Vanilla HTML skin of [Table, Bro](https://table-bro.com): data tables on the native controls of the browser,
+without a UI library, for any framework. The skin is `nv`.
 
 ## With an AI coding agent
 

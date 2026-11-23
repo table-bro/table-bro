@@ -1,7 +1,7 @@
 # @table-bro/bootstrap
 
-The Bootstrap skin of [Table, Bro](https://table-bro.com): data tables built from the components and the styles of
-Bootstrap 5. The skin is `bs`.
+The Vanilla Bootstrap skin of [Table, Bro](https://table-bro.com): data tables built from the components and the
+styles of Bootstrap 5, for any framework. The skin is `bs`.
 
 ## With an AI coding agent
 

@@ -8,9 +8,9 @@ native page. Rows have a fixed height, pages turn with a kinetic scroll, row det
 Material 3 corners, and search, sort and filters run on the client or go to your server as one query. The core has no
 runtime dependencies and works with any framework or none; Angular gets its own wrapper. The look and the controls of
 the table come from a skin: a thin layer that puts the components of a UI library into the toolbar, the paginator, the
-cells and the filter drawer. The skins Angular Material, MUI, SUID, M3 Svelte, Vuetify, Bootstrap 5 and plain HTML ship
-with the table, and a skin for your own design system is written the same way, so the table uses your components and
-follows the theme of your application instead of bringing its own.
+cells and the filter drawer. The skins Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Vanilla
+Bootstrap and Vanilla HTML ship with the table, and a skin for your own design system is written the same way, so the
+table uses your components and follows the theme of your application instead of bringing its own.
 
 [Demo](https://table-bro.com) · [Docs](https://table-bro.com/docs) · [Examples](https://table-bro.com/examples) ·
 [Architecture](ARCHITECTURE.md) · [Interactive diagram](https://table-bro.com/architecture) ·
@@ -44,9 +44,10 @@ follows the theme of your application instead of bringing its own.
   included, with the corners animated as the details open.
 - **Dark and light mode.** The table follows the color scheme of the page, with a theme attribute for a page of the
   other scheme.
-- **Any design system through a skin.** The Angular Material skin follows the theme of the application through Material
-  system tokens; the Bootstrap skin uses the variables of Bootstrap 5; the Native skin is plain HTML. They are the base
-  and the reference: a skin for your own component library gives the table your buttons, fields, toggles and tags.
+- **Any design system through a skin.** The Material skins, Angular Material, React MUI, Solid SUID, Svelte M3 and Vue
+  Vuetify, take the theme of the application from their UI library; Vanilla Bootstrap uses the variables of Bootstrap 5;
+  Vanilla HTML is plain HTML. They are the base and the reference: a skin for your own component library gives the table
+  your buttons, fields, toggles and tags.
 
 ### Details
 
@@ -127,8 +128,8 @@ Responsive layout for mobile, multi-row selection and inline cell editing.
 
 ## Accessibility & localization
 
-- **Screen readers.** The toolbar links of the Bootstrap and Native skins say what they do, the ones that act on the
-  table are buttons, and a live region tells the state of the table and the loading of row details.
+- **Screen readers.** The toolbar links of the skins Vanilla Bootstrap and Vanilla HTML say what they do, the ones that
+  act on the table are buttons, and a live region tells the state of the table and the loading of row details.
 - **Keyboard and focus.** Focus rings show in full, the hidden items of a cell are out of the tab order, and the focus
   goes back to the Filters button when the filter drawer closes.
 - **Texts in the language of the application.** `config.texts` sets the words of the toolbar, the search line, the
@@ -152,13 +153,13 @@ The Angular packages support Angular `>=20 <23`.
 
 | Package | Design | What it gives |
 | --- | --- | --- |
-| [`@table-bro/angular-material`](packages/skins/angular-material) | Material | The skin `mat` on the components of Angular Material, in the theme of the application |
-| [`@table-bro/react-mui`](packages/skins/react-mui) | Material | The skin `mui` on the components of MUI for React and Preact, in the theme of the application |
-| [`@table-bro/solid-suid`](packages/skins/solid-suid) | Material | The skin `suid` on the components of SUID, the port of MUI to Solid, in the theme of the application |
-| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | Material | The skin `m3-svelte` on the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
-| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | Material | The skin `vuetify` on the components of Vuetify for Vue, in the themes of the application |
-| [`@table-bro/bootstrap`](packages/skins/bootstrap) | Bootstrap | The skin `bs` on the components and the classes of Bootstrap 5 |
-| [`@table-bro/native`](packages/skins/native) | HTML | The skin `nv`: plain HTML elements, no UI library |
+| [`@table-bro/angular-material`](packages/skins/angular-material) | Material | Angular Material, `mat`: the components of Angular Material for Angular, in the theme of the application |
+| [`@table-bro/react-mui`](packages/skins/react-mui) | Material | React MUI, `mui`: the components of MUI for React and Preact, in the theme of the application |
+| [`@table-bro/solid-suid`](packages/skins/solid-suid) | Material | Solid SUID, `suid`: the components of SUID, the port of MUI to Solid, in the theme of the application |
+| [`@table-bro/svelte-m3`](packages/skins/svelte-m3) | Material | Svelte M3, `m3-svelte`: the components of M3 Svelte for Svelte, in the Material 3 theme of the application |
+| [`@table-bro/vue-vuetify`](packages/skins/vue-vuetify) | Material | Vue Vuetify, `vuetify`: the components of Vuetify for Vue, in the themes of the application |
+| [`@table-bro/bootstrap`](packages/skins/bootstrap) | Bootstrap | Vanilla Bootstrap, `bs`: the components and the classes of Bootstrap 5, for any framework |
+| [`@table-bro/native`](packages/skins/native) | HTML | Vanilla HTML, `nv`: plain HTML elements, no UI library, for any framework |
 
 ### Framework wrappers
 
@@ -175,10 +176,10 @@ themes, the styling, the CSS variables `--bro-*` and loading without a bundler. 
 ## Skins
 
 Table, Bro is a table engine, and a skin gives it the look and the controls of a UI library. The skins that ship today:
-Angular Material for Angular apps, MUI for React and Preact, SUID for Solid, M3 Svelte for Svelte, Vuetify for Vue,
-Bootstrap 5 for any framework, and Native, plain HTML elements, the reference skin to start your own from. The goal is
-any framework with any UI components: a skin of your design system, or of the component library of your framework, is
-built the same way.
+Angular Material for Angular apps, React MUI for React and Preact, Solid SUID for Solid, Svelte M3 for Svelte, Vue
+Vuetify for Vue, and for any page Vanilla Bootstrap, on Bootstrap 5, and Vanilla HTML, plain HTML elements, the
+reference skin to start your own from. The goal is any framework with any UI components: a skin of your design system,
+or of the component library of your framework, is built the same way.
 
 ### Create your own skin
 
@@ -189,7 +190,7 @@ the progress bar, the buttons and the dropdowns; and the attribute of the color 
 `themeAttribute`, as `data-bs-theme` of Bootstrap, which the table sets on its host to `'light'` or `'dark'`. The table
 also puts the name of the skin on its host as a class, so the CSS of your skin applies under that class.
 
-Native is the skin to start from: its config `nativeSkinConfig` of `@table-bro/native` and its sources in
+Vanilla HTML is the skin to start from: its config `nativeSkinConfig` of `@table-bro/native` and its sources in
 [`packages/skins/native`](packages/skins/native) show the parts of a skin. Give the parts the classes of your design
 system, or replace the elements with Custom Elements of your UI components, as the skin Angular Material does with the
 components of Angular Material, then register the config under a name of its own:
@@ -199,7 +200,7 @@ skin.
 
 An AI coding agent builds a skin of the components of your library with the skill
 [`create-skin`](.agents/skills/create-skin/SKILL.md) of the repository: the package, the elements and their contract
-with the table, the theme, the styles, a sample and the checks. The skin `mui` on MUI is its reference.
+with the table, the theme, the styles, a sample and the checks. The skin React MUI, `mui`, is its reference.
 
 ## Getting started
 

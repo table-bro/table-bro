@@ -10,11 +10,11 @@ with `npx http-server docs`.
 ## The parts
 
 The parts form three groups: the core with the MCP server, the skins, and the framework wrappers. The core is the base:
-the skins and the wrapper import it, and the Material skin also imports the wrapper. The MCP server is a package of its
-own and imports none of the others.
+the skins and the wrapper import it, and the skin Angular Material also imports the wrapper. The MCP server is a package
+of its own and imports none of the others.
 
-A skin, the wrapper and the Material skin import the core only by its name, `@table-bro/core`, as an application does.
-The core knows the skins only as configs in its registry, by `registerSkin()`.
+A skin and the wrapper import the core only by its name, `@table-bro/core`, as an application does. The core knows the
+skins only as configs in its registry, by `registerSkin()`.
 
 ### Core and MCP server
 
@@ -27,12 +27,12 @@ The core knows the skins only as configs in its registry, by `registerSkin()`.
 
 | Part | Package, folder | Design | What it owns |
 | --- | --- | --- | --- |
-| The Material skin | `@table-bro/angular-material`, `packages/skins/angular-material` | Material | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
-| The MUI skin | `@table-bro/react-mui`, `packages/skins/react-mui` | Material | The same for MUI in React and Preact: Custom Elements that render the components of MUI in React roots of their own, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the MUI theme |
-| The SUID skin | `@table-bro/solid-suid`, `packages/skins/solid-suid` | Material | The same for SUID in Solid: Custom Elements that render the components of SUID in Solid roots of their own, defined in the browser by the import of the skin, the paginator and the sort header of the vanilla skins for the parts that SUID does not port, and CSS that reads the CSS variables that the skin writes from the SUID theme |
-| The M3 skin | `@table-bro/svelte-m3`, `packages/skins/svelte-m3` | Material | The same for M3 Svelte in Svelte 5: Custom Elements that mount the components of M3 Svelte, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the M3 Svelte theme |
-| The Vuetify skin | `@table-bro/vue-vuetify`, `packages/skins/vue-vuetify` | Material | The same for Vuetify in Vue: Custom Elements that render the components of Vuetify in Vue roots of their own, in the context of an app of the skin that installs the Vuetify of the application, and CSS that reads the CSS variables of its themes |
-| The vanilla skins | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | Bootstrap, HTML | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
+| Angular Material | `@table-bro/angular-material`, `packages/skins/angular-material` | Material | The look and the controls of Angular Material: Angular components of the toolbar, the sort header, the paginator and the cells that the table creates as Custom Elements, the filter drawer of Material, the components of its elements for a prerender (`TABLE_BRO_ELEMENTS`), and CSS |
+| React MUI | `@table-bro/react-mui`, `packages/skins/react-mui` | Material | The same for MUI in React and Preact: Custom Elements that render the components of MUI in React roots of their own, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the MUI theme |
+| Solid SUID | `@table-bro/solid-suid`, `packages/skins/solid-suid` | Material | The same for SUID in Solid: Custom Elements that render the components of SUID in Solid roots of their own, defined in the browser by the import of the skin, the paginator and the sort header of the vanilla skins for the parts that SUID does not port, and CSS that reads the CSS variables that the skin writes from the SUID theme |
+| Svelte M3 | `@table-bro/svelte-m3`, `packages/skins/svelte-m3` | Material | The same for M3 Svelte in Svelte 5: Custom Elements that mount the components of M3 Svelte, defined in the browser by the import of the skin, and CSS that reads the CSS variables of the M3 Svelte theme |
+| Vue Vuetify | `@table-bro/vue-vuetify`, `packages/skins/vue-vuetify` | Material | The same for Vuetify in Vue: Custom Elements that render the components of Vuetify in Vue roots of their own, in the context of an app of the skin that installs the Vuetify of the application, and CSS that reads the CSS variables of its themes |
+| Vanilla Bootstrap, Vanilla HTML | `@table-bro/bootstrap`, `@table-bro/native`, `packages/skins/{bootstrap,native,shared}` | Bootstrap, HTML | The same for Bootstrap 5 and plain HTML: Custom Elements of the toolbar, the sort header, the paginator and the cells, a config that defines them in a registry of custom elements (`defineElements()`), and CSS |
 
 ### Framework wrappers
 
@@ -145,7 +145,7 @@ defines the update and its frame.
 `npm run check:arch` (`scripts/check-arch.mjs`) checks these rules by searching the code, and `npm test` runs it first:
 
 1. Views and models do not import the controller or the element.
-2. Skins, the Material skin and the wrapper import the core only from `@table-bro/core`, their unit specs too.
+2. Skins and the wrapper import the core only from `@table-bro/core`, their unit specs too.
 3. Nobody reads or writes a global object of the table, and the core touches no `window` or `document` while its
    modules load.
 5. Animations run only through `BroMotion`, and only its clock requests animation frames, also in the skins.

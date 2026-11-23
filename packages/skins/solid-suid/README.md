@@ -1,6 +1,6 @@
 # @table-bro/solid-suid
 
-The SUID skin of [Table, Bro](https://table-bro.com): Material data tables built from the components of
+The Solid SUID skin of [Table, Bro](https://table-bro.com): Material data tables built from the components of
 [SUID](https://suid.dev), the port of MUI to Solid, in the SUID theme of the application, with the sizes of the tables
 of the skin Angular Material. The skin is `suid`.
 

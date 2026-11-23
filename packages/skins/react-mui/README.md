@@ -1,6 +1,6 @@
 # @table-bro/react-mui
 
-The MUI skin of [Table, Bro](https://table-bro.com): Material data tables built from the components of
+The React MUI skin of [Table, Bro](https://table-bro.com): Material data tables built from the components of
 [MUI](https://mui.com/material-ui/) (Material UI) for React and Preact, in the MUI theme of the application, with the
 sizes of the tables of the skin Angular Material. The skin is `mui`.
 

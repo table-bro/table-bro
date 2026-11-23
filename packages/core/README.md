@@ -17,13 +17,13 @@ A skin gives it the look and the controls of a UI library. The packages of Table
 
 | Package | Design | What it gives |
 | --- | --- | --- |
-| `@table-bro/angular-material` | Material | The Angular Material skin `mat` |
-| `@table-bro/react-mui` | Material | The MUI skin `mui` for React and Preact |
-| `@table-bro/solid-suid` | Material | The SUID skin `suid` for Solid |
-| `@table-bro/svelte-m3` | Material | The M3 Svelte skin `m3-svelte` for Svelte |
-| `@table-bro/vue-vuetify` | Material | The Vuetify skin `vuetify` for Vue |
-| `@table-bro/bootstrap` | Bootstrap | The Bootstrap skin `bs` |
-| `@table-bro/native` | HTML | The native skin `nv`: plain HTML elements, no UI library |
+| `@table-bro/angular-material` | Material | Angular Material, `mat`, for Angular |
+| `@table-bro/react-mui` | Material | React MUI, `mui`, for React and Preact |
+| `@table-bro/solid-suid` | Material | Solid SUID, `suid`, for Solid |
+| `@table-bro/svelte-m3` | Material | Svelte M3, `m3-svelte`, for Svelte |
+| `@table-bro/vue-vuetify` | Material | Vue Vuetify, `vuetify`, for Vue |
+| `@table-bro/bootstrap` | Bootstrap | Vanilla Bootstrap, `bs`, on Bootstrap 5 for any framework |
+| `@table-bro/native` | HTML | Vanilla HTML, `nv`: plain HTML elements, no UI library, for any framework |
 
 ### Framework wrappers
 
@@ -34,9 +34,9 @@ A skin gives it the look and the controls of a UI library. The packages of Table
 ## With an AI coding agent
 
 The core is what the AI coding agent puts on the page: a pixel-perfect Material (M3) data table with search, paging,
-sorting, row details and dark mode, for React, Vue, Svelte, Angular and plain HTML. Tell your AI assistant to use Table,
-Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages, generates the table, its
-setup and its cells from one request, and checks the result.
+sorting, row details and dark mode, for Angular, Preact, React, Solid, Svelte, Vue and plain HTML. Tell your AI
+assistant to use Table, Bro, or add its MCP server to Claude Code, Cursor or Codex: the agent installs the packages,
+generates the table, its setup and its cells from one request, and checks the result.
 
 ```sh
 claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@1.2.2
