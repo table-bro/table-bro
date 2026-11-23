@@ -103,7 +103,10 @@ linkedom or happy-dom, has no layout, no global `document`, and custom elements 
    them through `new BroDom(this.ownerDocument)`.
 3. **The elements of the skin.** The module of a skin loaded without a DOM defines nothing, so `prerenderTableBro()`
    calls `BroSkinConfig.defineElements(registry)` with the registry of the window of the server DOM. The elements
-   render their markup without the scripts of the browser, as the dropdowns and the tooltips of a UI library.
+   render their markup without the scripts of the browser, as the dropdowns and the tooltips of a UI library. The
+   vanilla skins give `defineElements()` in their packages; a skin on the components of a framework, as `mui`, gives
+   it in its server entry, `@table-bro/<package>/server`, whose elements render their components with the server render
+   of the framework, as `react-dom/server` for MUI.
 4. **The mark.** The host gets `data-bro-prerender`. `isPrerendered(element)` tells an element of the skin in it to
    keep the markup of the prerender when the browser defines the element.
 5. **The browser.** `configure()` on the same element renders the table in its place, at the same height. Before it
