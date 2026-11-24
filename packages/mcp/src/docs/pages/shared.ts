@@ -6,7 +6,7 @@ import type {BroDocFile}            from '../pages.js';
 // The parts of the pages of Docs that more than one section shows: the setups, the orders and the sections about the
 // skins and the MCP server
 /** The languages of the files of code by the languages of the steps of the setup. */
-export const setupLanguages: Record<string, string> = {bash: 'bash', html: 'html', json: 'json', scss: 'scss', typescript: 'ts'};
+const setupLanguages: Record<string, string> = {bash: 'bash', html: 'html', json: 'json', scss: 'scss', typescript: 'ts'};
 
 /**
  * The setup of a project of one skin, as get_started of the MCP gives it: its steps as an ordered list of the page and
@@ -14,7 +14,7 @@ export const setupLanguages: Record<string, string> = {bash: 'bash', html: 'html
  * @param target - an Angular project or Vanilla JS
  * @param skin - the skin of the project
  */
-export function setup(target: BroTarget, skin: BroSpecSkin): {text: string; files: BroDocFile[]} {
+function setup(target: BroTarget, skin: BroSpecSkin): {text: string; files: BroDocFile[]} {
   const files: BroDocFile[] = [];
 
   const text = setupSteps(target, skin).map((step, i) => {
