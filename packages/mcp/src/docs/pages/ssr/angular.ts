@@ -2,7 +2,7 @@ import type {BroDocPage} from '../../pages.js';
 import {angularOrders}   from '../shared.js';
 
 /** The page ssr/angular of Docs. */
-export const angularPage: BroDocPage = {
+export const ssrAngularPage: BroDocPage = {
   path: 'ssr/angular',
   name: 'Angular SSR',
   text: `<!-- intro -->

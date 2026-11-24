@@ -1,7 +1,7 @@
 import type {BroDocPage} from '../../pages.js';
 
 /** The page ssr/preact of Docs. */
-export const preactPage: BroDocPage = {
+export const ssrPreactPage: BroDocPage = {
   path: 'ssr/preact',
   name: 'Preact (Astro)',
   text: `<!-- intro -->

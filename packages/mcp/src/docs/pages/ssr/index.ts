@@ -1,8 +1,8 @@
 import type {BroDocPage}  from '../../pages.js';
-import {angularPage}      from './angular.js';
+import {ssrAngularPage}   from './angular.js';
 import {nextjsPage}       from './nextjs.js';
 import {nuxtPage}         from './nuxt.js';
-import {preactPage}       from './preact.js';
+import {ssrPreactPage}    from './preact.js';
 import {prerenderingPage} from './prerendering.js';
 import {solidstartPage}   from './solidstart.js';
 import {sveltekitPage}    from './sveltekit.js';
@@ -17,4 +17,4 @@ A page that a server renders shows the table before any script runs: the prerend
 };
 
 /** The pages of the section Server-side rendering of Docs, in the order of the menu of Docs. */
-export const ssrPages: BroDocPage[] = [ssrPage, angularPage, preactPage, nextjsPage, solidstartPage, sveltekitPage, nuxtPage, prerenderingPage];
+export const ssrPages: BroDocPage[] = [ssrPage, ssrAngularPage, ssrPreactPage, nextjsPage, solidstartPage, sveltekitPage, nuxtPage, prerenderingPage];
