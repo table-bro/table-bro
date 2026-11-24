@@ -1,5 +1,5 @@
-import type {BroDocPage}                                                                from '../../pages.js';
-import {mcpInstall, mcpSection, muiInstall, muiOrders, muiSkin, muiTheme, skinsSection} from '../shared.js';
+import type {BroDocPage}                                                                 from '../../pages.js';
+import {mcpInstall, mcpSection, muiInstall, muiSkin, muiTheme, ordersFile, skinsSection} from '../shared.js';
 
 /** The page frameworks/react of Docs. */
 export const reactPage: BroDocPage = {
@@ -110,7 +110,7 @@ Yes. The table renders in the browser, as \`configure()\` runs in an effect of a
   </body>
 </html>
 `},
-    muiOrders,
+    ordersFile('mui'),
     {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of React, with its attribute theme
 import type {DetailedHTMLProps, HTMLAttributes} from 'react';
 

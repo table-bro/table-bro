@@ -1,5 +1,5 @@
-import type {BroDocPage}                        from '../../pages.js';
-import {installCommand, mcpInstall, mcpSection} from '../shared.js';
+import type {BroDocPage}                                   from '../../pages.js';
+import {installCommand, mcpInstall, mcpSection, orderCols} from '../shared.js';
 
 /** The page getting-started of Docs. */
 export const gettingStartedPage: BroDocPage = {
@@ -45,15 +45,7 @@ interface Order extends BroRow {
 }
 
 const cols: BroCol<Order>[] = [
-  {
-    title: 'Description',
-    name: 'description'
-  }, {
-    title: 'Price',
-    name: 'price',
-    dataType: 'number',
-    className: 'bro-col_text-right'
-  }
+${orderCols}
 ];
 
 const rows: Order[] = [

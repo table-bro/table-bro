@@ -1,5 +1,5 @@
-import type {BroDocPage}                                                                from '../../pages.js';
-import {mcpInstall, mcpSection, muiInstall, muiOrders, muiSkin, muiTheme, skinsSection} from '../shared.js';
+import type {BroDocPage}                                                                 from '../../pages.js';
+import {mcpInstall, mcpSection, muiInstall, muiSkin, muiTheme, ordersFile, skinsSection} from '../shared.js';
 
 /** The page frameworks/preact of Docs. */
 export const preactPage: BroDocPage = {
@@ -172,7 +172,7 @@ export default {
   </body>
 </html>
 `},
-    muiOrders,
+    ordersFile('mui'),
     {file: 'src/elements.d.ts', language: 'ts', code: `// The element <table-bro> in the JSX of Preact, with its attribute theme and its event bro-action
 import type {HTMLAttributes} from 'preact';
 

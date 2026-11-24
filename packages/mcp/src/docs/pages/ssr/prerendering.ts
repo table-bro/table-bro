@@ -1,5 +1,5 @@
 import type {BroDocPage} from '../../pages.js';
-import {frameworkOrders} from '../shared.js';
+import {ordersFile}      from '../shared.js';
 
 /** The page ssr/prerendering of Docs. */
 export const prerenderingPage: BroDocPage = {
@@ -74,7 +74,7 @@ import {cols, conf, rows} from './orders';
 // The prerendered table of the page: configure() renders the table with its rows in its place
 document.querySelector('table-bro')!.configure({cols, rows, conf});
 `},
-    frameworkOrders,
+    ordersFile('bs', " // 'nv' for Vanilla HTML"),
     {file: 'angular-optimization.json', language: 'json', code: `"optimization": {
   "scripts": true,
   "styles": {
