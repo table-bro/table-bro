@@ -3,8 +3,9 @@ import type {BroSpecSkin}           from '../../spec/spec.js';
 import {tableBroVersion}            from '../../version.js';
 import type {BroDocFile}            from '../pages.js';
 
-// The parts of the pages of Docs that more than one section shows: the setups, the orders and the sections about the
-// skins and the MCP server
+// The parts of the pages of Docs outside the modules of the pages: the setups that get_started of the MCP server gives,
+// the orders of the sample projects, the sections about the skins and the MCP server that more than one page shows, and
+// the files of the samples of the pages of Frameworks
 /** The languages of the files of code by the languages of the steps of the setup. */
 const setupLanguages: Record<string, string> = {bash: 'bash', html: 'html', json: 'json', scss: 'scss', typescript: 'ts'};
 
