@@ -157,10 +157,6 @@ export const skinsSection = `#### Which skins can I use?
 
 Table, Bro ships the skins Angular Material, React MUI, Solid SUID, Svelte M3, Vue Vuetify, Vanilla Bootstrap and Vanilla HTML, and a skin of your own design system or UI components is built the same way: [Getting started](https://table-bro.com/docs/getting-started) describes the skins, and [Your own skin](https://table-bro.com/docs/design/your-own-skin) how to build one.`;
 
-/**
- * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
- * Frameworks starts with.
- */
 /** The files of the setup of the page of Solid, as the project samples/solid-suid/solid has them. */
 export const suidInstall: BroDocFile = {file: 'install.sh', language: 'bash', code: `npm install @table-bro/core @table-bro/solid-suid @suid/material
 `};
@@ -214,6 +210,10 @@ import './sample-page.css';
 setMuiTheme(theme);
 `};
 
+/**
+ * The setup of the MCP server for Claude Code, which the installation on Getting started and on every page of
+ * Frameworks starts with.
+ */
 export const mcpInstall: BroDocFile = {file: 'mcp.sh', language: 'bash', code: `claude mcp add --scope project table-bro -- npx -y @table-bro/mcp@${tableBroVersion}
 `};
 
