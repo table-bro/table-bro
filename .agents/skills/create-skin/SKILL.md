@@ -201,12 +201,13 @@ The skin changes these files with the minimal lines it needs, in the commit of t
    the skins without a count, so the next skin adds its name only. The README of Angular Material names only the skins
    for Angular.
 
-The docs of the MCP server, `packages/mcp/src/docs/pages.ts`, go into a commit of their own, `Table, Bro MCP: ...`: the
-skin in the texts and the table of the skins of Getting started. A skin gets no page of design of its own: a library of
-Material Design, as MUI or Vuetify, gets a section of the page Material design, `#### React MUI`, `#### Vue Vuetify`,
-in the order of the skins: what the skin renders, the versions it supports, how it takes the theme, its setup of the
-theme as a file of the page, and the links to the pages of Frameworks of its framework. Name only what the library
-implements: no M3 for a library of Material Design 2.
+The docs of the MCP server, the pages of `packages/mcp/src/docs/pages/` (a folder per section of Docs with a module per page,
+which the `index.ts` of the folder lists and `pages.ts` joins into `docPages`), go into a commit of their own, `Table, Bro MCP: ...`: the skin in the texts and the table of the
+skins of Getting started. A skin gets no page of design of its own: a library of Material Design, as MUI or Vuetify,
+gets a section of the page Material design, `#### React MUI`, `#### Vue Vuetify`, in the order of the skins: what the
+skin renders, the versions it supports, how it takes the theme, its setup of the theme as a file of the page, and the
+links to the pages of Frameworks of its framework. Name only what the library implements: no M3 for a library of
+Material Design 2.
 
 The pages of Frameworks of the framework of the skin, as React and Preact for `mui` and Vue for `vuetify`, show the
 sample of the skin: the link of the working page `https://table-bro.com/samples/<library>/<framework>`, the link of
@@ -215,12 +216,12 @@ StackBlitz to `samples/<library>/<framework>`, and the manual setup with the fil
 page, and the spec compares the files of the page with it. The skins `bs` and `nv` stay the alternatives that the
 intro of the page names.
 
-The table «Texts by the part of the table» of `pages.ts` names in its column Skins every skin that shows a text, and the
-docs of `BroTexts` in `packages/core/types/table-bro.ts` name the skins of a text that only some skins show, as
-`loadingProgress`. Find what the skin shows: render a table of the skin with a marker in every text, as `Q<name>Q`,
-open its search and its drawer, and read the markers in its DOM with their `aria-label`. The texts of the core, the
-drawer, the states and the search of the toolbar are in every skin; the words of the paginator and the roles of the
-toolbar of the vanilla skins are not.
+The table «Texts by the part of the table» of `pages/accessibility/localization.ts` names in its column Skins every skin that shows a
+text, and the docs of `BroTexts` in `packages/core/types/table-bro.ts` name the skins of a text that only some skins
+show, as `loadingProgress`. Find what the skin shows: render a table of the skin with a marker in every text, as
+`Q<name>Q`, open its search and its drawer, and read the markers in its DOM with their `aria-label`. The texts of the
+core, the drawer, the states and the search of the toolbar are in every skin; the words of the paginator and the roles
+of the toolbar of the vanilla skins are not.
 
 The code generator and the spec check of the MCP server know the new skin in the same commit, as `mui` with the target
 `vanilla`: a module that renders `<table-bro>` into a container, with its cells as Custom Elements in Vanilla JS and,
