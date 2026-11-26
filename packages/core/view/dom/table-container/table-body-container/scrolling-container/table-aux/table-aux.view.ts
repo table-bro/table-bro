@@ -366,7 +366,13 @@ export class BroTableAux implements BroView {
     const shownCols = (this.hasColumnWidths('tbody') && model.tbodyCols) || theadCols;
 
     columns.forEach(({col, sortHeader}, i) => {
-      sortHeader?.setAttribute('tooltip', (theadCols[i].clientWidth > shownCols[i].targetWidth) ? col.title : (col.tooltip || ''));
+      const tooltip = (theadCols[i].clientWidth > shownCols[i].targetWidth) ? col.title : (col.tooltip || '');
+
+      // The same tooltip again writes nothing: each write calls the attributeChangedCallback of the sort header of the
+      // skin, which renders it again, as an Angular element does with a change detection
+      if (sortHeader && sortHeader.getAttribute('tooltip') !== tooltip) {
+        sortHeader.setAttribute('tooltip', tooltip);
+      }
     });
   }
 
