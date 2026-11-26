@@ -1,7 +1,7 @@
-import type {BroSpecField, BroSpecFilter, BroSpecSkin, BroTableSpec}                                          from '../spec/spec.js';
-import {escapeHtml, escapeTemplate, imports, importsField, indentBlock, lineComment, objectKey, templateText} from './code.js';
-import type {BroSpecFillings}                                                                                 from './fillings.js';
-import {BroNames}                                                                                             from './names.js';
+import type {BroSpecField, BroSpecFilter, BroSpecSkin, BroTableSpec}                                                         from '../spec/spec.js';
+import {escapeHtml, escapeTemplate, imports, importsField, indentBlock, lineComment, objectKey, returningBody, templateText} from './code.js';
+import type {BroSpecFillings}                                                                                                from './fillings.js';
+import {BroNames}                                                                                                            from './names.js';
 
 /** A key of the object of the filters: a range gives two. */
 interface BroFilterKey {
@@ -49,7 +49,7 @@ export class BroFiltersCode {
       if (filter.match === 'custom') {
         const name = `matches${filter.name[0].toUpperCase()}${filter.name.slice(1)}`;
         const filled = this.fillings.filterRules?.[filter.name]?.trim();
-        const body = filled || `// TODO: ${lineComment(filter.rule!)}\nreturn true;`;
+        const body = filled ? returningBody(filled) : `// TODO: ${lineComment(filter.rule!)}\nreturn true;`;
         // A written rule without the value of its filter, as a checkbox, takes only the row
         const withValue = !filled || /\bvalue\b/.test(filled);
 

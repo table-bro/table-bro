@@ -9,7 +9,7 @@ import {isPlainObject}     from './code.js';
 export interface BroSpecFillings {
   /** The cells and the row details by their names, for each skin. */
   cells?: Record<string, Partial<Record<BroSpecSkin, BroCellFilling>>>;
-  /** The conditions of the filters with the match custom, by their names: the body of (row, value) => boolean. */
+  /** The conditions of the filters with the match custom, by their names: an expression of row and value, or the body of (row, value) => boolean with return. */
   filterRules?: Record<string, string>;
   /** The bodies of the functions of the skin config, by the skin and the path, as components.sortHeader.afterRender. */
   callbacks?: Partial<Record<BroSpecSkin, Record<string, string>>>;

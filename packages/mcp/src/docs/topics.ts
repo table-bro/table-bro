@@ -65,8 +65,8 @@ export const topics: BroDocTopic[] = [
 
 - \`cells\`: by the name of a cell of the spec, then by the skin. \`template\`, \`styles\` and \`members\` are the parts of the component for Angular; \`render\` is the body of \`render()\` for Vanilla JS.
 - \`imports\`: only classes of your project, as \`{name, from}\`. The classes of Angular Material and the pipes of Angular come from the template itself, so leave them out. A string is only the name of such a class (\`"DatePipe"\`), not an import statement.
-- \`filterRules\`: by the name of a filter with \`match: "custom"\`, the body of \`(row, value) => boolean\`.
-- \`callbacks\`: by the skin, then the path of the function in the config of the skin (get_docs, topic skin-config), the body of the function.
+- \`filterRules\`: by the name of a filter with \`match: "custom"\`, the condition of \`(row, value) => boolean\`: an expression, as \`row.total > value\`, which the function returns, or a body with \`return\`.
+- \`callbacks\`: by the skin, then the path of the function in the config of the skin (get_docs, topic skin-config), the body of the function; a function that returns a string, as \`components.fontIcon.html\`, also takes an expression, which it returns.
 - \`generate_code\` checks the imports before it writes: a wrong entry comes back as an error with its path.`
   },
   {

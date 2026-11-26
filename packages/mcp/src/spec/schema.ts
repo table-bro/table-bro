@@ -244,7 +244,7 @@ export const fillingsSchema: BroJsonSchema = {
       description: 'The cells and the row details by their names, for each skin',
       additionalProperties: {type: 'object', properties: {mat: cellFillingSchema, bs: cellFillingSchema, nv: cellFillingSchema}, additionalProperties: false}
     },
-    filterRules: {type: 'object', description: 'The conditions of the filters with the match custom, by their names: the body of (row, value) => boolean', additionalProperties: string},
+    filterRules: {type: 'object', description: 'The conditions of the filters with the match custom, by their names: an expression of row and value, or the body of (row, value) => boolean with return', additionalProperties: string},
     callbacks: {
       type: 'object',
       description: 'The bodies of the functions of the skin config, by the skin and the path, as components.sortHeader.afterRender',

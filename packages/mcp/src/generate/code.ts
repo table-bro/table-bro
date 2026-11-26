@@ -97,6 +97,25 @@ export function indentBlock(code: string, indent: string): string {
   return code.split('\n').map(line => line ? indent + line : line).join('\n');
 }
 
+/**
+ * The body of a function that returns a value, from a text of a model. A text without return is an expression, as the
+ * example of the topic fillings, `row.total > value`: the function returns it. Put into the braces as it is, it would
+ * make the function return undefined, and a custom filter would match no row.
+ */
+export function returningBody(text: string): string {
+  // The comments before the first statement do not tell an expression from a body
+  const code = text.replace(/^(?:\s*\/\/[^\n]*(?:\n|$)|\s*\/\*[\s\S]*?\*\/)*\s*/, '');
+
+  if (/\breturn\b/.test(code) || /^(?:class|const|do|for|function|if|let|switch|throw|try|var|while)\b/.test(code)) {
+    return text;
+  }
+
+  const expression = text.replace(/;\s*$/, '');
+
+  // A line comment or a line break right after return would end the statement before the expression
+  return expression.includes('\n') ? `return (\n${indentBlock(expression, '  ')}\n);` : `return ${expression};`;
+}
+
 export function escapeHtml(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

@@ -160,6 +160,44 @@ describe('generateCode', () => {
     expect(page).toContain('<table-bro-filter-drawer-container id="order-table-filters" skin="bs">');
   });
 
+  it('returns a rule or a function of a value that a model writes as an expression', () => {
+    const spec = <BroTableSpec>{
+      ...orders.spec,
+      filters: [...orders.spec.filters!, {name: 'placedFrom', label: 'From', control: 'text', field: 'customer', match: 'custom', rule: 'on or after the value'}],
+      skinConfig: {bs: {callbacks: [{path: 'components.fontIcon.html', does: 'the markup of a Material icon'}]}}
+    };
+    const fillings = {
+      ...orders.fillings,
+      filterRules: {big: 'row.total > 1000', placedFrom: '// The dates compare as strings\nrow.customer >= value;'},
+      callbacks: {bs: {'components.fontIcon.html': '`<span class="material-icons">${iconName}</span>`'}}
+    };
+    const page = file(generateCode(spec, {target: 'angular', skin: 'bs', fillings}).files, 'order-table/order-table.ts');
+
+    expect(page).toContain([
+      '      const matchesBig = (row: Order): boolean => {',
+      '        return row.total > 1000;',
+      '      };'
+    ].join('\n'));
+    expect(page).toContain([
+      '      const matchesPlacedFrom = (row: Order, value: string): boolean => {',
+      '        return (',
+      '          // The dates compare as strings',
+      '          row.customer >= value',
+      '        );',
+      '      };'
+    ].join('\n'));
+    expect(page).toContain([
+      '        html: (iconName: string): string => {',
+      '          return `<span class="material-icons">${iconName}</span>`;',
+      '        }'
+    ].join('\n'));
+
+    // A body with return or with statements keeps its form
+    const kept = generateCode(spec, {target: 'angular', skin: 'bs', fillings: {...fillings, filterRules: {big: 'const limit = 1000;\nreturn row.total > limit;'}}}).files;
+
+    expect(file(kept, 'order-table/order-table.ts')).toContain('        const limit = 1000;\n        return row.total > limit;\n');
+  });
+
   it('names the filters app-<row-type>-filters and their own classes app-*, a component of the application as the page', () => {
     const angular = generateCode(orders.spec, {target: 'angular', skin: 'mat', fillings: orders.fillings}).files;
     const form = file(generateCode(orders.spec, {target: 'vanilla', skin: 'nv', fillings: orders.fillings}).files, 'order-table/order-filters.ts');

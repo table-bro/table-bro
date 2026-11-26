@@ -1,10 +1,10 @@
-import type {BroMcpExtension}                                  from '../extension.js';
-import {skinCallbacks}                                         from '../spec/skin-config.js';
-import type {BroSpecSkin, BroSpecToolbarButton, BroTableSpec}  from '../spec/spec.js';
-import {indentBlock, isPlainObject, lineComment, literal, raw} from './code.js';
-import type {BroSpecFillings}                                  from './fillings.js';
-import {BroFiltersCode}                                        from './filters.js';
-import {BroNames}                                              from './names.js';
+import type {BroMcpExtension}                                                 from '../extension.js';
+import {skinCallbacks}                                                        from '../spec/skin-config.js';
+import type {BroSpecSkin, BroSpecToolbarButton, BroTableSpec}                 from '../spec/spec.js';
+import {indentBlock, isPlainObject, lineComment, literal, raw, returningBody} from './code.js';
+import type {BroSpecFillings}                                                 from './fillings.js';
+import {BroFiltersCode}                                                       from './filters.js';
+import {BroNames}                                                             from './names.js';
 
 export interface BroConfigCode {
   /** The config as a literal. */
@@ -73,8 +73,10 @@ export function configCode(spec: BroTableSpec, skin: BroSpecSkin, fillings: BroS
 
   for (const callback of spec.skinConfig?.[skin]?.callbacks ?? []) {
     const known = skinCallbacks.find(item => item.path === callback.path)!;
-    const body = fillings.callbacks?.[skin]?.[callback.path]?.trim() || `// TODO: ${lineComment(callback.does)}`;
+    const filled = fillings.callbacks?.[skin]?.[callback.path]?.trim();
     const [, parameters, returns] = /^(\(.*?\)) => (.*)$/.exec(known.signature)!;
+    // A function of a value, as components.fontIcon.html, returns its expression; one of void keeps its statements
+    const body = !filled ? `// TODO: ${lineComment(callback.does)}` : /\bvoid\b/.test(returns) ? filled : returningBody(filled);
     const path = callback.path.split('.').slice(1);
 
     merge(components, <Record<string, unknown>>path.reduceRight<unknown>((item, key) => ({[key]: item}), raw(`${parameters}: ${returns} => {\n${indentBlock(body, '  ')}\n}`)));
