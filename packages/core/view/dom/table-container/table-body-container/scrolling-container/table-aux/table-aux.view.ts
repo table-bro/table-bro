@@ -16,6 +16,9 @@ let measureCanvas: HTMLCanvasElement | undefined;
 /** The custom property of the host with the opacity that a refresh gives the cells of the body. */
 const refreshOpacityProperty: string = '--bro-refresh-cell-opacity';
 
+/** The cells of the body that a refresh dims: the body table lies right in the scrolling container, the tables in the details of its rows stay out. */
+const refreshCellsSelector: string = `.${tableSelectors.tableBody} > table:not(.${selectors.tableAux}) > tbody > tr > td`;
+
 export class BroTableAux implements BroView {
   static template(config: BroResolvedConfig): string {
     return BroTable.template(config, false, {className: selectors.tableAux, ariaHidden: true});
@@ -30,6 +33,8 @@ export class BroTableAux implements BroView {
   private zIndexInitial?: string;
   /** The opacity of the cells of the body that the refresh gives them, or null without a refresh. */
   private refreshOpacity: number | null = null;
+  /** The cells that the last frame of a fade gave its opacity: the end of the fade takes it from them. */
+  private refreshFadedCells: HTMLElement[] = [];
 
   constructor(protected readonly ctx: BroContext,
               private rows: BroRow[] | null | undefined) {
@@ -287,7 +292,7 @@ export class BroTableAux implements BroView {
       draw: timingProgress => {
         const ended = (timingProgress === 1 && !this.refreshProgress);
 
-        this.renderRefreshOpacity(ended ? null : previousOpacity + (targetOpacity - previousOpacity) * timingProgress);
+        this.renderRefreshOpacity(ended ? null : previousOpacity + (targetOpacity - previousOpacity) * timingProgress, timingProgress < 1);
 
         if (ended) {
           el.style.zIndex = <string>this.zIndexInitial;
@@ -422,13 +427,25 @@ export class BroTableAux implements BroView {
 
   /**
    * The opacity of the cells of the body in one <style> of the host, and no clicks on them; null takes the rule away.
-   * The rule is written once per refresh and the frames change only its custom property on the host: WebKit matches
-   * the rules of the whole document again for each new text of a <style>, at each frame of the scroll to a server page.
+   * The rule is written once per refresh, with the opacity in a custom property of the host: WebKit matches the rules of
+   * the whole document again for each new text of a <style>, at each frame of the scroll to a server page. The frames
+   * of the fade write the opacity on the cells themselves: a custom property of the host is inherited by every element
+   * of the table, and each new value of it would compute the styles of all of them again in every frame; the opacity
+   * of a cell is not inherited. The custom property takes the opacity at the end of the fade, so a body rendered again
+   * during the refresh gets it too.
+   *
+   * @param opacity the opacity of the cells, or null to end the refresh
+   * @param frame   a frame of the fade, before its end: the opacity goes on the cells, and the custom property waits
    */
-  private renderRefreshOpacity(opacity: number | null): void {
+  private renderRefreshOpacity(opacity: number | null, frame: boolean = false): void {
     const {host, config} = this.ctx;
 
     this.refreshOpacity = opacity;
+
+    // The opacity of the frames stays on the cells until the end of the fade, where the rule takes over
+    this.refreshFadedCells.forEach(td => td.style.removeProperty('opacity'));
+    this.refreshFadedCells = frame ? Array.from(host.querySelectorAll<HTMLElement>(refreshCellsSelector)) : [];
+    this.refreshFadedCells.forEach(td => td.style.setProperty('opacity', `${opacity}`));
 
     let style = this.refreshStyle();
 
@@ -454,12 +471,13 @@ export class BroTableAux implements BroView {
       host.prepend(style);
     }
 
-    host.style.setProperty(refreshOpacityProperty, `${opacity}`);
+    if (!frame) {
+      host.style.setProperty(refreshOpacityProperty, `${opacity}`);
+    }
 
-    // The body table lies right in the scrolling container: the tables in the details of its rows stay out
     if (!style.textContent) {
       style.textContent = `
-      ${this.hostSelector()} .${tableSelectors.tableBody} > table:not(.${selectors.tableAux}) > tbody > tr > td {
+      ${this.hostSelector()} ${refreshCellsSelector} {
         opacity: var(${refreshOpacityProperty});
         pointer-events: none;
       }`;

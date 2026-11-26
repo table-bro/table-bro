@@ -975,28 +975,45 @@ test('a refresh fades the cells of the body and lays no white layer over the spa
   expect(await table.evaluate(el => el.style.getPropertyValue('--bro-refresh-cell-opacity'))).toBe('');
 });
 
-test('a refresh writes the rule of its dimming once and animates only the opacity in a custom property', async ({page}) => {
+test('a refresh writes the rule of its dimming once and the custom property of the host only at the ends of its fades', async ({page}) => {
   const table = await mountTable(page, {cols: priceCols, rows: priceRows, config: {skin: 'mat'}});
 
-  // A new text of a <style> makes WebKit match the rules of the whole document again, at every frame of the fade
-  const writes = await table.evaluate(async (el: TableBroHTMLElement) => {
+  // A new text of a <style> makes WebKit match the rules of the whole document again, at every frame of the fade. A new
+  // value of the custom property of the host computes the styles of every element of the table again: the frames of the
+  // fade write the opacity on the cells instead
+  const {texts, properties, inline} = await table.evaluate(async (el: TableBroHTMLElement) => {
     const texts: string[] = [];
+    const properties: string[] = [];
+    const property = () => el.style.getPropertyValue('--bro-refresh-cell-opacity');
+    let last = property();
     // Each write of the text replaces the children of the <style>: one record with the style as its target
-    const observer = new MutationObserver(records => records
-      .filter(record => record.target instanceof HTMLStyleElement && record.target.matches('[data-bro-refresh]'))
-      .forEach(record => texts.push(record.target.textContent ?? '')));
+    const observer = new MutationObserver(records => records.forEach(record => {
+      if (record.target instanceof HTMLStyleElement && record.target.matches('[data-bro-refresh]')) {
+        texts.push(record.target.textContent ?? '');
+      }
 
-    observer.observe(el, {childList: true, subtree: true});
+      if (record.target === el && property() !== last) {
+        last = property();
+        properties.push(last);
+      }
+    }));
+
+    observer.observe(el, {childList: true, subtree: true, attributes: true, attributeFilter: ['style']});
     el.setState('refreshing');
     await new Promise(resolve => setTimeout(resolve, 600));
     el.setState('idle');
     await new Promise(resolve => setTimeout(resolve, 600));
     observer.disconnect();
 
-    return texts.filter((text, i) => text !== texts[i - 1]);
+    // The cells keep no opacity of the frames once the refresh ends
+    const inline = Array.from(el.querySelectorAll<HTMLElement>('.bro-table-body > table:not(.bro-table-aux) > tbody > tr > td')).filter(td => td.style.opacity).length;
+
+    return {texts: texts.filter((text, i) => text !== texts[i - 1]), properties, inline};
   });
 
-  expect(writes).toEqual([expect.stringContaining('opacity: var(--bro-refresh-cell-opacity)'), '']);
+  expect(texts).toEqual([expect.stringContaining('opacity: var(--bro-refresh-cell-opacity)'), '']);
+  expect(properties).toEqual(['0.5', '']);
+  expect(inline).toBe(0);
 });
 
 test('the progress of loaded details fades from the first frame of their opening', async ({page}) => {
