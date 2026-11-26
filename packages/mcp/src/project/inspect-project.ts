@@ -47,7 +47,7 @@ interface BroPackageJson {
 
 /** The fields of an angular.json that the inspection reads. */
 interface BroAngularJson {
-  projects?: Record<string, {architect?: {build?: {options?: {styles?: (string | {input: string})[]}}}}>;
+  projects?: Record<string, {architect?: {build?: {options?: {styles?: (string | {input: string; inject?: boolean})[]}}}}>;
 }
 
 const tableBroPackages = ['@table-bro/core', '@table-bro/angular', '@table-bro/angular-material', '@table-bro/bootstrap', '@table-bro/native'];
@@ -82,13 +82,14 @@ export function inspectProject(root: string): BroProjectProfile {
   const version = (name: string): string | null => readJson<BroPackageJson>(path.join(root, 'node_modules', name, 'package.json'))?.version ?? declared[name] ?? null;
 
   const packages = Object.fromEntries(tableBroPackages.map(name => [name, version(name)]).filter(([, value]) => value));
+  const styles = angularStyles(root);
   const profile: BroProjectProfile = {
     folder: root,
     tableBro: {version: version('@table-bro/core'), packages, extensions: findExtensions(root).map(extension => extension.name)},
     framework: version('@angular/core') ? {name: 'angular', version: version('@angular/core')} : {name: 'none', version: null},
     ui: {material: version('@angular/material'), bootstrap: version('bootstrap')},
     skins: {registered: [], where: []},
-    styles: angularStyles(root),
+    styles: styles.map(style => style.input),
     customElements: [],
     tables: [],
     problems: []
@@ -135,7 +136,10 @@ export function inspectProject(root: string): BroProjectProfile {
     }
   }
 
-  profile.problems = problems(profile, selectors, Boolean(version('@angular/elements')));
+  // Bootstrap in the styles that Angular links to every page, not in a bundle that the page links itself
+  const globalBootstrap = styles.some(style => style.inject && /(^|\/)bootstrap(\.min)?\.s?css$/.test(style.input));
+
+  profile.problems = problems(profile, selectors, Boolean(version('@angular/elements')), globalBootstrap);
 
   if (walk.cut) {
     profile.problems.unshift({code: 'search-cut', message: `the search stopped after ${maxFiles} source files or ${maxFolders} folders: ${root} is larger than a project`, fix: 'pass the root of the project in path'});
@@ -187,7 +191,7 @@ export function findExtensions(root: string): {name: string; entry: string}[] {
   });
 }
 
-function problems(profile: BroProjectProfile, selectors: {tag: string; file: string}[], elements: boolean): BroProjectProblem[] {
+function problems(profile: BroProjectProfile, selectors: {tag: string; file: string}[], elements: boolean, globalBootstrap: boolean): BroProjectProblem[] {
   const list: BroProjectProblem[] = [];
   const {packages, version} = profile.tableBro;
   const angular = profile.framework.name === 'angular';
@@ -234,6 +238,12 @@ function problems(profile: BroProjectProfile, selectors: {tag: string; file: str
     if (!core || !skinStyles) {
       list.push({code: 'css-missing', message: `the CSS of ${!core ? 'the core' : 'the skin'} is not found in "styles" of angular.json`, fix: 'see get_docs with the topic setup'});
     }
+
+    const others = profile.skins.registered.filter(skin => skin !== 'bs');
+
+    if (globalBootstrap && profile.skins.registered.includes('bs') && others.length) {
+      list.push({code: 'bootstrap-global', message: `"styles" of angular.json link Bootstrap to every page, and the skins ${others.join(', ')} take its fonts and margins`, fix: 'link Bootstrap only while the skin bs is shown: generate_code with skins, or get_docs with the topic setup'});
+    }
   }
 
   const defined = new Set(profile.customElements.map(element => element.tag));
@@ -255,7 +265,8 @@ function older(a: string, b: string): boolean {
   return index !== -1 && first[index] < second[index];
 }
 
-function angularStyles(root: string): string[] {
+/** The stylesheets of angular.json; one with inject false is a bundle that the page links itself. */
+function angularStyles(root: string): {input: string; inject: boolean}[] {
   const workspace = readJson<BroAngularJson>(path.join(root, 'angular.json'));
 
   if (!workspace?.projects) {
@@ -265,7 +276,7 @@ function angularStyles(root: string): string[] {
   return Object.values(workspace.projects).flatMap(project => {
     const styles = project?.architect?.build?.options?.styles ?? [];
 
-    return styles.map((style: string | {input: string}) => (typeof style === 'string') ? style : style.input);
+    return styles.map(style => (typeof style === 'string') ? {input: style, inject: true} : {input: style.input, inject: style.inject !== false});
   });
 }
 

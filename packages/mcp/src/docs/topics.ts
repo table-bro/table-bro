@@ -108,7 +108,7 @@ ${JSON.stringify(builtinSpecs[0].spec, null, 2)}
     name: 'setup',
     title: 'The setup of a project',
     summary: 'The packages, the CSS and the registration of the skin, once for all tables of a project',
-    text: () => pairs.map(([target, skin]) => `**${(target === 'angular') ? 'Angular' : ({mui: 'React or Preact', suid: 'Solid', 'm3-svelte': 'Svelte', vuetify: 'Vue'}[<string>skin] ?? 'Vanilla JS')}, skin ${skin}**\n\n${setupText(setupSteps(target, skin))}`).join('\n\n')
+    text: () => ['A page with a switch of the skins takes the setup of each of its skins. With the skin bs among them, the page links Bootstrap only while bs is shown, as Bootstrap sets the fonts and the margins of the whole page: `generate_code` with `skins`, as `["mat", "bs", "nv"]`, gives its CSS and the function that links it.', ...pairs.map(([target, skin]) => `**${(target === 'angular') ? 'Angular' : ({mui: 'React or Preact', suid: 'Solid', 'm3-svelte': 'Svelte', vuetify: 'Vue'}[<string>skin] ?? 'Vanilla JS')}, skin ${skin}**\n\n${setupText(setupSteps(target, skin))}`)].join('\n\n')
   },
   {
     name: 'columns',

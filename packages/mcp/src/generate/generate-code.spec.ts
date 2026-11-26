@@ -397,6 +397,47 @@ describe('generateCode', () => {
       '      }'
     ].join('\n'));
   });
+
+  it('links Bootstrap only while the skin bs is shown on a page that switches its skins', () => {
+    const css = (skin: BroSpecSkin, skins?: BroSpecSkin[]) => generateCode(orders.spec, {target: 'angular', skin, skins}).setup.find(step => step.title === 'Add the CSS')!.code;
+    const bootstrap = (skin: BroSpecSkin, skins?: BroSpecSkin[]) => generateCode(orders.spec, {target: 'angular', skin, skins}).setup.find(step => step.title === 'Link Bootstrap while the skin bs is shown');
+    const onDemand = [
+      '"styles": [',
+      '  "node_modules/@table-bro/core/dist/table-bro.min.css",',
+      '  "node_modules/@table-bro/angular-material/dist/table-bro.material.min.css",',
+      '  "node_modules/@table-bro/native/dist/table-bro.native.min.css",',
+      '  {"input": "node_modules/bootstrap/dist/css/bootstrap.min.css", "bundleName": "skin-bs", "inject": false},',
+      '  {"input": "node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css", "bundleName": "skin-bs", "inject": false}',
+      ']'
+    ].join('\n');
+
+    // A project of the one skin bs keeps Bootstrap in its global styles
+    expect(css('bs')).toBe([
+      '"styles": [',
+      '  "node_modules/bootstrap/dist/css/bootstrap.min.css",',
+      '  "node_modules/@table-bro/core/dist/table-bro.min.css",',
+      '  "node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css"',
+      ']'
+    ].join('\n'));
+    expect(css('bs', ['bs'])).toBe(css('bs'));
+    expect(bootstrap('bs')).toBeUndefined();
+
+    // The setup of each skin of the switch gives the same styles and the function that links Bootstrap
+    for (const skin of <const>['mat', 'bs', 'nv']) {
+      expect(css(skin, ['mat', 'bs', 'nv'])).toBe(onDemand);
+      expect(bootstrap(skin, ['mat', 'bs', 'nv'])?.code).toContain("const bootstrapStyles = ['skin-bs.css'];");
+    }
+
+    // A switch without bs keeps its styles as they were
+    expect(css('mat', ['mat', 'nv'])).toBe(css('mat'));
+
+    const vanilla = generateCode(orders.spec, {target: 'vanilla', skin: 'nv', skins: ['bs', 'nv']}).setup;
+    const helper = vanilla.find(step => step.title === 'Link Bootstrap while the skin bs is shown')!.code!;
+
+    expect(vanilla.find(step => step.title === 'Link the CSS')!.code).not.toContain('bootstrap');
+    expect(helper).toContain("const bootstrapStyles = ['node_modules/bootstrap/dist/css/bootstrap.min.css', 'node_modules/@table-bro/bootstrap/dist/table-bro.bootstrap.min.css'];");
+    expect(ts.transpileModule(helper, {reportDiagnostics: true}).diagnostics).toEqual([]);
+  });
 });
 
 describe('a paid module', () => {

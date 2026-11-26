@@ -19,6 +19,8 @@ export interface BroGenerateOptions {
   simulateServer?: boolean;
   /** The sizes of a spec that the host takes. */
   limits?: BroSpecLimits;
+  /** The skins of a page that switches between them: the setup links Bootstrap only while the skin bs is shown. */
+  skins?: BroSpecSkin[];
 }
 
 export interface BroGeneratedCode {
@@ -114,5 +116,5 @@ export function generateCode(spec: BroTableSpec, options: BroGenerateOptions): B
       }]
     : [];
 
-  return {report, files: table.files, setup: [...setupSteps(target, skin, elements, skinFeatures(spec, skin)), ...http, ...modules.flatMap(extension => (extension.setup ?? []).map(step => ({...step, module: extension.package})))], todo: table.todo};
+  return {report, files: table.files, setup: [...setupSteps(target, skin, elements, skinFeatures(spec, skin), options.skins), ...http, ...modules.flatMap(extension => (extension.setup ?? []).map(step => ({...step, module: extension.package})))], todo: table.todo};
 }

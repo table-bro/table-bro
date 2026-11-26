@@ -182,17 +182,18 @@ export function createServer(root: string, extensions: BroMcpExtension[] = []): 
       builtinSpec: z.enum(<[string, ...string[]]>builtinSpecs.map(builtin => builtin.name)).optional().describe(`The name of a built-in spec instead of a spec: ${builtinSpecs.map(builtin => `${builtin.name}, ${builtin.description}`).join('; ')}`),
       fillings: shown(fillingsSchema).optional(),
       target,
-      skin
+      skin,
+      skins: z.array(skin).optional().describe('For a page with a switch of the skins: all its skins, as ["mat", "bs", "nv"]. The setup then links Bootstrap only while the skin bs is shown, as it changes the fonts and the margins of the whole page')
     },
     annotations: readOnly
-  }, ({spec, builtinSpec, fillings, target, skin}) => {
+  }, ({spec, builtinSpec, fillings, target, skin, skins}) => {
     const builtin = builtinSpecs.find(item => item.name === builtinSpec);
 
     if (!spec && !builtin) {
       return {...text('Give a spec or the name of a built-in spec.'), isError: true};
     }
 
-    const result = generateCode(<BroTableSpec>(spec ?? builtin!.spec), {target, skin, fillings: fillings ?? builtin?.fillings, extensions, limits});
+    const result = generateCode(<BroTableSpec>(spec ?? builtin!.spec), {target, skin, fillings: fillings ?? builtin?.fillings, extensions, limits, skins});
 
     if (!result.report.valid) {
       return {...text(`The spec has errors:\n\n${JSON.stringify(result.report, null, 2)}`), isError: true};

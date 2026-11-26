@@ -84,8 +84,9 @@ export interface BroSetupStep {
  * @param skin - the skin of the project
  * @param extraPackages - the packages that the tables need besides the ones of the skin
  * @param features - the optional elements of the skin that the tables use
+ * @param skins - the skins of a page that switches between them; the skin of the call by default
  */
-export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: string[] = [], features: BroSkinFeature[] = []): BroSetupStep[] {
+export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: string[] = [], features: BroSkinFeature[] = [], skins: BroSpecSkin[] = [skin]): BroSetupStep[] {
   const angular = (target === 'angular');
   const calls = features.map(feature => `${feature}()`).join(', ');
   // The elements that only some tables use: a project that registers the skin already adds the ones of a new table
@@ -105,7 +106,15 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     nv: ['@table-bro/native']
   }[skin], ...extraPackages];
 
-  const styles = [...(skin === 'bs' ? ['node_modules/bootstrap/dist/css/bootstrap.min.css'] : []), css.core, css[skin]];
+  // A page that switches between bs and other skins links Bootstrap only while bs is shown: its Reboot sets the fonts
+  // and the margins of the whole page, which the other skins would take. The skins keep the order of the switch, so the
+  // setup of each of them gives the same styles
+  const pageSkins = [...new Set(skins.includes(skin) ? skins : [skin, ...skins])];
+  const bootstrapOnDemand = pageSkins.includes('bs') && pageSkins.length > 1;
+  const bootstrapStyles = ['node_modules/bootstrap/dist/css/bootstrap.min.css', css.bs];
+  const otherSkins = pageSkins.filter(item => item !== 'bs');
+  const styles = bootstrapOnDemand ? [css.core, ...otherSkins.map(item => css[item])] : [...(skin === 'bs' ? [bootstrapStyles[0]] : []), css.core, css[skin]];
+  const bundle = (style: string): string => `{"input": "${style}", "bundleName": "skin-bs", "inject": false}`;
 
   const steps: BroSetupStep[] = [
     {
@@ -119,16 +128,19 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
     angular
       ? {
           title: 'Add the CSS',
-          text: 'To `"styles"` of `angular.json`:',
-          code: `"styles": [\n${styles.map(style => `  "${style}"`).join(',\n')}\n]`,
+          text: bootstrapOnDemand
+            ? `To \`"styles"\` of \`angular.json\`, the CSS of the core and of the other skins of the page, ${otherSkins.join(', ')}. Bootstrap and the CSS of the skin bs go into the bundle \`skin-bs.css\`, which Angular builds and does not link: the page links it only while the skin bs is shown, see the next step.`
+            : 'To `"styles"` of `angular.json`:',
+          code: `"styles": [\n${[...styles.map(style => `"${style}"`), ...(bootstrapOnDemand ? bootstrapStyles.map(bundle) : [])].map(style => `  ${style}`).join(',\n')}\n]`,
           language: 'json'
         }
       : {
           title: 'Link the CSS',
-          text: 'On the page:',
+          text: bootstrapOnDemand ? `On the page, the CSS of the core and of the other skins of the page, ${otherSkins.join(', ')}. Bootstrap and the CSS of the skin bs come only while the skin bs is shown, see the next step.` : 'On the page:',
           code: styles.map(style => `<link rel="stylesheet" href="${style}">`).join('\n'),
           language: 'html'
-        }
+        },
+    ...(bootstrapOnDemand ? [bootstrapStep(angular ? ['skin-bs.css'] : bootstrapStyles)] : [])
   ];
 
   if (skin === 'mat') {
@@ -326,6 +338,50 @@ export function setupSteps(target: BroTarget, skin: BroSpecSkin, extraPackages: 
   }
 
   return steps;
+}
+
+/**
+ * The step of a page that switches between bs and other skins: a function that links the stylesheets of Bootstrap
+ * while the skin bs is shown, as the site of Table, Bro links the stylesheet of each skin when a table takes it.
+ * @param hrefs - the bundle skin-bs.css of Angular, or the stylesheets themselves on a page without Angular
+ */
+function bootstrapStep(hrefs: string[]): BroSetupStep {
+  return {
+    title: 'Link Bootstrap while the skin bs is shown',
+    text: 'Bootstrap sets the fonts and the margins of the whole page: while it is linked, the other skins of the page take them too. In the browser, the page awaits `showBootstrapStyles(skin)` with its first skin and with every skin that the switch chooses, before the table renders in that skin: for bs the function links the stylesheets and resolves once they have loaded, for the other skins it removes them. In `bootstrap-styles.ts`:',
+    code: [
+      '/** The stylesheets of the skin bs: Bootstrap and the CSS of the skin. */',
+      `const bootstrapStyles = [${hrefs.map(href => `'${href}'`).join(', ')}];`,
+      '',
+      '/** Links the stylesheets of Bootstrap while the skin bs is shown, and removes them for the other skins. */',
+      'export function showBootstrapStyles(skin: string): Promise<void> {',
+      '  const links = document.querySelectorAll<HTMLLinkElement>(\'link[data-skin-styles="bs"]\');',
+      '',
+      '  if (skin !== \'bs\') {',
+      '    links.forEach(link => link.remove());',
+      '',
+      '    return Promise.resolve();',
+      '  }',
+      '',
+      '  if (links.length) {',
+      '    return Promise.resolve();',
+      '  }',
+      '',
+      '  // The table renders in bs once the browser has loaded the stylesheets, or failed to',
+      '  return Promise.all(bootstrapStyles.map(href => new Promise<void>(resolve => {',
+      '    const link = document.createElement(\'link\');',
+      '',
+      '    link.rel = \'stylesheet\';',
+      '    link.href = href;',
+      '    link.dataset[\'skinStyles\'] = \'bs\';',
+      '    link.addEventListener(\'load\', () => resolve());',
+      '    link.addEventListener(\'error\', () => resolve());',
+      '    document.head.append(link);',
+      '  }))).then(() => undefined);',
+      '}'
+    ].join('\n'),
+    language: 'typescript'
+  };
 }
 
 /** The steps of a setup as Markdown, for an agent. */

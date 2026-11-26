@@ -117,6 +117,19 @@ describe('inspectProject', () => {
     expect(profile.problems[2].message).toBe('src/app/orders/orders.component.ts names the tag bro-cell-order-actions, and its customElements.define is not found');
   });
 
+  it('tells that Bootstrap in the global styles reaches the other skins of the page', () => {
+    const switching = (bootstrap: string | {input: string; bundleName: string; inject: boolean}) => inspectProject(project({
+      ...angularProject,
+      'package.json': JSON.stringify({dependencies: {...JSON.parse(angularProject['package.json']).dependencies, '@angular/elements': '^20.1.4', '@table-bro/bootstrap': `^${tableBroVersion}`}}),
+      'angular.json': JSON.stringify({projects: {app: {architect: {build: {options: {styles: [bootstrap, 'node_modules/@table-bro/core/dist/table-bro.min.css', 'node_modules/@table-bro/angular-material/dist/table-bro.material.min.css']}}}}}}),
+      'src/main.ts': "import {useBootstrap} from '@table-bro/bootstrap';"
+    })).problems.map(problem => problem.code);
+    const css = 'node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+    expect(switching(css)).toContain('bootstrap-global');
+    expect(switching({input: css, bundleName: 'skin-bs', inject: false})).not.toContain('bootstrap-global');
+  });
+
   it('tells the version of the server for the version of the project', () => {
     const newer = inspectProject(project({'package.json': JSON.stringify({dependencies: {'@table-bro/core': '9.0.0'}})}));
 
